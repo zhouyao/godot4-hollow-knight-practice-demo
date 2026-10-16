@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://0fehsv2o2s14"]
+
+[ext_resource type="PackedScene" uid="uid://bepccumbt5vig" path="res://scenes/menus/default_menu.tscn" id="1_dm"]
+
+[sub_resource type="GDScript" id="GDScript_3rd1h"]
+script/source = "# 场景专属薄逻辑，无复用需求，保持内联。
+# DefaultMenu 直接作为子节点实例化，脚本里不再 preload 别的场景。
+
+extends CanvasLayer
+
+func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+"
+
+[node name="MainMenu" type="CanvasLayer" unique_id=390350015]
+script = SubResource("GDScript_3rd1h")
+
+[node name="DefaultMenu" parent="." instance=ExtResource("1_dm")]

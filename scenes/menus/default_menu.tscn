@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://bepccumbt5vig"]
+
+[ext_resource type="PackedScene" uid="uid://bo5xy6y4hmtw4" path="res://scenes/menus/components/buttons/focus_button.tscn" id="1_qnqyb"]
+[ext_resource type="Theme" uid="uid://dmt8kq3vncw2x" path="res://assets/ui/misted_theme.tres" id="2_theme"]
+
+[sub_resource type="GDScript" id="GDScript_dv1nh"]
+script/source = "# 场景专属薄逻辑：处理主菜单按钮导航，无复用需求，保持内联。
+# 按钮统一接 pressed：确认音由 autoload 上的 UiAudio 播放，切场景不会把它掐断，
+# 因此按下即可跳转，不需要等音效放完。
+
+extends Control
+
+func _ready() -> void:
+	Tr.apply(self)
+
+# TODO: 主玩法场景尚未创建，接入后改为 Globals.go_to_game()
+func _on_start_pressed() -> void:
+	push_warning(\"「开始」尚未接入主玩法场景\")
+
+func _on_system_button_pressed() -> void:
+	Globals.go_to_system_settings()
+
+func _on_quit_button_pressed() -> void:
+	Globals.quit_game()
+"
+
+[node name="DefaultMenu" type="Control" unique_id=813206640]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = SubResource("GDScript_dv1nh")
+
+[node name="LogoContainer" type="VBoxContainer" parent="." unique_id=1357244131]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="Logo" type="Label" parent="LogoContainer" unique_id=1394523304]
+layout_mode = 2
+theme_type_variation = "DisplayLabel"
+text = "《 雾隐 / Misted 》"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonContainer" type="VBoxContainer" parent="LogoContainer" unique_id=152293198]
+layout_mode = 2
+theme_override_constants/separation = 35
+
+[node name="StartButton" parent="LogoContainer/ButtonContainer" unique_id=478271977 instance=ExtResource("1_qnqyb")]
+layout_mode = 2
+text = "开始"
+
+[node name="SystemButton" parent="LogoContainer/ButtonContainer" unique_id=748620953 instance=ExtResource("1_qnqyb")]
+layout_mode = 2
+text = "设置"
+
+[node name="QuitButton" parent="LogoContainer/ButtonContainer" unique_id=456710849 instance=ExtResource("1_qnqyb")]
+layout_mode = 2
+text = "离开"
+
+[connection signal="pressed" from="LogoContainer/ButtonContainer/StartButton" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="LogoContainer/ButtonContainer/SystemButton" to="." method="_on_system_button_pressed"]
+[connection signal="pressed" from="LogoContainer/ButtonContainer/QuitButton" to="." method="_on_quit_button_pressed"]

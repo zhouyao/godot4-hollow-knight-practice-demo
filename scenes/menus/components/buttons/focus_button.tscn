@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://bo5xy6y4hmtw4"]
+
+[ext_resource type="Script" uid="uid://ct70xureg8q6r" path="res://scenes/menus/components/buttons/FocusButton.gd" id="1_rffjw"]
+
+[node name="FocusButton" type="Button" unique_id=478271977]
+custom_minimum_size = Vector2(200, 0)
+size_flags_horizontal = 4
+text = "Button"
+script = ExtResource("1_rffjw")
+metadata/_custom_type_script = "uid://ct70xureg8q6r"
+
+[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
+[connection signal="focus_exited" from="." to="." method="_on_focus_exited"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="pressed" from="." to="." method="_on_pressed"]

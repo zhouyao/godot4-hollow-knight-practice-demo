@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://cwgtjjg2wm0r6"]
+
+[ext_resource type="Script" uid="uid://d04tcn24sjwwn" path="res://scenes/menus/components/rows/VolumeRow.gd" id="1_vr"]
+[ext_resource type="PackedScene" uid="uid://dm2xsak4wq7v3" path="res://scenes/menus/components/buttons/reset_button.tscn" id="2_rb"]
+
+[node name="VolumeRow" type="HBoxContainer" unique_id=1183628143]
+size_flags_vertical = 4
+theme_override_constants/separation = 24
+script = ExtResource("1_vr")
+display_name = "音量"
+
+[node name="NameLabel" type="Label" parent="." unique_id=1500945809]
+layout_mode = 2
+text = "音量"
+horizontal_alignment = 2
+
+[node name="Slider" type="HSlider" parent="." unique_id=328469473]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="ValueLabel" type="Label" parent="." unique_id=794781222]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+horizontal_alignment = 2
+
+[node name="Reset" parent="." unique_id=1764870533 instance=ExtResource("2_rb")]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+disabled = true
