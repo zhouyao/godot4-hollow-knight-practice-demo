@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://bo5xy6y4hmtw4"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://ct70xureg8q6r" path="res://scenes/menus/components/buttons/FocusButton.gd" id="1_rffjw"]
+[ext_resource type="Script" path="res://scenes/menus/components/buttons/FocusButton.gd" id="1_rffjw"]
 
 [node name="FocusButton" type="Button" unique_id=478271977]
 custom_minimum_size = Vector2(200, 0)

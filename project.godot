@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Misted"
-run/main_scene="uid://0fehsv2o2s14"
+run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -75,7 +75,7 @@ jump={
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://localization/translations.en.translation", "res://localization/translations.zh_CN.translation")
+locale/translations=PackedStringArray("res://localization/translations.en.translation", "res://localization/translations.zh_CN.translation", "res://localization/translations.zh_TW.translation")
 
 [layer_names]
 

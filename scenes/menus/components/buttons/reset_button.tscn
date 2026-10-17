@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://dm2xsak4wq7v3"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://c65exhiohobg" path="res://scenes/menus/components/buttons/ResetButton.gd" id="1_rb"]
+[ext_resource type="Script" path="res://scenes/menus/components/buttons/ResetButton.gd" id="1_rb"]
 
 [node name="ResetButton" type="Button"]
 size_flags_vertical = 4

@@ -1,0 +1,72 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/menus/components/rows/key_binding_row.tscn" id="1_kbr"]
+
+[node name="OperationsContent" type="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="OpsTitle" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "按键设置"
+
+[node name="BindHeader" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="NameLabel" type="Label" parent="BindHeader"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="KeyboardLabel" type="Label" parent="BindHeader"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "键盘"
+horizontal_alignment = 1
+
+[node name="KeyboardSpacer" type="Control" parent="BindHeader"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="GamepadLabel" type="Label" parent="BindHeader"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "手柄"
+horizontal_alignment = 1
+
+[node name="GamepadSpacer" type="Control" parent="BindHeader"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="UpRow" parent="." instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"up"
+display_name = "向上"
+
+[node name="DownRow" parent="." instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"down"
+display_name = "向下"
+
+[node name="LeftRow" parent="." instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"left"
+display_name = "向左"
+
+[node name="RightRow" parent="." instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"right"
+display_name = "向右"
+
+[node name="AttackRow" parent="." instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"attack"
+display_name = "攻击"
+
+[node name="JumpRow" parent="." instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"jump"
+display_name = "跳跃"

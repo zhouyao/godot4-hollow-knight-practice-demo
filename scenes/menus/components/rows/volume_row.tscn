@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://cwgtjjg2wm0r6"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://d04tcn24sjwwn" path="res://scenes/menus/components/rows/VolumeRow.gd" id="1_vr"]
-[ext_resource type="PackedScene" uid="uid://dm2xsak4wq7v3" path="res://scenes/menus/components/buttons/reset_button.tscn" id="2_rb"]
+[ext_resource type="Script" path="res://scenes/menus/components/rows/VolumeRow.gd" id="1_vr"]
+[ext_resource type="PackedScene" path="res://scenes/menus/components/buttons/reset_button.tscn" id="2_rb"]
 
 [node name="VolumeRow" type="HBoxContainer" unique_id=1183628143]
 size_flags_vertical = 4

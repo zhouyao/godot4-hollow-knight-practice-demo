@@ -1,8 +1,8 @@
-[gd_scene format=3 uid="uid://cnr7y1pwjnrym"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://b7873115igwgr" path="res://scenes/menus/components/rows/KeyBindingRow.gd" id="1_kbr"]
-[ext_resource type="PackedScene" uid="uid://bo5xy6y4hmtw4" path="res://scenes/menus/components/buttons/focus_button.tscn" id="2_fb"]
-[ext_resource type="PackedScene" uid="uid://dm2xsak4wq7v3" path="res://scenes/menus/components/buttons/reset_button.tscn" id="3_rb"]
+[ext_resource type="Script" path="res://scenes/menus/components/rows/KeyBindingRow.gd" id="1_kbr"]
+[ext_resource type="PackedScene" path="res://scenes/menus/components/buttons/focus_button.tscn" id="2_fb"]
+[ext_resource type="PackedScene" path="res://scenes/menus/components/buttons/reset_button.tscn" id="3_rb"]
 
 [node name="KeyBindingRow" type="HBoxContainer" unique_id=831330037]
 size_flags_vertical = 4

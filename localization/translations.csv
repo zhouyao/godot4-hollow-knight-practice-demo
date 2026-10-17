@@ -1,53 +1,53 @@
-keys,en,zh_CN
-《 雾隐 / Misted 》,"< Misted >","《 雾隐 / Misted 》"
-开始,Start,开始
-设置,Settings,设置
-离开,Quit,离开
-操作,Controls,操作
-音频,Audio,音频
-语言,Language,语言
-返回,Back,返回
-按键设置,Controls,按键设置
-音频设置,Audio,音频设置
-语言设置,Language,语言设置
-键盘,Keyboard,键盘
-手柄,Gamepad,手柄
-向上,Move Up,向上
-向下,Move Down,向下
-向左,Move Left,向左
-向右,Move Right,向右
-攻击,Attack,攻击
-跳跃,Jump,跳跃
-主音量,Master Volume,主音量
-音效音量,Sound Volume,音效音量
-背景音量,Music Volume,背景音量
-未绑定,Unbound,未绑定
-按下新按键…,Press a key…,按下新按键…
-恢复默认按键,Restore default,恢复默认按键
-重置默认值,Reset to default,重置默认值
-该按键已保留给菜单，无法绑定,That key is reserved for the menu,该按键已保留给菜单，无法绑定
-不支持的输入源,Unsupported input device,不支持的输入源
-已从 %s 收回该按键,"Taken over from %s","已从 %s 收回该按键"
-空格,Space,空格
-回车,Enter,回车
-Esc,Esc,Esc
-Tab,Tab,Tab
-A 键,Button A,A 键
-B 键,Button B,B 键
-X 键,Button X,X 键
-Y 键,Button Y,Y 键
-LB 键,Button LB,LB 键
-RB 键,Button RB,RB 键
-十字键 上,D-Pad Up,十字键 上
-十字键 下,D-Pad Down,十字键 下
-十字键 左,D-Pad Left,十字键 左
-十字键 右,D-Pad Right,十字键 右
-菜单键,Start,菜单键
-返回键,Select,返回键
-手柄按键 %d,Button %d,手柄按键 %d
-左摇杆,Left Stick,左摇杆
-右摇杆,Right Stick,右摇杆
-↑,Up,↑
-↓,Down,↓
-←,Left,←
-→,Right,→
+keys,en,zh_CN,zh_TW
+《 雾隐 / Misted 》,"< Misted >","《 雾隐 / Misted 》",《 霧隱 / Misted 》
+开始,Start,开始,開始
+设置,Settings,设置,設定
+离开,Quit,离开,離開
+按键,Keys,按键,按鍵
+音频,Audio,音频,音訊
+语言,Language,语言,語言
+返回,Back,返回,返回
+按键设置,Controls,按键设置,按鍵設定
+音频设置,Audio,音频设置,音訊設定
+语言设置,Language,语言设置,語言設定
+键盘,Keyboard,键盘,鍵盤
+手柄,Gamepad,手柄,手把
+向上,Move Up,向上,向上
+向下,Move Down,向下,向下
+向左,Move Left,向左,向左
+向右,Move Right,向右,向右
+攻击,Attack,攻击,攻擊
+跳跃,Jump,跳跃,跳躍
+主音量,Master Volume,主音量,主音量
+音效音量,Sound Volume,音效音量,音效音量
+背景音量,Music Volume,背景音量,背景音量
+未绑定,Unbound,未绑定,未綁定
+按下新按键…,Press a key…,按下新按键…,按下新按鍵…
+恢复默认按键,Restore default,恢复默认按键,恢復預設按鍵
+重置默认值,Reset to default,重置默认值,重設預設值
+该按键已保留给菜单，无法绑定,That key is reserved for the menu,该按键已保留给菜单，无法绑定,該按鍵已保留給選單，無法綁定
+不支持的输入源,Unsupported input device,不支持的输入源,不支援的輸入源
+已从 %s 收回该按键,"Taken over from %s","已从 %s 收回该按键",已從 %s 收回該按鍵
+空格,Space,空格,空格
+回车,Enter,回车,回車
+Esc,Esc,Esc,Esc
+Tab,Tab,Tab,Tab
+A 键,Button A,A 键,A 鍵
+B 键,Button B,B 键,B 鍵
+X 键,Button X,X 键,X 鍵
+Y 键,Button Y,Y 键,Y 鍵
+LB 键,Button LB,LB 键,LB 鍵
+RB 键,Button RB,RB 键,RB 鍵
+十字键 上,D-Pad Up,十字键 上,十字鍵 上
+十字键 下,D-Pad Down,十字键 下,十字鍵 下
+十字键 左,D-Pad Left,十字键 左,十字鍵 左
+十字键 右,D-Pad Right,十字键 右,十字鍵 右
+菜单键,Start,菜单键,選單鍵
+返回键,Select,返回键,返回鍵
+手柄按键 %d,Button %d,手柄按键 %d,手把按鍵 %d
+左摇杆,Left Stick,左摇杆,左搖桿
+右摇杆,Right Stick,右摇杆,右搖桿
+↑,Up,↑,↑
+↓,Down,↓,↓
+←,Left,←,←
+→,Right,→,→

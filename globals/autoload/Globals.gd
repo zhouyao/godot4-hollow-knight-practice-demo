@@ -7,10 +7,16 @@ extends Node
 
 const MAIN_MENU_SCENE_PATH := "res://main.tscn"
 const SYSTEM_SETTINGS_SCENE_PATH := "res://scenes/menus/system_settings_menu.tscn"
+const GAME_SCENE_PATH := "res://scenes/world/world_template.tscn"
 
+var level_preparing: bool = true
 
 func go_to_main_menu() -> void:
 	get_tree().change_scene_to_file(MAIN_MENU_SCENE_PATH)
+
+
+func go_to_game() -> void:
+	get_tree().change_scene_to_file(GAME_SCENE_PATH)
 
 
 func go_to_system_settings() -> void:

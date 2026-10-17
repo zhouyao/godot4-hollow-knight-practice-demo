@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/menus/components/system_settings/language_content.gd" id="1_lc"]
+
+[node name="LanguageContent" type="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 36
+script = ExtResource("1_lc")
+
+[node name="LanguageTitle" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "语言设置"
+
+[node name="OptionRow" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="NameLabel" type="Label" parent="OptionRow"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "语言"
+horizontal_alignment = 2
+
+[node name="LanguageOption" type="OptionButton" parent="OptionRow"]
+custom_minimum_size = Vector2(320, 52)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"RowButton"
+alignment = 1
+
+[connection signal="item_selected" from="OptionRow/LanguageOption" to="." method="_on_language_option_item_selected"]

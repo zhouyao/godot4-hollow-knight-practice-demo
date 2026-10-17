@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://bepccumbt5vig"]
+[gd_scene format=3]
 
-[ext_resource type="PackedScene" uid="uid://bo5xy6y4hmtw4" path="res://scenes/menus/components/buttons/focus_button.tscn" id="1_qnqyb"]
-[ext_resource type="Theme" uid="uid://dmt8kq3vncw2x" path="res://assets/ui/misted_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://scenes/menus/components/buttons/focus_button.tscn" id="1_qnqyb"]
+[ext_resource type="Theme" path="res://assets/ui/misted_theme.tres" id="2_theme"]
 
 [sub_resource type="GDScript" id="GDScript_dv1nh"]
 script/source = "# 场景专属薄逻辑：处理主菜单按钮导航，无复用需求，保持内联。
@@ -13,9 +13,8 @@ extends Control
 func _ready() -> void:
 	Tr.apply(self)
 
-# TODO: 主玩法场景尚未创建，接入后改为 Globals.go_to_game()
 func _on_start_pressed() -> void:
-	push_warning(\"「开始」尚未接入主玩法场景\")
+	Globals.go_to_game()
 
 func _on_system_button_pressed() -> void:
 	Globals.go_to_system_settings()

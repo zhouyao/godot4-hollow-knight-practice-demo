@@ -1,12 +1,15 @@
-[gd_scene format=3 uid="uid://k4u00x8h51fb"]
+[gd_scene format=3 uid="uid://uita8f8nljsl"]
 
-[ext_resource type="PackedScene" uid="uid://bo5xy6y4hmtw4" path="res://scenes/menus/components/buttons/focus_button.tscn" id="1_fmb"]
-[ext_resource type="PackedScene" uid="uid://cnr7y1pwjnrym" path="res://scenes/menus/components/rows/key_binding_row.tscn" id="2_kbr"]
-[ext_resource type="PackedScene" uid="uid://cwgtjjg2wm0r6" path="res://scenes/menus/components/rows/volume_row.tscn" id="3_vr"]
+[ext_resource type="PackedScene" path="res://scenes/menus/components/buttons/focus_button.tscn" id="1_fmb"]
 [ext_resource type="Theme" uid="uid://dmt8kq3vncw2x" path="res://assets/ui/misted_theme.tres" id="4_theme"]
+[ext_resource type="PackedScene" path="res://scenes/menus/components/system_settings/operations_content.tscn" id="5_ops"]
+[ext_resource type="PackedScene" path="res://scenes/menus/components/system_settings/audio_content.tscn" id="6_aud"]
+[ext_resource type="PackedScene" path="res://scenes/menus/components/system_settings/language_content.tscn" id="7_lan"]
 
 [sub_resource type="GDScript" id="GDScript_acfms"]
-script/source = "# 场景专属薄逻辑：左侧 tab 切换右侧内容 + 音量预览音 + 语言切换后重刷文案，无复用需求，保持内联。
+script/source = "# 场景专属薄逻辑：左侧 tab 切换右侧内容 + 音量预览音，无复用需求，保持内联。
+# 三个内容面板已拆成独立场景（OperationsContent / AudioContent / LanguageContent），
+# 语言选项的下拉框逻辑随 LanguageContent 一起移到了它的脚本里。
 
 extends Control
 
@@ -19,8 +22,6 @@ const PREVIEW_STREAM := preload(\"res://assets/sounds/menus/confirm.wav\")
 @onready var operations_content: Control = $Margin/Columns/ContentPanel/OperationsContent
 @onready var audio_content: Control = $Margin/Columns/ContentPanel/AudioContent
 @onready var language_content: Control = $Margin/Columns/ContentPanel/LanguageContent
-@onready var language_option: OptionButton = $Margin/Columns/ContentPanel/LanguageContent/OptionRow/LanguageOption
-@onready var bind_header: Control = $Margin/Columns/ContentPanel/OperationsContent/BindHeader
 
 @onready var preview_player: AudioStreamPlayer = $PreviewPlayer
 
@@ -32,7 +33,6 @@ func _ready() -> void:
 	Settings.volume.volume_committed.connect(_on_volume_preview)
 	Settings.localization.locale_changed.connect(_on_locale_changed)
 
-	_build_language_option()
 	_select_tab(\"operations\")
 	Tr.apply(self)
 	tab_operations.quiet_focus()
@@ -62,23 +62,10 @@ func _select_tab(tab: String) -> void:
 	audio_content.visible = tab == \"audio\"
 	language_content.visible = tab == \"language\"
 
-# 下拉框选项由 Settings.localization.LOCALE_OPTIONS 生成，加一门语言只改那一处。
-# 选项文字用语言自己的写法，不参与当前语言的翻译
-func _build_language_option() -> void:
-	for locale in Settings.localization.LOCALE_OPTIONS:
-		language_option.add_item(Localization.locale_display_name(locale))
-	_sync_language_option()
-
-# 切语言后不重载场景：菜单是短命的，把新语言重新套一遍即可
+# 切语言后不重载场景：菜单是短命的，把新语言重新套一遍即可。
+# 语言下拉框的选中项同步由 LanguageContent 自行处理。
 func _on_locale_changed(_locale: String) -> void:
 	Tr.apply(self)
-	_sync_language_option()
-
-# 选中项已经是当前语言时就不再回写，避免下拉框与 set_locale 互相触发
-func _sync_language_option() -> void:
-	var index := Settings.localization.LOCALE_OPTIONS.find(Settings.localization.get_locale())
-	if language_option.selected != index:
-		language_option.selected = index
 
 # 只在一次调节结束（滑条松手 / 重置）时播放，避免拖动过程中重复触发
 func _on_volume_preview(bus_name: String) -> void:
@@ -88,9 +75,6 @@ func _on_volume_preview(bus_name: String) -> void:
 
 func _on_back_button_pressed() -> void:
 	Globals.go_to_main_menu()
-
-func _on_language_option_item_selected(index: int) -> void:
-	Settings.localization.set_locale(Settings.localization.LOCALE_OPTIONS[index])
 "
 
 [node name="SystemSettingsMenu" type="Control" unique_id=145228476]
@@ -136,7 +120,7 @@ theme_override_constants/separation = 20
 
 [node name="TabOperations" parent="Margin/Columns/TabList" unique_id=1005 instance=ExtResource("1_fmb")]
 layout_mode = 2
-text = "操作"
+text = "按键"
 
 [node name="TabAudio" parent="Margin/Columns/TabList" unique_id=1006 instance=ExtResource("1_fmb")]
 layout_mode = 2
@@ -159,126 +143,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_right = 50
 
-[node name="OperationsContent" type="VBoxContainer" parent="Margin/Columns/ContentPanel" unique_id=1010]
-layout_mode = 2
-theme_override_constants/separation = 30
+[node name="OperationsContent" parent="Margin/Columns/ContentPanel" unique_id=1532773904 instance=ExtResource("5_ops")]
 
-[node name="OpsTitle" type="Label" parent="Margin/Columns/ContentPanel/OperationsContent" unique_id=1011]
-layout_mode = 2
-theme_type_variation = &"TitleLabel"
-text = "按键设置"
-
-[node name="BindHeader" type="HBoxContainer" parent="Margin/Columns/ContentPanel/OperationsContent" unique_id=1032]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="NameLabel" type="Label" parent="Margin/Columns/ContentPanel/OperationsContent/BindHeader" unique_id=1033]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-
-[node name="KeyboardLabel" type="Label" parent="Margin/Columns/ContentPanel/OperationsContent/BindHeader" unique_id=1034]
-custom_minimum_size = Vector2(320, 0)
-layout_mode = 2
-theme_type_variation = &"MutedLabel"
-text = "键盘"
-horizontal_alignment = 1
-
-[node name="KeyboardSpacer" type="Control" parent="Margin/Columns/ContentPanel/OperationsContent/BindHeader" unique_id=1035]
-custom_minimum_size = Vector2(40, 0)
-layout_mode = 2
-
-[node name="GamepadLabel" type="Label" parent="Margin/Columns/ContentPanel/OperationsContent/BindHeader" unique_id=1036]
-custom_minimum_size = Vector2(320, 0)
-layout_mode = 2
-theme_type_variation = &"MutedLabel"
-text = "手柄"
-horizontal_alignment = 1
-
-[node name="GamepadSpacer" type="Control" parent="Margin/Columns/ContentPanel/OperationsContent/BindHeader" unique_id=1037]
-custom_minimum_size = Vector2(40, 0)
-layout_mode = 2
-
-[node name="UpRow" parent="Margin/Columns/ContentPanel/OperationsContent" unique_id=1576496360 instance=ExtResource("2_kbr")]
-layout_mode = 2
-action_name = &"up"
-display_name = "向上"
-
-[node name="DownRow" parent="Margin/Columns/ContentPanel/OperationsContent" unique_id=1703191999 instance=ExtResource("2_kbr")]
-layout_mode = 2
-action_name = &"down"
-display_name = "向下"
-
-[node name="LeftRow" parent="Margin/Columns/ContentPanel/OperationsContent" unique_id=226437243 instance=ExtResource("2_kbr")]
-layout_mode = 2
-action_name = &"left"
-display_name = "向左"
-
-[node name="RightRow" parent="Margin/Columns/ContentPanel/OperationsContent" unique_id=272308523 instance=ExtResource("2_kbr")]
-layout_mode = 2
-action_name = &"right"
-display_name = "向右"
-
-[node name="AttackRow" parent="Margin/Columns/ContentPanel/OperationsContent" unique_id=474237982 instance=ExtResource("2_kbr")]
-layout_mode = 2
-action_name = &"attack"
-display_name = "攻击"
-
-[node name="JumpRow" parent="Margin/Columns/ContentPanel/OperationsContent" unique_id=1080025764 instance=ExtResource("2_kbr")]
-layout_mode = 2
-action_name = &"jump"
-display_name = "跳跃"
-
-[node name="AudioContent" type="VBoxContainer" parent="Margin/Columns/ContentPanel" unique_id=1021]
+[node name="AudioContent" parent="Margin/Columns/ContentPanel" unique_id=1271637278 instance=ExtResource("6_aud")]
 visible = false
-layout_mode = 2
-theme_override_constants/separation = 36
 
-[node name="AudioTitle" type="Label" parent="Margin/Columns/ContentPanel/AudioContent" unique_id=1022]
-layout_mode = 2
-theme_type_variation = &"TitleLabel"
-text = "音频设置"
-
-[node name="MasterRow" parent="Margin/Columns/ContentPanel/AudioContent" unique_id=992624949 instance=ExtResource("3_vr")]
-layout_mode = 2
-bus_name = "Master"
-display_name = "主音量"
-
-[node name="SoundRow" parent="Margin/Columns/ContentPanel/AudioContent" unique_id=1886832034 instance=ExtResource("3_vr")]
-layout_mode = 2
-bus_name = "Sound"
-display_name = "音效音量"
-
-[node name="MusicRow" parent="Margin/Columns/ContentPanel/AudioContent" unique_id=1183409591 instance=ExtResource("3_vr")]
-layout_mode = 2
-bus_name = "Music"
-display_name = "背景音量"
-
-[node name="LanguageContent" type="VBoxContainer" parent="Margin/Columns/ContentPanel" unique_id=1023]
+[node name="LanguageContent" parent="Margin/Columns/ContentPanel" unique_id=2119692783 instance=ExtResource("7_lan")]
 visible = false
-layout_mode = 2
-theme_override_constants/separation = 36
-
-[node name="LanguageTitle" type="Label" parent="Margin/Columns/ContentPanel/LanguageContent" unique_id=1024]
-layout_mode = 2
-theme_type_variation = &"TitleLabel"
-text = "语言设置"
-
-[node name="OptionRow" type="HBoxContainer" parent="Margin/Columns/ContentPanel/LanguageContent" unique_id=1026]
-layout_mode = 2
-theme_override_constants/separation = 24
-
-[node name="NameLabel" type="Label" parent="Margin/Columns/ContentPanel/LanguageContent/OptionRow" unique_id=1027]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-text = "语言"
-horizontal_alignment = 2
-
-[node name="LanguageOption" type="OptionButton" parent="Margin/Columns/ContentPanel/LanguageContent/OptionRow" unique_id=1028]
-custom_minimum_size = Vector2(320, 52)
-layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"RowButton"
-alignment = 1
 
 [connection signal="pressed" from="Margin/Columns/TabList/BackButton" to="." method="_on_back_button_pressed"]
-[connection signal="item_selected" from="Margin/Columns/ContentPanel/LanguageContent/OptionRow/LanguageOption" to="." method="_on_language_option_item_selected"]

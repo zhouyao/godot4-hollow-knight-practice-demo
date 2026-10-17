@@ -10,11 +10,12 @@ signal locale_changed(locale: String)
 # 语言在配置里单独占一项，与音量 / 按键分开存
 const DEFAULT_LOCALE := "zh_CN"
 # 可切换的语言，顺序即设置菜单里的展示顺序
-const LOCALE_OPTIONS: Array[String] = ["zh_CN", "en"]
+const LOCALE_OPTIONS: Array[String] = ["zh_CN", "en", "zh_TW"]
 # 语言名固定用它自己的语言书写，切到英文后中文选项也不会变成译名
 const LOCALE_NAMES: Dictionary = {
 	"zh_CN": "简体中文",
 	"en": "English",
+	"zh_TW": "繁體中文",
 }
 
 # 没存过语言时的取值：系统语言直接可选就用它，否则退到同语言的第一个变体，
