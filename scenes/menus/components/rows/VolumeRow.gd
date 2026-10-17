@@ -31,7 +31,9 @@ func _exit_tree() -> void:
 		Settings.volume_update.disconnect(_on_volume_update)
 
 
-# 拖动过程中高频触发：只改音频总线与显示，落盘交给 drag_ended
+# 鼠标拖动与方向键都从这里进：只改音频总线与显示。
+# 落盘与预览音由 Settings 负责：鼠标走 drag_ended 的即时提交，
+# 方向键 / 手柄没有结束事件，由 Settings 的静止提交兜底
 func _on_value_changed(value: float) -> void:
 	Settings.set_volume(bus_name, value / 100.0)
 	_sync_from_slider()

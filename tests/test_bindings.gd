@@ -15,17 +15,23 @@ func _ready() -> void:
 
 	_test_set_binding_ok()
 	_test_reserved_key_rejected()
+	_test_reserved_pad_button_rejected()
 	_test_conflict_detection()
 	_test_conflict_steals_key()
 	_test_reset_binding()
 	_test_volume_clamped()
+	# 回归：方向键 / 手柄调音量没有 drag_ended，必须靠静止提交兜底
+	_test_keyboard_volume_commits()
+	_test_flush_writes_immediately()
 	_test_slider_step_matches_settings()
 	# 回归：滑条曾把存档里非整格的音量吸附后反向写回配置
 	_test_slider_does_not_overwrite_config()
 	_test_locale_switch()
 
-	# 等写盘合并窗口过去，再把玩家原本的配置放回去
-	await get_tree().create_timer(Settings.SAVE_DEBOUNCE + 0.05).timeout
+	# 等静止提交与写盘合并窗口都过去，再把玩家原本的配置放回去
+	await get_tree().create_timer(
+		Settings.COMMIT_DEBOUNCE + Settings.SAVE_DEBOUNCE + 0.1
+	).timeout
 	_restore_settings()
 	print("通过 %d 项，失败 %d 项" % [_passed, _failed])
 	get_tree().quit(1 if _failed > 0 else 0)
@@ -68,6 +74,59 @@ func _test_reserved_key_rejected() -> void:
 	_check(Settings.set_binding(&"up", _key(KEY_ESCAPE)) == Settings.BindResult.RESERVED_KEY, "Esc 被判定为保留键")
 	_check(!Settings.events_equal(Settings.get_binding(&"up", false), _key(KEY_ESCAPE)), "保留键没有写进 InputMap")
 	_check(Settings.set_binding(&"up", _key(KEY_TAB)) == Settings.BindResult.RESERVED_KEY, "Tab 被判定为保留键")
+
+
+# 回归：方向键 / 手柄调音量不会触发 drag_ended，改动必须在静止后自动落到盘上
+func _test_keyboard_volume_commits() -> void:
+	var original := Settings.get_volume("Music")
+	Settings.set_volume("Music", 0.42)
+	_check(!_settings_contains("Music=0.42"), "提交之前音量只改在内存里")
+	await get_tree().create_timer(
+		Settings.COMMIT_DEBOUNCE + Settings.SAVE_DEBOUNCE + 0.1
+	).timeout
+	_check(_settings_contains("Music=0.42"), "静止后自动提交，音量写进了存档")
+	Settings.set_volume("Music", original)
+	Settings.flush()
+
+
+# 回归：quit() 不会等 debounce，退出前必须能立刻落盘
+func _test_flush_writes_immediately() -> void:
+	var original := Settings.get_volume("Sound")
+	Settings.set_volume("Sound", 0.66)
+	Settings.flush()
+	_check(_settings_contains("Sound=0.66"), "flush 立刻写盘，不必等 debounce")
+	Settings.set_volume("Sound", original)
+	Settings.flush()
+
+
+func _settings_contains(text: String) -> bool:
+	var file := FileAccess.open(_settings_path(), FileAccess.READ)
+	if file == null:
+		return false
+	var content := file.get_as_text()
+	file.close()
+	return content.contains(text)
+
+
+func _test_reserved_pad_button_rejected() -> void:
+	_check(Settings.set_binding(&"jump", _pad_button(JOY_BUTTON_B)) == Settings.BindResult.RESERVED_KEY,
+		"手柄 B 键（ui_cancel）被判定为保留键")
+	_check(!Settings.events_equal(Settings.get_binding(&"jump", true), _pad_button(JOY_BUTTON_B)),
+		"保留的手柄键没有写进 InputMap")
+	_check(Settings.set_binding(&"jump", _pad_button(JOY_BUTTON_START)) == Settings.BindResult.RESERVED_KEY,
+		"手柄 Start 键被判定为保留键")
+	_check(Settings.set_binding(&"jump", _pad_button(JOY_BUTTON_Y)) == Settings.BindResult.OK,
+		"普通手柄键仍然可以绑定")
+	Settings.reset_binding(&"jump", true)
+
+	# 保留名单会变，旧存档里已经绑上的保留输入要在启动时就被换掉
+	InputMap.action_erase_events(&"jump")
+	InputMap.action_add_event(&"jump", _pad_button(JOY_BUTTON_B))
+	Settings.purge_reserved_bindings()
+	var bound := Settings.get_binding(&"jump", true) as InputEventJoypadButton
+	_check(bound != null and bound.button_index != JOY_BUTTON_B, "启动清理把旧存档里的保留键换掉了")
+	Settings.reset_binding(&"jump", true)
+	Settings.reset_binding(&"jump", false)
 
 
 func _test_conflict_detection() -> void:
@@ -140,6 +199,12 @@ func _key(keycode: Key) -> InputEventKey:
 	var event := InputEventKey.new()
 	event.keycode = keycode
 	event.physical_keycode = keycode
+	return event
+
+
+func _pad_button(button: JoyButton) -> InputEventJoypadButton:
+	var event := InputEventJoypadButton.new()
+	event.button_index = button
 	return event
 
 

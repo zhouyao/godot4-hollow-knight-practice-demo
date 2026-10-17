@@ -51,8 +51,8 @@ tests/                  单元测试与冒烟测试
 
 ## 设计要点
 
-- **音量**：`Settings.VOLUME_STEP` 是唯一的步进定义，滑条的 `step` 在 `_ready()` 里由它推导。拖动过程中只改内存与音频总线，松手才落盘，多次写入会被合并。
-- **按键绑定**：修改后立即写入 `InputMap`；`Esc` / `Tab` / `Enter` 是保留键，不允许绑定——否则玩家可能把自己锁在设置界面里。抢占别人的按键时会给出提示，并给对方补回默认键。
+- **音量**：`Settings.VOLUME_STEP` 是唯一的步进定义，滑条的 `step` 在 `_ready()` 里由它推导。音量改动任何时候都是先改内存与音频总线，再由一次"提交"负责写盘与播放预览音。鼠标拖动会发 `drag_ended`，松手即提交；方向键 / 手柄没有结束事件，靠 `Settings.COMMIT_DEBOUNCE` 的静止判定自动补一次提交。无论哪条路径，退出前都由 `Settings.flush()` 兜底（`Globals.quit_game()` 与 root 的 `close_requested` 各接一处），保证 debounce 窗口里的改动不会被丢掉。
+- **按键绑定**：修改后立即写入 `InputMap`；`Esc` / `Tab` / `Enter` 与手柄 `B` / `Start` 是保留输入，不允许绑定——键盘侧对应 `ui_accept` / `ui_cancel`，手柄侧的 B 就是每个菜单的取消键，绑走之后玩家按跳跃键会直接退出菜单，等于把自己锁住。保留名单只留这两颗，再多（例如作为确认键的 A）会让跳跃、攻击没法绑。名单本身变了也不怕：`Settings.purge_reserved_bindings()` 会在启动时把旧存档里已经绑上的保留输入换回默认。抢占别人的按键时会给出提示，并给对方补回默认键。
 - **菜单导航**：`Esc` / 手柄 B 为取消（先退出按键监听，再返回主菜单）。按钮按下立即响应；确认音由 autoload 播放，切场景不会被掐断。
 - **语言**：可切换的语言写在 `Settings.LOCALE_OPTIONS`，设置菜单「语言」页的下拉框由它生成，加一门语言只改这一处（外加 `translations.csv` 补一列）。首次进入跟随系统语言，之后以存档为准；切换后立即生效并落盘，菜单靠 `Settings.locale_changed` 重刷文案，不重载场景。选项文字用语言自己的写法（简体中文 / English），不跟随当前语言翻译。
 - **外观**：字号与颜色集中在 `assets/ui/MistedTheme.gd`，场景通过 `theme_type_variation` 取用 `DisplayLabel` / `TitleLabel` / `MutedLabel` / `HintLabel` / `RowButton` 五种变体。`OptionButton` 默认会继承 `Button` 的 80 号字，行内使用时必须挂 `RowButton` 变体。

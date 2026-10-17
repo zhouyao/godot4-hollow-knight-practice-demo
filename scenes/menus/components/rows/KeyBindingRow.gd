@@ -95,8 +95,9 @@ func _input(event: InputEvent) -> void:
 		stop_listening()
 		return
 
-	# ui_cancel 在手柄上对应 B 键，监听手柄槽时应允许把它绑走，否则 B 键永远不可用
-	if event.is_action_pressed(&"ui_cancel") and !Settings.is_gamepad_event(event):
+	# 取消键优先处理：Esc / 手柄 B（都是 ui_cancel）退出监听。
+	# 手柄 B 也在 Settings.RESERVED_PAD_BUTTONS 里，绑不走，只能当作取消
+	if event.is_action_pressed(&"ui_cancel"):
 		get_viewport().set_input_as_handled()
 		stop_listening()
 		return

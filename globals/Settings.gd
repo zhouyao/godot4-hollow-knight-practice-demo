@@ -38,6 +38,8 @@ const DEFAULT_VOLUME := 0.5
 const VOLUME_STEP := 0.05
 # 连续调节会把多次写入合并成一次，避免每按一格就全量写盘
 const SAVE_DEBOUNCE := 0.3
+# 键盘/手柄调节音量没有 drag_ended 可以通知，改动静止这么久就认为一次调节结束
+const COMMIT_DEBOUNCE := 0.4
 
 const KEYBOARD_TAG := "key"
 const GAMEPAD_TAG := "pad"
@@ -46,6 +48,9 @@ const UNBOUND_TEXT := "未绑定"
 
 # 保留给菜单导航与系统功能的按键，不允许被绑定，否则玩家可能把自己锁在设置界面里
 const RESERVED_KEYS: Array[int] = [KEY_ESCAPE, KEY_TAB, KEY_ENTER, KEY_KP_ENTER]
+# 手柄侧同样要保留：B 是 ui_cancel（任何菜单里按它就返回上一级 / 退出），
+# Start 是系统菜单键。留这两颗就够，再多（比如 A 确认键）会连跳跃、攻击都绑不了
+const RESERVED_PAD_BUTTONS: Array[int] = [JOY_BUTTON_B, JOY_BUTTON_START]
 
 # 可重绑定的动作，顺序即设置菜单中的展示顺序
 const BINDABLE_ACTIONS: Array[StringName] = [&"up", &"down", &"left", &"right", &"attack", &"jump"]
@@ -98,6 +103,8 @@ const PAD_BUTTON_NAMES: Dictionary = {
 var _config: ConfigFile = ConfigFile.new()
 var _bus_indexes: Dictionary = {}
 var _save_timer: SceneTreeTimer = null
+# bus_name -> 待提交的 SceneTreeTimer，用来判定一次连续调节是否已经停下
+var _commit_timers: Dictionary = {}
 
 # physical_keycode -> keycode 的换算要跨 DisplayServer 查询，缓存下来避免每次刷新都问一遍
 static var _keycode_cache: Dictionary = {}
@@ -111,15 +118,15 @@ func _ready() -> void:
 
 	ensure_default_bindings()
 	load_bindings()
+	purge_reserved_bindings()
 
 	# 存档语言优先，没存过时跟随系统语言
 	TranslationServer.set_locale(get_locale())
 
-
-# 进程被强杀时也要尽量保住上一次已经落到内存的音量调整
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST and _save_timer != null:
-		_flush_settings()
+	# 窗口关闭按钮 / 系统快捷键退出前保住最后一次改动。这里连 root 的 close_requested
+	# 而不是 NOTIFICATION_WM_CLOSE_REQUEST：后者是否广播到 autoload 节点取决于引擎实现，
+	# 而 quit() 触发的退出根本走不到它，那条路径由 Globals.quit_game() 负责
+	get_tree().root.close_requested.connect(flush)
 
 
 #region 音量
@@ -173,15 +180,20 @@ func get_volume(bus_name: String) -> float:
 	return clampf(value, 0.0, 1.0)
 
 
-# 拖动滑条会高频调用：只改内存与音频总线，不写盘
+# 任何来源的音量改动都走这里：鼠标拖动、方向键、手柄、代码。
+# 只改内存与音频总线，写盘与预览音交给一次“提交”，连续调节不会被拆成多次。
 func set_volume(bus_name: String, value: float) -> void:
 	var volume := clampf(value, 0.0, 1.0)
 	_config.set_value(AUDIO_SETTING_NAME, bus_name, volume)
 	_apply_volume(bus_name, volume)
 	volume_update.emit(bus_name, volume)
+	# 拖动有 drag_ended 可以通知提交，方向键 / 手柄没有，这里兜底排一个静止提交
+	_queue_commit(bus_name)
 
 
+# 一次调节结束（滑条松手 / 重置 / 静止超时）时调用：落盘并通知 UI 播放预览音
 func commit_volume(bus_name: String) -> void:
+	_cancel_commit(bus_name)
 	save_settings()
 	volume_committed.emit(bus_name)
 
@@ -196,6 +208,39 @@ func save_settings() -> void:
 		return
 	_save_timer = get_tree().create_timer(SAVE_DEBOUNCE)
 	_save_timer.timeout.connect(_flush_settings)
+
+
+# 退出前把还在 debounce 窗口里的改动立刻写盘，不再等 debounce / 静止提交到点
+func flush() -> void:
+	_commit_timers.clear()
+	_flush_settings()
+
+
+func _queue_commit(bus_name: String) -> void:
+	var timer: SceneTreeTimer = _commit_timers.get(bus_name)
+	if timer != null:
+		timer.time_left = COMMIT_DEBOUNCE
+		return
+	if get_tree() == null:
+		save_settings()
+		return
+	timer = get_tree().create_timer(COMMIT_DEBOUNCE)
+	_commit_timers[bus_name] = timer
+	timer.timeout.connect(_on_commit_timeout.bind(bus_name, timer))
+
+
+# SceneTreeTimer 没有 stop()，取消只能把登记表里的位置腾空
+func _cancel_commit(bus_name: String) -> void:
+	_commit_timers.erase(bus_name)
+
+
+# 比对 timer 身份而不是只看有没有登记：一次提交之后又开了新一轮调节时，
+# 上一轮的 timer 到点不能顺手把新一轮也提前提交掉
+func _on_commit_timeout(bus_name: String, timer: SceneTreeTimer) -> void:
+	if _commit_timers.get(bus_name) != timer:
+		return
+	_commit_timers.erase(bus_name)
+	commit_volume(bus_name)
 
 
 func _flush_settings() -> void:
@@ -328,10 +373,29 @@ static func clean_event(event: InputEvent) -> InputEvent:
 
 static func is_reserved_event(event: InputEvent) -> bool:
 	var key_event := event as InputEventKey
-	if key_event == null:
-		return false
-	var keycode := key_of(key_event)
-	return keycode != KEY_NONE and RESERVED_KEYS.has(keycode)
+	if key_event != null:
+		var keycode := key_of(key_event)
+		return keycode != KEY_NONE and RESERVED_KEYS.has(keycode)
+	var button_event := event as InputEventJoypadButton
+	if button_event != null:
+		return RESERVED_PAD_BUTTONS.has(button_event.button_index)
+	return false
+
+
+# 保留名单会随版本变化，旧存档里已经绑上的保留输入在这里一次性退回默认
+func purge_reserved_bindings() -> void:
+	var changed := false
+	for action in BINDABLE_ACTIONS:
+		for event in InputMap.action_get_events(action):
+			if !is_reserved_event(event):
+				continue
+			InputMap.action_erase_event(action, event)
+			var fallback := default_binding(action, is_gamepad_event(event))
+			if fallback and !InputMap.action_has_event(action, fallback):
+				InputMap.action_add_event(action, fallback)
+			changed = true
+	if changed:
+		save_bindings()
 
 
 func reset_binding(action: StringName, gamepad: bool) -> void:

@@ -18,4 +18,6 @@ func go_to_system_settings() -> void:
 
 
 func quit_game() -> void:
+	# Settings 的写盘有 debounce，直接 quit 会把最后一次音量 / 按键改动丢掉
+	Settings.flush()
 	get_tree().quit()
