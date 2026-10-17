@@ -14,8 +14,10 @@ config/name="Misted"
 run/main_scene="uid://0fehsv2o2s14"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
-; Menus do not need unlimited frames; this keeps laptops quiet.
-run/max_fps=60
+
+[audio]
+
+audio/buses/default_bus_layout="res://default_bus_layout.tres"
 
 [autoload]
 
@@ -31,7 +33,6 @@ window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-window/vsync/vsync_mode=0
 
 [input]
 
@@ -75,7 +76,6 @@ jump={
 [internationalization]
 
 locale/translations=PackedStringArray("res://localization/translations.en.translation", "res://localization/translations.zh_CN.translation")
-locale/fallback="zh_CN"
 
 [layer_names]
 

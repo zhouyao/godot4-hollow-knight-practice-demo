@@ -8,11 +8,6 @@ signal listen_stopped(row: KeyBindingRow)
 
 const LISTENING_TEXT := "按下新按键…"
 
-# 绑定槽的宽度，行本体和表头按同一组常量布局
-const SLOT_MIN_WIDTH := 320.0
-# 其中的恢复默认按钮占位，与 MenuRow 的方框尺寸保持同一个来源
-const RESET_MIN_WIDTH := ResetButton.SIZE
-
 # 同一时刻只允许一行处于监听态。用 group 标记替代静态变量，脚本热重载后不会残留旧引用
 const LISTENING_GROUP := &"key_binding_listening"
 
@@ -43,27 +38,19 @@ func _ready() -> void:
 	keyboard_reset.pressed.connect(_on_reset_pressed.bind(Slot.KEYBOARD))
 	gamepad_reset.pressed.connect(_on_reset_pressed.bind(Slot.GAMEPAD))
 
-	Settings.binding_update.connect(_refresh)
+	Settings.bindings.binding_update.connect(_refresh)
 	# 切语言后按键名要跟着变（空格 <-> Space），Tr 只能翻回 meta 里的旧文案，这里再刷一次
-	Settings.locale_changed.connect(_on_locale_changed)
+	Settings.localization.locale_changed.connect(_on_locale_changed)
 	# 同一时刻只有一行在监听输入，其余行不参与 _input 分发
 	set_process_input(false)
-	_apply_slot_widths()
 	_refresh()
 
 
-# 槽位列宽由常量统一施加，表头在设置菜单里也读同一组常量，改一处即可对齐
-# 名称列宽度由 MenuRow 施加，重置按钮的尺寸由 reset_button.tscn 自己带
-func _apply_slot_widths() -> void:
-	keyboard_button.custom_minimum_size.x = SLOT_MIN_WIDTH
-	gamepad_button.custom_minimum_size.x = SLOT_MIN_WIDTH
-
-
 func _exit_tree() -> void:
-	if Settings.binding_update.is_connected(_refresh):
-		Settings.binding_update.disconnect(_refresh)
-	if Settings.locale_changed.is_connected(_on_locale_changed):
-		Settings.locale_changed.disconnect(_on_locale_changed)
+	if Settings.bindings.binding_update.is_connected(_refresh):
+		Settings.bindings.binding_update.disconnect(_refresh)
+	if Settings.localization.locale_changed.is_connected(_on_locale_changed):
+		Settings.localization.locale_changed.disconnect(_on_locale_changed)
 	if is_in_group(LISTENING_GROUP):
 		remove_from_group(LISTENING_GROUP)
 
@@ -96,14 +83,14 @@ func _input(event: InputEvent) -> void:
 		return
 
 	# 取消键优先处理：Esc / 手柄 B（都是 ui_cancel）退出监听。
-	# 手柄 B 也在 Settings.RESERVED_PAD_BUTTONS 里，绑不走，只能当作取消
+	# 手柄 B 也在 InputBindings.RESERVED_PAD_BUTTONS 里，绑不走，只能当作取消
 	if event.is_action_pressed(&"ui_cancel"):
 		get_viewport().set_input_as_handled()
 		stop_listening()
 		return
 
 	var want_gamepad := _listening_slot == Slot.GAMEPAD
-	if Settings.is_gamepad_event(event) != want_gamepad:
+	if InputBindings.is_gamepad_event(event) != want_gamepad:
 		return
 	# 摇杆同样属于手柄事件，但当前只支持把手柄按键作为绑定
 	if want_gamepad and !(event is InputEventJoypadButton):
@@ -115,12 +102,12 @@ func _input(event: InputEvent) -> void:
 
 
 func _try_bind(event: InputEvent) -> void:
-	var conflicts := Settings.conflicting_actions(action_name, Settings.clean_event(event))
-	var result := Settings.set_binding(action_name, event)
+	var conflicts := InputBindings.conflicting_actions(action_name, InputBindings.clean_event(event))
+	var result := Settings.bindings.set_binding(action_name, event)
 	match result:
-		Settings.BindResult.RESERVED_KEY:
+		InputBindings.BindResult.RESERVED_KEY:
 			_show_hint(tr("该按键已保留给菜单，无法绑定"))
-		Settings.BindResult.UNSUPPORTED_EVENT:
+		InputBindings.BindResult.UNSUPPORTED_EVENT:
 			_show_hint(tr("不支持的输入源"))
 		_:
 			if conflicts.is_empty():
@@ -141,7 +128,7 @@ func _on_bind_pressed(slot: Slot) -> void:
 
 
 func _on_reset_pressed(slot: Slot) -> void:
-	Settings.reset_binding(action_name, slot == Slot.GAMEPAD)
+	Settings.bindings.reset_binding(action_name, slot == Slot.GAMEPAD)
 
 
 func _refresh() -> void:
@@ -149,13 +136,13 @@ func _refresh() -> void:
 	var listening_gamepad := _listening_slot == Slot.GAMEPAD
 
 	keyboard_button.text = tr(LISTENING_TEXT) if listening_keyboard \
-		else Settings.event_display_name(Settings.get_binding(action_name, false))
+		else InputBindings.event_display_name(Settings.bindings.get_binding(action_name, false))
 	gamepad_button.text = tr(LISTENING_TEXT) if listening_gamepad \
-		else Settings.event_display_name(Settings.get_binding(action_name, true))
+		else InputBindings.event_display_name(Settings.bindings.get_binding(action_name, true))
 
 	var idle := !listening_keyboard and !listening_gamepad
-	keyboard_reset.set_available(idle and !Settings.is_binding_default(action_name, false))
-	gamepad_reset.set_available(idle and !Settings.is_binding_default(action_name, true))
+	keyboard_reset.set_available(idle and !Settings.bindings.is_binding_default(action_name, false))
+	gamepad_reset.set_available(idle and !Settings.bindings.is_binding_default(action_name, true))
 
 
 func _conflict_names(conflicts: Array[StringName]) -> PackedStringArray:

@@ -1,12 +1,14 @@
-# Godot 4+ specific ignores
+# Godot 4+ 编辑器缓存与导入产物
 .godot/
-/android/
 
-# 构建产物
-builds/
+# 导出构建产物
+/export/
+/build/
+
+# 本地/用户配置（由 Godot 自动生成，因人而异）
+.godot/mono/
 *.tmp
 
-# 编辑器 / 系统
-.vscode/
-.idea/
+# macOS 元数据
 .DS_Store
+**/.DS_Store

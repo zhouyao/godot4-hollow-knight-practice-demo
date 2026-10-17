@@ -19,7 +19,6 @@ const PREVIEW_STREAM := preload(\"res://assets/sounds/menus/confirm.wav\")
 @onready var operations_content: Control = $Margin/Columns/ContentPanel/OperationsContent
 @onready var audio_content: Control = $Margin/Columns/ContentPanel/AudioContent
 @onready var language_content: Control = $Margin/Columns/ContentPanel/LanguageContent
-@onready var language_name_label: Label = $Margin/Columns/ContentPanel/LanguageContent/OptionRow/NameLabel
 @onready var language_option: OptionButton = $Margin/Columns/ContentPanel/LanguageContent/OptionRow/LanguageOption
 @onready var bind_header: Control = $Margin/Columns/ContentPanel/OperationsContent/BindHeader
 
@@ -30,22 +29,19 @@ func _ready() -> void:
 	tab_audio.pressed.connect(_on_tab_pressed.bind(\"audio\"))
 	tab_language.pressed.connect(_on_tab_pressed.bind(\"language\"))
 
-	Settings.volume_committed.connect(_on_volume_preview)
-	Settings.locale_changed.connect(_on_locale_changed)
+	Settings.volume.volume_committed.connect(_on_volume_preview)
+	Settings.localization.locale_changed.connect(_on_locale_changed)
 
-	_apply_header_widths()
-	language_name_label.custom_minimum_size.x = MenuRow.NAME_MIN_WIDTH
 	_build_language_option()
-	language_option.item_selected.connect(_on_language_selected)
 	_select_tab(\"operations\")
 	Tr.apply(self)
 	tab_operations.quiet_focus()
 
 func _exit_tree() -> void:
-	if Settings.volume_committed.is_connected(_on_volume_preview):
-		Settings.volume_committed.disconnect(_on_volume_preview)
-	if Settings.locale_changed.is_connected(_on_locale_changed):
-		Settings.locale_changed.disconnect(_on_locale_changed)
+	if Settings.volume.volume_committed.is_connected(_on_volume_preview):
+		Settings.volume.volume_committed.disconnect(_on_volume_preview)
+	if Settings.localization.locale_changed.is_connected(_on_locale_changed):
+		Settings.localization.locale_changed.disconnect(_on_locale_changed)
 
 # Esc / 手柄取消：正在监听按键时先退出监听，否则返回主菜单
 func _unhandled_input(event: InputEvent) -> void:
@@ -66,15 +62,12 @@ func _select_tab(tab: String) -> void:
 	audio_content.visible = tab == \"audio\"
 	language_content.visible = tab == \"language\"
 
-# 下拉框选项由 Settings.LOCALE_OPTIONS 生成，加一门语言只改那一处。
+# 下拉框选项由 Settings.localization.LOCALE_OPTIONS 生成，加一门语言只改那一处。
 # 选项文字用语言自己的写法，不参与当前语言的翻译
 func _build_language_option() -> void:
-	for locale in Settings.LOCALE_OPTIONS:
-		language_option.add_item(Settings.locale_display_name(locale))
+	for locale in Settings.localization.LOCALE_OPTIONS:
+		language_option.add_item(Localization.locale_display_name(locale))
 	_sync_language_option()
-
-func _on_language_selected(index: int) -> void:
-	Settings.set_locale(Settings.LOCALE_OPTIONS[index])
 
 # 切语言后不重载场景：菜单是短命的，把新语言重新套一遍即可
 func _on_locale_changed(_locale: String) -> void:
@@ -83,22 +76,9 @@ func _on_locale_changed(_locale: String) -> void:
 
 # 选中项已经是当前语言时就不再回写，避免下拉框与 set_locale 互相触发
 func _sync_language_option() -> void:
-	var index := Settings.LOCALE_OPTIONS.find(Settings.get_locale())
+	var index := Settings.localization.LOCALE_OPTIONS.find(Settings.localization.get_locale())
 	if language_option.selected != index:
 		language_option.selected = index
-
-# 表头与行共用同一组宽度常量，改一次就能整体对齐
-func _apply_header_widths() -> void:
-	_set_header_width(\"NameLabel\", MenuRow.NAME_MIN_WIDTH)
-	_set_header_width(\"KeyboardLabel\", KeyBindingRow.SLOT_MIN_WIDTH)
-	_set_header_width(\"KeyboardSpacer\", KeyBindingRow.RESET_MIN_WIDTH)
-	_set_header_width(\"GamepadLabel\", KeyBindingRow.SLOT_MIN_WIDTH)
-	_set_header_width(\"GamepadSpacer\", KeyBindingRow.RESET_MIN_WIDTH)
-
-func _set_header_width(child_name: String, width: float) -> void:
-	var child: Control = bind_header.get_node_or_null(child_name) as Control
-	if child != null:
-		child.custom_minimum_size.x = width
 
 # 只在一次调节结束（滑条松手 / 重置）时播放，避免拖动过程中重复触发
 func _on_volume_preview(bus_name: String) -> void:
@@ -108,6 +88,9 @@ func _on_volume_preview(bus_name: String) -> void:
 
 func _on_back_button_pressed() -> void:
 	Globals.go_to_main_menu()
+
+func _on_language_option_item_selected(index: int) -> void:
+	Settings.localization.set_locale(Settings.localization.LOCALE_OPTIONS[index])
 "
 
 [node name="SystemSettingsMenu" type="Control" unique_id=145228476]
@@ -190,24 +173,29 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="NameLabel" type="Label" parent="Margin/Columns/ContentPanel/OperationsContent/BindHeader" unique_id=1033]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 
 [node name="KeyboardLabel" type="Label" parent="Margin/Columns/ContentPanel/OperationsContent/BindHeader" unique_id=1034]
+custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 text = "键盘"
 horizontal_alignment = 1
 
 [node name="KeyboardSpacer" type="Control" parent="Margin/Columns/ContentPanel/OperationsContent/BindHeader" unique_id=1035]
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 
 [node name="GamepadLabel" type="Label" parent="Margin/Columns/ContentPanel/OperationsContent/BindHeader" unique_id=1036]
+custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 theme_type_variation = &"MutedLabel"
 text = "手柄"
 horizontal_alignment = 1
 
 [node name="GamepadSpacer" type="Control" parent="Margin/Columns/ContentPanel/OperationsContent/BindHeader" unique_id=1037]
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 
 [node name="UpRow" parent="Margin/Columns/ContentPanel/OperationsContent" unique_id=1576496360 instance=ExtResource("2_kbr")]
@@ -280,9 +268,10 @@ layout_mode = 2
 theme_override_constants/separation = 24
 
 [node name="NameLabel" type="Label" parent="Margin/Columns/ContentPanel/LanguageContent/OptionRow" unique_id=1027]
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "语言"
-horizontal_alignment = 1
+horizontal_alignment = 2
 
 [node name="LanguageOption" type="OptionButton" parent="Margin/Columns/ContentPanel/LanguageContent/OptionRow" unique_id=1028]
 custom_minimum_size = Vector2(320, 52)
@@ -292,3 +281,4 @@ theme_type_variation = &"RowButton"
 alignment = 1
 
 [connection signal="pressed" from="Margin/Columns/TabList/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="item_selected" from="Margin/Columns/ContentPanel/LanguageContent/OptionRow/LanguageOption" to="." method="_on_language_option_item_selected"]

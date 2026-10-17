@@ -21,8 +21,6 @@ keys,en,zh_CN
 主音量,Master Volume,主音量
 音效音量,Sound Volume,音效音量
 背景音量,Music Volume,背景音量
-音量,Volume,音量
-动作,Action,动作
 未绑定,Unbound,未绑定
 按下新按键…,Press a key…,按下新按键…
 恢复默认按键,Restore default,恢复默认按键
@@ -53,4 +51,3 @@ RB 键,Button RB,RB 键
 ↓,Down,↓
 ←,Left,←
 →,Right,→
-Button,Button,Button

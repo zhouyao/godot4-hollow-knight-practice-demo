@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://4ldi3el5wl0v"]
-
-[ext_resource type="Script" path="res://tests/test_bindings.gd" id="1_tb"]
-
-[node name="TestBindings" type="Node"]
-script = ExtResource("1_tb")
