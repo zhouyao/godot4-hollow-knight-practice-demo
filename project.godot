@@ -24,15 +24,18 @@ audio/buses/default_bus_layout="res://default_bus_layout.tres"
 Globals="*uid://ueysvl4eaalp"
 Settings="*uid://byknb1nladkm7"
 UiAudio="*uid://b0xaosluegwol"
+TransitionLayer="*uid://b7cjeemjxyyyp"
 
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
-window/size/window_width_override=1280
-window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/sprite_frames_to_animation_player/plugin.cfg")
 
 [input]
 
@@ -88,6 +91,11 @@ locale/translations=PackedStringArray("res://localization/translations.en.transl
 2d_physics/layer_7="No Player Collision"
 2d_physics/layer_8="Drops"
 2d_physics/layer_9="Background Destroy"
+
+[physics]
+
+common/physics_jitter_fix=0.0
+common/physics_interpolation=true
 
 [rendering]
 

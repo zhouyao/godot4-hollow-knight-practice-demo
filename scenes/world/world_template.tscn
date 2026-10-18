@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://p4lhgrlll3a6" path="res://scenes/world/world_template.gd" id="1_g2vgr"]
 [ext_resource type="PackedScene" uid="uid://dbjleohr8a1u2" path="res://scenes/props/floor/floor.tscn" id="2_3ut3u"]
-[ext_resource type="PackedScene" path="res://scenes/players/player.tscn" id="2_4kn81"]
+[ext_resource type="PackedScene" uid="uid://434vdpo3jiq" path="res://scenes/characters/players/player_initial/player_initial.tscn" id="2_4kn81"]
 
 [node name="WorldTemplate" type="Node2D" unique_id=560156841]
 script = ExtResource("1_g2vgr")
@@ -38,7 +38,6 @@ scale = Vector2(50, 1)
 
 [node name="Player" parent="." unique_id=1112432844 instance=ExtResource("2_4kn81")]
 position = Vector2(19, -27)
-collision_mask = 29
 
 [node name="Foreground" type="Node2D" parent="." unique_id=1812575969]
 
@@ -47,6 +46,8 @@ collision_mask = 29
 [node name="Timers" type="Node" parent="." unique_id=1760641847]
 
 [node name="StartTimer" type="Timer" parent="Timers" unique_id=233241113]
+one_shot = true
+autostart = true
 
 [node name="Lights" type="Node2D" parent="." unique_id=1627484379]
 
@@ -62,3 +63,4 @@ blend_mode = 1
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1428327126]
 
 [connection signal="body_entered" from="KillBox" to="." method="_on_kill_box_body_entered"]
+[connection signal="timeout" from="Timers/StartTimer" to="." method="_on_start_timer_timeout"]

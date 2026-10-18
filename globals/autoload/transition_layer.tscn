@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://b7cjeemjxyyyp"]
+
+[sub_resource type="GDScript" id="GDScript_wxa1j"]
+script/source = "extends CanvasLayer
+
+func change_scene(target: String) -> void:
+	$AnimationPlayer.play(\"fade_to_black\")
+	await $AnimationPlayer.animation_finished
+	get_tree().change_scene_to_file.bind(target).call_deferred()
+	get_tree().paused = false
+	$AnimationPlayer.play_backwards(\"fade_to_black\")
+"
+
+[sub_resource type="Animation" id="Animation_ywy38"]
+resource_name = "fade_to_black"
+length = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_uyjlu"]
+_data = {
+&"fade_to_black": SubResource("Animation_ywy38")
+}
+
+[node name="TransitionLayer" type="CanvasLayer" unique_id=337301126]
+process_mode = 3
+layer = 128
+script = SubResource("GDScript_wxa1j")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=128369754]
+modulate = Color(0, 0, 0, 0)
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1346435407]
+libraries/ = SubResource("AnimationLibrary_uyjlu")
