@@ -1,5 +1,8 @@
 # Normalize EOL for all files that Git considers text files.
 * text=auto eol=lf
+
+# 二进制资源走 Git LFS
+# 注意：*.gd / *.tscn / *.tres / *.import / *.uid 必须保持文本，不能进 LFS
 *.png filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.webp filter=lfs diff=lfs merge=lfs -text

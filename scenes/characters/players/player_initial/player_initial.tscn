@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://doqp4ka6848rl" path="res://assets/animations/characters/players/player_initial/death/player_death.png" id="4_qnkh1"]
 [ext_resource type="Texture2D" uid="uid://3gsg0qolbkvg" path="res://assets/animations/characters/players/player_initial/idle/player_idle.png" id="5_qnkh1"]
 [ext_resource type="Texture2D" uid="uid://it4n3qcip6wd" path="res://assets/animations/characters/players/player_initial/walk/player_walk.png" id="6_qnkh1"]
-[ext_resource type="AudioStream" uid="uid://37bd44p7le25" path="res://assets/sounds/characters/players/player_initial/player_walk_footsteps_stone.wav" id="7_8p4rp"]
+[ext_resource type="AudioStream" uid="uid://37bd44p7le25" path="res://assets/sounds/characters/players/player_initial/player_walk.wav" id="7_8p4rp"]
 
 [sub_resource type="CapsuleShape2D" id="2_capsule"]
 radius = 30.0
@@ -369,7 +369,7 @@ scale = Vector2(0.7, -0.7)
 sprite_frames = SubResource("SpriteFrames_kc87p")
 animation = &"death"
 autoplay = "idle"
-frame_progress = 0.77450997
+frame_progress = 0.58638996
 
 [node name="Timers" type="Node" parent="." unique_id=2135656479]
 
