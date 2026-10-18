@@ -9,6 +9,3 @@ position = Vector2(-779, 16)
 
 [node name="Player" parent="." index="9" unique_id=1112432844]
 position = Vector2(1, -157)
-
-[node name="StartTimer" parent="Timers" parent_id_path=PackedInt32Array(1760641847) index="0" unique_id=233241113]
-wait_time = 1.5

@@ -4,9 +4,14 @@
 [ext_resource type="Script" uid="uid://bs8i07lacixpl" path="res://scenes/characters/players/player_initial/PlayerInitialStateMachine.gd" id="2_8p4rp"]
 [ext_resource type="Texture2D" uid="uid://pnuqea280sri" path="res://assets/textures/lights/circle.png" id="3_b1yaw"]
 [ext_resource type="Texture2D" uid="uid://doqp4ka6848rl" path="res://assets/animations/characters/players/player_initial/death/player_death.png" id="4_qnkh1"]
+[ext_resource type="Texture2D" uid="uid://dlm5s27mpnapf" path="res://assets/animations/characters/players/player_initial/fall/player_fall.png" id="5_77k28"]
 [ext_resource type="Texture2D" uid="uid://3gsg0qolbkvg" path="res://assets/animations/characters/players/player_initial/idle/player_idle.png" id="5_qnkh1"]
+[ext_resource type="Texture2D" uid="uid://delekgtdw1sbd" path="res://assets/animations/characters/players/player_initial/jump/player_jump.png" id="6_17pwy"]
 [ext_resource type="Texture2D" uid="uid://it4n3qcip6wd" path="res://assets/animations/characters/players/player_initial/walk/player_walk.png" id="6_qnkh1"]
 [ext_resource type="AudioStream" uid="uid://37bd44p7le25" path="res://assets/sounds/characters/players/player_initial/player_walk.wav" id="7_8p4rp"]
+[ext_resource type="AudioStream" uid="uid://bfxddug655fh1" path="res://assets/sounds/characters/players/player_initial/player_death.wav" id="8_b1yaw"]
+[ext_resource type="AudioStream" uid="uid://5i3tdrjs7em3" path="res://assets/sounds/characters/players/player_initial/player_jump.wav" id="10_t4wlk"]
+[ext_resource type="AudioStream" uid="uid://dodbbn1fndqpc" path="res://assets/sounds/characters/players/player_initial/player_land.wav" id="12_77k28"]
 
 [sub_resource type="CapsuleShape2D" id="2_capsule"]
 radius = 30.0
@@ -36,6 +41,14 @@ region = Rect2(300, 0, 100, 200)
 atlas = ExtResource("4_qnkh1")
 region = Rect2(400, 0, 100, 200)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_7x1pf"]
+atlas = ExtResource("5_77k28")
+region = Rect2(0, 0, 100, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k5ffa"]
+atlas = ExtResource("5_77k28")
+region = Rect2(100, 0, 100, 200)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_olb2f"]
 atlas = ExtResource("5_qnkh1")
 region = Rect2(0, 0, 100, 200)
@@ -43,6 +56,18 @@ region = Rect2(0, 0, 100, 200)
 [sub_resource type="AtlasTexture" id="AtlasTexture_sguum"]
 atlas = ExtResource("5_qnkh1")
 region = Rect2(100, 0, 100, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t4wlk"]
+atlas = ExtResource("6_17pwy")
+region = Rect2(0, 0, 100, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dtbbj"]
+atlas = ExtResource("6_17pwy")
+region = Rect2(100, 0, 100, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_77k28"]
+atlas = ExtResource("6_17pwy")
+region = Rect2(200, 0, 100, 200)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jwv1m"]
 atlas = ExtResource("6_qnkh1")
@@ -74,8 +99,19 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_wb5ey")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7x1pf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k5ffa")
+}],
+"loop": 0,
+"name": &"fall",
 "speed": 5.0
 }, {
 "frames": [{
@@ -87,6 +123,20 @@ animations = [{
 }],
 "loop": 1,
 "name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t4wlk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dtbbj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_77k28")
+}],
+"loop": 0,
+"name": &"jump",
 "speed": 5.0
 }, {
 "frames": [{
@@ -104,9 +154,8 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="Animation" id="Animation_sguum"]
+[sub_resource type="Animation" id="Animation_b1yaw"]
 resource_name = "death"
-loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -131,8 +180,51 @@ tracks/1/keys = {
 "update": 1,
 "values": [0, 1, 2, 3, 4]
 }
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.96666664),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_dead"
+}]
+}
 
-[sub_resource type="Animation" id="Animation_jwv1m"]
+[sub_resource type="Animation" id="Animation_77k28"]
+resource_name = "fall"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visual/PlayerAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"fall"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Visual/PlayerAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="Animation" id="Animation_17pwy"]
 resource_name = "idle"
 length = 0.4
 loop_mode = 1
@@ -161,7 +253,35 @@ tracks/1/keys = {
 "values": [0, 1]
 }
 
-[sub_resource type="Animation" id="Animation_phaeh"]
+[sub_resource type="Animation" id="Animation_dtbbj"]
+resource_name = "jump"
+length = 0.6000000000000001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visual/PlayerAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"jump"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Visual/PlayerAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_t4wlk"]
 resource_name = "walk"
 length = 0.6000000000000001
 loop_mode = 1
@@ -192,103 +312,14 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_k6mkd"]
 _data = {
-&"death": SubResource("Animation_sguum"),
-&"idle": SubResource("Animation_jwv1m"),
-&"walk": SubResource("Animation_phaeh")
-}
-
-[sub_resource type="Animation" id="Animation_yl2j2"]
-resource_name = "death"
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Visual/PlayerAnimatedSprite:animation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"death"]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Visual/PlayerAnimatedSprite:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4]
-}
-
-[sub_resource type="Animation" id="Animation_es4m5"]
-resource_name = "idle"
-length = 0.4
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Visual/PlayerAnimatedSprite:animation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"idle"]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Visual/PlayerAnimatedSprite:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [0, 1]
-}
-
-[sub_resource type="Animation" id="Animation_fsrjl"]
-resource_name = "walk"
-length = 0.6000000000000001
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Visual/PlayerAnimatedSprite:animation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"walk"]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Visual/PlayerAnimatedSprite:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [0, 1, 2]
+&"death": SubResource("Animation_b1yaw"),
+&"fall": SubResource("Animation_77k28"),
+&"idle": SubResource("Animation_17pwy"),
+&"jump": SubResource("Animation_dtbbj"),
+&"walk": SubResource("Animation_t4wlk")
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_mh0hk"]
-_data = {
-&"death": SubResource("Animation_yl2j2"),
-&"idle": SubResource("Animation_es4m5"),
-&"walk": SubResource("Animation_fsrjl")
-}
 
 [node name="Player" type="CharacterBody2D" unique_id=19015186]
 collision_mask = 29
@@ -369,7 +400,6 @@ scale = Vector2(0.7, -0.7)
 sprite_frames = SubResource("SpriteFrames_kc87p")
 animation = &"death"
 autoplay = "idle"
-frame_progress = 0.58638996
 
 [node name="Timers" type="Node" parent="." unique_id=2135656479]
 
@@ -389,6 +419,20 @@ position = Vector2(100, 0)
 
 [node name="Walk" type="AudioStreamPlayer2D" parent="Audio" unique_id=450526490]
 stream = ExtResource("7_8p4rp")
+bus = &"Sound"
+
+[node name="Death" type="AudioStreamPlayer2D" parent="Audio" unique_id=840005491]
+stream = ExtResource("8_b1yaw")
+bus = &"Sound"
+area_mask = 1048576
+
+[node name="Jump" type="AudioStreamPlayer2D" parent="Audio" unique_id=1597815567]
+stream = ExtResource("10_t4wlk")
+bus = &"Sound"
+area_mask = 16384
+
+[node name="Land" type="AudioStreamPlayer2D" parent="Audio" unique_id=1090883804]
+stream = ExtResource("12_77k28")
 bus = &"Sound"
 
 [node name="ActionAnimationPlayer" type="AnimationPlayer" parent="." unique_id=822109903]

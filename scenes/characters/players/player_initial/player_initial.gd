@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name PlayerInitial
 
 signal player_death
 
@@ -24,7 +25,6 @@ var rng = RandomNumberGenerator.new()
 var knockback: Vector2 = Vector2.ZERO
 
 var dead: bool = false
-var jumping: bool = false
 
 @onready var look_up_timer: Timer = $Timers/LookUpTimer
 @onready var look_down_timer: Timer = $Timers/LookDownTimer
@@ -45,6 +45,9 @@ var jumping: bool = false
 @onready var front_attack_area = $FrontAttackArea
 
 @onready var walk_audio = $Audio/Walk
+@onready var jump_audio = $Audio/Jump
+@onready var land_audio = $Audio/Land
+@onready var death_audio = $Audio/Death
 
 func _ready() -> void:
 	gravity = 2.0 * max_jump_height / pow(jump_duration, 2)
@@ -66,8 +69,6 @@ func _apply_gravity(delta):
 		velocity.y += gravity * delta
 
 func _apply_movement():
-	if Globals.level_preparing:
-		velocity.x = 0
 	move_and_slide()
 	knockback = lerp(knockback, Vector2.ZERO, 0.4)
 	Globals.player_pos = global_position
@@ -121,6 +122,9 @@ func _update_camera_position():
 		camera.global_position.x = Globals.horizontal_locks.back() + cam_mod
 	else:
 		camera.global_position.x = camera_marker.global_position.x
+
+func _dead():
+	player_death.emit()
 
 
 # ---- 攻击 / 受击判定（占位）----

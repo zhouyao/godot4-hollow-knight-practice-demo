@@ -45,10 +45,6 @@ position = Vector2(19, -27)
 
 [node name="Timers" type="Node" parent="." unique_id=1760641847]
 
-[node name="StartTimer" type="Timer" parent="Timers" unique_id=233241113]
-one_shot = true
-autostart = true
-
 [node name="Lights" type="Node2D" parent="." unique_id=1627484379]
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="Lights" unique_id=617027591]
@@ -63,4 +59,3 @@ blend_mode = 1
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1428327126]
 
 [connection signal="body_entered" from="KillBox" to="." method="_on_kill_box_body_entered"]
-[connection signal="timeout" from="Timers/StartTimer" to="." method="_on_start_timer_timeout"]

@@ -5,7 +5,6 @@ const PAUSE_MENU_SCENE := preload("res://scenes/menus/pause_menu.tscn")
 var pause_menu: CanvasLayer = null
 
 func _ready():
-	Globals.level_preparing = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
 
 # Esc 切换暂停：未暂停时打开暂停菜单；已暂停时由 PauseMenu 自身处理恢复
@@ -31,7 +30,3 @@ func _on_pause_menu_exited() -> void:
 func _on_kill_box_body_entered(body: Node2D) -> void:
 	if "kill" in body:
 		body.kill()
-
-
-func _on_start_timer_timeout() -> void:
-	Globals.level_preparing = false

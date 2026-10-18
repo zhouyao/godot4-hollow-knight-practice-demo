@@ -1,12 +1,22 @@
 extends Node
 
 signal camera_shake(strength, fade_speed)
+## 关卡准备期开始 / 结束时发出，供状态机、UI 等订阅（避免每帧轮询）
+signal level_preparing_changed(is_preparing: bool)
 
 const MAIN_MENU_SCENE_PATH := "res://main.tscn"
 const SYSTEM_SETTINGS_SCENE_PATH := "res://scenes/menus/system_settings_menu.tscn"
 const GAME_SCENE_PATH := "res://scenes/world/world_template.tscn"
 
-var level_preparing: bool = true
+var _level_preparing := true
+var level_preparing: bool:
+	set(value):
+		if _level_preparing == value:
+			return
+		_level_preparing = value
+		level_preparing_changed.emit(value)
+	get:
+		return _level_preparing
 
 var UNIT_SIZE: float = 96.0
 

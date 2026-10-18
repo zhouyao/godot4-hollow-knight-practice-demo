@@ -43,8 +43,10 @@ func _on_audio_pressed() -> void:
 	show_audio()
 
 func _on_main_menu_pressed() -> void:
-	get_tree().paused = false
+	# 不在这里解除暂停：交给 TransitionLayer 在黑场结束后统一恢复，
+	# 否则淡出的 1 秒里世界继续跑，空中的角色会继续下落
 	Globals.go_to_main_menu()
+	queue_free()
 
 func _on_back_pressed() -> void:
 	show_main()
