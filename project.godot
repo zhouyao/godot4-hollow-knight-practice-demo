@@ -25,6 +25,7 @@ Globals="*uid://ueysvl4eaalp"
 Settings="*uid://byknb1nladkm7"
 UiAudio="*uid://b0xaosluegwol"
 TransitionLayer="*uid://b7cjeemjxyyyp"
+AuCameraDirector="*res://addons/camera_director/AuCameraDirector.gd"
 
 [display]
 
@@ -35,7 +36,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/sprite_frames_to_animation_player/plugin.cfg")
+enabled=PackedStringArray("res://addons/camera_director/plugin.cfg", "res://addons/sprite_frames_to_animation_player/plugin.cfg")
 
 [input]
 

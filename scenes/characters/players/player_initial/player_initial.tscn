@@ -12,6 +12,12 @@
 [ext_resource type="AudioStream" uid="uid://bfxddug655fh1" path="res://assets/sounds/characters/players/player_initial/player_death.wav" id="8_b1yaw"]
 [ext_resource type="AudioStream" uid="uid://5i3tdrjs7em3" path="res://assets/sounds/characters/players/player_initial/player_jump.wav" id="10_t4wlk"]
 [ext_resource type="AudioStream" uid="uid://dodbbn1fndqpc" path="res://assets/sounds/characters/players/player_initial/player_land.wav" id="12_77k28"]
+[ext_resource type="Script" uid="uid://b3xmjmmcxljdn" path="res://scenes/characters/players/player_initial/states/idle.gd" id="20_idle"]
+[ext_resource type="Script" uid="uid://dy2w2yqaulgqu" path="res://scenes/characters/players/player_initial/states/walk.gd" id="21_walk"]
+[ext_resource type="Script" uid="uid://cnyo3pdq86gc1" path="res://scenes/characters/players/player_initial/states/jump.gd" id="22_jump"]
+[ext_resource type="Script" uid="uid://bieyqjtp3ed" path="res://scenes/characters/players/player_initial/states/fall.gd" id="23_fall"]
+[ext_resource type="Script" uid="uid://ca8t3tnq0h5vf" path="res://scenes/characters/players/player_initial/states/land.gd" id="24_land"]
+[ext_resource type="Script" uid="uid://drqeaw71drqys" path="res://scenes/characters/players/player_initial/states/death.gd" id="25_death"]
 
 [sub_resource type="CapsuleShape2D" id="2_capsule"]
 radius = 30.0
@@ -159,7 +165,7 @@ resource_name = "death"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Visual/PlayerAnimatedSprite:animation")
+tracks/0/path = NodePath("Animation/PlayerAnimatedSprite:animation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -171,7 +177,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Visual/PlayerAnimatedSprite:frame")
+tracks/1/path = NodePath("Animation/PlayerAnimatedSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -202,7 +208,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Visual/PlayerAnimatedSprite:animation")
+tracks/0/path = NodePath("Animation/PlayerAnimatedSprite:animation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -214,7 +220,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Visual/PlayerAnimatedSprite:frame")
+tracks/1/path = NodePath("Animation/PlayerAnimatedSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -231,7 +237,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Visual/PlayerAnimatedSprite:animation")
+tracks/0/path = NodePath("Animation/PlayerAnimatedSprite:animation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -243,7 +249,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Visual/PlayerAnimatedSprite:frame")
+tracks/1/path = NodePath("Animation/PlayerAnimatedSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -259,7 +265,7 @@ length = 0.6000000000000001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Visual/PlayerAnimatedSprite:animation")
+tracks/0/path = NodePath("Animation/PlayerAnimatedSprite:animation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -271,7 +277,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Visual/PlayerAnimatedSprite:frame")
+tracks/1/path = NodePath("Animation/PlayerAnimatedSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -288,7 +294,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Visual/PlayerAnimatedSprite:animation")
+tracks/0/path = NodePath("Animation/PlayerAnimatedSprite:animation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -300,7 +306,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Visual/PlayerAnimatedSprite:frame")
+tracks/1/path = NodePath("Animation/PlayerAnimatedSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -325,12 +331,69 @@ _data = {
 collision_mask = 29
 script = ExtResource("1_qnkh1")
 
+[node name="Timer" type="Node" parent="." unique_id=2135656479]
+
+[node name="LookUpTimer" type="Timer" parent="Timer" unique_id=444711820]
+wait_time = 0.3
+one_shot = true
+
+[node name="LookDownTimer" type="Timer" parent="Timer" unique_id=2069861755]
+wait_time = 0.3
+one_shot = true
+
+[node name="HitTimer" type="Timer" parent="Timer" unique_id=1399737945]
+one_shot = true
+
 [node name="StateMachine" type="Node" parent="." unique_id=1168596325]
 script = ExtResource("2_8p4rp")
+host_path = NodePath("..")
+initial_state = &"idle"
+debug_label = NodePath("../Visual/MarginContainer/Label")
 metadata/_custom_type_script = "uid://ub71f6ps06hf"
 
+[node name="idle" type="Node" parent="StateMachine" unique_id=1261779563]
+script = ExtResource("20_idle")
+metadata/_custom_type_script = "uid://cf4m21w6vucer"
+
+[node name="walk" type="Node" parent="StateMachine" unique_id=1927382093]
+script = ExtResource("21_walk")
+
+[node name="jump" type="Node" parent="StateMachine" unique_id=635734010]
+script = ExtResource("22_jump")
+
+[node name="fall" type="Node" parent="StateMachine" unique_id=1016537043]
+script = ExtResource("23_fall")
+
+[node name="land" type="Node" parent="StateMachine" unique_id=1322023765]
+script = ExtResource("24_land")
+
+[node name="death" type="Node" parent="StateMachine" unique_id=1209192914]
+script = ExtResource("25_death")
+
+[node name="Audio" type="Node2D" parent="." unique_id=290561661]
+
+[node name="walk" type="AudioStreamPlayer2D" parent="Audio" unique_id=450526490]
+stream = ExtResource("7_8p4rp")
+bus = &"Sound"
+
+[node name="death" type="AudioStreamPlayer2D" parent="Audio" unique_id=840005491]
+stream = ExtResource("8_b1yaw")
+bus = &"Sound"
+area_mask = 1048576
+
+[node name="jump" type="AudioStreamPlayer2D" parent="Audio" unique_id=1597815567]
+stream = ExtResource("10_t4wlk")
+bus = &"Sound"
+area_mask = 16384
+
+[node name="land" type="AudioStreamPlayer2D" parent="Audio" unique_id=1090883804]
+stream = ExtResource("12_77k28")
+bus = &"Sound"
+
+[node name="CameraPosition" type="Marker2D" parent="." unique_id=302156869]
+position = Vector2(100, 0)
+
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=1422771152]
-position = Vector2(-5, 216)
 energy = 2.0
 texture = ExtResource("3_b1yaw")
 texture_scale = 2.0
@@ -375,6 +438,24 @@ collision_mask = 6
 shape = SubResource("CapsuleShape2D_detect")
 disabled = true
 
+[node name="Animation" type="Node2D" parent="." unique_id=935029620]
+
+[node name="PlayerAnimatedSprite" type="AnimatedSprite2D" parent="Animation" unique_id=458371313]
+position = Vector2(0, -21)
+rotation = 3.1415925
+scale = Vector2(0.7, -0.7)
+sprite_frames = SubResource("SpriteFrames_kc87p")
+animation = &"death"
+autoplay = "idle"
+
+[node name="ActionAnimationPlayer" type="AnimationPlayer" parent="Animation" unique_id=822109903]
+root_node = NodePath("../..")
+libraries/ = SubResource("AnimationLibrary_k6mkd")
+
+[node name="SecondaryAnimationPlayer" type="AnimationPlayer" parent="Animation" unique_id=1435996298]
+root_node = NodePath("../..")
+libraries/ = SubResource("AnimationLibrary_mh0hk")
+
 [node name="Visual" type="Node2D" parent="." unique_id=1086242235]
 
 [node name="MarginContainer" type="MarginContainer" parent="Visual" unique_id=1293634810]
@@ -387,60 +468,8 @@ offset_bottom = -95.0
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="Camera2D" type="Camera2D" parent="Visual" unique_id=1862431929]
-position = Vector2(100, 0)
-scale = Vector2(1.5, 1.5)
-offset = Vector2(-27.585, -13.195)
-position_smoothing_enabled = true
-
-[node name="PlayerAnimatedSprite" type="AnimatedSprite2D" parent="Visual" unique_id=458371313]
-position = Vector2(0, -21)
-rotation = -3.1415927
-scale = Vector2(0.7, -0.7)
-sprite_frames = SubResource("SpriteFrames_kc87p")
-animation = &"death"
-autoplay = "idle"
-
-[node name="Timers" type="Node" parent="." unique_id=2135656479]
-
-[node name="LookUpTimer" type="Timer" parent="Timers" unique_id=444711820]
-one_shot = true
-
-[node name="LookDownTimer" type="Timer" parent="Timers" unique_id=2069861755]
-one_shot = true
-
-[node name="HitTimer" type="Timer" parent="Timers" unique_id=1399737945]
-one_shot = true
-
-[node name="CameraPosition" type="Marker2D" parent="." unique_id=302156869]
-position = Vector2(100, 0)
-
-[node name="Audio" type="Node2D" parent="." unique_id=290561661]
-
-[node name="Walk" type="AudioStreamPlayer2D" parent="Audio" unique_id=450526490]
-stream = ExtResource("7_8p4rp")
-bus = &"Sound"
-
-[node name="Death" type="AudioStreamPlayer2D" parent="Audio" unique_id=840005491]
-stream = ExtResource("8_b1yaw")
-bus = &"Sound"
-area_mask = 1048576
-
-[node name="Jump" type="AudioStreamPlayer2D" parent="Audio" unique_id=1597815567]
-stream = ExtResource("10_t4wlk")
-bus = &"Sound"
-area_mask = 16384
-
-[node name="Land" type="AudioStreamPlayer2D" parent="Audio" unique_id=1090883804]
-stream = ExtResource("12_77k28")
-bus = &"Sound"
-
-[node name="ActionAnimationPlayer" type="AnimationPlayer" parent="." unique_id=822109903]
-libraries/ = SubResource("AnimationLibrary_k6mkd")
-
-[node name="SecondaryAnimationPlayer" type="AnimationPlayer" parent="." unique_id=1435996298]
-libraries/ = SubResource("AnimationLibrary_mh0hk")
-
+[connection signal="timeout" from="Timer/LookUpTimer" to="." method="_on_look_up_timer_timeout"]
+[connection signal="timeout" from="Timer/LookDownTimer" to="." method="_on_look_down_timer_timeout"]
 [connection signal="body_entered" from="DownAttackArea" to="." method="_on_down_attack_area_body_entered"]
 [connection signal="body_entered" from="UpAttackArea" to="." method="_on_up_attack_area_body_entered"]
 [connection signal="body_entered" from="FrontAttackArea" to="." method="_on_front_attack_area_body_entered"]

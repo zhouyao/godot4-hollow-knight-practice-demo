@@ -7,7 +7,6 @@ var pause_menu: CanvasLayer = null
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
 
-# Esc 切换暂停：未暂停时打开暂停菜单；已暂停时由 PauseMenu 自身处理恢复
 func _unhandled_input(event: InputEvent) -> void:
 	if !event.is_action_pressed(&"ui_cancel"):
 		return
@@ -15,8 +14,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	if pause_menu == null:
 		open_pause()
 
-# 暂停游戏并把暂停菜单挂到世界节点下；菜单自身 process_mode = ALWAYS，
-# 因此即使 SceneTree 被暂停，按钮与输入仍可用。
 func open_pause() -> void:
 	get_tree().paused = true
 	pause_menu = PAUSE_MENU_SCENE.instantiate()
