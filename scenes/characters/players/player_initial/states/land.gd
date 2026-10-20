@@ -1,8 +1,5 @@
 extends PlayerState
 
-## 落地过渡态：播放 land 音效，短暂保持后回到 idle。
-## 没有 land 专属动画，落地瞬间用 idle 姿态过渡。
-
 ## 落地保持时长（秒）；状态机自动维护 elapsed
 @export var hold_time: float = 0.1
 

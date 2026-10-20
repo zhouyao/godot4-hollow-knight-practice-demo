@@ -3,7 +3,6 @@
 一个 Godot 4 编辑器插件，把 `AnimatedSprite2D` 的 `SpriteFrames` 一键转换成 `AnimationPlayer` 的动画（含 `frame` / `animation` 两条轨道），方便用 `AnimationPlayer` 统一管理、混编、过渡所有精灵动画。
 
 - 插件版本：`1.3.3`
-- 作者：AuAu
 - 标签：`2d`、`animation`、`tools`
 - 目标引擎：Godot 4（含 4.7 的 API 适配，如对 `AnimatedSprite2D.playing` 移除、`AnimationLibrary` 等的处理）
 
@@ -105,7 +104,7 @@
 
 MIT License，见 `LICENSE` 文件（与 Godot Asset Store 页面选择的许可证类型一致）。
 
-Copyright (c) 2026 AuAu
+Copyright (c) 2026
 
 ---
 

@@ -1,7 +1,5 @@
 extends PlayerState
 
-## 行走态：水平速度不为 0 且在地面。停下则回到 idle。
-
 ## 判定静止的阈值：避免 knockback 等残余速度导致永远回不到 idle
 const STOP_EPS := 1.0
 

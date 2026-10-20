@@ -27,11 +27,11 @@ var dead: bool = false
 @onready var enemy_detection_area = $EnemyDetectionArea
 @onready var front_attack_area = $FrontAttackArea
 
-@onready var look_up_timer: Timer = $Timer/LookUpTimer
-@onready var look_down_timer: Timer = $Timer/LookDownTimer
 @onready var hit_timer: Timer = $Timer/HitTimer
 
 @onready var player_animated_sprite: AnimatedSprite2D = $Animation/PlayerAnimatedSprite
+@onready var attack_animated_sprite: AnimatedSprite2D = $Animation/AttackAnimatedSprite
+
 @onready var action_animation_player = $Animation/ActionAnimationPlayer
 @onready var secondary_animation_player = $Animation/SecondaryAnimationPlayer
 
@@ -68,7 +68,7 @@ func _apply_movement():
 	knockback = lerp(knockback, Vector2.ZERO, 0.4)
 
 func _flip_direction():
-	for flipped in [player_animated_sprite, collision_shape,enemy_detection_area, front_attack_area]:
+	for flipped in [player_animated_sprite,attack_animated_sprite,front_attack_area]:
 		flipped.scale.x *= -1
 		flipped.reset_physics_interpolation()
 
@@ -116,30 +116,3 @@ func _on_down_attack_area_body_entered(_body: Node2D) -> void:
 
 func _on_enemy_detection_area_body_entered(_body: Node2D) -> void:
 	pass
-
-
-## 视野上下偏移：按住 up / down 超过 LookUpTimer.wait_time 才生效，松开立即归位。
-## 这里只上报意图，具体怎么偏移由 AuCameraDirector 决定（还要看当前区域是否允许）。
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"up"):
-		look_up_timer.start()
-	elif event.is_action_released(&"up"):
-		look_up_timer.stop()
-		_reset_look()
-	elif event.is_action_pressed(&"down"):
-		look_down_timer.start()
-	elif event.is_action_released(&"down"):
-		look_down_timer.stop()
-		_reset_look()
-
-
-func _on_look_up_timer_timeout() -> void:
-	AuCameraDirector.look_up()
-
-
-func _on_look_down_timer_timeout() -> void:
-	AuCameraDirector.look_down()
-
-
-func _reset_look() -> void:
-	AuCameraDirector.clear_look()
