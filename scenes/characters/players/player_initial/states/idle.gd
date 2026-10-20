@@ -5,8 +5,9 @@ const MOVE_EPS := 1.0
 ## 一旦开始移动就切到这个状态（可在检查器改指向 dash 等）
 @export var target_move: StringName = PlayerStateNames.WALK
 
-## 按住方向超过该时长才进入 look 状态（与原相机 LookUpTimer 一致，避免轻触误触）
-@export var look_hold_time: float = 0.3
+## 按住方向超过该时长才进入 look 状态；默认 0 表示按下即抬头 / 低头
+## （相机侧自带平滑，轻触不会造成画面跳动；需要防误触时再调大，如 0.3）
+@export var look_hold_time: float = 0.0
 
 ## 从按下方向累计的按住时长，松开即清零
 var _look_hold: float = 0.0

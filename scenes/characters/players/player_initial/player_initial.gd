@@ -16,6 +16,12 @@ var dash_distance: float = 3.5 * Globals.UNIT_SIZE
 var dash_duration: float = 0.2
 var dash_speed: float
 
+## 下劈命中敌人的反弹高度（在 _ready 里换算成向上初速度）
+var slash_down_bounce_height: float = 1.5 * Globals.UNIT_SIZE
+var slash_down_bounce_velocity: float
+## 起手向下俯冲的速度：与当前下落速度取较大值，保证空中下劈有"砸下去"的手感
+var slash_down_dive_speed: float = 5.0 * Globals.UNIT_SIZE
+
 var knockback: Vector2 = Vector2.ZERO
 
 var dead: bool = false
@@ -30,7 +36,7 @@ var dead: bool = false
 @onready var hit_timer: Timer = $Timer/HitTimer
 
 @onready var player_animated_sprite: AnimatedSprite2D = $Animation/PlayerAnimatedSprite
-@onready var attack_animated_sprite: AnimatedSprite2D = $Animation/AttackAnimatedSprite
+@onready var slash_forward_animated_sprite: AnimatedSprite2D = $Animation/SlashForwardAnimatedSprite
 
 @onready var action_animation_player = $Animation/ActionAnimationPlayer
 @onready var secondary_animation_player = $Animation/SecondaryAnimationPlayer
@@ -49,6 +55,7 @@ func _ready() -> void:
 	max_jump_velocity = -sqrt(2.0 * gravity * max_jump_height)
 	min_jump_velocity = -sqrt(2.0 * gravity * min_jump_height)
 	dash_speed = dash_distance / dash_duration
+	slash_down_bounce_velocity = -sqrt(2.0 * gravity * slash_down_bounce_height)
 
 	# 自己上报相机跟随锚点：这样即使死亡重生（本节点被重建），相机也能重新挂上，
 	# 不用依赖关卡脚本重新赋值。
@@ -68,7 +75,7 @@ func _apply_movement():
 	knockback = lerp(knockback, Vector2.ZERO, 0.4)
 
 func _flip_direction():
-	for flipped in [player_animated_sprite,attack_animated_sprite,front_attack_area]:
+	for flipped in [player_animated_sprite,slash_forward_animated_sprite,front_attack_area]:
 		flipped.scale.x *= -1
 		flipped.reset_physics_interpolation()
 
@@ -111,8 +118,13 @@ func _on_up_attack_area_body_entered(_body: Node2D) -> void:
 
 
 func _on_down_attack_area_body_entered(_body: Node2D) -> void:
-	pass
-
+# 	只有 slash_down 动画会打开该判定区
+	if state_machine == null or state_machine.get_state_name() != PlayerStateNames.SLASH_DOWN:
+		return
+	# 只有怪物才弹起：劈到地面 / 道具不反弹
+	if _body is CollisionObject2D and (_body.collision_layer & Globals.LAYER_ENEMIES) == 0:
+		return
+	velocity.y = slash_down_bounce_velocity
 
 func _on_enemy_detection_area_body_entered(_body: Node2D) -> void:
 	pass

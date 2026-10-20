@@ -74,6 +74,7 @@ repeat_size = Vector2(1920, 1080)
 [node name="ColorRect" type="ColorRect" parent="Background/Darkness" index="0" unique_id=1018453055]
 offset_right = 1920.0
 offset_bottom = 1080.0
+mouse_filter = 2
 color = Color(0.18359044, 0.18359047, 0.18359038, 1)
 
 [node name="Layer_1" type="Parallax2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="1" unique_id=864429977]

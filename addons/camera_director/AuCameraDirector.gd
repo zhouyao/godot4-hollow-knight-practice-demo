@@ -17,6 +17,9 @@ signal look_changed(offset: float)
 # 注视偏移的像素幅度（look_up 为负、look_down 为正）。
 const LOOK_MAGNITUDE := 100.0
 
+# 注视偏移推进到目标值所需的时长（秒）：相机平滑跟上，避免瞬间跳变。
+const LOOK_TWEEN_DURATION := 0.25
+
 # 缩放缓动的默认时长（秒）。
 const ZOOM_TWEEN_DURATION := 0.4
 
@@ -26,7 +29,9 @@ var _rig: AuCameraRig = null
 var _behaviors: Array[AuCameraBehavior] = []
 var _follow_behavior := AuFollowBehavior.new()
 
+# _look_offset 为当前实际生效的偏移（每帧向 _look_target 推进），_look_target 为目标值
 var _look_offset := 0.0
+var _look_target := 0.0
 var _active_area: AuCameraLockArea = null
 var _warned_no_follow := false
 
@@ -65,6 +70,7 @@ func _reset_level_state() -> void:
 		if _behaviors[i] != _follow_behavior:
 			_behaviors.remove_at(i)
 	_look_offset = 0.0
+	_look_target = 0.0
 	_active_area = null
 	_zoom_held = false
 	_active_zoom = _base_zoom
@@ -124,6 +130,7 @@ func is_overridden() -> bool:
 
 
 ## 向上看：在允许 look up 的锁定区域内把相机上移 LOOK_MAGNITUDE。
+## 何时调用由上层（玩家状态）决定；重复调用无害，偏移未变时直接返回。
 func look_up() -> void:
 	_set_look(-LOOK_MAGNITUDE)
 
@@ -131,13 +138,22 @@ func look_up() -> void:
 func look_down() -> void:
 	_set_look(LOOK_MAGNITUDE)
 
-## 取消注视偏移，相机回到区域锁定位置。
+## 取消注视偏移，相机平滑回到区域锁定 / 跟随位置。
 func clear_look() -> void:
 	_set_look(0.0)
 
 func _set_look(value: float) -> void:
-	_look_offset = value
+	if _look_target == value:
+		return
+	_look_target = value
 	look_changed.emit(value)
+
+## 生效偏移在 LOOK_TWEEN_DURATION 内平滑追上目标值（含回落），避免镜头跳变。
+func _update_look(delta: float) -> void:
+	if _look_offset == _look_target:
+		return
+	var step := LOOK_MAGNITUDE / maxf(LOOK_TWEEN_DURATION, 0.0001) * delta
+	_look_offset = move_toward(_look_offset, _look_target, step)
 
 
 ## 直接缓动缩放，并把 z 设为新的基础缩放（后续回落到该值）。
@@ -181,7 +197,7 @@ func shake_heavy() -> void:
 		_rig.shake(_rig.shake_heavy.x, _rig.shake_heavy.y)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not is_instance_valid(_rig):
 		return
 
@@ -192,6 +208,8 @@ func _process(_delta: float) -> void:
 		return
 	_warned_no_follow = false
 
+	_update_look(delta)
+
 	for b in _behaviors:
 		if b is AuLockAreaBehavior:
 			var la := b as AuLockAreaBehavior
@@ -201,6 +219,8 @@ func _process(_delta: float) -> void:
 
 	_behaviors.sort_custom(_sort_by_priority)
 
+	# 注视偏移只在锁定区域内生效，且受该区域 can_look_up / can_look_down 限制：
+	# 开放区域（不在任何锁定区域内）抬头不会推动相机。
 	var ctx := {"target": Vector2.ZERO, "zoom": null}
 	for b in _behaviors:
 		b.resolve(ctx)

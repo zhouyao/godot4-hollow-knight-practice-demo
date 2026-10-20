@@ -26,3 +26,4 @@ repeat_size = Vector2(1920, 1080)
 material = SubResource("ShaderMaterial_lc5ks")
 offset_right = 1920.0
 offset_bottom = 1080.0
+mouse_filter = 2

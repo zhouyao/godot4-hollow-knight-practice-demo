@@ -25,8 +25,17 @@ func handle_input(event: InputEvent) -> void:
 		on_attack_pressed()
 
 func on_attack_pressed() -> void:
-	if machine != null:
-		machine.set_state(PlayerStateNames.SLASH_FORWARD)
+	if machine == null:
+		return
+	# 按住 ↑ + 攻击：地面 / 空中都直接上劈，不需要先进入 look_up 抬头姿态
+	if Input.is_action_pressed(&"up"):
+		machine.set_state(PlayerStateNames.SLASH_UP, true)
+		return
+	# 地面按 ↓ + 攻击仍是平砍；只有空中按住 ↓ + 攻击才进下劈（force 允许连续踩踏重入）
+	if not player.is_on_floor() and Input.is_action_pressed(&"down"):
+		machine.set_state(PlayerStateNames.SLASH_DOWN, true)
+		return
+	machine.set_state(PlayerStateNames.SLASH_FORWARD)
 
 func _play_action(name: StringName) -> void:
 	player.action_animation_player.play(name)

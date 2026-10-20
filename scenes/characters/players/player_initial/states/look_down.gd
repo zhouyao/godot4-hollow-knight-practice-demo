@@ -1,13 +1,18 @@
 extends PlayerState
 
+## 低头持续多久才把相机压下去（节奏归玩家状态，相机只负责偏移与平滑）
+@export var camera_look_delay: float = 1.0
+
 func enter(_from: StringName) -> void:
 	_play_action(PlayerStateNames.LOOK_DOWN)
-	AuCameraDirector.look_down()
 
 func exit(_to: StringName) -> void:
 	AuCameraDirector.clear_look()
 
 func update(_delta: float) -> void:
+	# elapsed 由状态机统计，进入时自动清零；按住够时长才开始推动相机
+	if elapsed >= camera_look_delay:
+		AuCameraDirector.look_down()
 	player._apply_gravity(_delta)
 	player._apply_movement()
 
