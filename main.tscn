@@ -1,4 +1,4 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dnhvawra6o88v"]
 
 [ext_resource type="PackedScene" path="res://scenes/menus/default_menu.tscn" id="1_dm"]
 
@@ -15,4 +15,4 @@ func _ready() -> void:
 [node name="MainMenu" type="CanvasLayer" unique_id=390350015]
 script = SubResource("GDScript_3rd1h")
 
-[node name="DefaultMenu" parent="." instance=ExtResource("1_dm")]
+[node name="DefaultMenu" parent="." unique_id=1148457372 instance=ExtResource("1_dm")]

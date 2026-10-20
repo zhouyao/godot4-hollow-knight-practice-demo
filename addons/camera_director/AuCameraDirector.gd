@@ -3,7 +3,6 @@
 ## 再把结果（目标位置 / 缩放）交给 AuCameraRig 执行。
 extends Node
 
-
 ## 跟随锚点发生变化。node 为新的锚点。
 signal follow_changed(node: Node2D)
 ## 当前生效的锁定区域发生变化。area 为 null 表示回到纯跟随。

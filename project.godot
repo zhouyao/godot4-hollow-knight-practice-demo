@@ -25,7 +25,7 @@ Globals="*uid://ueysvl4eaalp"
 Settings="*uid://byknb1nladkm7"
 UiAudio="*uid://b0xaosluegwol"
 TransitionLayer="*uid://b7cjeemjxyyyp"
-AuCameraDirector="*res://addons/camera_director/AuCameraDirector.gd"
+AuCameraDirector="*uid://dwvbfunxlwt7s"
 
 [display]
 
