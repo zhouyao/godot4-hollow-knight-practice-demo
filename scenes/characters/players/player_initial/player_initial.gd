@@ -22,6 +22,9 @@ var slash_down_bounce_velocity: float
 ## 起手向下俯冲的速度：与当前下落速度取较大值，保证空中下劈有"砸下去"的手感
 var slash_down_dive_speed: float = 5.0 * Globals.UNIT_SIZE
 
+## 三段挥砍（前刺 / 上挑 / 下劈）共用的伤害值
+@export var slash_damage: int = 1
+
 var knockback: Vector2 = Vector2.ZERO
 
 var dead: bool = false
@@ -41,7 +44,7 @@ var dead: bool = false
 @onready var action_animation_player = $Animation/ActionAnimationPlayer
 @onready var secondary_animation_player = $Animation/SecondaryAnimationPlayer
 
-@onready var state_label: Label = $Visual/MarginContainer/Label
+@onready var state_label: Label = $Debug/MarginContainer/StateName
 
 @onready var state_machine: StateMachine = $StateMachine
 
@@ -105,26 +108,33 @@ func kill():
 	if(!dead):
 		_dead()
 		
-# ---- 攻击 / 受击判定（占位）----
-# 四个 Area 默认 disabled；等攻击状态接入后，由 ActionAnimationPlayer 在挥砍帧
-# 打开对应判定区、动画结束帧再关闭。
+# ---- 攻击 / 受击判定 ----
+# 三个攻击判定区默认 disabled；由 ActionAnimationPlayer 在挥砍帧打开对应判定区、
+# 动画结束帧再关闭。
 
-func _on_front_attack_area_body_entered(_body: Node2D) -> void:
-	pass
-
-
-func _on_up_attack_area_body_entered(_body: Node2D) -> void:
-	pass
+func _on_front_attack_area_body_entered(body: Node2D) -> void:
+	_hit_enemy(body)
 
 
-func _on_down_attack_area_body_entered(_body: Node2D) -> void:
+func _on_up_attack_area_body_entered(body: Node2D) -> void:
+	_hit_enemy(body)
+
+
+func _on_down_attack_area_body_entered(body: Node2D) -> void:
 # 	只有 slash_down 动画会打开该判定区
 	if state_machine == null or state_machine.get_state_name() != PlayerStateNames.SLASH_DOWN:
 		return
-	# 只有怪物才弹起：劈到地面 / 道具不反弹
-	if _body is CollisionObject2D and (_body.collision_layer & Globals.LAYER_ENEMIES) == 0:
+	# 只有怪物才结算伤害并弹起：劈到地面 / 道具什么都不做
+	if not (body is Enemy):
 		return
+	_hit_enemy(body)
 	velocity.y = slash_down_bounce_velocity
+
+## 只对敌人结算伤害。击退方向交给敌人自己按攻击来源位置推算，
+## 所以这里不用关心玩家朝哪个方位砍（前刺推开 / 上挑顶起 / 下劈砸下）。
+func _hit_enemy(body: Node2D) -> void:
+	if body is Enemy:
+		body.take_damage(slash_damage, self)
 
 func _on_enemy_detection_area_body_entered(_body: Node2D) -> void:
 	pass

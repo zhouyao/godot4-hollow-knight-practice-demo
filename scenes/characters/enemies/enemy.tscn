@@ -1,0 +1,219 @@
+[gd_scene format=3 uid="uid://br8vy2on44xtx"]
+
+[ext_resource type="Script" uid="uid://qde1q1k3u5sr7" path="res://scenes/characters/enemies/enemy.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://nezgveibdot53" path="res://scenes/characters/enemies/EnemyStateMachine.gd" id="2_esm"]
+[ext_resource type="Script" uid="uid://j86jg4bxk417a" path="res://scenes/characters/enemies/states/idle.gd" id="3_idle"]
+[ext_resource type="Script" uid="uid://r9mk7xa0cpuph" path="res://scenes/characters/enemies/states/death.gd" id="4_death"]
+[ext_resource type="Texture2D" uid="uid://j2o25agvlkow" path="res://assets/sprites/placeholders/Square/Square-0006.png" id="5_square"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 30.0
+height = 100.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_attack"]
+size = Vector2(80, 60)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_detect"]
+radius = 200.0
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_sprite"]
+light_mode = 1
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_placeholder"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_square")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_square")
+}],
+"loop": 0,
+"name": &"death",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_reset"]
+resource_name = "RESET"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AttackArea/CollisionShape2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle"]
+}
+
+[sub_resource type="Animation" id="Animation_death"]
+resource_name = "death"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"death"]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_dead"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_actions"]
+_data = {
+&"RESET": SubResource("Animation_reset"),
+&"death": SubResource("Animation_death"),
+&"idle": SubResource("Animation_idle")
+}
+
+[node name="Enemy" type="CharacterBody2D"] unique_id=335206447
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("1_enemy")
+
+[node name="Timer" type="Node" parent="."] unique_id=1604027709
+
+[node name="HitTimer" type="Timer" parent="Timer"] unique_id=914545561
+one_shot = true
+
+[node name="StateMachine" type="Node" parent="."] unique_id=158278157
+script = ExtResource("2_esm")
+host_path = NodePath("..")
+initial_state = &"idle"
+debug_label = NodePath("../Debug/MarginContainer/StateName")
+metadata/_custom_type_script = "uid://ub71f6ps06hf"
+
+[node name="idle" type="Node" parent="StateMachine"] unique_id=651727177
+script = ExtResource("3_idle")
+metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
+
+[node name="death" type="Node" parent="StateMachine"] unique_id=459652963
+script = ExtResource("4_death")
+metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
+
+[node name="Audio" type="Node2D" parent="."] unique_id=77163991
+
+[node name="attack" type="AudioStreamPlayer2D" parent="Audio"] unique_id=46718069
+bus = &"Sound"
+
+[node name="hurt" type="AudioStreamPlayer2D" parent="Audio"] unique_id=113449483
+bus = &"Sound"
+
+[node name="death" type="AudioStreamPlayer2D" parent="Audio"] unique_id=1273151279
+bus = &"Sound"
+
+[node name="WallDetector" type="RayCast2D" parent="."] unique_id=1586936499
+target_position = Vector2(48, 0)
+collision_mask = 4
+
+[node name="LedgeDetector" type="RayCast2D" parent="."] unique_id=310289710
+position = Vector2(0, 40)
+target_position = Vector2(40, 64)
+collision_mask = 4
+
+[node name="Muzzle" type="Marker2D" parent="."] unique_id=1122866048
+position = Vector2(60, 0)
+
+[node name="DropMarker" type="Marker2D" parent="."] unique_id=2014379175
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."] unique_id=847857828
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="AttackArea" type="Area2D" parent="."] unique_id=1799643011
+collision_layer = 32
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"] unique_id=1886832241
+position = Vector2(60, 0)
+shape = SubResource("RectangleShape2D_attack")
+disabled = true
+
+[node name="PlayerDetectionArea" type="Area2D" parent="."] unique_id=1262565107
+collision_layer = 32
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetectionArea"] unique_id=1249575519
+shape = SubResource("CircleShape2D_detect")
+
+[node name="Animation" type="Node2D" parent="."] unique_id=450456599
+
+[node name="EnemyAnimatedSprite" type="AnimatedSprite2D" parent="Animation"] unique_id=1866401831
+material = SubResource("CanvasItemMaterial_sprite")
+sprite_frames = SubResource("SpriteFrames_placeholder")
+animation = &"idle"
+
+[node name="ActionAnimationPlayer" type="AnimationPlayer" parent="Animation"] unique_id=1761292966
+root_node = NodePath("../..")
+libraries/ = SubResource("AnimationLibrary_actions")
+
+[node name="Debug" type="Node2D" parent="."] unique_id=84183668
+
+[node name="MarginContainer" type="MarginContainer" parent="Debug"] unique_id=556377142
+offset_left = -50.0
+offset_top = -130.0
+offset_right = 50.0
+offset_bottom = -95.0
+mouse_filter = 2
+
+[node name="StateName" type="Label" parent="Debug/MarginContainer"] unique_id=3048522
+layout_mode = 2
+horizontal_alignment = 1
+
+[connection signal="timeout" from="Timer/HitTimer" to="." method="_on_hit_timer_timeout"]
+[connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
+[connection signal="body_entered" from="PlayerDetectionArea" to="." method="_on_player_detection_area_body_entered"]
+[connection signal="body_exited" from="PlayerDetectionArea" to="." method="_on_player_detection_area_body_exited"]

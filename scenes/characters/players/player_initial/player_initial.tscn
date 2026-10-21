@@ -32,7 +32,7 @@
 [ext_resource type="Script" uid="uid://bgntrngripevl" path="res://scenes/characters/players/player_initial/states/slash_forward.gd" id="28_slash"]
 [ext_resource type="Texture2D" uid="uid://ckod2i08t1rdo" path="res://assets/animations/characters/players/player_initial/slash_up/slash_up.png" id="29_pvxb1"]
 [ext_resource type="Script" uid="uid://noav7tyes6os" path="res://scenes/characters/players/player_initial/states/slash_down.gd" id="29_sdown"]
-[ext_resource type="Script" uid="uid://n5m39ggv4pj4" path="res://scenes/characters/players/player_initial/states/slash_up.gd" id="30_sup"]
+[ext_resource type="Script" uid="uid://n5m4aggv4pj4" path="res://scenes/characters/players/player_initial/states/slash_up.gd" id="30_sup"]
 [ext_resource type="Texture2D" uid="uid://cp5pya1p8opeq" path="res://assets/animations/characters/players/player_initial/_slash_up/slash_up.png" id="33_1hld7"]
 
 [sub_resource type="CapsuleShape2D" id="2_capsule"]
@@ -891,7 +891,7 @@ one_shot = true
 script = ExtResource("2_8p4rp")
 host_path = NodePath("..")
 initial_state = &"idle"
-debug_label = NodePath("../Visual/MarginContainer/Label")
+debug_label = NodePath("../Debug/MarginContainer/StateName")
 metadata/_custom_type_script = "uid://ub71f6ps06hf"
 
 [node name="idle" type="Node" parent="StateMachine" unique_id=1261779563]
@@ -1014,9 +1014,9 @@ position = Vector2(0, -21)
 rotation = 3.1415925
 scale = Vector2(0.7, -0.7)
 sprite_frames = SubResource("SpriteFrames_kc87p")
-animation = &"slash_up"
+animation = &"death"
 autoplay = "idle"
-frame = 2
+frame = 4
 
 [node name="SlashForwardAnimatedSprite" type="AnimatedSprite2D" parent="Animation" unique_id=768569118]
 visible = false
@@ -1051,18 +1051,17 @@ libraries/ = SubResource("AnimationLibrary_k6mkd")
 root_node = NodePath("../..")
 libraries/ = SubResource("AnimationLibrary_mh0hk")
 
-[node name="Visual" type="Node2D" parent="." unique_id=1086242235]
+[node name="Debug" type="Node2D" parent="." unique_id=1086242235]
 
-[node name="MarginContainer" type="MarginContainer" parent="Visual" unique_id=1293634810]
+[node name="MarginContainer" type="MarginContainer" parent="Debug" unique_id=1293634810]
 offset_left = -50.0
 offset_top = -130.0
 offset_right = 50.0
 offset_bottom = -95.0
 mouse_filter = 2
 
-[node name="Label" type="Label" parent="Visual/MarginContainer" unique_id=1879349282]
+[node name="StateName" type="Label" parent="Debug/MarginContainer" unique_id=1879349282]
 layout_mode = 2
-mouse_filter = 2
 horizontal_alignment = 1
 
 [connection signal="body_entered" from="DownAttackArea" to="." method="_on_down_attack_area_body_entered"]

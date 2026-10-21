@@ -5,7 +5,7 @@ signal level_preparing_changed(is_preparing: bool)
 
 const MAIN_MENU_SCENE_PATH := "res://main.tscn"
 const SYSTEM_SETTINGS_SCENE_PATH := "res://scenes/menus/system_settings_menu.tscn"
-const GAME_SCENE_PATH := "res://scenes/world/world_test.tscn"
+const GAME_SCENE_PATH := "res://scenes/worlds/world_test.tscn"
 
 # ---- 2D 物理层位掩码 ----
 # 与「项目设置 → 层名称 → 2d_physics」一一对应：层号 n 的掩码是 1 << (n - 1)。
@@ -23,8 +23,10 @@ const LAYER_OBJECTS := 1 << 2
 const LAYER_PROJECTILES := 1 << 3
 ## 层 5：触发区（相机锁定区、KillBox…）自己所在的层，它们靠 mask 只探测玩家。
 const LAYER_AREAS_AND_ZONES := 1 << 4
-## 层 6：玩家身上各攻击 / 侦测 Area2D 的专用层，避免被物理世界当成实体互相碰撞。
-const LAYER_PLAYER_ENEMY_DETECTION := 1 << 5
+## 层 6：玩家 / 敌人身上各攻击、侦测 Area2D 的专用层，避免被物理世界当成实体互相碰撞。
+## 目前没有任何东西的 mask 指向本层，所以复用它是安全的；将来要做弹反 / 格挡，
+## 只需在那一侧的 Area 的 mask 里加上本层即可。
+const LAYER_DETECTION_AND_ATTACK := 1 << 5
 ## 层 7：不与玩家碰撞的物体（单向平台、纯装饰…）。
 const LAYER_NO_PLAYER_COLLISION := 1 << 6
 ## 层 8：掉落物。
