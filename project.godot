@@ -38,6 +38,15 @@ window/stretch/aspect="expand"
 
 enabled=PackedStringArray("res://addons/camera_director/plugin.cfg", "res://addons/sprite_frames_to_animation_player/plugin.cfg")
 
+[global_group]
+
+player=""
+enemy=""
+
+[gui]
+
+theme/theme="res://assets/themes/misted_theme.tres"
+
 [input]
 
 up={

@@ -1,0 +1,6 @@
+[gd_resource type="Theme" script_class="MistedTheme" format=3 uid="uid://dmt8kq3vncw2x"]
+
+[ext_resource type="Script" uid="uid://cxlpu2muk1pt7" path="res://assets/themes/MistedTheme.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")

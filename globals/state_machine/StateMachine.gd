@@ -10,8 +10,6 @@ signal state_changed(new_state: StringName, old_state: StringName)
 ## 初始状态名。留空则不在 _ready 自动进入，由宿主在自身 _ready 末尾调用 start()/start(名字)。
 ## 之所以不自动启动：子节点的 _ready 先于宿主的 @onready 赋值，此时 enter() 会拿到未就绪的成员。
 @export var initial_state: StringName = &""
-## 可选调试输出：把当前状态名写进该 Label（相对于本节点）；留空则不输出任何 UI。
-@export var debug_label: NodePath
 
 var host: Node
 
@@ -31,14 +29,12 @@ var _pending_state: StringName = &""
 var _pending_force := false
 
 var _started := false
-var _debug_label: Label
 var _sfx_nodes: Dictionary = {}
 var _sfx_resolved := false
 
 func _ready() -> void:
 	_collect_states()
 	_resolve_host()
-	_resolve_debug_label()
 
 ## 由宿主在自己的 _ready 末尾调用（此时宿主的 @onready 已就绪），进入初始状态。
 ## 传空则使用导出的 initial_state。重复调用等价于重启到该状态。
@@ -95,16 +91,6 @@ func _resolve_host() -> void:
 	if host == null:
 		push_warning("StateMachine(%s): 宿主解析失败，请检查 host_path=%s" % [name, host_path])
 
-func _resolve_debug_label() -> void:
-	_debug_label = null
-	if debug_label.is_empty():
-		return
-	var node := get_node_or_null(debug_label)
-	if node is Label:
-		_debug_label = node
-	else:
-		push_warning("StateMachine(%s): debug_label 指向的不是 Label：%s" % [name, debug_label])
-
 func _physics_process(delta: float) -> void:
 	if not active or current_state == null:
 		return
@@ -145,7 +131,6 @@ func set_state(target: StringName, force := false) -> void:
 	current_state.elapsed = 0.0
 	current_state.enter(old)
 	state_changed.emit(target, old)
-	_update_debug_label(target)
 	_is_transitioning = false
 
 	if _pending_state != &"":
@@ -154,10 +139,6 @@ func set_state(target: StringName, force := false) -> void:
 		_pending_state = &""
 		_pending_force = false
 		set_state(next, next_force)
-
-func _update_debug_label(new_state: StringName) -> void:
-	if _debug_label != null:
-		_debug_label.text = new_state
 
 ## 播放宿主侧音效；宿主用 Dictionary 类型的 audio_nodes 声明即可（{名字: AudioStreamPlayer2D}）。
 ## 首次调用时解析一次并缓存，不做每帧的动态属性查找。

@@ -5,7 +5,7 @@ class_name State
 ## 父节点即状态机，通过它访问宿主（player）与状态机本身。
 ##
 ## 推荐用法：不要直接继承本类，而是为每个宿主派生一层类型化基类
-## （见 scenes/characters/players/player_initial/states/player_state.gd），
+## （见 scenes/characters/players/player/states/player_state.gd），
 ## 这样状态内部可以拿到强类型的宿主引用，不必每帧做 as 转换。
 
 ## 进入状态（from 为上一个状态名）。不要在这里直接 set_state 触发无限递归。

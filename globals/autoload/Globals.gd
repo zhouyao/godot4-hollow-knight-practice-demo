@@ -46,6 +46,20 @@ var level_preparing: bool:
 
 var UNIT_SIZE: float = 96.0
 
+## 全局调试开关：控制各角色 Debug 节点（状态名、血条等）的显隐。
+## 运行时改 Globals.debug_enabled 即可一键开关所有调试 UI；也可监听本信号做即时响应。
+signal debug_enabled_changed(enabled: bool)
+
+var _debug_enabled := true
+var debug_enabled: bool:
+	set(value):
+		if _debug_enabled == value:
+			return
+		_debug_enabled = value
+		debug_enabled_changed.emit(value)
+	get:
+		return _debug_enabled
+
 func go_to_main_menu() -> void:
 	TransitionLayer.change_scene(MAIN_MENU_SCENE_PATH)
 

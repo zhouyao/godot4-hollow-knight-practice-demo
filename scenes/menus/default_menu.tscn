@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/menus/components/buttons/focus_button.tscn" id="1_qnqyb"]
-[ext_resource type="Theme" path="res://assets/ui/misted_theme.tres" id="2_theme"]
+[ext_resource type="Theme" uid="uid://dmt8kq3vncw2x" path="res://assets/themes/misted_theme.tres" id="2_theme"]
 
 [sub_resource type="GDScript" id="GDScript_dv1nh"]
 script/source = "# 场景专属薄逻辑：处理主菜单按钮导航，无复用需求，保持内联。

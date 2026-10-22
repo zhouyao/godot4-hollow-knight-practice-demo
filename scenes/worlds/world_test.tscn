@@ -6,8 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://ciidxwely181f" path="res://assets/sprites/backgrounds/bg_2.png" id="3_c3uki"]
 [ext_resource type="PackedScene" uid="uid://bukv7vkqpvb33" path="res://scenes/effects/fog.tscn" id="4_6yx3g"]
 [ext_resource type="Texture2D" uid="uid://cucdtk38ti2vg" path="res://assets/sprites/backgrounds/bg_4.png" id="5_8jedn"]
-[ext_resource type="PackedScene" uid="uid://dbjleohr8a1u2" path="res://scenes/props/floor/floor.tscn" id="5_bd7ha"]
+[ext_resource type="PackedScene" uid="uid://dbjleohr8a1u2" path="res://scenes/props/floor.tscn" id="5_bd7ha"]
 [ext_resource type="Texture2D" uid="uid://b2rove6y8y4dd" path="res://assets/sprites/backgrounds/bg_3.png" id="5_l8c12"]
+[ext_resource type="PackedScene" uid="uid://cc7bpmgddem53" path="res://scenes/characters/enemies/enemy_slime.tscn" id="8_3bc65"]
+[ext_resource type="PackedScene" uid="uid://br8vy2on44xtx" path="res://scenes/characters/enemies/enemy.tscn" id="9_5m234"]
+[ext_resource type="PackedScene" uid="uid://cg7ionofoem53" path="res://scenes/characters/enemies/enemy_spitter.tscn" id="9_nygb8"]
 
 [sub_resource type="GDScript" id="GDScript_c5aoa"]
 script/source = "extends WorldTemplate
@@ -27,6 +30,11 @@ func _on_zoom_camera_lock_body_exited(body: Node2D) -> void:
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rywq7"]
 size = Vector2(40, 40)
 
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_rywq7"]
+vertices = PackedVector2Array(1433.6172, -733.2031, 1406.3594, -10.890625, 707.1328, -3.109375, 716.8594, -747.78906)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(707, -758, 697, 7, 1416, -1, 1444, -743)])
+
 [node name="WorldTest" unique_id=560156841 instance=ExtResource("1_h76fn")]
 script = SubResource("GDScript_c5aoa")
 
@@ -34,6 +42,10 @@ script = SubResource("GDScript_c5aoa")
 position = Vector2(0, 600)
 scale = Vector2(80, 1)
 shape = SubResource("RectangleShape2D_rywq7")
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="NavigationAreas" parent_id_path=PackedInt32Array(1557722077) index="0" unique_id=1970439446]
+position = Vector2(0, 500)
+navigation_polygon = SubResource("NavigationPolygon_rywq7")
 
 [node name="RightCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="0" unique_id=1421588960 node_paths=PackedStringArray("vertical_lock_marker")]
 position = Vector2(50, 220)
@@ -121,8 +133,29 @@ modulate = Color(0, 0, 0, 0.8)
 position = Vector2(-200, 200)
 scale = Vector2(4, 0.5)
 
+[node name="Enemy" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=67643208 instance=ExtResource("9_5m234")]
+position = Vector2(635, 427)
+max_health = 100
+initial_health = 100
+contact_damage_enabled = false
+
+[node name="SlimeEnemy" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="1" unique_id=588911125 instance=ExtResource("8_3bc65")]
+position = Vector2(835, 427)
+max_health = 100
+initial_health = 99
+contact_damage_enabled = false
+
+[node name="SpitterEnemy" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="2" unique_id=775034443 instance=ExtResource("9_nygb8")]
+position = Vector2(1035, 300)
+max_health = 100
+initial_health = 99
+contact_damage_enabled = false
+leash_enabled = true
+leash_size = Vector2(600, 400)
+
 [node name="Player" parent="." index="9" unique_id=1112432844]
 position = Vector2(1, 300)
+initial_energy = 50
 
 [node name="Layer_0" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=1048978077]
 repeat_size = Vector2(6000, 0)

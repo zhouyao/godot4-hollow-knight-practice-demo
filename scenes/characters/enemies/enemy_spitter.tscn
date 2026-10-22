@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://cg7ionofoem53"]
+
+[ext_resource type="PackedScene" uid="uid://br8vy2on44xtx" path="res://scenes/characters/enemies/enemy.tscn" id="1_enemy"]
+[ext_resource type="Script" uid="uid://og6qtfvgwa0u" path="res://scenes/characters/enemies/states/enemy_spit.gd" id="2_spit"]
+[ext_resource type="PackedScene" uid="uid://cl38x7ce5rm3y" path="res://scenes/characters/enemies/projectile.tscn" id="3_proj"]
+
+[node name="Enemy2" unique_id=1746772293 groups=["enemy"] instance=ExtResource("1_enemy")]
+projectile_scene = ExtResource("3_proj")
+gravity_enabled = false
+motion_mode = 1
+hover_amplitude = 24.0
+hover_frequency = 0.35
+use_navigation = true
+
+[node name="StateMachine" parent="." index="1" unique_id=1283964249]
+initial_state = &"spit"
+
+[node name="spit" type="Node" parent="StateMachine" index="2" unique_id=732424409]
+script = ExtResource("2_spit")
