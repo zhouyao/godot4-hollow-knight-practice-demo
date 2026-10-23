@@ -1,4 +1,3 @@
-## 收集场景里某类节点的小工具，对话框与右键菜单共用。
 class_name NodeFinder
 extends RefCounted
 
@@ -17,7 +16,6 @@ static func _collect(node: Node, type: Variant, out: Array) -> void:
 		_collect(child, type, out)
 
 
-## 转成带类型的数组，方便后续按 AnimatedSprite2D 直接使用
 static func typed_sprites(raw: Array) -> Array[AnimatedSprite2D]:
 	var out: Array[AnimatedSprite2D] = []
 	for n in raw:

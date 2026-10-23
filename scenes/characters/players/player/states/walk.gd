@@ -1,9 +1,9 @@
 extends PlayerState
 
-## 判定静止的阈值：避免 knockback 等残余速度导致永远回不到 idle
+
 const STOP_EPS := 1.0
 
-## 停下来后的去向（可在检查器改指向 dash 等）
+## 横向速度衰减到阈值以下时切往的目标状态（一般是 idle）。
 @export var target_stop: StringName = PlayerStateNames.IDLE
 
 func enter(_from: StringName) -> void:

@@ -1,21 +1,16 @@
 [gd_scene format=3 uid="uid://br8vy2on44xtx"]
 
-[ext_resource type="Script" uid="uid://vrkesv3mdbq5" path="res://scenes/characters/enemies/enemy.gd" id="1_enemy"]
-[ext_resource type="Script" uid="uid://bsrt37qjn27vs" path="res://scenes/characters/enemies/EnemyStateMachine.gd" id="2_esm"]
-[ext_resource type="Script" uid="uid://cjdsa0hggqboq" path="res://scenes/characters/enemies/states/idle.gd" id="3_idle"]
-[ext_resource type="Script" uid="uid://csy3uply2wdof" path="res://scenes/characters/enemies/states/death.gd" id="4_death"]
+[ext_resource type="Script" uid="uid://vrkesv3mdbq5" path="res://scenes/characters/enemies/enemy/enemy.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://bsrt37qjn27vs" path="res://scenes/characters/enemies/enemy/EnemyStateMachine.gd" id="2_esm"]
+[ext_resource type="Script" uid="uid://cjdsa0hggqboq" path="res://scenes/characters/enemies/enemy/states/idle.gd" id="3_idle"]
+[ext_resource type="Script" uid="uid://csy3uply2wdof" path="res://scenes/characters/enemies/enemy/states/death.gd" id="4_death"]
 [ext_resource type="Texture2D" uid="uid://j2o25agvlkow" path="res://assets/sprites/placeholders/Square/Square-0006.png" id="5_square"]
 [ext_resource type="PackedScene" path="res://scenes/characters/character_debug.tscn" id="7_dbg"]
+[ext_resource type="Script" uid="uid://ch8mvqx0p2knt" path="res://scenes/characters/enemies/enemy/states/hurt.gd" id="9_hurt"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
-radius = 30.0
-height = 100.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h6q0h"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_attack"]
-size = Vector2(80, 60)
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_detect"]
-radius = 700.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vywje"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_sprite"]
 light_mode = 1
@@ -45,7 +40,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("AttackArea/CollisionShape2D:disabled")
+tracks/0/path = NodePath("AttackArea/BodyAttackShape:disabled")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -121,7 +116,7 @@ _data = {
 &"idle": SubResource("Animation_idle")
 }
 
-[node name="Enemy" type="CharacterBody2D" unique_id=1382172558]
+[node name="Enemy" type="CharacterBody2D" unique_id=1382172558 groups=["enemy"]]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_enemy")
@@ -145,6 +140,10 @@ metadata/_custom_type_script = "uid://ub71f6ps06hf"
 script = ExtResource("3_idle")
 metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
 
+[node name="hurt" type="Node" parent="StateMachine" unique_id=1800428759]
+script = ExtResource("9_hurt")
+metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
+
 [node name="death" type="Node" parent="StateMachine" unique_id=932432461]
 script = ExtResource("4_death")
 metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
@@ -160,39 +159,20 @@ bus = &"Sound"
 [node name="death" type="AudioStreamPlayer2D" parent="Audio" unique_id=1699287581]
 bus = &"Sound"
 
-[node name="WallDetector" type="RayCast2D" parent="." unique_id=1710783293]
-target_position = Vector2(48, 0)
-collision_mask = 4
-
-[node name="LedgeDetector" type="RayCast2D" parent="." unique_id=311882515]
-position = Vector2(0, 40)
-target_position = Vector2(40, 64)
-collision_mask = 4
-
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1198583949]
 debug_enabled = true
-
-[node name="Muzzle" type="Marker2D" parent="." unique_id=1544223880]
-position = Vector2(60, 0)
 
 [node name="DropMarker" type="Marker2D" parent="." unique_id=1857504893]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=366153699]
-shape = SubResource("CapsuleShape2D_body")
+shape = SubResource("RectangleShape2D_h6q0h")
 
 [node name="AttackArea" type="Area2D" parent="." unique_id=2020624]
 collision_layer = 32
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=865173618]
-position = Vector2(60, 0)
-shape = SubResource("RectangleShape2D_attack")
+[node name="BodyAttackShape" type="CollisionShape2D" parent="AttackArea" unique_id=865173618]
+shape = SubResource("RectangleShape2D_vywje")
 disabled = true
-
-[node name="PlayerDetectionArea" type="Area2D" parent="." unique_id=2025089917]
-collision_layer = 32
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetectionArea" unique_id=405777218]
-shape = SubResource("CircleShape2D_detect")
 
 [node name="Animation" type="Node2D" parent="." unique_id=953898085]
 
@@ -208,5 +188,3 @@ libraries/ = SubResource("AnimationLibrary_actions")
 [node name="Debug" parent="." unique_id=282903970 instance=ExtResource("7_dbg")]
 
 [connection signal="timeout" from="Timer/HitTimer" to="." method="_on_hit_timer_timeout"]
-[connection signal="body_entered" from="PlayerDetectionArea" to="." method="_on_player_detection_area_body_entered"]
-[connection signal="body_exited" from="PlayerDetectionArea" to="." method="_on_player_detection_area_body_exited"]

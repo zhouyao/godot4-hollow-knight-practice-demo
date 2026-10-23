@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cc7bpmgddem53"]
+
+[ext_resource type="PackedScene" uid="uid://br8vy2on44xtx" path="res://scenes/characters/enemies/enemy/enemy.tscn" id="1_enemy"]
+[ext_resource type="Script" uid="uid://bg17gpcj1lae8" path="res://scenes/characters/enemies/enemy_ground/enemy_ground.gd" id="2_56q28"]
+[ext_resource type="Script" uid="uid://djb8l2kurcgo1" path="res://scenes/characters/enemies/enemy_ground/states/chase.gd" id="3_cinxp"]
+[ext_resource type="Script" uid="uid://bjre0jsdy4k15" path="res://scenes/characters/enemies/enemy_ground/EnemyGroundStateMachine.gd" id="4_gsm"]
+[ext_resource type="Script" uid="uid://bippqub5sskyu" path="res://scenes/characters/enemies/enemy_ground/states/homing.gd" id="5_ghome"]
+
+[node name="Enemy" unique_id=220108385 instance=ExtResource("1_enemy")]
+script = ExtResource("2_56q28")
+
+[node name="StateMachine" parent="." index="1" unique_id=1283964249]
+script = ExtResource("4_gsm")
+initial_state = &"chase"
+
+[node name="chase" type="Node" parent="StateMachine" index="4" unique_id=1057346826]
+script = ExtResource("3_cinxp")
+
+[node name="homing" type="Node" parent="StateMachine" index="5"]
+script = ExtResource("5_ghome")
+
+[node name="WallDetector" type="RayCast2D" parent="." index="9" unique_id=1710783293]
+target_position = Vector2(48, 0)
+collision_mask = 4
+
+[node name="LedgeDetector" type="RayCast2D" parent="." index="10" unique_id=311882515]
+position = Vector2(0, 40)
+target_position = Vector2(40, 64)
+collision_mask = 4

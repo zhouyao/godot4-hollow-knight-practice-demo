@@ -1,14 +1,7 @@
-## 把 AnimatedSprite2D 的 SpriteFrames 转成 AnimationPlayer 的 Animation。
-## 每条 SpriteFrames 动画 → 一个同名 Animation，内含两条离散数值轨道：
-##   <sprite>:animation  切到同名精灵动画（关键帧在 t=0）
-##   <sprite>:frame      逐帧关键帧，时间轴按 duration / fps 铺开
 class_name SpriteFramesConverter
 extends RefCounted
 
 
-## player: 目标 AnimationPlayer（轨道路径按它的 root_node 计算）
-## sprite: 数据来源与目标 AnimatedSprite2D
-## include: 留空表示全部精灵动画，否则只导出列出的那些
 static func build_library(
 	player: AnimationPlayer,
 	sprite: AnimatedSprite2D,

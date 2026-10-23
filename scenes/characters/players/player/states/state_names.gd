@@ -1,5 +1,5 @@
-
 class_name PlayerStateNames
+
 
 const IDLE: StringName = &"idle"
 const LOOK_UP: StringName = &"look_up"
@@ -11,5 +11,5 @@ const LAND: StringName = &"land"
 const SLASH_FORWARD: StringName = &"slash_forward"
 const SLASH_DOWN: StringName = &"slash_down"
 const SLASH_UP: StringName = &"slash_up"
-const DAMAGE: StringName = &"damage"
+const HURT: StringName = &"hurt"
 const DEATH: StringName = &"death"

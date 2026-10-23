@@ -1,6 +1,3 @@
-## 从场景里的 AnimatedSprite2D 选动画，导入到某个 AnimationPlayer。
-## 目标不写死：右键进来的那个只是默认值，对话框里可以切到场景里任意 AnimationPlayer；
-## 批量模式下还能给每个精灵各指定一个目标。
 @tool
 extends ConfirmationDialog
 
@@ -16,8 +13,6 @@ var _anim_box: VBoxContainer
 var _anim_checks: Dictionary = {}
 var _anim_total := 0
 
-## Tree 的 get_combined_minimum_size() 跟行数无关（实测恒为 16x17），
-## 只靠它表格会塌成几十像素、所有库都缩在里面得拖。量不到行高时的兜底值。
 const FALLBACK_ROW_HEIGHT := 24.0
 var _batch_targets_box: VBoxContainer
 var _batch_targets: Array[OptionButton] = []
@@ -29,7 +24,6 @@ var _hint: Label
 var _select_all: Button
 var _select_none: Button
 
-## 静态文案的 key 存在节点 meta 上，切语言时照 key 重新查表
 const I18N_META := &"i18n_key"
 
 
@@ -43,14 +37,12 @@ func setup(player: AnimationPlayer, sprites: Array[AnimatedSprite2D], plugin) ->
 	_refresh()
 
 
-## 弹出来之后再量一次行高：没弹出来之前表格没排版，量不到真实行高
 func fit_library_table() -> void:
 	_fit_library_table()
 
 
-## 编辑器语言切了：静态文案按 key 重查，动态文案交给 _refresh() 重算
 func retranslate() -> void:
-	if _anim_box == null:  # 还没建 UI（对话框没打开过）
+	if _anim_box == null:
 		return
 	title = SpriteFramesI18n.t("dialog.title")
 	get_ok_button().text = SpriteFramesI18n.t("dialog.ok")
@@ -77,7 +69,6 @@ func _refresh() -> void:
 	_refresh_animations()
 
 
-# --- UI ---
 
 func _build_ui() -> void:
 	title = SpriteFramesI18n.t("dialog.title")
@@ -160,14 +151,11 @@ func _build_ui() -> void:
 	confirmed.connect(_on_confirmed)
 
 
-## text 传的是 i18n 的 key，不是最终文案
 func _form_row(parent: Control, key: String, control: Control) -> void:
 	parent.add_child(_label(key))
 	parent.add_child(control)
 
 
-## 目标动画库用表格显示，最前面一列是单选框（4.7 的 TreeItem 没有 CELL_MODE_RADIO，
-## 用 CELL_MODE_CHECK + 手动互斥实现）。高度自适应，内容列不裁剪可横向滚动。
 func _build_library_table(parent: Control) -> void:
 	_library_tree = Tree.new()
 	_library_tree.columns = 4
@@ -194,7 +182,6 @@ func _build_library_table(parent: Control) -> void:
 	parent.add_child(_library_tree)
 
 
-## 静态文案统一从这里出：key 存进 meta，切语言时按 key 重查
 func _label(key: String) -> Label:
 	var l := Label.new()
 	l.set_meta(I18N_META, key)
@@ -202,7 +189,6 @@ func _label(key: String) -> Label:
 	return l
 
 
-## 把树里所有带 i18n meta 的 Label 重新翻译一遍
 func _apply_meta_texts(node: Node) -> void:
 	for child in node.get_children():
 		var key := String(child.get_meta(I18N_META, ""))
@@ -211,11 +197,8 @@ func _apply_meta_texts(node: Node) -> void:
 		_apply_meta_texts(child)
 
 
-# --- 数据 ---
 
 func _refresh_players() -> void:
-	# 右键进来的那个可能不在收集范围里（比如来自另一个场景），一定得保进候选列表，
-	# 否则目标下拉和动画库下拉会一起变空
 	if _player != null and not _players.has(_player):
 		_players.append(_player)
 	_target_option.clear()
@@ -246,7 +229,6 @@ func _refresh_sprites() -> void:
 	_batch_all.visible = _sprites.size() > 1
 
 
-## 批量模式下给每个精灵一行「目标」下拉，默认都是当前选的目标
 func _refresh_batch_targets() -> void:
 	for child in _batch_targets_box.get_children():
 		child.queue_free()
@@ -275,7 +257,6 @@ func _refresh_batch_targets() -> void:
 		_batch_targets.append(option)
 
 
-## 表格至少要有行可点：目标没解析出来、或目标压根没建库时，给一行 <global>（导入时新建）
 func _refresh_libraries() -> void:
 	var keep: Variant = _selected_library()
 	_library_tree.clear()
@@ -312,7 +293,6 @@ func _refresh_libraries() -> void:
 		item.set_metadata(0, lib_name)
 		if keep != null and lib_name == keep:
 			pick = i
-	# TreeItem 只有 get_child(idx)，没有 get_child_by_index
 	var target: TreeItem = tree_root.get_child(pick)
 	if target == null:
 		target = tree_root.get_first_child()
@@ -320,12 +300,9 @@ func _refresh_libraries() -> void:
 		target.select(0)
 		_exclusive_check(target)
 	_update_library_detail()
-	# 表格要按行数撑开，但刚建好时还没排版、量不到行高，所以延后再量一次
 	_fit_library_table.call_deferred()
 
 
-## 按实际行高 × 行数撑开表格，让所有动画库都能直接看到，不用拖滚动条。
-## 没排版好时量不到行高（rect.size.y ≈ 0），这时用兜底值，等下一帧再量。
 func _fit_library_table() -> void:
 	if _library_tree == null or not _library_tree.is_inside_tree():
 		return
@@ -345,7 +322,6 @@ func _fit_library_table() -> void:
 	_library_tree.custom_minimum_size = Vector2(0.0, top + rows * row_height + 8.0)
 
 
-## 单选：把这一行勾上，其余全部取消
 func _exclusive_check(keep: TreeItem) -> void:
 	var tree_root := _library_tree.get_root()
 	if tree_root == null or keep == null:
@@ -357,7 +333,6 @@ func _exclusive_check(keep: TreeItem) -> void:
 		child.set_checked(0, child == keep)
 
 
-## 勾了单选框、或点了行里任意一格，都当选中这一行
 func _on_library_edited() -> void:
 	var keep := _library_tree.get_selected()
 	if keep != null and keep.is_checked(0):
@@ -365,7 +340,6 @@ func _on_library_edited() -> void:
 		_update_library_detail()
 		_update_anim_hint()
 		return
-	# 兜底：找到刚被勾上的那一行
 	var tree_root := _library_tree.get_root()
 	if tree_root == null:
 		return
@@ -385,7 +359,6 @@ func _target_player_name() -> String:
 	return player.name if player != null else SpriteFramesI18n.t("value.unspecified")
 
 
-## 目标库在提示里的显示名，跟着表格单选走
 func _target_library_label() -> String:
 	var lib_name: Variant = _selected_library()
 	if lib_name == null:
@@ -413,7 +386,6 @@ func _library_content_text(names: Array, virtual_row: bool) -> String:
 	return "，".join(list)
 
 
-## 目标库里现在有什么、哪些会被覆盖，写清楚
 func _update_library_detail() -> void:
 	if _library_detail == null:
 		return
@@ -431,7 +403,6 @@ func _update_library_detail() -> void:
 		_library_detail.text = SpriteFramesI18n.t("detail.lib_empty")
 		return
 	var picked := _selected_animations()
-	# get_animation_list() 返回 PackedStringArray，拿 StringName 去 has() 会比对不上
 	var existing_strings: Array[String] = []
 	for raw in existing:
 		existing_strings.append(String(raw))
@@ -448,7 +419,6 @@ func _update_library_detail() -> void:
 	_library_detail.text = text
 
 
-## 勾选列表跟随选中的精灵；批量模式下取所有精灵动画的并集
 func _refresh_animations() -> void:
 	for child in _anim_box.get_children():
 		child.queue_free()
@@ -461,7 +431,6 @@ func _refresh_animations() -> void:
 			continue
 		for raw in sprite.sprite_frames.get_animation_names():
 			var n := StringName(raw)
-			# SpriteFrames 自带一条 0 帧的 default，别列出来干扰选择
 			if names.has(n) or _max_frames(n, sources) <= 0:
 				continue
 			names.append(n)
@@ -480,8 +449,6 @@ func _refresh_animations() -> void:
 	_update_library_detail()
 
 
-## 勾选状态一变就重算，别停在刷新那一刻的数字上。
-## 分母用 _anim_total（刷新时记录的候选总数），否则取消勾选时分母会跟着变小。
 func _update_anim_hint(available: Array = []) -> void:
 	if _hint == null:
 		return
@@ -524,7 +491,6 @@ func _describe(anim_name: StringName, sources: Array[AnimatedSprite2D]) -> Strin
 	return "   ".join(counts)
 
 
-# --- 取值 ---
 
 func _selected_player() -> AnimationPlayer:
 	if _players.is_empty():
@@ -532,8 +498,6 @@ func _selected_player() -> AnimationPlayer:
 	return _target_option.get_item_metadata(_target_option.selected) as AnimationPlayer
 
 
-## 当前表格里选中的库名；一行都没选时返回 null。
-## 返回类型故意不标 StringName——它不允许 null。
 func _selected_library():
 	var item := _checked_library_item()
 	if item == null:
@@ -592,13 +556,11 @@ func _on_confirmed() -> void:
 	if sprites.size() == 1:
 		msg = _plugin.export_frames(player, sprites[0], _settings())
 	else:
-		# 批量：每个精灵用自己的目标下拉
 		var targets: Array[AnimationPlayer] = []
 		for i in sprites.size():
 			var option := _batch_targets[i] as OptionButton
 			targets.append(option.get_item_metadata(option.selected) as AnimationPlayer)
 		msg = _plugin.export_batch(sprites, targets, _settings())
-	# exporter.gd 已经把结果打到 Output，这里避免重复输出
 	_hint.text = msg
 
 
@@ -609,8 +571,6 @@ func _path_of(node: Node) -> String:
 	return node.name
 
 
-## 候选 AnimationPlayer 要从「精灵所在的场景树」里找，
-## 不能只认正在编辑的场景根——实例化子场景、非编辑器环境都会拿空。
 func _scene_root() -> Node:
 	var edited := _edited_root()
 	var first: Node = _player if _player != null else (_sprites[0] if not _sprites.is_empty() else null)
@@ -630,14 +590,10 @@ static func _is_descendant(node: Node, ancestor: Node) -> bool:
 	return false
 
 
-## 向上找到「场景级」的顶层节点：撞到窗口根就停，撞到有 scene_file_path 的（实例子场景根）也停。
-## 注意别一路爬到窗口根——那里还挂着 autoload（Globals、TransitionLayer 之类），会被误收进来。
 static func _top_of(node: Node) -> Node:
 	var cur := node
 	while true:
 		var parent := cur.get_parent()
-		# 用「父节点是不是 Window」判边界，不用 get_tree()：
-		# 自定义 MainLoop（--script）下 get_tree() 会返回 null
 		if parent == null or parent is Window:
 			break
 		if cur.scene_file_path != "":

@@ -1,21 +1,14 @@
-## 真正执行导出 / 回滚的对象。被 plugin.gd 挂到 EditorUndoRedoManager 的 do/undo 上，
-## 所以导出（含批量）可以在编辑器里 Ctrl+Z 一次撤销。
 extends RefCounted
 
-## 每个精灵一次导出留一张快照，批量时按数组顺序回滚
 var _snapshots: Array[Dictionary] = []
 
-## 返回给调用方显示的状态文本
 var last_message := ""
 
-## 上次导出的 SpriteFrames 动画总数
 var last_count := 0
 
-## 上一批处理涉及了多少个精灵
 var last_sprites := 0
 
 
-# --- do 方法（由 UndoRedo 调用）---
 
 func do_export(player: AnimationPlayer, sprite: AnimatedSprite2D, settings: Dictionary) -> void:
 	_begin()
@@ -25,8 +18,6 @@ func do_export(player: AnimationPlayer, sprite: AnimatedSprite2D, settings: Dict
 
 func do_export_batch(sprites: Array, players: Array, settings: Dictionary) -> void:
 	_begin()
-	# 同一个 AnimationPlayer 被多个精灵共享时，重名的 idle/walk 会互相覆盖，
-	# 给这些精灵加节点名前缀，例如 PlayerAnimatedSprite_walk；独占的不加。
 	var shared := _count_per_player(players)
 	for i in sprites.size():
 		var player: AnimationPlayer = players[i] if i < players.size() else null
@@ -61,7 +52,6 @@ func undo_export() -> void:
 	_snapshots.clear()
 
 
-# --- 内部实现 ---
 
 func _begin() -> void:
 	_snapshots.clear()
@@ -100,7 +90,6 @@ func _export_one(player: AnimationPlayer, sprite: AnimatedSprite2D, settings: Di
 		"added": [] as Array[StringName],
 		"stopped": stop_playback,
 		"autoplay": sprite.autoplay,
-		# 4.7 起 AnimatedSprite2D 没有 playing 属性，播放状态只能读 is_playing() / 改 stop()
 		"was_playing": sprite.is_playing(),
 		"animation": sprite.animation,
 		"frame": sprite.frame,
@@ -121,7 +110,6 @@ func _export_one(player: AnimationPlayer, sprite: AnimatedSprite2D, settings: Di
 	snapshot["added"] = added
 
 	if stop_playback:
-		# 只在值真的变了才写，避免编辑器里刷 Setting-autoplay 告警
 		if String(sprite.autoplay) != "":
 			sprite.autoplay = ""
 		if sprite.is_playing():

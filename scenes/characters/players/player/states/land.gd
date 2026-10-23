@@ -1,9 +1,10 @@
 extends PlayerState
 
-## 落地保持时长（秒）；状态机自动维护 elapsed
+
+## 落地硬直时长（秒）：期间不产生过渡，保证落地动作播完再走下一步。
 @export var hold_time: float = 0.1
 
-## 保持结束后的去向
+## 硬直结束后切往的状态（一般是 idle）。
 @export var target_next: StringName = PlayerStateNames.IDLE
 
 func enter(_from: StringName) -> void:

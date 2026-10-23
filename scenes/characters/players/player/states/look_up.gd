@@ -1,6 +1,7 @@
 extends PlayerState
 
-## 抬头持续多久才把相机推上去（节奏归玩家状态，相机只负责偏移与平滑）
+
+## 进入抬头状态后延迟多久才推动镜头（秒）：避免轻点一下方向键画面就晃。
 @export var camera_look_delay: float = 1.0
 
 func enter(_from: StringName) -> void:
@@ -10,7 +11,6 @@ func exit(_to: StringName) -> void:
 	AuCameraDirector.clear_look()
 
 func update(_delta: float) -> void:
-	# elapsed 由状态机统计，进入时自动清零；按住够时长才开始推动相机
 	if elapsed >= camera_look_delay:
 		AuCameraDirector.look_up()
 	player._apply_gravity(_delta)

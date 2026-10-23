@@ -1,4 +1,3 @@
-## 场景树右键菜单：只在选到 AnimationPlayer 时出现「从精灵导入 SpriteFrames」。
 @tool
 extends EditorContextMenuPlugin
 
@@ -17,7 +16,6 @@ func _popup_menu(_paths: PackedStringArray) -> void:
 		add_context_menu_item(String(item["label"]), item["callback"] as Callable)
 
 
-## 纯逻辑：给定场景根与选区，算出要挂哪些菜单项。抽出来是为了能脱离编辑器做验证。
 func plan_items(root: Node, selection: Array) -> Array[Dictionary]:
 	if root == null:
 		return []
@@ -43,10 +41,6 @@ func plan_items(root: Node, selection: Array) -> Array[Dictionary]:
 	return items
 
 
-## 菜单回调。
-## 后面几个可选参数是防御：引擎调用菜单回调时可能额外带参数（如条目 id / index），
-## 参数个数对不上 GDScript 会直接报错、表现为「点了没反应」。
-## player/sprites 拿不到时再退回按当前选区重新解析。
 func _on_import(_p1 = null, _p2 = null, _p3 = null, _p4 = null, _p5 = null) -> void:
 	var args := [_p1, _p2, _p3, _p4, _p5]
 	var player: AnimationPlayer = null

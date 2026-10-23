@@ -1,20 +1,24 @@
 extends MenuRow
 class_name KeyBindingRow
 
-# 一条按键配置项：同一个动作分别提供键盘与手柄两个绑定槽，并各自提供恢复默认按钮。
 
+## 本行开始监听新按键时发出（点下键盘 / 手柄绑定按钮后）。
+## 参数 row：正在监听的那一行，可用于让菜单高亮当前行或屏蔽其它输入。
 signal listen_started(row: KeyBindingRow)
+## 本行结束监听时发出：绑定成功、按 ui_cancel 取消或行被隐藏都会触发。
+## 参数 row：结束监听的那一行。
 signal listen_stopped(row: KeyBindingRow)
 
 const LISTENING_TEXT := "按下新按键…"
 
-# 同一时刻只允许一行处于监听态。用 group 标记替代静态变量，脚本热重载后不会残留旧引用
 const LISTENING_GROUP := &"key_binding_listening"
 
 const HINT_SECONDS := 2.0
 
 enum Slot { KEYBOARD, GAMEPAD, NONE = -1 }
 
+## 本行绑定的输入动作名（项目设置 Input Map 里的 action，如 "jump" / "attack"）。
+## 留空则该行不读写任何绑定；名字拼错时绑定会静默失败，请与 InputBindings 中的动作表保持一致。
 @export var action_name: StringName = &""
 
 @onready var keyboard_button: FocusButton = $KeyboardButton
@@ -39,9 +43,7 @@ func _ready() -> void:
 	gamepad_reset.pressed.connect(_on_reset_pressed.bind(Slot.GAMEPAD))
 
 	Settings.bindings.binding_update.connect(_refresh)
-	# 切语言后按键名要跟着变（空格 <-> Space），Tr 只能翻回 meta 里的旧文案，这里再刷一次
 	Settings.localization.locale_changed.connect(_on_locale_changed)
-	# 同一时刻只有一行在监听输入，其余行不参与 _input 分发
 	set_process_input(false)
 	_refresh()
 
@@ -82,8 +84,6 @@ func _input(event: InputEvent) -> void:
 		stop_listening()
 		return
 
-	# 取消键优先处理：Esc / 手柄 B（都是 ui_cancel）退出监听。
-	# 手柄 B 也在 InputBindings.RESERVED_PAD_BUTTONS 里，绑不走，只能当作取消
 	if event.is_action_pressed(&"ui_cancel"):
 		get_viewport().set_input_as_handled()
 		stop_listening()
@@ -92,7 +92,6 @@ func _input(event: InputEvent) -> void:
 	var want_gamepad := _listening_slot == Slot.GAMEPAD
 	if InputBindings.is_gamepad_event(event) != want_gamepad:
 		return
-	# 摇杆同样属于手柄事件，但当前只支持把手柄按键作为绑定
 	if want_gamepad and !(event is InputEventJoypadButton):
 		return
 
@@ -153,7 +152,6 @@ func _conflict_names(conflicts: Array[StringName]) -> PackedStringArray:
 	return names
 
 
-# 冲突提示直接用兄弟行已经翻译过的标题，省掉另一份 action -> 名称的映射表
 func _sibling_display_name(action: StringName, parent: Node) -> String:
 	if parent != null:
 		for row in parent.get_children():

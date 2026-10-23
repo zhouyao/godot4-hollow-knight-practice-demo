@@ -1,6 +1,7 @@
 extends PlayerState
 
-## 落地后的去向（可在检查器改指向 land / dash 等）
+
+## 落回地面时切往的状态（一般是 land）。改成 idle 可以直接跳过落地硬直。
 @export var target_grounded: StringName = PlayerStateNames.LAND
 
 func enter(_from: StringName) -> void:

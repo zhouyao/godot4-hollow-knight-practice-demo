@@ -1,10 +1,3 @@
-## 直接往场景树右键菜单里塞一个条目。
-##
-## 为什么不用 EditorContextMenuPlugin.add_context_menu_item()：
-## 那条路径下引擎不一定会真的调用我们的 Callable（条目显示得出来，点了没反应），
-## 且实测它调用时会额外带参数、把 bind 的实参整体挤到后面。
-## 这里改成钩住场景树 PopupMenu 自身的 about_to_popup / id_pressed 信号，
-## 这两个是普通控件信号，行为确定，且经过 headless 实测。
 class_name SceneTreeMenuHook
 extends RefCounted
 
@@ -30,7 +23,6 @@ func bind() -> int:
 	return menus.size()
 
 
-## 场景树面板那几个 PopupMenu（右键菜单本体）
 static func find_menus() -> Array:
 	var base := EditorInterface.get_base_control()
 	var out: Array = []
@@ -61,7 +53,6 @@ func _on_popup(menu: PopupMenu) -> void:
 		return
 	if menu.get_item_index(MENU_ID) >= 0:
 		return
-	# 选中多个时只给一个入口，真正目标在对话框里挑（不写死）
 	var label := SpriteFramesI18n.t("menu.import_to", [players[0].name]) if players.size() == 1 \
 		else SpriteFramesI18n.t("menu.import_multi", [players.size()])
 	menu.add_separator()
@@ -77,7 +68,6 @@ func _on_id_pressed(id: int, menu: PopupMenu) -> void:
 	if players.is_empty():
 		print(SpriteFramesI18n.log_text("log.menu_no_player"))
 		return
-	# 只作为对话框里的默认目标，真正目标在对话框里选
 	var player := players[0]
 	print(SpriteFramesI18n.log_text("log.menu_clicked", [player.name]))
 	var root := EditorInterface.get_edited_scene_root()

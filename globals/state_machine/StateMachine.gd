@@ -1,29 +1,26 @@
 extends Node
 class_name StateMachine
 
-## 状态变化时发出，供 UI / 音频 / 动画等外部系统订阅
+
+## 状态切换完成后发出（旧状态 exit 之后、新状态 enter 之后）。
+## 参数 new_state：切换到的状态名；old_state：切换前的状态名，首次进入时为 &""。
+## 注意本信号在过渡过程中发出，回调里再调 set_state() 会被暂存、等本次过渡结束后才生效。
 signal state_changed(new_state: StringName, old_state: StringName)
 
-## 宿主节点，不绑定具体类型，敌人 / NPC / UI 都能复用
-## 默认取父节点；也可在场景中通过 host_path 指定，解除对节点层级的隐式依赖
+## 宿主节点路径（状态机操作的对象）。留空则取状态机的父节点。
 @export var host_path: NodePath
-## 初始状态名。留空则不在 _ready 自动进入，由宿主在自身 _ready 末尾调用 start()/start(名字)。
-## 之所以不自动启动：子节点的 _ready 先于宿主的 @onready 赋值，此时 enter() 会拿到未就绪的成员。
+## 启动时进入的初始状态名（与子节点名一致）。留空则 start() 必须显式传入状态名。
 @export var initial_state: StringName = &""
 
 var host: Node
 
-## 运行状态开关；玩家死亡 / 对话 / 过场时置 false 可挂起整个状态机
 var active: bool = true
 
-## 子状态节点表：状态名(StringName) -> State 节点
 var states: Dictionary = {}
 var current_state: State
 var current_state_name: StringName = &""
 var previous_state_name: StringName = &""
 
-## 过渡期间的重入保护：enter / exit / state_changed 回调中再次调用 set_state 时暂存，
-## 待本次过渡结束后统一应用，避免嵌套过渡搅乱状态（last-wins 语义）
 var _is_transitioning := false
 var _pending_state: StringName = &""
 var _pending_force := false
@@ -36,8 +33,6 @@ func _ready() -> void:
 	_collect_states()
 	_resolve_host()
 
-## 由宿主在自己的 _ready 末尾调用（此时宿主的 @onready 已就绪），进入初始状态。
-## 传空则使用导出的 initial_state。重复调用等价于重启到该状态。
 func start(state_name: StringName = &"") -> void:
 	if state_name == &"":
 		state_name = initial_state
@@ -51,18 +46,15 @@ func start(state_name: StringName = &"") -> void:
 	active = true
 	set_state(state_name, true)
 
-## 是否已完成启动（进入过初始状态）
 func is_started() -> bool:
 	return _started
 
-## 自动收集直接子节点中继承自 State 的节点（也可由子类在 super._ready() 前 add_child 注入）
 func _collect_states() -> void:
 	states.clear()
 	for child in get_children():
 		if child is State:
 			states[child.name] = child
 
-## 运行时注册 / 注销状态（技能、Buff 带来的临时状态等动态场景）
 func add_state(state: State) -> void:
 	if state == null:
 		return
@@ -105,8 +97,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	current_state.handle_input(event)
 
-## 切换状态：force 为 true 时允许重新进入当前状态（连击等需要重触发的场景）。
-## 目标状态不存在会告警；过渡中的重入调用会被暂存到本次过渡结束后应用。
 func set_state(target: StringName, force := false) -> void:
 	if not states.has(target):
 		push_warning("StateMachine(%s): 未知状态 '%s'，已忽略（检查子节点名是否拼错）" % [name, target])
@@ -115,7 +105,6 @@ func set_state(target: StringName, force := false) -> void:
 	if target == current_state_name and not force:
 		return
 
-	# 过渡未结束（重入）：暂存目标，本次过渡结束后再应用
 	if _is_transitioning:
 		_pending_state = target
 		_pending_force = force
@@ -140,15 +129,12 @@ func set_state(target: StringName, force := false) -> void:
 		_pending_force = false
 		set_state(next, next_force)
 
-## 播放宿主侧音效；宿主用 Dictionary 类型的 audio_nodes 声明即可（{名字: AudioStreamPlayer2D}）。
-## 首次调用时解析一次并缓存，不做每帧的动态属性查找。
 func play_sfx(key: StringName) -> void:
 	_resolve_sfx_nodes()
 	var stream := _sfx_nodes.get(key) as AudioStreamPlayer2D
 	if stream:
 		stream.play()
 
-## 停止宿主侧音效；节点不存在则安全跳过。
 func stop_sfx(key: StringName) -> void:
 	_resolve_sfx_nodes()
 	var stream := _sfx_nodes.get(key) as AudioStreamPlayer2D
@@ -162,7 +148,6 @@ func _resolve_sfx_nodes() -> void:
 	var nodes = host.get("audio_nodes")
 	_sfx_nodes = nodes if nodes is Dictionary else {}
 
-## 供外部（UI / 调试）读取当前 / 上一状态名
 func get_state_name() -> StringName:
 	return current_state_name
 

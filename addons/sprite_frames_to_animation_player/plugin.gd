@@ -39,7 +39,6 @@ func _exit_tree() -> void:
 	_exporter = null
 
 
-## 场景树面板是延迟构造的，刚进插件时可能还没建好，所以等几帧再找
 func _bind_scene_tree_menu() -> void:
 	var tree := _editor_tree()
 	if tree == null:
@@ -47,7 +46,7 @@ func _bind_scene_tree_menu() -> void:
 		return
 	for _attempt in 10:
 		await tree.process_frame
-		if _hook == null:  # 期间插件被禁用了
+		if _hook == null:
 			return
 		if _hook.bind() > 0:
 			print(SpriteFramesI18n.log_text("log.menu_bound"))
@@ -56,8 +55,6 @@ func _bind_scene_tree_menu() -> void:
 	_fallback_context_menu()
 
 
-## 编辑器语言改了：菜单名要重新登记（引擎只认登记时的那个字符串），
-## 已打开的对话框也要整体重刷一遍
 func _on_locale_changed() -> void:
 	_remove_tool_menu()
 	_add_tool_menu()
@@ -89,8 +86,6 @@ func open_import_dialog(player: AnimationPlayer, sprites: Array[AnimatedSprite2D
 	_popup_after_menu_closed()
 
 
-## 等一整帧再弹：右键菜单是在输入处理里关闭的，call_deferred 仍落在当前帧末尾，
-## 弹窗会被正在关闭的 PopupMenu 带掉（表现为「点了没反应」）。
 func _popup_after_menu_closed() -> void:
 	var tree := _dialog.get_tree()
 	if tree != null:
@@ -98,14 +93,12 @@ func _popup_after_menu_closed() -> void:
 	if _dialog == null:
 		return
 	_dialog.popup_centered()
-	# 弹出来之后再等一帧量行高，把动画库表格撑到能放下所有行
 	if tree != null:
 		await tree.process_frame
 	if _dialog != null:
 		_dialog.fit_library_table()
 
 
-# --- 内部 ---
 
 func _ensure_dialog() -> ConfirmationDialog:
 	if _dialog != null and is_instance_valid(_dialog):
@@ -122,7 +115,6 @@ func _editor_tree() -> SceneTree:
 	return base.get_tree() if base != null else null
 
 
-## Project > Tools 入口：目标取选中的 AnimationPlayer，否则取场景里第一个
 func _on_tool_menu() -> void:
 	var root := EditorInterface.get_edited_scene_root()
 	if root == null:
@@ -143,7 +135,6 @@ func _on_tool_menu() -> void:
 	open_import_dialog(target, NodeFinder.typed_sprites(NodeFinder.collect(root, AnimatedSprite2D)))
 
 
-# --- 供 import_dialog.gd 调用 ---
 
 func export_frames(player: AnimationPlayer, sprite: AnimatedSprite2D, settings: Dictionary) -> String:
 	var ur := get_undo_redo()
@@ -155,7 +146,6 @@ func export_frames(player: AnimationPlayer, sprite: AnimatedSprite2D, settings: 
 	return _exporter.last_message
 
 
-## 批量出口：sprites 与 targets 一一对应，整体算一个撤销动作
 func export_batch(sprites: Array, targets: Array, settings: Dictionary) -> String:
 	var ur := get_undo_redo()
 	ur.create_action("SpriteFrames → AnimationPlayer")

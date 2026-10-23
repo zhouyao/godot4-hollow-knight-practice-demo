@@ -1,6 +1,7 @@
 extends Node2D
 class_name WorldTemplate
 
+
 const PAUSE_MENU_SCENE := preload("res://scenes/menus/pause_menu.tscn")
 var pause_menu: CanvasLayer = null
 

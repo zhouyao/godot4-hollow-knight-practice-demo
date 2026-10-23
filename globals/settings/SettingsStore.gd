@@ -1,12 +1,6 @@
 extends RefCounted
 class_name SettingsStore
 
-# 配置读写层：只负责把设置落到 user://settings.cfg（ConfigFile），
-# 不持有任何运行时状态、信号或引擎副作用。Settings 单例在此基础上做
-# 音频总线 / InputMap / TranslationServer 的运行时分发与写盘 debounce。
-#
-# 方法签名刻意对齐 ConfigFile 的常用接口，使 Settings 内部的迁移只改前缀，
-# 不改动调用形态。
 
 const SETTINGS_PATH := "user://settings.cfg"
 const AUDIO_SETTING_NAME := "Audio"

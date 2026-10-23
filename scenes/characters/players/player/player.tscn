@@ -14,18 +14,18 @@
 [ext_resource type="Script" uid="uid://noav7tyes6os" path="res://scenes/characters/players/player/states/slash_down.gd" id="12_tmesi"]
 [ext_resource type="Script" uid="uid://n5m4aggv4pj4" path="res://scenes/characters/players/player/states/slash_up.gd" id="13_vvfi6"]
 [ext_resource type="AudioStream" uid="uid://37bd44p7le25" path="res://assets/sounds/characters/players/player/player_walk.wav" id="14_3lsh5"]
-[ext_resource type="Script" uid="uid://d0perfsqddujp" path="res://scenes/characters/players/player/states/damage.gd" id="14_dmgst"]
+[ext_resource type="Script" uid="uid://d0perfsqddujp" path="res://scenes/characters/players/player/states/hurt.gd" id="14_dmgst"]
 [ext_resource type="AudioStream" uid="uid://bfxddug655fh1" path="res://assets/sounds/characters/players/player/player_death.wav" id="15_oi6ae"]
 [ext_resource type="AudioStream" uid="uid://5i3tdrjs7em3" path="res://assets/sounds/characters/players/player/player_jump.wav" id="16_nm7y7"]
 [ext_resource type="AudioStream" uid="uid://dodbbn1fndqpc" path="res://assets/sounds/characters/players/player/player_land.wav" id="17_eix85"]
 [ext_resource type="AudioStream" uid="uid://cmqjdqcp0jpu6" path="res://assets/sounds/characters/players/player/slash_forward.wav" id="18_dq5qu"]
 [ext_resource type="AudioStream" uid="uid://b3st40g1pufow" path="res://assets/sounds/characters/players/player/slash_up.wav" id="19_cyxjp"]
 [ext_resource type="AudioStream" uid="uid://bulklivs86a1x" path="res://assets/sounds/characters/players/player/slash_down.wav" id="20_lduw1"]
-[ext_resource type="AudioStream" uid="uid://c6xb2fyhvcb0v" path="res://assets/sounds/characters/players/player/player_damage.wav" id="21_fvm4r"]
+[ext_resource type="AudioStream" uid="uid://c6xb2fyhvcb0v" path="res://assets/sounds/characters/players/player/player_hurt.wav" id="21_fvm4r"]
 [ext_resource type="Texture2D" uid="uid://pnuqea280sri" path="res://assets/textures/lights/circle.png" id="21_g7q77"]
 [ext_resource type="Texture2D" uid="uid://doqp4ka6848rl" path="res://assets/animations/characters/players/player/death/player_death.png" id="22_sxvnn"]
 [ext_resource type="Texture2D" uid="uid://dlm5s27mpnapf" path="res://assets/animations/characters/players/player/fall/player_fall.png" id="23_aigm3"]
-[ext_resource type="Texture2D" uid="uid://b2lnhaq5frfpe" path="res://assets/animations/characters/players/player/damage/player_damage.png" id="23_tin0m"]
+[ext_resource type="Texture2D" uid="uid://b2lnhaq5frfpe" path="res://assets/animations/characters/players/player/hurt/player_damage.png" id="23_tin0m"]
 [ext_resource type="Texture2D" uid="uid://3gsg0qolbkvg" path="res://assets/animations/characters/players/player/idle/player_idle.png" id="24_ge0r3"]
 [ext_resource type="Texture2D" uid="uid://delekgtdw1sbd" path="res://assets/animations/characters/players/player/jump/player_jump.png" id="25_sj54g"]
 [ext_resource type="Texture2D" uid="uid://cfy40ktdbgo67" path="res://assets/animations/characters/players/player/look_down/player_look_down.png" id="26_q2fdo"]
@@ -45,18 +45,6 @@ height = 100.0
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_2n40l"]
 light_mode = 1
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yc2fp"]
-atlas = ExtResource("23_tin0m")
-region = Rect2(0, 0, 100, 200)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wqnxi"]
-atlas = ExtResource("23_tin0m")
-region = Rect2(100, 0, 100, 200)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_c8mju"]
-atlas = ExtResource("23_tin0m")
-region = Rect2(200, 0, 100, 200)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_es4m5"]
 atlas = ExtResource("22_sxvnn")
@@ -85,6 +73,18 @@ region = Rect2(0, 0, 100, 200)
 [sub_resource type="AtlasTexture" id="AtlasTexture_k5ffa"]
 atlas = ExtResource("23_aigm3")
 region = Rect2(100, 0, 100, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yc2fp"]
+atlas = ExtResource("23_tin0m")
+region = Rect2(0, 0, 100, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wqnxi"]
+atlas = ExtResource("23_tin0m")
+region = Rect2(100, 0, 100, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c8mju"]
+atlas = ExtResource("23_tin0m")
+region = Rect2(200, 0, 100, 200)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_olb2f"]
 atlas = ExtResource("24_ge0r3")
@@ -174,20 +174,6 @@ region = Rect2(200, 0, 100, 200)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_yc2fp")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_wqnxi")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_c8mju")
-}],
-"loop": 0,
-"name": &"damage",
-"speed": 3.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_es4m5")
 }, {
 "duration": 1.0,
@@ -216,6 +202,20 @@ animations = [{
 "loop": 0,
 "name": &"fall",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yc2fp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wqnxi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c8mju")
+}],
+"loop": 0,
+"name": &"hurt",
+"speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -398,33 +398,17 @@ animations = [{
 
 [sub_resource type="Animation" id="Animation_e5tlo"]
 length = 0.001
-
-[sub_resource type="Animation" id="Animation_tin0m"]
-resource_name = "damage"
-length = 0.3
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Animation/PlayerAnimatedSprite:animation")
+tracks/0/path = NodePath("Animation/PlayerAnimatedSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"damage"]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Animation/PlayerAnimatedSprite:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [0, 1, 2]
+"values": [0]
 }
 
 [sub_resource type="Animation" id="Animation_b1yaw"]
@@ -495,6 +479,34 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [0, 1]
+}
+
+[sub_resource type="Animation" id="Animation_yc2fp"]
+resource_name = "hurt"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/PlayerAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"hurt"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/PlayerAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
 }
 
 [sub_resource type="Animation" id="Animation_17pwy"]
@@ -870,9 +882,9 @@ tracks/1/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_k6mkd"]
 _data = {
 &"RESET": SubResource("Animation_e5tlo"),
-&"damage": SubResource("Animation_tin0m"),
 &"death": SubResource("Animation_b1yaw"),
 &"fall": SubResource("Animation_77k28"),
+&"hurt": SubResource("Animation_yc2fp"),
 &"idle": SubResource("Animation_17pwy"),
 &"jump": SubResource("Animation_dtbbj"),
 &"look_down": SubResource("Animation_yx6ho"),
@@ -936,7 +948,7 @@ script = ExtResource("12_tmesi")
 [node name="slash_up" type="Node" parent="StateMachine" unique_id=2010000005]
 script = ExtResource("13_vvfi6")
 
-[node name="damage" type="Node" parent="StateMachine" unique_id=2010000006]
+[node name="hurt" type="Node" parent="StateMachine" unique_id=2010000006]
 script = ExtResource("14_dmgst")
 
 [node name="Audio" type="Node2D" parent="." unique_id=290561661]
@@ -969,7 +981,7 @@ bus = &"Sound"
 stream = ExtResource("20_lduw1")
 bus = &"Sound"
 
-[node name="damage" type="AudioStreamPlayer2D" parent="Audio" unique_id=2059580229]
+[node name="hurt" type="AudioStreamPlayer2D" parent="Audio" unique_id=2059580229]
 stream = ExtResource("21_fvm4r")
 bus = &"Sound"
 
@@ -1021,8 +1033,7 @@ position = Vector2(0, -21)
 rotation = 3.1415925
 scale = Vector2(0.7, -0.7)
 sprite_frames = SubResource("SpriteFrames_kc87p")
-animation = &"damage"
-autoplay = "idle"
+animation = &"hurt"
 
 [node name="SlashForwardAnimatedSprite" type="AnimatedSprite2D" parent="Animation" unique_id=768569118]
 visible = false

@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://cg7ionofoem53"]
+
+[ext_resource type="PackedScene" uid="uid://br8vy2on44xtx" path="res://scenes/characters/enemies/enemy/enemy.tscn" id="1_enemy"]
+[ext_resource type="Script" uid="uid://d3jq0s40o1kob" path="res://scenes/characters/enemies/enemy_flying/enemy_flying.gd" id="2_6sbtg"]
+[ext_resource type="PackedScene" uid="uid://cl38x7ce5rm3y" path="res://scenes/characters/enemies/projectile.tscn" id="3_proj"]
+[ext_resource type="Script" uid="uid://ccpnbqbs3vg4x" path="res://scenes/characters/enemies/enemy_flying/states/chase.gd" id="4_fly"]
+[ext_resource type="Script" uid="uid://11c6nem6rhaw" path="res://scenes/characters/enemies/enemy_flying/states/spit.gd" id="5_spit"]
+[ext_resource type="Script" uid="uid://bv1xlrod3ptvr" path="res://scenes/characters/enemies/enemy_flying/EnemyFlyingStateMachine.gd" id="6_fsm"]
+[ext_resource type="Script" uid="uid://dmel73ffqpksp" path="res://scenes/characters/enemies/enemy_flying/states/homing.gd" id="7_fhome"]
+
+[node name="Enemy2" unique_id=1746772293 instance=ExtResource("1_enemy")]
+motion_mode = 1
+script = ExtResource("2_6sbtg")
+projectile_scene = ExtResource("3_proj")
+projectile_damage = 1
+gravity_enabled = false
+
+[node name="StateMachine" parent="." index="1" unique_id=1283964249]
+script = ExtResource("6_fsm")
+initial_state = &"chase"
+
+[node name="chase" type="Node" parent="StateMachine" index="4" unique_id=170000001]
+script = ExtResource("4_fly")
+
+[node name="spit" type="Node" parent="StateMachine" index="5" unique_id=732424409]
+script = ExtResource("5_spit")
+
+[node name="homing" type="Node" parent="StateMachine" index="6"]
+script = ExtResource("7_fhome")
+
+[node name="Muzzle" type="Marker2D" parent="." index="9" unique_id=1544223880]
+position = Vector2(60, 0)

@@ -1,9 +1,5 @@
 extends Node
 
-# UI 音效统一播放：所有菜单控件共享一组播放器。
-# 原先每个 FocusButton 各挂 2 个 AudioStreamPlayer，仅在按键设置一屏就有 24 个节点，
-# 这里收拢成一对，既省节点也保证同一时刻只有一声在响。
-# 注意：autoload 脚本不声明与 autoload 名同名的 class_name（Godot 会报 hides an autoload singleton）。
 
 const SOUND_BUS := &"Sound"
 
