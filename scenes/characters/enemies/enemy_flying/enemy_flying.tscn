@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://bv1xlrod3ptvr" path="res://scenes/characters/enemies/enemy_flying/EnemyFlyingStateMachine.gd" id="6_fsm"]
 [ext_resource type="Script" uid="uid://dmel73ffqpksp" path="res://scenes/characters/enemies/enemy_flying/states/homing.gd" id="7_fhome"]
 
-[node name="Enemy2" unique_id=1746772293 instance=ExtResource("1_enemy")]
+[node name="EnemyFlying" unique_id=1746772293 instance=ExtResource("1_enemy")]
 motion_mode = 1
 script = ExtResource("2_6sbtg")
 projectile_scene = ExtResource("3_proj")
@@ -19,13 +19,13 @@ gravity_enabled = false
 script = ExtResource("6_fsm")
 initial_state = &"chase"
 
-[node name="chase" type="Node" parent="StateMachine" index="4" unique_id=170000001]
+[node name="chase" type="Node" parent="StateMachine" index="3" unique_id=170000001]
 script = ExtResource("4_fly")
 
-[node name="spit" type="Node" parent="StateMachine" index="5" unique_id=732424409]
+[node name="spit" type="Node" parent="StateMachine" index="4" unique_id=732424409]
 script = ExtResource("5_spit")
 
-[node name="homing" type="Node" parent="StateMachine" index="6"]
+[node name="homing" type="Node" parent="StateMachine" index="5" unique_id=381687989]
 script = ExtResource("7_fhome")
 
 [node name="Muzzle" type="Marker2D" parent="." index="9" unique_id=1544223880]

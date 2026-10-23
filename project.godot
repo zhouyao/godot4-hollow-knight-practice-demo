@@ -38,6 +38,18 @@ window/stretch/aspect="expand"
 
 enabled=PackedStringArray("res://addons/camera_director/plugin.cfg", "res://addons/sprite_frames_to_animation_player/plugin.cfg")
 
+[file_customization]
+
+folder_colors={
+"res://scenes/characters/": "pink",
+"res://scenes/characters/enemies/": "red",
+"res://scenes/characters/npcs/": "orange",
+"res://scenes/characters/players/": "purple",
+"res://scenes/menus/": "orange",
+"res://scenes/props/": "teal",
+"res://scenes/worlds/": "green"
+}
+
 [global_group]
 
 player=""

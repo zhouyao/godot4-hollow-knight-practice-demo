@@ -17,7 +17,6 @@ func change_scene(target: String) -> void:
 
 [sub_resource type="Animation" id="Animation_ywy38"]
 resource_name = "fade_to_black"
-length = 1.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true

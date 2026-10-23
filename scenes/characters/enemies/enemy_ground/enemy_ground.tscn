@@ -6,17 +6,17 @@
 [ext_resource type="Script" uid="uid://bjre0jsdy4k15" path="res://scenes/characters/enemies/enemy_ground/EnemyGroundStateMachine.gd" id="4_gsm"]
 [ext_resource type="Script" uid="uid://bippqub5sskyu" path="res://scenes/characters/enemies/enemy_ground/states/homing.gd" id="5_ghome"]
 
-[node name="Enemy" unique_id=220108385 instance=ExtResource("1_enemy")]
+[node name="EnemyGround" unique_id=220108385 instance=ExtResource("1_enemy")]
 script = ExtResource("2_56q28")
 
 [node name="StateMachine" parent="." index="1" unique_id=1283964249]
 script = ExtResource("4_gsm")
 initial_state = &"chase"
 
-[node name="chase" type="Node" parent="StateMachine" index="4" unique_id=1057346826]
+[node name="chase" type="Node" parent="StateMachine" index="3" unique_id=1057346826]
 script = ExtResource("3_cinxp")
 
-[node name="homing" type="Node" parent="StateMachine" index="5"]
+[node name="homing" type="Node" parent="StateMachine" index="4" unique_id=197066618]
 script = ExtResource("5_ghome")
 
 [node name="WallDetector" type="RayCast2D" parent="." index="9" unique_id=1710783293]

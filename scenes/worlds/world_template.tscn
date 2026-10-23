@@ -12,14 +12,6 @@ script = ExtResource("1_g2vgr")
 collision_layer = 16
 collision_mask = 3
 
-[node name="NavigationAreas" type="Node2D" parent="." unique_id=1557722077]
-
-[node name="CameraLock" type="Node2D" parent="." unique_id=1547390241]
-
-[node name="Areas" type="Node2D" parent="CameraLock" unique_id=1193241330]
-
-[node name="Markers" type="Node2D" parent="CameraLock" unique_id=689316407]
-
 [node name="Background" type="Node2D" parent="." unique_id=1742804954]
 
 [node name="Forebackground" type="Node2D" parent="." unique_id=1506133326]
@@ -62,5 +54,13 @@ blend_mode = 1
 [node name="AuCameraRig" type="Node2D" parent="." unique_id=331803307]
 script = ExtResource("3_camrig")
 metadata/_custom_type_script = "uid://dos4hols5h4c2"
+
+[node name="NavigationAreas" type="Node2D" parent="." unique_id=1557722077]
+
+[node name="CameraLock" type="Node2D" parent="." unique_id=1547390241]
+
+[node name="Areas" type="Node2D" parent="CameraLock" unique_id=1193241330]
+
+[node name="Markers" type="Node2D" parent="CameraLock" unique_id=689316407]
 
 [connection signal="body_entered" from="KillBox" to="." method="_on_kill_box_body_entered"]

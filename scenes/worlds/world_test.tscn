@@ -44,43 +44,6 @@ position = Vector2(0, 600)
 scale = Vector2(80, 1)
 shape = SubResource("RectangleShape2D_rywq7")
 
-[node name="Territory" parent="NavigationAreas" parent_id_path=PackedInt32Array(1557722077) index="0" unique_id=1970439446 instance=ExtResource("10_terrt")]
-position = Vector2(0, 500)
-navigation_polygon = SubResource("NavigationPolygon_rywq7")
-
-[node name="RightCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="0" unique_id=1421588960 node_paths=PackedStringArray("vertical_lock_marker")]
-position = Vector2(50, 220)
-collision_layer = 16
-script = ExtResource("2_p6tgj")
-vertical_lock_marker = NodePath("../../Markers/vertical_lock")
-can_look_up = true
-can_look_down = true
-
-[node name="LeftCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="1" unique_id=324128848 node_paths=PackedStringArray("horizontal_lock_marker", "vertical_lock_marker")]
-position = Vector2(-385, 217)
-collision_layer = 16
-script = ExtResource("2_p6tgj")
-horizontal_lock_marker = NodePath("../../Markers/horizontal_lock")
-vertical_lock_marker = NodePath("../../Markers/vertical_lock")
-can_look_up = true
-can_look_down = true
-area_size = Vector2(300, 600)
-
-[node name="ZoomCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="2" unique_id=146476761 node_paths=PackedStringArray("vertical_lock_marker")]
-position = Vector2(-1281, 224)
-collision_layer = 16
-script = ExtResource("2_p6tgj")
-vertical_lock_marker = NodePath("../../Markers/vertical_lock")
-can_look_up = true
-can_look_down = true
-area_size = Vector2(1500, 600)
-
-[node name="vertical_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="0" unique_id=1345446756]
-position = Vector2(0, 200)
-
-[node name="horizontal_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="1" unique_id=708724070]
-position = Vector2(-280, 300)
-
 [node name="Darkness" type="Parallax2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="0" unique_id=1607616105]
 repeat_size = Vector2(1920, 1080)
 
@@ -154,7 +117,7 @@ initial_health = 99
 contact_damage_enabled = false
 navigation_region = NodePath("../../NavigationAreas/Territory")
 
-[node name="Player" parent="." index="9" unique_id=1112432844]
+[node name="Player" parent="." index="7" unique_id=1112432844]
 position = Vector2(32, 300)
 initial_energy = 50
 
@@ -180,6 +143,43 @@ texture = ExtResource("5_l8c12")
 position = Vector2(-400, 440)
 scale = Vector2(2, 2)
 texture = ExtResource("5_l8c12")
+
+[node name="Territory" parent="NavigationAreas" parent_id_path=PackedInt32Array(1557722077) index="0" unique_id=1970439446 instance=ExtResource("10_terrt")]
+position = Vector2(0, 500)
+navigation_polygon = SubResource("NavigationPolygon_rywq7")
+
+[node name="RightCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="0" unique_id=1421588960 node_paths=PackedStringArray("vertical_lock_marker")]
+position = Vector2(50, 204)
+collision_layer = 16
+script = ExtResource("2_p6tgj")
+vertical_lock_marker = NodePath("../../Markers/vertical_lock")
+can_look_up = true
+can_look_down = true
+
+[node name="LeftCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="1" unique_id=324128848 node_paths=PackedStringArray("horizontal_lock_marker", "vertical_lock_marker")]
+position = Vector2(-389, 201)
+collision_layer = 16
+script = ExtResource("2_p6tgj")
+horizontal_lock_marker = NodePath("../../Markers/horizontal_lock")
+vertical_lock_marker = NodePath("../../Markers/vertical_lock")
+can_look_up = true
+can_look_down = true
+area_size = Vector2(300, 600)
+
+[node name="ZoomCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="2" unique_id=146476761 node_paths=PackedStringArray("vertical_lock_marker")]
+position = Vector2(-1271, 205)
+collision_layer = 16
+script = ExtResource("2_p6tgj")
+vertical_lock_marker = NodePath("../../Markers/vertical_lock")
+can_look_up = true
+can_look_down = true
+area_size = Vector2(1500, 600)
+
+[node name="vertical_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="0" unique_id=1345446756]
+position = Vector2(0, 200)
+
+[node name="horizontal_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="1" unique_id=708724070]
+position = Vector2(-280, 300)
 
 [connection signal="body_entered" from="CameraLock/Areas/ZoomCameraLock" to="." method="_on_zoom_camera_lock_body_entered"]
 [connection signal="body_exited" from="CameraLock/Areas/ZoomCameraLock" to="." method="_on_zoom_camera_lock_body_exited"]

@@ -6,6 +6,7 @@ const HURT: StringName = &"hurt"
 const DEATH: StringName = &"death"
 const CHASE: StringName = &"chase"
 const HOMING: StringName = &"homing"
+const SPIT: StringName = &"spit"
+
 const PATROL: StringName = &"patrol"
 const ATTACK: StringName = &"attack"
-const SPIT: StringName = &"spit"
