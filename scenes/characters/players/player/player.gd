@@ -134,6 +134,13 @@ func _handle_move_input():
 		velocity.y = max_jump_velocity
 
 
+## 治疗（食物掉落用）：不会超过 max_health，死亡状态下无效。
+func heal(amount: int) -> void:
+	if dead or amount <= 0:
+		return
+	health = mini(health + amount, max_health)
+	_refresh_health_bar()
+
 func _dead():
 	if dead:
 		return

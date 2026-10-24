@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://cl38x7ce5rm3y"]
+
+[ext_resource type="Script" uid="uid://bhgnd4c8einaq" path="res://scenes/projectiles/projectile.gd" id="1_proj"]
+
+[sub_resource type="CircleShape2D" id="circle"]
+radius = 14.0
+
+[node name="Projectile" type="Area2D" unique_id=22216134]
+collision_layer = 8
+collision_mask = 5
+script = ExtResource("1_proj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=165469838]
+shape = SubResource("circle")
+
+[node name="Visual" type="Polygon2D" parent="." unique_id=1022203735]
+color = Color(0.9, 0.2, 0.2, 1)
+polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
+
+[node name="LifeTimer" type="Timer" parent="." unique_id=1552217917]
+one_shot = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="LifeTimer" to="." method="_on_life_timer_timeout"]

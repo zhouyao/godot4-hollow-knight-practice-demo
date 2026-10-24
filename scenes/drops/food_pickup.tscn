@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://c5tqx7jnlvs76"]
+
+[ext_resource type="Script" uid="uid://b7pgustb0nvm3" path="res://scenes/drops/food_pickup.gd" id="1_food"]
+[ext_resource type="Texture2D" uid="uid://dh7x8my2eslwe" path="res://assets/sprites/placeholders/Diamond/Sprite-0002.png" id="2_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_magnet"]
+radius = 120.0
+
+[node name="FoodPickup" type="Area2D" unique_id=517395777]
+collision_layer = 128
+script = ExtResource("1_food")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1427531848]
+position = Vector2(0, -8)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tex")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1918794793]
+shape = SubResource("CircleShape2D_magnet")
+
+[node name="Audio" type="Node2D" parent="." unique_id=1691692258]
+
+[node name="Pickup" type="AudioStreamPlayer2D" parent="Audio" unique_id=2105068178]
+bus = &"Sound"

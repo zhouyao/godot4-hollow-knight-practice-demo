@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://b0wloetbeydqe"]
+
+[ext_resource type="Script" uid="uid://c0hiubym73ayh" path="res://scenes/ui/hud.gd" id="1_hud"]
+
+[node name="Hud" type="CanvasLayer" unique_id=1053996388]
+script = ExtResource("1_hud")
+
+[node name="HBox" type="HBoxContainer" parent="." unique_id=932961798]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 424.0
+offset_bottom = 64.0
+theme_override_constants/separation = 32
+
+[node name="CoinLabel" type="Label" parent="HBox" unique_id=709891256]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 28
+text = "钱币: 0"
+
+[node name="FoodLabel" type="Label" parent="HBox" unique_id=25978460]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 28
+text = "食物: 0"

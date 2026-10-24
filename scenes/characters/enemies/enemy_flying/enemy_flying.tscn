@@ -1,32 +1,39 @@
 [gd_scene format=3 uid="uid://cg7ionofoem53"]
 
-[ext_resource type="PackedScene" uid="uid://br8vy2on44xtx" path="res://scenes/characters/enemies/enemy/enemy.tscn" id="1_enemy"]
+[ext_resource type="PackedScene" uid="uid://br8vy2on44xtx" path="res://scenes/characters/enemies/_base/enemy.tscn" id="1_enemy"]
 [ext_resource type="Script" uid="uid://d3jq0s40o1kob" path="res://scenes/characters/enemies/enemy_flying/enemy_flying.gd" id="2_6sbtg"]
-[ext_resource type="PackedScene" uid="uid://cl38x7ce5rm3y" path="res://scenes/characters/enemies/projectile.tscn" id="3_proj"]
-[ext_resource type="Script" uid="uid://ccpnbqbs3vg4x" path="res://scenes/characters/enemies/enemy_flying/states/chase.gd" id="4_fly"]
-[ext_resource type="Script" uid="uid://11c6nem6rhaw" path="res://scenes/characters/enemies/enemy_flying/states/spit.gd" id="5_spit"]
-[ext_resource type="Script" uid="uid://bv1xlrod3ptvr" path="res://scenes/characters/enemies/enemy_flying/EnemyFlyingStateMachine.gd" id="6_fsm"]
-[ext_resource type="Script" uid="uid://dmel73ffqpksp" path="res://scenes/characters/enemies/enemy_flying/states/homing.gd" id="7_fhome"]
+[ext_resource type="PackedScene" uid="uid://cl38x7ce5rm3y" path="res://scenes/projectiles/projectile.tscn" id="3_proj"]
+[ext_resource type="Script" uid="uid://bsrt37qjn27vs" path="res://scenes/characters/enemies/_base/EnemyStateMachine.gd" id="6_fsm"]
+[ext_resource type="Script" uid="uid://cjnchdg6o2b4m" path="res://scenes/characters/enemies/enemy_flying/states/chase.gd" id="7_chase"]
+[ext_resource type="Script" path="res://scenes/characters/enemies/enemy_flying/states/return.gd" id="8_ret"]
+[ext_resource type="Script" uid="uid://dmijt5wgtd4sk" path="res://scenes/characters/enemies/enemy_flying/states/patrol.gd" id="9_fpatrol"]
+[ext_resource type="Script" uid="uid://11c6nem6rhaw" path="res://scenes/characters/enemies/enemy_flying/states/attack.gd" id="10_fatk"]
+[ext_resource type="Resource" path="res://resources/drops/enemy_basic.tres" id="11_drop"]
 
 [node name="EnemyFlying" unique_id=1746772293 instance=ExtResource("1_enemy")]
 motion_mode = 1
 script = ExtResource("2_6sbtg")
-projectile_scene = ExtResource("3_proj")
-projectile_damage = 1
+keep_distance = -1.0
+fly_attack_range = -1.0
+fly_speed_multiplier = -1.0
 gravity_enabled = false
+projectile_scene = ExtResource("3_proj")
+drop_table = ExtResource("11_drop")
 
 [node name="StateMachine" parent="." index="1" unique_id=1283964249]
 script = ExtResource("6_fsm")
-initial_state = &"chase"
+
+[node name="patrol" type="Node" parent="StateMachine" index="2" unique_id=2000000006]
+script = ExtResource("9_fpatrol")
+metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
 
 [node name="chase" type="Node" parent="StateMachine" index="3" unique_id=170000001]
-script = ExtResource("4_fly")
+script = ExtResource("7_chase")
 
-[node name="spit" type="Node" parent="StateMachine" index="4" unique_id=732424409]
-script = ExtResource("5_spit")
+[node name="attack" type="Node" parent="StateMachine" index="4" unique_id=2000000007]
+script = ExtResource("10_fatk")
+metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
 
-[node name="homing" type="Node" parent="StateMachine" index="5" unique_id=381687989]
-script = ExtResource("7_fhome")
-
-[node name="Muzzle" type="Marker2D" parent="." index="9" unique_id=1544223880]
-position = Vector2(60, 0)
+[node name="return" type="Node" parent="StateMachine" index="5" unique_id=2000000005]
+script = ExtResource("8_ret")
+metadata/_custom_type_script = "uid://xyw8ryqy76l2e"

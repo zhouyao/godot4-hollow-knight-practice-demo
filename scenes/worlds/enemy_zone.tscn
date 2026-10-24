@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dyuk18suxru7s"]
+
+[ext_resource type="Script" uid="uid://cc72ycc16m0kn" path="res://scenes/worlds/enemy_zone.gd" id="1_zone"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rywq7"]
+size = Vector2(500, 500)
+
+[node name="EnemyZone" type="Area2D" unique_id=1673687519]
+collision_layer = 0
+script = ExtResource("1_zone")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2129009515]
+shape = SubResource("RectangleShape2D_rywq7")
+debug_color = Color(0.941, 0.153, 0, 0.302)

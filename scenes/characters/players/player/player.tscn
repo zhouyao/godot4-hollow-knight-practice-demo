@@ -37,7 +37,7 @@
 [ext_resource type="Texture2D" uid="uid://cbo8om5ixuoe2" path="res://assets/animations/characters/players/player/_slash_forward/slash_forward.png" id="32_reld4"]
 [ext_resource type="Texture2D" uid="uid://cc4mcuf5rpn88" path="res://assets/animations/characters/players/player/_slash_down/slash_down.png" id="33_aay45"]
 [ext_resource type="Texture2D" uid="uid://cp5pya1p8opeq" path="res://assets/animations/characters/players/player/_slash_up/slash_up.png" id="34_8woun"]
-[ext_resource type="PackedScene" path="res://scenes/characters/character_debug.tscn" id="35_aldr5"]
+[ext_resource type="PackedScene" path="res://scenes/debug/character_debug.tscn" id="35_aldr5"]
 
 [sub_resource type="CapsuleShape2D" id="2_capsule"]
 radius = 30.0

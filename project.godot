@@ -22,6 +22,8 @@ audio/buses/default_bus_layout="res://default_bus_layout.tres"
 [autoload]
 
 Globals="*uid://ueysvl4eaalp"
+Inventory="*res://globals/autoload/Inventory.gd"
+DropSpawner="*res://globals/autoload/DropSpawner.gd"
 Settings="*uid://byknb1nladkm7"
 UiAudio="*uid://b0xaosluegwol"
 TransitionLayer="*uid://b7cjeemjxyyyp"
@@ -41,12 +43,19 @@ enabled=PackedStringArray("res://addons/camera_director/plugin.cfg", "res://addo
 [file_customization]
 
 folder_colors={
+"res://addons/": "gray",
+"res://resources/": "blue",
 "res://scenes/characters/": "pink",
 "res://scenes/characters/enemies/": "red",
+"res://scenes/characters/enemies/_base/": "gray",
 "res://scenes/characters/npcs/": "orange",
 "res://scenes/characters/players/": "purple",
+"res://scenes/debug/": "gray",
+"res://scenes/drops/": "yellow",
 "res://scenes/menus/": "orange",
+"res://scenes/projectiles/": "yellow",
 "res://scenes/props/": "teal",
+"res://scenes/ui/": "orange",
 "res://scenes/worlds/": "green"
 }
 
