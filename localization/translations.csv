@@ -18,6 +18,7 @@ keys,en,zh_CN,zh_TW
 向右,Move Right,向右,向右
 攻击,Attack,攻击,攻擊
 跳跃,Jump,跳跃,跳躍
+技能,Skill,技能,技能
 主音量,Master Volume,主音量,主音量
 音效音量,Sound Volume,音效音量,音效音量
 背景音量,Music Volume,背景音量,背景音量
@@ -51,3 +52,20 @@ RB 键,Button RB,RB 键,RB 鍵
 ↓,Down,↓,↓
 ←,Left,←,←
 →,Right,→,→
+技能面板,Skill Panel,技能面板,技能面板
+（暂无技能）,No skills yet,（暂无技能）,（暂无技能）
+前刺（示例）,Forward Slash,前刺（示例）,前刺（示例）
+冲刺（Dash）,Dash,冲刺（Dash）,衝刺（Dash）
+技能槽,Skill Slots,技能槽,技能槽
+技能槽 1,Skill Slot 1,技能槽 1,技能槽 1
+技能槽 2,Skill Slot 2,技能槽 2,技能槽 2
+技能槽 3,Skill Slot 3,技能槽 3,技能槽 3
+技能槽 4,Skill Slot 4,技能槽 4,技能槽 4
+技能槽 5,Skill Slot 5,技能槽 5,技能槽 5
+冷却：%.1f 秒,Cooldown: %.1f s,冷却：%.1f 秒,冷卻：%.1f 秒
+消耗能量：%d 点,Energy Cost: %d,消耗能量：%d 点,消耗能量：%d 點
+画面,Display,画面,畫面
+画面设置,Display,画面设置,畫面設定
+显示模式,Window Mode,显示模式,顯示模式
+窗口,Windowed,窗口,視窗
+全屏,Fullscreen,全屏,全螢幕

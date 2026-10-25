@@ -46,15 +46,19 @@ func _spawn(scene: PackedScene, at: Vector2, item_id: StringName,
 		return
 	_seq += 1
 	p.name = "Pickup_%s_%d" % [item_id, _seq]
-	parent.add_child(p)
 	p.item_id = item_id
 	p.amount = amount
-	p.global_position = at
-	# 位置改变后必须重置插值，否则第一帧会从世界原点飞过来。
-	p.reset_physics_interpolation()
-	p.launch(Vector2(rng.randf_range(-p.launch_speed_x, p.launch_speed_x),
-			p.launch_speed_y))
 	_live.append(p)
+	# _spawn 常从物理回调中触发（如敌人死亡掉落），此时物理引擎正在刷新查询，
+	# 直接 add_child 带碰撞体的 Area2D 会触发 area_set_shape_disabled 报错。
+	# 延迟到刷新结束后再挂载并激活，避免改动 monitoring 状态。
+	parent.call_deferred("add_child", p)
+	p.call_deferred("set_deferred", "global_position", at)
+	# 位置改变后必须重置插值，否则第一帧会从世界原点飞过来。
+	p.call_deferred("reset_physics_interpolation")
+	p.call_deferred("launch",
+			Vector2(rng.randf_range(-p.launch_speed_x, p.launch_speed_x),
+					p.launch_speed_y))
 
 
 ## 优先放进世界里的 "Drops" 容器（保持场景树整洁），没有则退回当前场景根节点。

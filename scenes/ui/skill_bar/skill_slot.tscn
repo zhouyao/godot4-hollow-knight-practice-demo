@@ -1,0 +1,132 @@
+[gd_scene format=3 uid="uid://rqywe7xqmbtm"]
+
+[ext_resource type="Script" uid="uid://w0g21a2p8jt6" path="res://scenes/ui/skill_bar/skill_slot.gd" id="1_slot"]
+[ext_resource type="Script" uid="uid://dv2qgvwi28sig" path="res://scenes/ui/skill_bar/cooldown_mask.gd" id="2_mask"]
+[ext_resource type="Script" uid="uid://ckbhglbyrys6y" path="res://scenes/ui/skill_bar/skill_slot_close_button.gd" id="3_close"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0, 0, 0, 0.4)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hl"]
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.86, 0.72, 0.44, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+corner_detail = 5
+
+[node name="SkillSlot" type="Control" unique_id=901616259]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_slot")
+slot_size = Vector2(70, 70)
+
+[node name="Bg" type="PanelContainer" parent="." unique_id=1155472821]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+
+[node name="Highlight" type="Panel" parent="." unique_id=2024058350]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hl")
+
+[node name="Icon" type="TextureRect" parent="." unique_id=1323365105]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="KeyHint" type="Label" parent="." unique_id=139809168]
+visible = false
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -30.0
+offset_top = -28.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.86, 0.72, 0.44, 1)
+theme_override_font_sizes/font_size = 22
+text = "1"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="CooldownMask" type="ColorRect" parent="." unique_id=356114144]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.65)
+script = ExtResource("2_mask")
+
+[node name="CooldownLabel" type="Label" parent="." unique_id=1443168504]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 26
+text = "1.1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseButton" type="Control" parent="." unique_id=1632004411]
+visible = false
+anchors_preset = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -13.0
+offset_top = -13.0
+offset_right = 7.0
+offset_bottom = 7.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("3_close")

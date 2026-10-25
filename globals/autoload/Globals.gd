@@ -6,7 +6,7 @@ signal level_preparing_changed(is_preparing: bool)
 
 const MAIN_MENU_SCENE_PATH := "res://main.tscn"
 const SYSTEM_SETTINGS_SCENE_PATH := "res://scenes/menus/system_settings_menu.tscn"
-const GAME_SCENE_PATH := "res://scenes/worlds/world_test.tscn"
+const GAME_SCENE_PATH := "res://scenes/worlds/levels/level_1.tscn"
 
 
 const LAYER_PLAYER := 1 << 0

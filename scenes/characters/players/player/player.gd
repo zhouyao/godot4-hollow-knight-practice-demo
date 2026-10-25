@@ -30,6 +30,19 @@ var slash_down_dive_speed: float = 5.0 * Globals.UNIT_SIZE
 
 var knockback: Vector2 = Vector2.ZERO
 
+## 冲刺被打断成挥砍时残留的水平冲量：逐帧衰减，让挥砍带着冲刺的位移滑出去。
+var dash_carry: Vector2 = Vector2.ZERO
+
+## 冲量初速 = 冲刺速度 × 该比例，0.6 表示保留六成冲刺速度。
+@export var dash_carry_ratio: float = 0.6
+## 冲量每物理帧的衰减系数：越小滑得越远（0.25 ≈ 滑 0.7 格）。
+@export var dash_carry_decay: float = 0.25
+
+## 技能冷却剩余时间表：skill_id -> 剩余秒数。每物理帧递减，归零自动移除条目。
+## 放在玩家身上而不是状态里：受击 / 死亡 / 切状态都要继续走表，
+## 而且暂停（paused=true）时随物理帧一起冻结，恢复后接着数。
+var _skill_cooldowns: Dictionary = {}
+
 ## 命中敌人后玩家自身的水平反冲力：沿攻击反方向弹开，走击退通道并逐帧衰减，制造"出手后一顿"的手感。
 ## 量级远小于受击击退，纯粹是手感调参。
 @export var attacker_recoil_x: float = 1000.0
@@ -43,16 +56,16 @@ var knockback: Vector2 = Vector2.ZERO
 @export var damage_vertical_threshold: float = 16.0
 
 ## 最大生命值，同时也是血条上限。
-@export var max_health: int = 100
+@export var max_health: int = 10
 ## 初始血量：出生时取 min(initial_health, max_health)，可让角色残血出场。
-@export var initial_health: int = 90
+@export var initial_health: int = 8
 ## 受击后的无敌帧时长（秒），由 HitTimer 计时，期间不再结算伤害。
 @export var invincible_time: float = 0.3
 
 ## 最大能量值，同时也是能量条上限。
-@export var max_energy: int = 100
+@export var max_energy: int = 10
 ## 初始能量：出生时取 min(initial_energy, max_energy)。命中敌人会 +1，可用于大招消耗。
-@export var initial_energy: int = 100
+@export var initial_energy: int = 5
 
 var health: int
 var energy: int
@@ -105,6 +118,59 @@ func _ready() -> void:
 		state_machine.start()
 
 
+func _physics_process(delta: float) -> void:
+	_tick_skill_cooldowns(delta)
+
+
+## 冷却逐帧递减：keys() 返回的是拷贝，遍历中 erase 安全。
+func _tick_skill_cooldowns(delta: float) -> void:
+	for skill_id in _skill_cooldowns.keys():
+		var left: float = float(_skill_cooldowns[skill_id]) - delta
+		if left <= 0.0:
+			_skill_cooldowns.erase(skill_id)
+		else:
+			_skill_cooldowns[skill_id] = left
+
+
+## 技能是否在可用状态（不在冷却表里就是可用）。
+func is_skill_ready(skill_id: StringName) -> bool:
+	return not _skill_cooldowns.has(skill_id)
+
+
+## 起手即上冷却：时长查 SkillDefinition，未配置冷却（<=0）的技能不进表。
+func start_skill_cooldown(skill_id: StringName) -> void:
+	var duration := Skills.cooldown_of(skill_id)
+	if skill_id == &"" or duration <= 0.0:
+		return
+	_skill_cooldowns[skill_id] = duration
+
+
+## 剩余冷却秒数（未冷却返回 0）。
+func skill_cooldown_left(skill_id: StringName) -> float:
+	return float(_skill_cooldowns.get(skill_id, 0.0))
+
+
+## 剩余冷却比例：1 = 刚用完，0 = 可用（技能条画遮罩用）。
+func skill_cooldown_ratio(skill_id: StringName) -> float:
+	var total := Skills.cooldown_of(skill_id)
+	return 0.0 if total <= 0.0 else clampf(skill_cooldown_left(skill_id) / total, 0.0, 1.0)
+
+
+## 付得起该技能的起手消耗（消耗 0 的技能恒为 true）。
+func can_afford_skill(skill_id: StringName) -> bool:
+	return energy >= Skills.energy_cost_of(skill_id)
+
+
+## 扣掉该技能的起手消耗：能量不足时返回 false 且不动数值，调用方据此放弃施放。
+func spend_skill_energy(skill_id: StringName) -> bool:
+	var cost := Skills.energy_cost_of(skill_id)
+	if energy < cost:
+		return false
+	energy = maxi(energy - cost, 0)
+	_refresh_energy_bar()
+	return true
+
+
 func _apply_gravity(delta):
 	if velocity.y < 2000:
 		velocity.y += gravity * delta
@@ -112,6 +178,12 @@ func _apply_gravity(delta):
 func _apply_movement():
 	move_and_slide()
 	knockback = lerp(knockback, Vector2.ZERO, 0.4)
+	dash_carry = lerp(dash_carry, Vector2.ZERO, dash_carry_decay)
+
+
+## 注入一段沿朝向的水平冲量（冲刺被打断成挥砍时调用），已有余速会被覆盖。
+func start_dash_carry(dir: int) -> void:
+	dash_carry = Vector2(float(dir) * dash_speed * dash_carry_ratio, 0.0)
 
 func _flip_direction():
 	for flipped in [player_animated_sprite,slash_forward_animated_sprite,front_attack_area]:
@@ -129,7 +201,7 @@ func _handle_move_input():
 		move_direction = direction
 
 	velocity.x = direction * speed
-	velocity += knockback
+	velocity += knockback + dash_carry
 	if(velocity.y < max_jump_velocity):
 		velocity.y = max_jump_velocity
 
@@ -199,6 +271,9 @@ func end_attack() -> void:
 func _refresh_health_bar() -> void:
 	debug.set_health(health, max_health)
 
+func _refresh_energy_bar() -> void:
+	debug.set_energy(energy, max_energy)
+
 func _on_hit_timer_timeout() -> void:
 	invincible = false
 
@@ -227,7 +302,7 @@ func _hit_enemy(body: Node2D) -> void:
 		body.take_damage(slash_damage, self)
 		if landed:
 			energy = mini(energy + 1, max_energy)
-			debug.set_energy(energy, max_energy)
+			_refresh_energy_bar()
 		if state_machine != null and state_machine.get_state_name() == PlayerStateNames.SLASH_DOWN:
 			return
 		var away := global_position - body.global_position

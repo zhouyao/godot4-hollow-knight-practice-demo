@@ -1,4 +1,4 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cjjibti2ww3bl"]
 
 [ext_resource type="PackedScene" path="res://scenes/menus/components/buttons/focus_button.tscn" id="1_qnqyb"]
 [ext_resource type="Theme" uid="uid://dmt8kq3vncw2x" path="res://assets/themes/misted_theme.tres" id="2_theme"]
@@ -46,7 +46,7 @@ alignment = 1
 
 [node name="Logo" type="Label" parent="LogoContainer" unique_id=1394523304]
 layout_mode = 2
-theme_type_variation = "DisplayLabel"
+theme_type_variation = &"DisplayLabel"
 text = "《 雾隐 / Misted 》"
 horizontal_alignment = 1
 vertical_alignment = 1

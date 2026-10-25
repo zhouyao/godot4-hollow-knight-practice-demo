@@ -3,33 +3,29 @@
 [ext_resource type="PackedScene" uid="uid://br8vy2on44xtx" path="res://scenes/characters/enemies/_base/enemy.tscn" id="1_enemy"]
 [ext_resource type="Script" uid="uid://bg17gpcj1lae8" path="res://scenes/characters/enemies/enemy_ground/enemy_ground.gd" id="2_56q28"]
 [ext_resource type="Script" uid="uid://djb8l2kurcgo1" path="res://scenes/characters/enemies/enemy_ground/states/chase.gd" id="3_cinxp"]
-[ext_resource type="Script" uid="uid://bsrt37qjn27vs" path="res://scenes/characters/enemies/_base/EnemyStateMachine.gd" id="4_gsm"]
 [ext_resource type="Script" uid="uid://bgroundatk001" path="res://scenes/characters/enemies/enemy_ground/states/attack.gd" id="5_gatk"]
 [ext_resource type="Script" path="res://scenes/characters/enemies/enemy_ground/states/return.gd" id="6_ret"]
 [ext_resource type="Script" uid="uid://cick2ht1jou8v" path="res://scenes/characters/enemies/enemy_ground/states/patrol.gd" id="7_gpatrol"]
 [ext_resource type="PackedScene" uid="uid://cl38x7ce5rm3y" path="res://scenes/projectiles/projectile.tscn" id="8_proj"]
-[ext_resource type="Resource" path="res://resources/drops/enemy_basic.tres" id="9_drop"]
+[ext_resource type="Resource" uid="uid://piw3hsrkqnak" path="res://resources/drops/enemy_basic.tres" id="9_drop"]
 
 [node name="EnemyGround" unique_id=220108385 instance=ExtResource("1_enemy")]
 script = ExtResource("2_56q28")
 projectile_scene = ExtResource("8_proj")
 drop_table = ExtResource("9_drop")
 
-[node name="StateMachine" parent="." index="1" unique_id=1283964249]
-script = ExtResource("4_gsm")
-
-[node name="patrol" type="Node" parent="StateMachine" index="2" unique_id=2000000001]
+[node name="patrol" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="2" unique_id=2000000001]
 script = ExtResource("7_gpatrol")
 metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
 
-[node name="chase" type="Node" parent="StateMachine" index="3" unique_id=1057346826]
+[node name="chase" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="3" unique_id=1057346826]
 script = ExtResource("3_cinxp")
 
-[node name="attack" type="Node" parent="StateMachine" index="4" unique_id=2000000003]
+[node name="attack" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="4" unique_id=2000000003]
 script = ExtResource("5_gatk")
 metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
 
-[node name="return" type="Node" parent="StateMachine" index="5" unique_id=2000000004]
+[node name="return" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="5" unique_id=2000000004]
 script = ExtResource("6_ret")
 metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
 

@@ -4,7 +4,7 @@
 
 [node name="OperationsContent" type="VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 30
+theme_override_constants/separation = 14
 
 [node name="OpsTitle" type="Label" parent="."]
 layout_mode = 2
@@ -41,32 +41,79 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 
-[node name="UpRow" parent="." instance=ExtResource("1_kbr")]
+; 12 行按键行塞满后高度会超出 1080，所以整块包进 ScrollContainer：
+; 高度给足内容高度（816）时不出滚动条，以后再加行会自动可滚。
+[node name="Rows" type="ScrollContainer" parent="."]
+custom_minimum_size = Vector2(0, 816)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RowsList" type="VBoxContainer" parent="Rows"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="UpRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
 layout_mode = 2
 action_name = &"up"
 display_name = "向上"
 
-[node name="DownRow" parent="." instance=ExtResource("1_kbr")]
+[node name="DownRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
 layout_mode = 2
 action_name = &"down"
 display_name = "向下"
 
-[node name="LeftRow" parent="." instance=ExtResource("1_kbr")]
+[node name="LeftRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
 layout_mode = 2
 action_name = &"left"
 display_name = "向左"
 
-[node name="RightRow" parent="." instance=ExtResource("1_kbr")]
+[node name="RightRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
 layout_mode = 2
 action_name = &"right"
 display_name = "向右"
 
-[node name="AttackRow" parent="." instance=ExtResource("1_kbr")]
+[node name="AttackRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
 layout_mode = 2
 action_name = &"attack"
 display_name = "攻击"
 
-[node name="JumpRow" parent="." instance=ExtResource("1_kbr")]
+[node name="JumpRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
 layout_mode = 2
 action_name = &"jump"
 display_name = "跳跃"
+
+[node name="SkillRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"skill"
+display_name = "技能"
+
+[node name="SlotsTitle" type="Label" parent="Rows/RowsList"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "技能槽"
+
+[node name="SlotRow1" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"skill_slot_1"
+display_name = "技能槽 1"
+
+[node name="SlotRow2" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"skill_slot_2"
+display_name = "技能槽 2"
+
+[node name="SlotRow3" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"skill_slot_3"
+display_name = "技能槽 3"
+
+[node name="SlotRow4" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"skill_slot_4"
+display_name = "技能槽 4"
+
+[node name="SlotRow5" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"skill_slot_5"
+display_name = "技能槽 5"

@@ -16,8 +16,16 @@ const UNBOUND_TEXT := "未绑定"
 const RESERVED_KEYS: Array[int] = [KEY_ESCAPE, KEY_TAB, KEY_ENTER, KEY_KP_ENTER]
 const RESERVED_PAD_BUTTONS: Array[int] = [JOY_BUTTON_B, JOY_BUTTON_START]
 
-const BINDABLE_ACTIONS: Array[StringName] = [&"up", &"down", &"left", &"right", &"attack", &"jump"]
+## 技能条 5 个槽位对应的动作名，下标即槽位序号（与 SkillBarSection 的槽位一致）。
+## 玩家施放与技能条角标都从这个表取，保证三者不会错位。
+const SKILL_SLOT_ACTIONS: Array[StringName] = [
+	&"skill_slot_1", &"skill_slot_2", &"skill_slot_3", &"skill_slot_4", &"skill_slot_5"]
 
+const BINDABLE_ACTIONS: Array[StringName] = [
+	&"up", &"down", &"left", &"right", &"attack", &"jump", &"skill",
+	&"skill_slot_1", &"skill_slot_2", &"skill_slot_3", &"skill_slot_4", &"skill_slot_5"]
+
+## 大键盘 1~5（不是小键盘 KEY_KP_*）。
 const DEFAULT_KEYBOARD_KEYS: Dictionary = {
 	&"up": KEY_W,
 	&"down": KEY_S,
@@ -25,8 +33,15 @@ const DEFAULT_KEYBOARD_KEYS: Dictionary = {
 	&"right": KEY_D,
 	&"attack": KEY_J,
 	&"jump": KEY_SPACE,
+	&"skill": KEY_P,
+	&"skill_slot_1": KEY_1,
+	&"skill_slot_2": KEY_2,
+	&"skill_slot_3": KEY_3,
+	&"skill_slot_4": KEY_4,
+	&"skill_slot_5": KEY_5,
 }
 
+## 技能槽刻意不设手柄默认键：手柄列显示"未绑定"，玩家想要可自行绑定。
 const DEFAULT_GAMEPAD_BUTTONS: Dictionary = {
 	&"up": JOY_BUTTON_DPAD_UP,
 	&"down": JOY_BUTTON_DPAD_DOWN,
@@ -34,6 +49,7 @@ const DEFAULT_GAMEPAD_BUTTONS: Dictionary = {
 	&"right": JOY_BUTTON_DPAD_RIGHT,
 	&"attack": JOY_BUTTON_X,
 	&"jump": JOY_BUTTON_A,
+	&"skill": JOY_BUTTON_Y,
 }
 
 const KEY_DISPLAY_NAMES: Dictionary = {
@@ -241,6 +257,13 @@ static func key_of(event: InputEventKey) -> int:
 
 static func bind_key(action: StringName, gamepad: bool) -> String:
 	return "%s_%s" % [action, GAMEPAD_TAG if gamepad else KEYBOARD_TAG]
+
+
+## 槽位下标 → 按键动作名（如 0 → skill_slot_1）。越界返回 &""。
+static func slot_action(slot: int) -> StringName:
+	if slot < 0 or slot >= SKILL_SLOT_ACTIONS.size():
+		return &""
+	return SKILL_SLOT_ACTIONS[slot]
 
 
 

@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/menus/components/system_settings/display_content.gd" id="1_dc"]
+
+[node name="DisplayContent" type="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 36
+script = ExtResource("1_dc")
+
+[node name="DisplayTitle" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "画面设置"
+
+[node name="ModeRow" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="NameLabel" type="Label" parent="ModeRow"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "显示模式"
+horizontal_alignment = 2
+
+[node name="ModeOption" type="OptionButton" parent="ModeRow"]
+custom_minimum_size = Vector2(320, 52)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"RowButton"
+alignment = 1
+
+[connection signal="item_selected" from="ModeRow/ModeOption" to="." method="_on_mode_option_item_selected"]

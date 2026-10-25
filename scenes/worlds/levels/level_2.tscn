@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://l3ynhne64ne5"]
+
+[ext_resource type="PackedScene" uid="uid://bqr11wgnlhh6f" path="res://scenes/worlds/_base/world_template.tscn" id="1_vodrh"]
+
+[node name="WorldTemplate" unique_id=560156841 instance=ExtResource("1_vodrh")]

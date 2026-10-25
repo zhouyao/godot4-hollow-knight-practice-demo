@@ -5,11 +5,12 @@
 [ext_resource type="PackedScene" path="res://scenes/menus/components/system_settings/operations_content.tscn" id="5_ops"]
 [ext_resource type="PackedScene" path="res://scenes/menus/components/system_settings/audio_content.tscn" id="6_aud"]
 [ext_resource type="PackedScene" path="res://scenes/menus/components/system_settings/language_content.tscn" id="7_lan"]
+[ext_resource type="PackedScene" path="res://scenes/menus/components/system_settings/display_content.tscn" id="8_dis"]
 
 [sub_resource type="GDScript" id="GDScript_acfms"]
 script/source = "# 场景专属薄逻辑：左侧 tab 切换右侧内容 + 音量预览音，无复用需求，保持内联。
-# 三个内容面板已拆成独立场景（OperationsContent / AudioContent / LanguageContent），
-# 语言选项的下拉框逻辑随 LanguageContent 一起移到了它的脚本里。
+# 四个内容面板已拆成独立场景（OperationsContent / AudioContent / LanguageContent /
+# DisplayContent），语言选项的下拉框逻辑随 LanguageContent 一起移到了它的脚本里。
 
 extends Control
 
@@ -18,10 +19,12 @@ const PREVIEW_STREAM := preload(\"res://assets/sounds/menus/confirm.wav\")
 @onready var tab_operations: FocusButton = $Margin/Columns/TabList/TabOperations
 @onready var tab_audio: FocusButton = $Margin/Columns/TabList/TabAudio
 @onready var tab_language: FocusButton = $Margin/Columns/TabList/TabLanguage
+@onready var tab_display: FocusButton = $Margin/Columns/TabList/TabDisplay
 
 @onready var operations_content: Control = $Margin/Columns/ContentPanel/OperationsContent
 @onready var audio_content: Control = $Margin/Columns/ContentPanel/AudioContent
 @onready var language_content: Control = $Margin/Columns/ContentPanel/LanguageContent
+@onready var display_content: Control = $Margin/Columns/ContentPanel/DisplayContent
 
 @onready var preview_player: AudioStreamPlayer = $PreviewPlayer
 
@@ -29,6 +32,7 @@ func _ready() -> void:
 	tab_operations.pressed.connect(_on_tab_pressed.bind(\"operations\"))
 	tab_audio.pressed.connect(_on_tab_pressed.bind(\"audio\"))
 	tab_language.pressed.connect(_on_tab_pressed.bind(\"language\"))
+	tab_display.pressed.connect(_on_tab_pressed.bind(\"display\"))
 
 	Settings.volume.volume_committed.connect(_on_volume_preview)
 	Settings.localization.locale_changed.connect(_on_locale_changed)
@@ -61,6 +65,7 @@ func _select_tab(tab: String) -> void:
 	operations_content.visible = tab == \"operations\"
 	audio_content.visible = tab == \"audio\"
 	language_content.visible = tab == \"language\"
+	display_content.visible = tab == \"display\"
 
 # 切语言后不重载场景：菜单是短命的，把新语言重新套一遍即可。
 # 语言下拉框的选中项同步由 LanguageContent 自行处理。
@@ -130,6 +135,10 @@ text = "音频"
 layout_mode = 2
 text = "语言"
 
+[node name="TabDisplay" parent="Margin/Columns/TabList" unique_id=1010 instance=ExtResource("1_fmb")]
+layout_mode = 2
+text = "画面"
+
 [node name="Spacer" type="Control" parent="Margin/Columns/TabList" unique_id=1007]
 layout_mode = 2
 size_flags_vertical = 3
@@ -149,6 +158,9 @@ theme_override_constants/margin_right = 50
 visible = false
 
 [node name="LanguageContent" parent="Margin/Columns/ContentPanel" unique_id=2119692783 instance=ExtResource("7_lan")]
+visible = false
+
+[node name="DisplayContent" parent="Margin/Columns/ContentPanel" unique_id=2119692784 instance=ExtResource("8_dis")]
 visible = false
 
 [connection signal="pressed" from="Margin/Columns/TabList/BackButton" to="." method="_on_back_button_pressed"]

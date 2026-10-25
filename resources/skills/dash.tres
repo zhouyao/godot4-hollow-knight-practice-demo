@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="SkillDefinition" format=3 uid="uid://bf5olifvxw0x4"]
+
+[ext_resource type="Texture2D" uid="uid://dm2jomnt31w15" path="res://assets/icons/skill/dash.png" id="1_8vyne"]
+[ext_resource type="Script" uid="uid://cjow5dihr1ch0" path="res://resources/skills/skill_definition.gd" id="11_1po8n"]
+[ext_resource type="SpriteFrames" uid="uid://c0qkeffcyf62y" path="res://resources/skills/previews/dash_preview.tres" id="12_0pf7k"]
+
+[resource]
+script = ExtResource("11_1po8n")
+id = &"dash"
+display_name = &"冲刺（Dash）"
+icon = ExtResource("1_8vyne")
+preview_frames = ExtResource("12_0pf7k")
+preview_animation = &"dash"
+description = "冲刺"
+cooldown = 1.5

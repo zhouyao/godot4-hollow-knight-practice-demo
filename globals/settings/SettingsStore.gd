@@ -6,7 +6,11 @@ const SETTINGS_PATH := "user://settings.cfg"
 const AUDIO_SETTING_NAME := "Audio"
 const INPUT_SETTING_NAME := "Input"
 const LOCALE_SETTING_NAME := "Locale"
+const SKILL_BAR_SETTING_NAME := "SkillBar"
+const DISPLAY_SETTING_NAME := "Display"
 const LOCALE_KEY := "locale"
+const WINDOW_MODE_KEY := "window_mode"
+const WINDOW_SIZE_KEY := "window_size"
 
 var _config: ConfigFile = ConfigFile.new()
 
