@@ -45,9 +45,9 @@ func _on_pause_menu_exited() -> void:
 	_set_skill_bar_visible(true)
 
 
-func _set_skill_bar_visible(visible: bool) -> void:
+func _set_skill_bar_visible(should_show: bool) -> void:
 	if skill_bar != null:
-		skill_bar.visible = visible
+		skill_bar.visible = should_show
 
 
 func open_skill_panel() -> void:

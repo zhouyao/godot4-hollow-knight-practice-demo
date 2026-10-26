@@ -17,12 +17,12 @@ var _save_timer: SceneTreeTimer = null
 
 
 func _ready() -> void:
-	var request_save := Callable(self, "request_save")
-	volume = VolumeSection.new(_store, request_save)
-	bindings = InputBindings.new(_store, request_save)
-	localization = Localization.new(_store, request_save)
-	skill_bar = SkillBarSection.new(_store, request_save)
-	display = DisplaySection.new(_store, request_save)
+	var request_save_cb := Callable(self, "request_save")
+	volume = VolumeSection.new(_store, request_save_cb)
+	bindings = InputBindings.new(_store, request_save_cb)
+	localization = Localization.new(_store, request_save_cb)
+	skill_bar = SkillBarSection.new(_store, request_save_cb)
+	display = DisplaySection.new(_store, request_save_cb)
 	_sections = [volume, bindings, localization, skill_bar, display]
 
 	if _store.load_config() != OK:

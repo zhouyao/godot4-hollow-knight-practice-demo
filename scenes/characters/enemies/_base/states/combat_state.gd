@@ -2,9 +2,6 @@ extends EnemyState
 class_name CombatState
 
 
-## 标记为战斗态。进入/退出战斗、丢失判定都以此为据。
-var _is_combat_state: bool = true
-
 ## 子类实现：把本帧期望速度写入 enemy.velocity（chase / return / patrol 各自不同）。
 func _step_move(_delta: float) -> void:
 	pass

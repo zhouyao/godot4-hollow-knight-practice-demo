@@ -14,7 +14,7 @@ script/source = "# 场景专属薄逻辑：左侧 tab 切换右侧内容 + 音�
 
 extends Control
 
-const PREVIEW_STREAM := preload(\"res://assets/sounds/menus/confirm.wav\")
+const PREVIEW_STREAM := preload(\"res://assets/sounds/menus/confirm.ogg\")
 
 @onready var tab_operations: FocusButton = $Margin/Columns/TabList/TabOperations
 @onready var tab_audio: FocusButton = $Margin/Columns/TabList/TabAudio

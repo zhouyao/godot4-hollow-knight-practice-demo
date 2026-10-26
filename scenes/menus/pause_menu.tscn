@@ -12,7 +12,7 @@ script/source = "# 暂停菜单：由 WorldTemplate 在按 Esc 时实例化并 a
 
 extends CanvasLayer
 
-const PREVIEW_STREAM := preload(\"res://assets/sounds/menus/confirm.wav\")
+const PREVIEW_STREAM := preload(\"res://assets/sounds/menus/confirm.ogg\")
 
 @onready var main_panel: VBoxContainer = $Margin/Center/MainPanel
 @onready var audio_panel: VBoxContainer = $Margin/Center/AudioPanel

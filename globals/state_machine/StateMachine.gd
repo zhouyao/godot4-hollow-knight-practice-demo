@@ -59,7 +59,8 @@ func add_state(state: State) -> void:
 	if state == null:
 		return
 	if state.get_parent() != self:
-		state.name = state.name if not state.name.is_empty() else "state"
+		if state.name.is_empty():
+			state.name = "state"
 		add_child(state)
 	states[state.name] = state
 

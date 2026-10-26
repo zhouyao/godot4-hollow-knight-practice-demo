@@ -213,7 +213,7 @@ func _try_connect_resize() -> void:
 
 ## 运行时切换拉伸宽高比：窗口模式用 keep（锁定的 16:9 窗口正好铺满），
 ## 全屏用 expand（铺满整块屏幕，非 16:9 屏多显示一点世界、不留黑边，对应空洞骑士全屏填满）。
-func _set_stretch_aspect(mode: int) -> void:
+func _set_stretch_aspect(mode: Window.ContentScaleAspect) -> void:
 	var tree := Engine.get_main_loop() as SceneTree
 	if tree == null or tree.root == null:
 		return

@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://cmsnjp2t0ottm"]
+
+[ext_resource type="Script" uid="uid://bry7xjaog375o" path="res://scenes/effects/hit_spark.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://clu8kmjf4ilrf" path="res://assets/animations/effects/nail_hit_effect/0.png" id="2_f0"]
+[ext_resource type="Texture2D" uid="uid://bt1kcee26xk0i" path="res://assets/animations/effects/nail_hit_effect/1.png" id="3_f1"]
+[ext_resource type="Texture2D" uid="uid://c25dbtb18fyoa" path="res://assets/animations/effects/nail_hit_effect/2.png" id="4_f2"]
+
+[sub_resource type="SpriteFrames" id="5_frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_f0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_f1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_f2")
+}],
+"loop": 0,
+"name": &"nailhit",
+"speed": 20.0
+}]
+
+[node name="hit_spark" type="AnimatedSprite2D" unique_id=2010656084]
+sprite_frames = SubResource("5_frames")
+animation = &"nailhit"
+script = ExtResource("1_script")

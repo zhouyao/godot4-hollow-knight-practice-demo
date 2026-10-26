@@ -3,8 +3,8 @@ extends Node
 
 const SOUND_BUS := &"Sound"
 
-const FOCUS_CHANGE_STREAM := preload("res://assets/sounds/menus/focus_change.wav")
-const CONFIRM_STREAM := preload("res://assets/sounds/menus/confirm.wav")
+const FOCUS_CHANGE_STREAM := preload("res://assets/sounds/menus/focus_change.ogg")
+const CONFIRM_STREAM := preload("res://assets/sounds/menus/confirm.ogg")
 
 var _focus_change: AudioStreamPlayer
 var _confirm: AudioStreamPlayer

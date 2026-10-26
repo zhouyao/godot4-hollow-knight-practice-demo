@@ -1,0 +1,86 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/animations/plants/grass_leaf/fall/0.png" id="1_leaf"]
+[ext_resource type="Script" path="res://scenes/effects/plants/leaf_burst.gd" id="2_script"]
+
+[sub_resource type="AtlasTexture" id="3_atlas0"]
+atlas = ExtResource("1_leaf")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="4_atlas1"]
+atlas = ExtResource("1_leaf")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="5_atlas2"]
+atlas = ExtResource("1_leaf")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="Gradient" id="6_grad"]
+offsets = PackedFloat32Array(0.0, 0.58, 1.0)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="leaf_burst" type="Node2D"]
+script = ExtResource("2_script")
+
+[node name="Leaves0" type="CPUParticles2D" parent="."]
+texture = SubResource("3_atlas0")
+color_ramp = SubResource("6_grad")
+amount = 7
+lifetime = 1.2
+one_shot = true
+explosiveness = 1.0
+emission_shape = 6
+emission_ring_inner_radius = 12.0
+emission_ring_radius = 65.0
+direction = Vector2(0, -1)
+spread = 90.0
+gravity = Vector2(0, 147)
+initial_velocity_min = 75.0
+initial_velocity_max = 125.0
+angular_velocity_min = 100.0
+angular_velocity_max = 150.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+emitting = true
+
+[node name="Leaves1" type="CPUParticles2D" parent="."]
+texture = SubResource("4_atlas1")
+color_ramp = SubResource("6_grad")
+amount = 7
+lifetime = 1.2
+one_shot = true
+explosiveness = 1.0
+emission_shape = 6
+emission_ring_inner_radius = 12.0
+emission_ring_radius = 65.0
+direction = Vector2(0, -1)
+spread = 90.0
+gravity = Vector2(0, 147)
+initial_velocity_min = 75.0
+initial_velocity_max = 125.0
+angular_velocity_min = 100.0
+angular_velocity_max = 150.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+emitting = true
+
+[node name="Leaves2" type="CPUParticles2D" parent="."]
+texture = SubResource("5_atlas2")
+color_ramp = SubResource("6_grad")
+amount = 6
+lifetime = 1.2
+one_shot = true
+explosiveness = 1.0
+emission_shape = 6
+emission_ring_inner_radius = 12.0
+emission_ring_radius = 65.0
+direction = Vector2(0, -1)
+spread = 90.0
+gravity = Vector2(0, 147)
+initial_velocity_min = 75.0
+initial_velocity_max = 125.0
+angular_velocity_min = 100.0
+angular_velocity_max = 150.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+emitting = true

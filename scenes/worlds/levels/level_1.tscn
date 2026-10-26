@@ -13,18 +13,20 @@
 [ext_resource type="PackedScene" uid="uid://projspread01" path="res://scenes/projectiles/projectile_spread.tscn" id="8_nygb8"]
 [ext_resource type="PackedScene" uid="uid://cg7ionofoem53" path="res://scenes/characters/enemies/enemy_flying/enemy_flying.tscn" id="9_nygb8"]
 [ext_resource type="PackedScene" uid="uid://dyuk18suxru7s" path="res://scenes/worlds/enemy_zone.tscn" id="11_zone"]
+[ext_resource type="PackedScene" uid="uid://bq438wduv3nk8" path="res://scenes/effects/plants/grass.tscn" id="12_nvw4u"]
+[ext_resource type="PackedScene" path="res://scenes/props/moss_floor.tscn" id="13_uoxyj"]
 
 [sub_resource type="GDScript" id="GDScript_c5aoa"]
 script/source = "extends WorldTemplate
 
 @onready var light: DirectionalLight2D = $Lights/DirectionalLight2D
 
-func _on_zoom_camera_lock_body_entered(body: Node2D) -> void:
+func _on_zoom_camera_lock_body_entered(_body: Node2D) -> void:
 	var tween = create_tween()
 	tween.tween_property(light, \"energy\", 3.0, 2.0)
 	AuCameraDirector.shake_heavy()
 
-func _on_zoom_camera_lock_body_exited(body: Node2D) -> void:
+func _on_zoom_camera_lock_body_exited(_body: Node2D) -> void:
 	var tween = create_tween()
 	tween.tween_property(light, \"energy\", 1.5, 2.0)
 "
@@ -99,8 +101,8 @@ scale = Vector2(4, 0.5)
 
 [node name="Floor4" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="2" unique_id=1205828303 instance=ExtResource("5_bd7ha")]
 modulate = Color(0, 0, 0, 1)
-position = Vector2(-1460, 500)
-scale = Vector2(100, 0.4)
+position = Vector2(-4000, 500)
+scale = Vector2(180, 0.4)
 
 [node name="Floor5" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="3" unique_id=498290294 instance=ExtResource("5_bd7ha")]
 modulate = Color(0, 0, 0, 1)
@@ -131,10 +133,37 @@ projectile_scene = ExtResource("8_nygb8")
 attack_range = 100.0
 projectile_damage = 0
 
-[node name="Player" parent="." index="8" unique_id=1112432844]
+[node name="Efffects_0" type="Node2D" parent="." index="8" unique_id=1504885066]
+position = Vector2(-1200, 422)
+
+[node name="G0" type="Node2D" parent="Efffects_0" index="0" unique_id=229419568]
+
+[node name="Grass0" parent="Efffects_0/G0" index="0" unique_id=1672507866 instance=ExtResource("12_nvw4u")]
+hits_to_die = 2
+
+[node name="MossFloor" parent="Efffects_0/G0" index="1" unique_id=2005529879 instance=ExtResource("13_uoxyj")]
+position = Vector2(0, 66)
+scale = Vector2(2.2, 1)
+
+[node name="G2" type="Node2D" parent="Efffects_0" index="1" unique_id=1219452682]
+position = Vector2(600, 10)
+
+[node name="Grass2" parent="Efffects_0/G2" index="0" unique_id=1888133126 instance=ExtResource("12_nvw4u")]
+idle_animation = &"grass_2"
+death_animation = &"grass_2"
+hits_to_die = 2
+
+[node name="MossFloor" parent="Efffects_0/G2" index="1" unique_id=608866006 instance=ExtResource("13_uoxyj")]
+position = Vector2(5, 64)
+scale = Vector2(2.2, 1)
+
+[node name="Player" parent="." index="9" unique_id=1112432844]
 position = Vector2(32, 300)
 
-[node name="Layer_0" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=1048978077]
+[node name="Foreground" parent="." index="10" unique_id=1812575969]
+visible = false
+
+[node name="Layer_0" type="Parallax2D" parent="Foreground" index="0" unique_id=1048978077]
 repeat_size = Vector2(6000, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="Foreground/Layer_0" index="0" unique_id=94120090]
@@ -143,19 +172,43 @@ scale = Vector2(1.5, 1.5)
 texture = ExtResource("5_8jedn")
 offset = Vector2(0, 369)
 
-[node name="Layer_1" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="1" unique_id=80876967]
+[node name="Layer_1" type="Parallax2D" parent="Foreground" index="1" unique_id=80876967]
 
 [node name="Sprite2D" type="Sprite2D" parent="Foreground/Layer_1" index="0" unique_id=431540785]
 position = Vector2(400, 438)
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("5_l8c12")
 
-[node name="Layer_2" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="2" unique_id=476770090]
+[node name="Layer_2" type="Parallax2D" parent="Foreground" index="2" unique_id=476770090]
 
 [node name="Sprite2D" type="Sprite2D" parent="Foreground/Layer_2" index="0" unique_id=1746045946]
 position = Vector2(-400, 440)
 scale = Vector2(2, 2)
 texture = ExtResource("5_l8c12")
+
+[node name="G1" type="Node2D" parent="Effects" parent_id_path=PackedInt32Array(996629329) index="0" unique_id=146498545]
+position = Vector2(-900, 423)
+
+[node name="Grass1" parent="Effects/G1" index="0" unique_id=33662686 instance=ExtResource("12_nvw4u")]
+idle_animation = &"grass_1"
+death_animation = &"grass_1"
+hits_to_die = 2
+
+[node name="MossFloor" parent="Effects/G1" index="1" unique_id=637239354 instance=ExtResource("13_uoxyj")]
+position = Vector2(2, 64)
+scale = Vector2(2.2, 1)
+
+[node name="G3" type="Node2D" parent="Effects" parent_id_path=PackedInt32Array(996629329) index="1" unique_id=1910157471]
+position = Vector2(-1400, 425)
+
+[node name="Grass3" parent="Effects/G3" index="0" unique_id=1991747258 instance=ExtResource("12_nvw4u")]
+idle_animation = &"grass_3"
+death_animation = &"grass_3"
+hits_to_die = 2
+
+[node name="MossFloor" parent="Effects/G3" index="1" unique_id=390967002 instance=ExtResource("13_uoxyj")]
+position = Vector2(3, 64)
+scale = Vector2(2.2, 1)
 
 [node name="EnemyZone" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="0" unique_id=556081287 instance=ExtResource("11_zone")]
 position = Vector2(861, 178)
@@ -170,7 +223,7 @@ can_look_up = true
 can_look_down = true
 
 [node name="LeftCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="1" unique_id=324128848 node_paths=PackedStringArray("horizontal_lock_marker", "vertical_lock_marker")]
-position = Vector2(-389, 201)
+position = Vector2(-1673, 197)
 collision_layer = 16
 script = ExtResource("2_p6tgj")
 horizontal_lock_marker = NodePath("../../Markers/horizontal_lock")
@@ -180,7 +233,7 @@ can_look_down = true
 area_size = Vector2(300, 600)
 
 [node name="ZoomCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="2" unique_id=146476761 node_paths=PackedStringArray("vertical_lock_marker")]
-position = Vector2(-1271, 205)
+position = Vector2(-3312, 201)
 collision_layer = 16
 script = ExtResource("2_p6tgj")
 vertical_lock_marker = NodePath("../../Markers/vertical_lock")
@@ -192,7 +245,7 @@ area_size = Vector2(1500, 600)
 position = Vector2(0, 200)
 
 [node name="horizontal_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="1" unique_id=708724070]
-position = Vector2(-280, 300)
+position = Vector2(-709, 295)
 
 [connection signal="body_entered" from="CameraLock/Areas/ZoomCameraLock" to="." method="_on_zoom_camera_lock_body_entered"]
 [connection signal="body_exited" from="CameraLock/Areas/ZoomCameraLock" to="." method="_on_zoom_camera_lock_body_exited"]

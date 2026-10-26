@@ -82,9 +82,6 @@ var invincible: bool = false
 @onready var hit_timer: Timer = $Timer/HitTimer
 
 @onready var player_animated_sprite: AnimatedSprite2D = $Animation/PlayerAnimatedSprite
-@onready var slash_forward_animated_sprite: AnimatedSprite2D = $Animation/SlashForwardAnimatedSprite
-@onready var slash_up_animated_sprite: AnimatedSprite2D = $Animation/SlashUpAnimatedSprite
-@onready var slash_down_animated_sprite: AnimatedSprite2D = $Animation/SlashDownAnimatedSprite
 
 @onready var action_animation_player: AnimationPlayer = $Animation/ActionAnimationPlayer
 @onready var secondary_animation_player: AnimationPlayer = $Animation/SecondaryAnimationPlayer
@@ -186,7 +183,7 @@ func start_dash_carry(dir: int) -> void:
 	dash_carry = Vector2(float(dir) * dash_speed * dash_carry_ratio, 0.0)
 
 func _flip_direction():
-	for flipped in [player_animated_sprite,slash_forward_animated_sprite,front_attack_area]:
+	for flipped in [player_animated_sprite,front_attack_area]:
 		flipped.scale.x *= -1
 		flipped.reset_physics_interpolation()
 
@@ -264,9 +261,6 @@ func set_attack_areas_disabled(disabled: bool) -> void:
 
 func end_attack() -> void:
 	set_attack_areas_disabled(true)
-	for sprite in [slash_forward_animated_sprite, slash_up_animated_sprite, slash_down_animated_sprite]:
-		if is_instance_valid(sprite):
-			sprite.visible = false
 
 func _refresh_health_bar() -> void:
 	debug.set_health(health, max_health)
@@ -300,6 +294,8 @@ func _hit_enemy(body: Node2D) -> void:
 	if body is Enemy:
 		var landed: bool = not body.dead and not body.invincible
 		body.take_damage(slash_damage, self)
+		# 反馈 D：任意对象受击都生成一次短促刀光（通用复用）
+		hit_spark.spawn(body.global_position, get_tree().current_scene)
 		if landed:
 			energy = mini(energy + 1, max_energy)
 			_refresh_energy_bar()
@@ -312,3 +308,18 @@ func _hit_enemy(body: Node2D) -> void:
 		elif away.x < 0.0:
 			recoil_dir_x = -1.0
 		knockback = Vector2(recoil_dir_x, 0.0) * attacker_recoil_x
+
+# ---- 反馈 B：攻击区域命中草等 Area2D 对象（草是 Area2D，body_entered 检测不到） ----
+func _on_attack_area_area_entered(area: Node) -> void:
+	if state_machine == null:
+		return
+	# 只在挥砍状态下结算，避免走动擦碰时误触发
+	var state := state_machine.get_state_name()
+	if state != PlayerStateNames.SLASH_FORWARD and state != PlayerStateNames.SLASH_UP \
+			and state != PlayerStateNames.SLASH_DOWN:
+		return
+	# 跳过玩家自身的攻击子区域，只命中外部可受伤对象（草、宝箱等）
+	if area == self or area.get_parent() == self:
+		return
+	if area.has_method("take_damage"):
+		area.take_damage(slash_damage, self)

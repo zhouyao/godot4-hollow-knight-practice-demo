@@ -1,0 +1,41 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://bq7xk0nv2a5cp"]
+
+[ext_resource type="Texture2D" uid="uid://c0dx14ivsqhpe" path="res://assets/animations/plants/grass_0/death/0.png" id="1_death0"]
+[ext_resource type="Texture2D" uid="uid://4esjs8ydro7b" path="res://assets/animations/plants/grass_1/death/0.png" id="2_death1"]
+[ext_resource type="Texture2D" uid="uid://cguyru2y3oxt7" path="res://assets/animations/plants/grass_2/death/0.png" id="3_death2"]
+[ext_resource type="Texture2D" uid="uid://cjapidrmb6g6g" path="res://assets/animations/plants/grass_3/death/0.png" id="4_death3"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_death0")
+}],
+"loop": 0,
+"name": &"grass_0",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_death1")
+}],
+"loop": 0,
+"name": &"grass_1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_death2")
+}],
+"loop": 0,
+"name": &"grass_2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_death3")
+}],
+"loop": 0,
+"name": &"grass_3",
+"speed": 5.0
+}]

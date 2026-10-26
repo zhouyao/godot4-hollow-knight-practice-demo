@@ -332,7 +332,9 @@ static func event_display_name(event: InputEvent) -> String:
 		if KEY_DISPLAY_NAMES.has(key_code):
 			return TranslationServer.translate(KEY_DISPLAY_NAMES[key_code] as String)
 		var key_name := OS.get_keycode_string(key_code)
-		return key_name if key_name != "" else TranslationServer.translate(UNBOUND_TEXT)
+		if key_name != "":
+			return key_name
+		return TranslationServer.translate(UNBOUND_TEXT)
 	var button_event := event as InputEventJoypadButton
 	if button_event != null:
 		var button: int = button_event.button_index
