@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dbjleohr8a1u2" path="res://scenes/props/floor.tscn" id="5_bd7ha"]
 [ext_resource type="Texture2D" uid="uid://b2rove6y8y4dd" path="res://assets/sprites/backgrounds/bg_3.png" id="5_l8c12"]
 [ext_resource type="PackedScene" uid="uid://projsplit01" path="res://scenes/projectiles/projectile_split.tscn" id="7_6c23j"]
+[ext_resource type="PackedScene" uid="uid://cwtmrqxf83kjo" path="res://scenes/characters/enemies/enemy_ground_crawlid/crawlid.tscn" id="7_xo2r0"]
 [ext_resource type="PackedScene" uid="uid://cc7bpmgddem53" path="res://scenes/characters/enemies/enemy_ground/enemy_ground.tscn" id="8_3bc65"]
 [ext_resource type="PackedScene" uid="uid://projspread01" path="res://scenes/projectiles/projectile_spread.tscn" id="8_nygb8"]
 [ext_resource type="PackedScene" uid="uid://cg7ionofoem53" path="res://scenes/characters/enemies/enemy_flying/enemy_flying.tscn" id="9_nygb8"]
@@ -101,39 +102,20 @@ scale = Vector2(4, 0.5)
 
 [node name="Floor4" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="2" unique_id=1205828303 instance=ExtResource("5_bd7ha")]
 modulate = Color(0, 0, 0, 1)
-position = Vector2(-4000, 500)
-scale = Vector2(180, 0.4)
+position = Vector2(-2000, 500)
+scale = Vector2(120, 0.4)
 
 [node name="Floor5" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="3" unique_id=498290294 instance=ExtResource("5_bd7ha")]
 modulate = Color(0, 0, 0, 1)
 position = Vector2(2000, 500)
 scale = Vector2(50, 0.16)
 
-[node name="Enemy" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=67643208 instance=ExtResource("8_3bc65")]
-position = Vector2(335, 427)
-enemy_zone = NodePath("../../EnemyZones/EnemyZone")
-projectile_scene = null
+[node name="Floor6" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="4" unique_id=1778910462 instance=ExtResource("5_bd7ha")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-3700, 500)
+scale = Vector2(50, 0.16)
 
-[node name="EnemyGround" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="1" unique_id=588911125 instance=ExtResource("8_3bc65")]
-position = Vector2(1650, 200)
-enemy_zone = NodePath("../../EnemyZones/EnemyZone")
-
-[node name="EnemyFlying" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="2" unique_id=775034443 instance=ExtResource("9_nygb8")]
-position = Vector2(1035, 300)
-enemy_zone = NodePath("../../EnemyZones/EnemyZone")
-projectile_scene = ExtResource("7_6c23j")
-attack_range = 100.0
-
-[node name="EnemyFlying2" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="3" unique_id=1746772293 instance=ExtResource("9_nygb8")]
-position = Vector2(770, 300)
-keep_distance = 0.0
-fly_speed_multiplier = 2.0
-enemy_zone = NodePath("../../EnemyZones/EnemyZone")
-projectile_scene = ExtResource("8_nygb8")
-attack_range = 100.0
-projectile_damage = 0
-
-[node name="Efffects_0" type="Node2D" parent="." index="8" unique_id=1504885066]
+[node name="Efffects_0" type="Node2D" parent="." index="7" unique_id=1504885066]
 position = Vector2(-1200, 422)
 
 [node name="G0" type="Node2D" parent="Efffects_0" index="0" unique_id=229419568]
@@ -156,6 +138,30 @@ hits_to_die = 2
 [node name="MossFloor" parent="Efffects_0/G2" index="1" unique_id=608866006 instance=ExtResource("13_uoxyj")]
 position = Vector2(5, 64)
 scale = Vector2(2.2, 1)
+
+[node name="Crawlid" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=220108385 instance=ExtResource("7_xo2r0")]
+position = Vector2(-800, 423)
+enemy_zone = NodePath("../../EnemyZones/EnemyZone2")
+projectile_scene = null
+
+[node name="EnemyGround" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="1" unique_id=588911125 instance=ExtResource("8_3bc65")]
+position = Vector2(1650, 200)
+enemy_zone = NodePath("../../EnemyZones/EnemyZone")
+
+[node name="EnemyFlying" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="2" unique_id=775034443 instance=ExtResource("9_nygb8")]
+position = Vector2(1035, 300)
+enemy_zone = NodePath("../../EnemyZones/EnemyZone")
+projectile_scene = ExtResource("7_6c23j")
+attack_range = 100.0
+
+[node name="EnemyFlying2" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="3" unique_id=1746772293 instance=ExtResource("9_nygb8")]
+position = Vector2(770, 300)
+keep_distance = 0.0
+fly_speed_multiplier = 2.0
+enemy_zone = NodePath("../../EnemyZones/EnemyZone")
+projectile_scene = ExtResource("8_nygb8")
+attack_range = 100.0
+projectile_damage = 0
 
 [node name="Player" parent="." index="9" unique_id=1112432844]
 position = Vector2(32, 300)
@@ -211,26 +217,31 @@ position = Vector2(3, 64)
 scale = Vector2(2.2, 1)
 
 [node name="EnemyZone" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="0" unique_id=556081287 instance=ExtResource("11_zone")]
-position = Vector2(861, 178)
+position = Vector2(1200, 178)
+size = Vector2(1200, 700)
+
+[node name="EnemyZone2" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="1" unique_id=1673687519 instance=ExtResource("11_zone")]
+position = Vector2(-1006, 170)
 size = Vector2(1200, 700)
 
 [node name="RightCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="0" unique_id=1421588960 node_paths=PackedStringArray("vertical_lock_marker")]
-position = Vector2(50, 204)
+position = Vector2(426, 207)
 collision_layer = 16
 script = ExtResource("2_p6tgj")
 vertical_lock_marker = NodePath("../../Markers/vertical_lock")
 can_look_up = true
 can_look_down = true
+area_size = Vector2(6000, 600)
 
 [node name="LeftCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="1" unique_id=324128848 node_paths=PackedStringArray("horizontal_lock_marker", "vertical_lock_marker")]
-position = Vector2(-1673, 197)
+position = Vector2(-863, 205)
 collision_layer = 16
 script = ExtResource("2_p6tgj")
 horizontal_lock_marker = NodePath("../../Markers/horizontal_lock")
 vertical_lock_marker = NodePath("../../Markers/vertical_lock")
 can_look_up = true
 can_look_down = true
-area_size = Vector2(300, 600)
+area_size = Vector2(1500, 600)
 
 [node name="ZoomCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="2" unique_id=146476761 node_paths=PackedStringArray("vertical_lock_marker")]
 position = Vector2(-3312, 201)
@@ -242,10 +253,10 @@ can_look_down = true
 area_size = Vector2(1500, 600)
 
 [node name="vertical_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="0" unique_id=1345446756]
-position = Vector2(0, 200)
+position = Vector2(-479, 155)
 
 [node name="horizontal_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="1" unique_id=708724070]
-position = Vector2(-709, 295)
+position = Vector2(-470, 318)
 
 [connection signal="body_entered" from="CameraLock/Areas/ZoomCameraLock" to="." method="_on_zoom_camera_lock_body_entered"]
 [connection signal="body_exited" from="CameraLock/Areas/ZoomCameraLock" to="." method="_on_zoom_camera_lock_body_exited"]

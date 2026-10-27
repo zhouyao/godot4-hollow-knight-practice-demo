@@ -32,6 +32,14 @@ class_name Pickup
 ## 消失前闪烁的提前量（秒）。
 @export var blink_time: float = 3.0
 
+@export_group("表现")
+## 绘制层级：默认抬到 1，保证掉落物压在敌人尸体与玩家之上。
+## 场景树里 Enemies 容器排在 Drops 之后、且全局都没开 y_sort，
+## 纯按树序绘制的话刚爆出来的金币会被尸体整个盖住，玩家根本看不见。
+## 这里抬的是自身 z（z_as_relative 默认开，会叠加到父容器上），
+## 不搬动容器顺序 —— 重排模板会打乱 level_*.tscn 里继承节点的 index。
+@export var draw_z: int = 1
+
 enum Phase { SETTLE, IDLE, MAGNET }
 
 var _phase := Phase.SETTLE
@@ -50,6 +58,7 @@ var _need_probe := true
 func _ready() -> void:
 	# 入树后立刻同步一次插值状态，避免从父节点原点"飞"过来。
 	reset_physics_interpolation()
+	z_index = draw_z
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 
@@ -67,7 +76,7 @@ func _physics_process(delta: float) -> void:
 		# 预置在场景里的（放在 Items 下）没被抛出：已在地面就直接待拾取，
 		# 悬空摆放的则走 SETTLE 自由落体。
 		if not _launched and global_position.y >= _ground_y - 0.5:
-			_phase = Phase.IDLE
+			_set_phase(Phase.IDLE)
 
 	_age += delta
 	if _age >= life_time:
@@ -95,7 +104,7 @@ func _integrate(delta: float) -> void:
 		_vel = Vector2(_vel.x * 0.4, -absf(_vel.y) * bounce)
 		return
 	_vel = Vector2.ZERO
-	_phase = Phase.IDLE
+	_set_phase(Phase.IDLE)
 
 
 ## IDLE 期间主动查一次当前重叠的玩家。
@@ -108,14 +117,14 @@ func _check_idle_magnet() -> void:
 	for b in get_overlapping_bodies():
 		if b is Node2D and b.is_in_group("player"):
 			_player = b
-			_phase = Phase.MAGNET
+			_set_phase(Phase.MAGNET)
 			return
 
 
 func _magnet(delta: float) -> void:
 	var p := _get_player()
 	if p == null:
-		_phase = Phase.IDLE
+		_set_phase(Phase.IDLE)
 		return
 	if _age < pick_delay:
 		return
@@ -148,12 +157,27 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	_player = body
 	if _phase != Phase.SETTLE:
-		_phase = Phase.MAGNET
+		_set_phase(Phase.MAGNET)
 
 
 func _on_body_exited(body: Node2D) -> void:
 	if body == _player and _phase == Phase.MAGNET:
-		_phase = Phase.IDLE
+		_set_phase(Phase.IDLE)
+
+
+## 阶段切换的唯一入口：必须走这里，子类（CoinPickup 等）才能收到
+## "起飞 / 落地"通知去切动画 —— 直接写 _phase = 的赋值无法被观测。
+func _set_phase(p: Phase) -> void:
+	if _phase == p:
+		return
+	_phase = p
+	_on_phase_changed(p)
+
+
+## 子类重写：阶段变化时同步表现层（动画 / 音效等）。基类不做任何处理。
+## 与 _apply_effect() 一样是给子类的虚钩子，默认空实现。
+func _on_phase_changed(_p: Phase) -> void:
+	pass
 
 
 func _get_player() -> Node2D:
@@ -167,14 +191,25 @@ func _get_player() -> Node2D:
 func _collect(by: Node2D) -> void:
 	Inventory.add(item_id, amount)
 	_apply_effect(by)
-	if _audio != null and _audio.stream != null:
-		# 音效要在节点释放后仍能播完：先脱离父节点再延迟释放。
-		remove_child(_audio)
-		get_tree().current_scene.add_child(_audio)
-		_audio.global_position = global_position
-		_audio.finished.connect(_audio.queue_free)
-		_audio.play()
+	_detach_audio()
 	queue_free()
+
+
+## 音效要在拾取物释放后仍能播完：先把播放器挪出即将被销毁的子树，挂到场景根上延迟释放。
+## 注意 _audio 挂在 Audio 容器下（$Audio/Pickup），它的父节点并不是本节点 ——
+## 直接对自己调 remove_child(_audio) 会触发 "p_child->data.parent != this" 报错。
+## reparent() 内部用的是节点真实的父节点，等价于"从真父节点摘除 + add_child"。
+func _detach_audio() -> void:
+	if _audio == null or _audio.stream == null:
+		return
+	var holder := get_tree().current_scene
+	if holder == null:
+		return
+	# keep_global_transform 传 false：音效位置下一行会显式重设，省一次变换换算。
+	_audio.reparent(holder, false)
+	_audio.global_position = global_position
+	_audio.finished.connect(_audio.queue_free)
+	_audio.play()
 
 
 ## 子类重写：钱币无需额外效果，食物在此回血。

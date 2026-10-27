@@ -41,10 +41,17 @@ func _patrol_ground(delta: float) -> void:
 		return
 
 	# 非战斗巡逻：前方撞墙，或前方无地面（悬崖）都立即调头返回继续巡逻。
+	# force_raycast_update()：RayCast2D 的碰撞结果是上一物理帧的缓存，
+	# 查询前先按当前位置刷新一次，免得读到"翻面前那一侧"的旧结果。
 	var wall: RayCast2D = enemy.get("wall_detector")
-	if (wall != null and wall.is_colliding()) or (enemy as EnemyGround).ledge_ahead():
+	if wall != null:
+		wall.force_raycast_update()
+	# 悬崖判定按"本帧准备走的方向"而不是当前朝向：掉头的那一帧两者并不一致。
+	var wall_blocked := wall != null and wall.is_colliding()
+	var ledge_blocked := not (enemy as EnemyGround).has_ground_ahead(float(_dir))
+	if wall_blocked or ledge_blocked:
 		_dir *= -1
-		_face_x(enemy.global_position.x + float(_dir))  # 立即转身，使探测器指向反方向
+		_face_dir(float(_dir))  # 立即转身，使探测器指向反方向
 		_wait = wait_time * 0.5
 		enemy.velocity.x = 0.0
 		return
@@ -53,7 +60,7 @@ func _patrol_ground(delta: float) -> void:
 	var target_x := bounds.x if _dir < 0 else bounds.y
 	var dir := enemy.nav_velocity(Vector2(target_x, enemy.global_position.y), enemy.move_speed * patrol_speed_multiplier, true)
 	if dir.x != 0.0:
-		_face_x(enemy.global_position.x + dir.x)
+		_face_dir(signf(dir.x))
 		enemy.velocity.x = dir.x
 	else:
 		# 抵达端点（nav_velocity 返回零向量），调头并停留，之后继续巡逻。

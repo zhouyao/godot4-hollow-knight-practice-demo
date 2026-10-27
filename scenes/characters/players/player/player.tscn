@@ -13,19 +13,19 @@
 [ext_resource type="Script" uid="uid://bgntrngripevl" path="res://scenes/characters/players/player/states/slash_forward.gd" id="11_eqn8m"]
 [ext_resource type="Script" uid="uid://noav7tyes6os" path="res://scenes/characters/players/player/states/slash_down.gd" id="12_tmesi"]
 [ext_resource type="Script" uid="uid://n5m4aggv4pj4" path="res://scenes/characters/players/player/states/slash_up.gd" id="13_vvfi6"]
-[ext_resource uid="uid://bvqp3ngqdnona" type="AudioStream" path="res://assets/sounds/characters/players/player/player_walk.ogg" id="14_3lsh5"]
+[ext_resource type="AudioStream" uid="uid://bvqp3ngqdnona" path="res://assets/sounds/characters/players/player/player_walk.ogg" id="14_3lsh5"]
 [ext_resource type="Script" uid="uid://d0perfsqddujp" path="res://scenes/characters/players/player/states/hurt.gd" id="14_dmgst"]
-[ext_resource uid="uid://cdltsupvpwh3v" type="AudioStream" path="res://assets/sounds/characters/players/player/player_death.ogg" id="15_oi6ae"]
-[ext_resource uid="uid://4il6pdwiaagt" type="AudioStream" path="res://assets/sounds/characters/players/player/player_jump.ogg" id="16_nm7y7"]
-[ext_resource uid="uid://dmgh73l7uuwrb" type="AudioStream" path="res://assets/sounds/characters/players/player/player_land.ogg" id="17_eix85"]
-[ext_resource uid="uid://bnsmvf18jjne7" type="AudioStream" path="res://assets/sounds/characters/players/player/slash_forward.ogg" id="18_dq5qu"]
-[ext_resource uid="uid://c0krki5irst8q" type="AudioStream" path="res://assets/sounds/characters/players/player/slash_up.ogg" id="19_cyxjp"]
-[ext_resource uid="uid://dhrdxmhyyauro" type="AudioStream" path="res://assets/sounds/characters/players/player/slash_down.ogg" id="20_lduw1"]
-[ext_resource uid="uid://c6gactj43wwd0" type="AudioStream" path="res://assets/sounds/characters/players/player/player_hurt.ogg" id="21_fvm4r"]
+[ext_resource type="AudioStream" uid="uid://cdltsupvpwh3v" path="res://assets/sounds/characters/players/player/player_death.ogg" id="15_oi6ae"]
+[ext_resource type="AudioStream" uid="uid://4il6pdwiaagt" path="res://assets/sounds/characters/players/player/player_jump.ogg" id="16_nm7y7"]
+[ext_resource type="AudioStream" uid="uid://dmgh73l7uuwrb" path="res://assets/sounds/characters/players/player/player_land.ogg" id="17_eix85"]
+[ext_resource type="AudioStream" uid="uid://bnsmvf18jjne7" path="res://assets/sounds/characters/players/player/slash_forward.ogg" id="18_dq5qu"]
+[ext_resource type="AudioStream" uid="uid://c0krki5irst8q" path="res://assets/sounds/characters/players/player/slash_up.ogg" id="19_cyxjp"]
+[ext_resource type="AudioStream" uid="uid://dhrdxmhyyauro" path="res://assets/sounds/characters/players/player/slash_down.ogg" id="20_lduw1"]
+[ext_resource type="AudioStream" uid="uid://c6gactj43wwd0" path="res://assets/sounds/characters/players/player/player_hurt.ogg" id="21_fvm4r"]
 [ext_resource type="Texture2D" uid="uid://pnuqea280sri" path="res://assets/textures/lights/circle.png" id="21_g7q77"]
-[ext_resource uid="uid://cl37etmvjq80v" type="AudioStream" path="res://assets/sounds/characters/players/player/player_dash.ogg" id="23_ft8l0"]
-[ext_resource type="SpriteFrames" uid="uid://c2tqjvedi1tch" path="res://resources/characters/players/player/player_sprite_frames.tres" id="26_qkgkx"]
-[ext_resource type="AnimationLibrary" uid="uid://chcmuoef0l46l" path="res://resources/characters/players/player/player_action_animations.tres" id="30_muvqv"]
+[ext_resource type="AudioStream" uid="uid://cl37etmvjq80v" path="res://assets/sounds/characters/players/player/player_dash.ogg" id="23_ft8l0"]
+[ext_resource type="SpriteFrames" uid="uid://c2tqjvedi1tch" path="res://resources/characters/players/player/player_sprite.tres" id="26_qkgkx"]
+[ext_resource type="AnimationLibrary" uid="uid://chcmuoef0l46l" path="res://resources/characters/players/player/player_action_player.tres" id="30_muvqv"]
 [ext_resource type="PackedScene" path="res://scenes/debug/character_debug.tscn" id="35_aldr5"]
 [ext_resource type="Script" uid="uid://f7sp6wnvwghi" path="res://scenes/characters/players/player/states/dash.gd" id="36_dash"]
 
@@ -177,7 +177,7 @@ disabled = true
 [node name="PlayerAnimatedSprite" type="AnimatedSprite2D" parent="Animation" unique_id=458371313]
 material = SubResource("CanvasItemMaterial_2n40l")
 sprite_frames = ExtResource("26_qkgkx")
-animation = &"walk"
+animation = &"idle"
 
 [node name="ActionAnimationPlayer" type="AnimationPlayer" parent="Animation" unique_id=1051654828]
 root_node = NodePath("../..")

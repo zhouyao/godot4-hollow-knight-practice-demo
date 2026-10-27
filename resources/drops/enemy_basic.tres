@@ -2,22 +2,14 @@
 
 [ext_resource type="Script" uid="uid://d0emdc03j66x7" path="res://resources/drops/drop_table.gd" id="1_tbl"]
 [ext_resource type="Script" uid="uid://c3fh1kim240ss" path="res://resources/drops/drop_entry.gd" id="2_ent"]
-[ext_resource type="PackedScene" path="res://scenes/drops/coin_pickup.tscn" id="3_coin"]
-[ext_resource type="PackedScene" uid="uid://c5tqx7jnlvs76" path="res://scenes/drops/food_pickup.tscn" id="4_food"]
+[ext_resource type="PackedScene" uid="uid://cfnktgjb8ajfp" path="res://scenes/drops/coin_pickup.tscn" id="3_coin"]
 
 [sub_resource type="Resource" id="Resource_coin"]
 script = ExtResource("2_ent")
 scene = ExtResource("3_coin")
-min_amount = 3
-max_amount = 6
-
-[sub_resource type="Resource" id="Resource_food"]
-script = ExtResource("2_ent")
-item_id = &"food"
-scene = ExtResource("4_food")
-chance = 0.35
-max_pickups = 2
+max_amount = 2
 
 [resource]
 script = ExtResource("1_tbl")
-entries = Array[ExtResource("2_ent")]([SubResource("Resource_coin"), SubResource("Resource_food")])
+entries = Array[ExtResource("2_ent")]([SubResource("Resource_coin")])
+max_pickups = 1

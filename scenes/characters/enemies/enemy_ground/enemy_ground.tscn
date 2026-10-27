@@ -16,6 +16,7 @@ drop_table = ExtResource("9_drop")
 
 [node name="patrol" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="2" unique_id=2000000001]
 script = ExtResource("7_gpatrol")
+patrol_speed_multiplier = 0.6
 metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
 
 [node name="chase" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="3" unique_id=1057346826]

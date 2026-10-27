@@ -94,10 +94,24 @@ var spawn_position: Vector2 = Vector2.ZERO
 ## 尸体淡出时长（秒）：从完全不透明渐变到透明的耗时。<= 0 表示到点直接消失，不做渐变。
 @export var corpse_fade_time: float = 1.0
 
+@export_group("转身")
+## 转身动作名：ActionAnimationPlayer 里的同名 clip。留空 = 关闭转身动画。
+## 每次翻面（patrol 撞墙/悬崖/端点、chase 面朝目标、return 回巢）都会自动播一次，
+## 播完自动回到翻面前正在播的那个动作。敌人没配这个 clip 时行为与现在完全一致（瞬时翻面）。
+@export var turn_animation: StringName = &"turn"
+## 两次转身动画之间的最小间隔（秒）：目标在朝向死区边缘抖动时，防止把动画反复重放到卡顿。
+@export var turn_min_interval: float = 0.2
+
 ## 战斗丢失计时器：累计"目标丢失 / 出 leash / 无视线"的时长，达到 combat_lose_time 即丢战。
 var combat_timer: float = 0.0
 ## 当前是否处于战斗（仇恨）状态。
 var combat_active: bool = false
+
+## 转身表现状态：正在播放 / 播完后要恢复的动作名 / 上次播放时刻（毫秒，负值 = 从未播放过）/ 攒下的翻面次数。
+var _turning: bool = false
+var _turn_resume: StringName = &""
+var _turn_last_ms: int = -1000000
+var _turn_pending: int = 0
 
 
 var move_speed: float = 1.0 * Globals.UNIT_SIZE
@@ -152,6 +166,12 @@ func _ready() -> void:
 	if contact_timer != null:
 		contact_timer.wait_time = contact_cooldown
 
+	if action_animation_player != null:
+		if not action_animation_player.animation_finished.is_connected(_on_action_animation_finished):
+			action_animation_player.animation_finished.connect(_on_action_animation_finished)
+		if not action_animation_player.animation_changed.is_connected(_on_action_animation_changed):
+			action_animation_player.animation_changed.connect(_on_action_animation_changed)
+
 	if attack_area != null:
 		attack_area.monitoring = contact_damage_enabled
 	_set_contact_area_shapes_enabled(contact_damage_enabled)
@@ -176,21 +196,98 @@ func _apply_movement() -> void:
 	move_and_slide()
 
 
+## 左右换向：逻辑朝向（move_direction，+1 = 向右）立刻翻转，
+## 攻击判定区、掉落点、以及子类挂在 _flip_extra() 上的探测器 / 吐弹口也跟着立刻翻（它们只影响逻辑）；
+## 精灵画面朝向则可能被转身动画接管，见 _flip_sprite()。
+## 注意精灵是"按 scale.x 当前符号取反"，所以素材本身朝左的怪（如 crawlid）
+## 必须在场景里把 EnemyAnimatedSprite.scale.x 预置成 -1，让它与 move_direction = +1 对齐；
+## 那不是多余的镜像，删掉就会出现"头朝反方向走路"。
 func _flip_direction() -> void:
 	move_direction *= -1
-	for flipped in [animated_sprite, attack_area]:
-		flipped.scale.x *= -1
-		flipped.reset_physics_interpolation()
+	attack_area.scale.x *= -1
+	attack_area.reset_physics_interpolation()
 	for marker in [drop_marker]:
 		marker.position.x *= -1
 		marker.reset_physics_interpolation()
 	_flip_extra()
+	_flip_sprite()
 
 func _flip_extra() -> void:
 	# 吐弹口跟着朝向翻转（无 Muzzle 的怪为 null，直接跳过）。
 	if muzzle != null:
 		muzzle.position.x *= -1
 		muzzle.reset_physics_interpolation()
+
+## 精灵的左右翻面：能播转身动画时交给动画收尾，否则立即翻。
+## 关键点：turn 素材的两帧本身画了 180° 转向（第 0 帧画旧朝向、最后一帧画新朝向），
+## 所以动画期间必须保持旧的 scale，等播完再翻一次。若像最早那样"先翻 scale 再播动画"，
+## 画面会变成 新朝向 → 第0帧退回旧朝向 → 第1帧又到新朝向，看起来就是"多扭一次/多回一次头"。
+## 动画中又翻面（目标来回横跳）时不打断动画，只把翻面次数攒起来，播完一次性结算。
+func _flip_sprite() -> void:
+	if _turning and action_animation_player != null \
+			and action_animation_player.current_animation == turn_animation:
+		_turn_pending += 1
+		return
+	if _try_start_turn():
+		_turn_pending = 1
+		return
+	_apply_sprite_flip()  # 没配转身动画 / 还在冷却：退回瞬时翻面
+
+func _apply_sprite_flip() -> void:
+	animated_sprite.scale.x *= -1
+	animated_sprite.reset_physics_interpolation()
+
+## 尝试起一次转身动画。守卫让"不是每只怪都配了转身动画"成为默认值：
+##   1. turn_animation 为空 / 没有同名 clip → false（调用方立刻翻面，行为与以前一致）；
+##   2. 距上次转身不足 turn_min_interval → false（防目标在朝向死区边缘抖动把动画打卡顿）。
+func _try_start_turn() -> bool:
+	var player := action_animation_player
+	if player == null or turn_animation == &"" or not player.has_animation(turn_animation):
+		return false
+	var now := Time.get_ticks_msec()
+	if now - _turn_last_ms < int(turn_min_interval * 1000.0):
+		return false
+	_turn_last_ms = now
+	_turning = true
+	_turn_pending = 0
+	# 记下当前动作：转身是一次性动画，播完必须还给 idle / walk。
+	var current := player.current_animation
+	if current == &"" or current == turn_animation or not player.has_animation(current):
+		current = &"idle"
+	_turn_resume = current if player.has_animation(current) else &""
+	player.play(turn_animation)
+	return true
+
+## 收尾：把转身期间攒下的精灵翻面一次性结算（奇数才真的翻），并清空状态。
+## 绝不能漏掉这一步 —— 否则精灵会一直停在旧朝向，与 move_direction 长期不一致。
+func _finish_turn() -> void:
+	_turning = false
+	if _turn_pending % 2 == 1:
+		_apply_sprite_flip()
+	_turn_pending = 0
+	_turn_resume = &""
+
+## 转身动画播完：把动作还给原来那个（idle / walk），并结算精灵翻面。
+## 顺序很重要：先 play + seek 把精灵切到恢复动画的第 0 帧，再翻 scale。
+## 反过来的话会有一帧出现"scale 已翻、精灵还停在 turn 最后一帧"的组合，
+## 那一帧的朝向会弹回旧方向（轻微版"多回一次头"）。两者在同一回调内完成，渲染前不会露出来。
+func _on_action_animation_finished(anim_name: StringName) -> void:
+	if anim_name != turn_animation:
+		return
+	var resume := _turn_resume
+	var player := action_animation_player
+	_turning = false  # 先落旗，避免下面的 play() 触发 animation_changed 时重复结算
+	if player != null and resume != &"" and player.has_animation(resume):
+		player.play(resume)
+		player.seek(0.0, true)
+	_finish_turn()
+
+## 转身动画被别的动作顶掉（受击硬直、切状态抢播 idle、死亡等）：
+## 立刻结算精灵翻面，别让它停在旧朝向。
+## 注：本回调在 play(_turn_resume) 时也会触发，但那时 _turning 已为 false，不会重复结算。
+func _on_action_animation_changed(_old_name: StringName, new_name: StringName) -> void:
+	if _turning and new_name != turn_animation:
+		_finish_turn()
 
 
 func take_damage(amount: int, from: Node2D = null) -> void:

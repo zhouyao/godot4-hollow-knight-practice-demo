@@ -29,6 +29,6 @@ func _patrol_fly(_delta: float) -> void:
 	var dir := enemy.nav_velocity(target, enemy.move_speed * patrol_speed_multiplier, false)
 	enemy.velocity = dir
 	if dir.x != 0.0:
-		_face_x(enemy.global_position.x + dir.x)
+		_face_dir(signf(dir.x))
 	if enemy.global_position.distance_to(enemy.spawn_position) > patrol_radius * 1.5:
 		_dir *= -1
