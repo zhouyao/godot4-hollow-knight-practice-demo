@@ -44,7 +44,7 @@
 [ext_resource type="Texture2D" uid="uid://b7k2nbip0kfo6" path="res://assets/animations/characters/players/player/jump/3.png" id="42_xlws8"]
 [ext_resource type="Texture2D" uid="uid://1nfll4o2k4ky" path="res://assets/animations/characters/players/player/jump/4.png" id="43_ii25i"]
 [ext_resource type="Texture2D" uid="uid://do46nskpestoj" path="res://assets/animations/characters/players/player/jump/5.png" id="44_fdwd4"]
-[ext_resource type="Texture2D" uid="uid://bg3gwoopoai7i" path="res://assets/animations/characters/players/player/look_down/0.png" id="45_4h88e"]
+[ext_resource type="Texture2D" uid="uid://dver5dsoocvow" path="res://assets/animations/characters/players/player/look_down/0.png" id="45_4h88e"]
 [ext_resource type="Texture2D" uid="uid://iqrh5r1l6fxn" path="res://assets/animations/characters/players/player/look_up/0.png" id="46_2nocw"]
 [ext_resource type="Texture2D" uid="uid://c6ddrnb82lrwj" path="res://assets/animations/characters/players/player/slash_down/0.png" id="47_7ob4y"]
 [ext_resource type="Texture2D" uid="uid://cagjv7spdw384" path="res://assets/animations/characters/players/player/slash_down/1.png" id="48_kom4v"]

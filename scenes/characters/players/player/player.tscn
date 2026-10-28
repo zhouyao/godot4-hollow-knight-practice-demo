@@ -143,7 +143,7 @@ texture_scale = 2.0
 energy = 4.0
 texture = ExtResource("21_g7q77")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=863208272]
+[node name="BodyCollisionShape2D" type="CollisionShape2D" parent="." unique_id=863208272]
 shape = SubResource("2_capsule")
 
 [node name="DownAttackArea" type="Area2D" parent="." unique_id=1102514049]

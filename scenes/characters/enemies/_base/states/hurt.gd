@@ -41,7 +41,7 @@ func get_transition(_delta: float) -> StringName:
 	# 受击硬直结束后：仍在战斗则回追击，否则回巡逻。
 	if enemy != null and enemy.combat_active:
 		return EnemyStateNames.CHASE
-	return _return_from if _return_from != &"" else EnemyStateNames.PATROL
+	return _return_from if _return_from != &"" else enemy.resting_state()
 
 func exit(_to: StringName) -> void:
 	if enemy != null:

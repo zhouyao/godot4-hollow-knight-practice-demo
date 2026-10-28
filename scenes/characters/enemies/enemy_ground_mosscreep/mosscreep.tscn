@@ -1,0 +1,343 @@
+[gd_scene format=3 uid="uid://bqsqwrfub1mkt"]
+
+[ext_resource type="PackedScene" uid="uid://cc7bpmgddem53" path="res://scenes/characters/enemies/enemy_ground/enemy_ground.tscn" id="1_ne33h"]
+[ext_resource type="Texture2D" uid="uid://bsqq4e3bqxouj" path="res://assets/animations/characters/enemies/mosscreep/death/0.png" id="2_75ffa"]
+[ext_resource type="Texture2D" uid="uid://b5h8wblaxf3mj" path="res://assets/animations/characters/enemies/mosscreep/appear/0.png" id="2_fysxx"]
+[ext_resource type="Texture2D" uid="uid://dw6aflvlfsh2e" path="res://assets/animations/characters/enemies/mosscreep/idle/0.png" id="2_r7di0"]
+[ext_resource type="Texture2D" uid="uid://dkks5gyghplpx" path="res://assets/animations/characters/enemies/mosscreep/appear/1.png" id="3_c1ip6"]
+[ext_resource type="Texture2D" uid="uid://dw4sxvqn8g2vr" path="res://assets/animations/characters/enemies/mosscreep/idle/1.png" id="3_dp6av"]
+[ext_resource type="Texture2D" uid="uid://dpqfb0jngvjo7" path="res://assets/animations/characters/enemies/mosscreep/death/1.png" id="3_twgq2"]
+[ext_resource type="Texture2D" uid="uid://dp6o3oxpstdym" path="res://assets/animations/characters/enemies/mosscreep/move/0.png" id="4_c3kon"]
+[ext_resource type="Texture2D" uid="uid://dv63pkvdhj5lg" path="res://assets/animations/characters/enemies/mosscreep/appear/2.png" id="4_teuvm"]
+[ext_resource type="Texture2D" uid="uid://com80exy7lqsb" path="res://assets/animations/characters/enemies/mosscreep/death/2.png" id="4_wqfjs"]
+[ext_resource type="Texture2D" uid="uid://dusmcui7nfojj" path="res://assets/animations/characters/enemies/mosscreep/appear/3.png" id="5_6e4kl"]
+[ext_resource type="Texture2D" uid="uid://7r4bfnwt5kbc" path="res://assets/animations/characters/enemies/mosscreep/death/3.png" id="5_8mc8d"]
+[ext_resource type="Texture2D" uid="uid://e46x0nx4ivpn" path="res://assets/animations/characters/enemies/mosscreep/move/1.png" id="5_ekody"]
+[ext_resource type="Texture2D" uid="uid://ub7rawsyjvp2" path="res://assets/animations/characters/enemies/mosscreep/move/2.png" id="6_0n1yl"]
+[ext_resource type="Texture2D" uid="uid://cesda5xjxgdnw" path="res://assets/animations/characters/enemies/mosscreep/death/4.png" id="6_gohx0"]
+[ext_resource type="Texture2D" uid="uid://r74jwwvpqco3" path="res://assets/animations/characters/enemies/mosscreep/appear/4.png" id="6_ignf4"]
+[ext_resource type="Texture2D" uid="uid://dasl0pa46yfpp" path="res://assets/animations/characters/enemies/mosscreep/death/5.png" id="7_3u1va"]
+[ext_resource type="Texture2D" uid="uid://b7jergog4814e" path="res://assets/animations/characters/enemies/mosscreep/bury/0.png" id="7_p55e5"]
+[ext_resource type="Texture2D" uid="uid://cqrxtaapvadjr" path="res://assets/animations/characters/enemies/mosscreep/move/3.png" id="7_y4iwv"]
+[ext_resource type="Texture2D" uid="uid://co0ento1xleta" path="res://assets/animations/characters/enemies/mosscreep/bury/1.png" id="8_miw6j"]
+[ext_resource type="Texture2D" uid="uid://ckswjirtqaymo" path="res://assets/animations/characters/enemies/mosscreep/turn/0.png" id="8_y4iwv"]
+[ext_resource type="Texture2D" uid="uid://j7kq7l5e5xak" path="res://assets/animations/characters/enemies/mosscreep/turn/1.png" id="9_dt756"]
+[ext_resource type="Texture2D" uid="uid://b4uwu1nkk2aww" path="res://assets/animations/characters/enemies/mosscreep/bury/2.png" id="9_ofpjo"]
+[ext_resource type="Texture2D" uid="uid://dl1e0oc7g8ljf" path="res://assets/animations/characters/enemies/mosscreep/turn/2.png" id="10_6dv6f"]
+[ext_resource type="Texture2D" uid="uid://dkdu3pahqi3op" path="res://assets/animations/characters/enemies/mosscreep/bury/3.png" id="10_ateev"]
+[ext_resource type="Texture2D" uid="uid://8fjcly6rhjwa" path="res://assets/animations/characters/enemies/mosscreep/bury/4.png" id="11_0xqux"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fysxx"]
+size = Vector2(109, 98)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ne33h"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_fysxx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_c1ip6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_teuvm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_6e4kl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ignf4")
+}],
+"loop": 0,
+"name": &"appear",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_p55e5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_miw6j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_ofpjo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_ateev")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_0xqux")
+}],
+"loop": 0,
+"name": &"bury",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_75ffa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_twgq2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_wqfjs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_8mc8d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_gohx0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_3u1va")
+}],
+"loop": 0,
+"name": &"death",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 2.0,
+"texture": ExtResource("2_r7di0")
+}, {
+"duration": 2.0,
+"texture": ExtResource("3_dp6av")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_c3kon")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ekody")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_0n1yl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_y4iwv")
+}],
+"loop": 1,
+"name": &"move",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_y4iwv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_dt756")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_6dv6f")
+}],
+"loop": 0,
+"name": &"turn",
+"speed": 3.0
+}]
+
+[sub_resource type="Animation" id="Animation_fysxx"]
+resource_name = "appear"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"appear"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4]
+}
+
+[sub_resource type="Animation" id="Animation_c1ip6"]
+resource_name = "bury"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"bury"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4]
+}
+
+[sub_resource type="Animation" id="Animation_teuvm"]
+resource_name = "death"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"death"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.16666667, 0.33333334, 0.5, 0.6666667, 0.8333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+
+[sub_resource type="Animation" id="Animation_6e4kl"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="Animation" id="Animation_ignf4"]
+resource_name = "move"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"move"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_p55e5"]
+resource_name = "turn"
+length = 0.15
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"turn"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.23333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [1, 2, 0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_miw6j"]
+_data = {
+&"appear": SubResource("Animation_fysxx"),
+&"bury": SubResource("Animation_c1ip6"),
+&"death": SubResource("Animation_teuvm"),
+&"idle": SubResource("Animation_6e4kl"),
+&"move": SubResource("Animation_ignf4"),
+&"turn": SubResource("Animation_p55e5")
+}
+
+[node name="Mosscreep" unique_id=220108385 instance=ExtResource("1_ne33h")]
+patrol_enabled = false
+projectile_scene = null
+corpse_lifetime = -1.0
+corpse_y_offset = -5.0
+
+[node name="idle" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="6" unique_id=2000000010]
+arrive_animation = &"bury"
+emerge_animation = &"appear"
+
+[node name="Muzzle" parent="." index="4" unique_id=1436587748]
+position = Vector2(75, -20)
+
+[node name="BodyCollisionShape2D" parent="." index="5" unique_id=366153699]
+position = Vector2(0.5, 1)
+shape = SubResource("RectangleShape2D_fysxx")
+
+[node name="WallDetector" parent="." index="7" unique_id=1710783293]
+position = Vector2(60, 0)
+
+[node name="LedgeDetector" parent="." index="8" unique_id=311882515]
+position = Vector2(62, 41)
+
+[node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(953898085) index="0" unique_id=1162166538]
+sprite_frames = SubResource("SpriteFrames_ne33h")
+
+[node name="ActionAnimationPlayer" parent="Animation" parent_id_path=PackedInt32Array(953898085) index="1" unique_id=736473467]
+libraries/ = SubResource("AnimationLibrary_miw6j")

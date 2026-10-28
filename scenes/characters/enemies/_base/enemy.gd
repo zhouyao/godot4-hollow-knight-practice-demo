@@ -23,12 +23,30 @@ const HIDDEN_BUT_SAVED := PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_STORAGE
 ## 初始血量：出生时取 min(initial_health, max_health)，可用于让敌人残血出场。
 @export var initial_health: int = 3
 
-@export_group("物理")
-## 是否吃重力：true = 地面怪（默认）；false = 飞行怪，垂直方向由状态逻辑直接驱动。
-@export var gravity_enabled: bool = true
-## 重力加速度（像素 / 秒²），默认与玩家手感一致（2 * 3 * UNIT_SIZE / 0.5²）。
-## gravity_enabled = false 时本项自动隐藏。
-@export var gravity: float = 2304.0
+@export_group("运动介质")
+## 运动模式：决定垂直方向怎么动、导航是否只取水平分量、死后尸体怎么处理。
+## 换这一个资源就能把地面怪变成飞行怪 / 水下怪，无需改动任何状态代码。
+##   地面 res://resources/characters/enemies/_shared/locomotion/ground.tres（默认）
+##   飞行 res://resources/characters/enemies/_shared/locomotion/flying.tres
+##   水下 res://resources/characters/enemies/_shared/locomotion/swimming.tres
+## 详见 resources/characters/enemies/_shared/locomotion/enemy_locomotion.gd。
+@export var locomotion: EnemyLocomotion = preload("res://resources/characters/enemies/_shared/locomotion/ground.tres")
+
+@export_group("调参预设")
+## 整类怪的数值预设：巡逻 / 追击 / 攻击 / 返回的所有数值都可以写进这一个资源，
+## 一份 .tres 在多只怪之间复用。留空则完全沿用下面各导出项与各状态自身的默认值。
+## 取值优先级：tuning > 本节点同名导出（逐只微调） > 状态脚本默认值。
+## 详见 resources/characters/enemies/_shared/enemy_tuning.gd。
+@export var tuning: EnemyTuning = null
+
+@export_group("移动")
+## 基础移动速度（像素 / 秒）：巡逻 / 追击 / 返回的所有倍率都乘以它。
+## 想整体调快调慢一只怪改这里（或改 tuning.move_speed），
+## 想只调某一种行为改对应的倍率，不必再逐个状态节点改三处。
+@export var move_speed: float = 1.0 * Globals.UNIT_SIZE
+## 追击速度倍率（乘以 enemy.move_speed）：< 0 表示沿用 chase 状态自身的默认值。
+## 地面怪与飞行怪共用同一套名字：逐只覆盖在世界场景里改这一项即可。
+@export var chase_speed_multiplier: float = -1.0
 
 @export_group("受击")
 ## 受击后的无敌帧时长（秒），由 HitTimer 计时，期间不再结算伤害。
@@ -47,6 +65,18 @@ const HIDDEN_BUT_SAVED := PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_STORAGE
 ## 出生点：用于 return 状态归位与 leash 范围判定，_ready 时记录。
 var spawn_position: Vector2 = Vector2.ZERO
 
+@export_group("巡逻")
+## 巡逻总开关：true（默认）= 出生后绕出生点 / 领地来回巡逻；false = 原地待机（站岗 / 悬停）。
+## 关闭后仍可被受击 / 领地触发进入战斗，战斗结束后回到巡逻状态继续待机。
+## 地面怪与飞行怪共用本开关：两边"怎么巡逻"不同（沿地往返 / 全 2D 飘移），但那是
+## 各自 patrol 状态里 _patrol_move() 的差异，开关本身没有任何分支，没必要各存一份。
+@export var patrol_enabled: bool = true
+
+## 出生 / 战斗结束后的"驻留"状态：关巡逻＝idle，否则＝patrol。
+## return / hurt 回流时统一走这里，避免把"关巡逻的怪"错误送回巡逻逻辑。
+func resting_state() -> StringName:
+	return EnemyStateNames.IDLE if not patrol_enabled else EnemyStateNames.PATROL
+
 @export_group("感知与仇恨")
 ## 牵引（leash）半径：目标离开出生点此距离即视为"追丢"，触发 return。
 @export var leash_range: float = 700.0
@@ -54,8 +84,6 @@ var spawn_position: Vector2 = Vector2.ZERO
 @export var combat_lose_time: float = 10.0
 ## 视线丢失判定开关：true 时超出 leash 且无视线会累计丢失时间。
 @export var use_line_of_sight: bool = true
-## 是否允许追击（被控制效果禁用时置 false）。
-@export var can_chase: bool = true
 ## 绑定的领地（EnemyZone）：玩家踏入该领地时令本敌人开战。
 ## 留空则不通过领地触发（仍可由受击开战）。在检查器里从世界的 EnemyZones 选择对应领地。
 @export var enemy_zone: NodePath = NodePath()
@@ -70,16 +98,19 @@ var spawn_position: Vector2 = Vector2.ZERO
 ##   res://scenes/projectiles/projectile_split.tscn  延迟分裂弹：母弹先飞，到点炸成 N 颗
 ## 弹药可自行声明只允许某些阵营装配（见 Ammo.usable_by），越权时本函数会拒绝发射。
 @export var projectile_scene: PackedScene = null
-## 地面近战攻击距离（像素）：与目标距离小于该值即切到 attack 状态。
+## 近战触发距离（像素）：与目标距离小于该值即切到 attack 状态。< 0 表示沿用 chase 状态自身的默认值。
 ## 纯近战怪（未配 projectile_scene）用它；配了 projectile_scene 改用下面的 shoot_range，本项自动隐藏。
-@export var attack_range: float = 64.0
+## 地面怪与飞行怪共用：地面默认 64（贴身）、飞行默认 140（扑击），默认值各自写在 chase 状态里。
+@export var melee_attack_range: float = -1.0
 ## 投射物携带的伤害值（setup() 时传给投射物，与 contact_damage 相互独立）。
 @export var projectile_damage: int = 1
 ## 远程射程（像素）：与目标直线距离小于该值才切到 attack 吐弹。< 0 表示沿用 chase 状态自身的默认值。
+## 地面怪与飞行怪共用：地面默认 400、飞行默认 500，默认值各自写在 chase 状态里。
 @export var shoot_range: float = -1.0
 ## 两次远程攻击之间的冷却（秒）：< 0 表示沿用 chase 状态自身的默认值。
 @export var attack_interval: float = -1.0
 ## 远程追击时与目标保持的水平距离（像素）：< 0 表示沿用 chase 状态自身的默认值；0 = 贴脸。
+## 地面怪与飞行怪共用：地面默认 140、飞行默认 120，默认值各自写在 chase 状态里。
 @export var shoot_keep_distance: float = -1.0
 
 @export_group("掉落")
@@ -93,6 +124,9 @@ var spawn_position: Vector2 = Vector2.ZERO
 @export var corpse_lifetime: float = 3.0
 ## 尸体淡出时长（秒）：从完全不透明渐变到透明的耗时。<= 0 表示到点直接消失，不做渐变。
 @export var corpse_fade_time: float = 1.0
+## 尸体纵向偏移（像素）：死亡落地后把尸体精灵沿 y 轴挪动这么多，
+## 用于微调躺尸的纵向位置，让不同素材的尸体贴合地面（正 = 向下，负 = 向上）。0 = 不偏移。
+@export var corpse_y_offset: float = 0.0
 
 @export_group("转身")
 ## 转身动作名：ActionAnimationPlayer 里的同名 clip。留空 = 关闭转身动画。
@@ -101,6 +135,21 @@ var spawn_position: Vector2 = Vector2.ZERO
 @export var turn_animation: StringName = &"turn"
 ## 两次转身动画之间的最小间隔（秒）：目标在朝向死区边缘抖动时，防止把动画反复重放到卡顿。
 @export var turn_min_interval: float = 0.2
+
+@export_group("音效")
+## 只在镜头内发声：true 时本敌人的所有音效（attack / hurt / death / walk …）都要求
+## 自己位于当前镜头可视矩形内才播放。屏幕外很远就开打、远远吐弹的敌人不该把声音送进耳朵。
+## 置 false 可退回"无条件播放"（此时仍受 sfx_max_distance 衰减限制）。
+@export var sfx_only_on_screen: bool = true
+## 可视矩形外扩（像素）：刚走出画面的敌人仍允许发声，避免声音在画面边缘被硬切。
+## sfx_only_on_screen = false 时本项自动隐藏。
+@export var sfx_screen_margin: float = 240.0
+## 音效衰减到静音的距离（像素）：_ready 时写入本敌人所有 AudioStreamPlayer2D.max_distance。
+## AudioStreamPlayer2D 默认 2000 太远（本作 1 单位 = 96 像素），隔着大半张地图的攻击声都听得见。
+## 默认取略大于一屏对角线（1920×1080 的对角线半径约 1100），保证画面内的声音不会提前闷掉。
+@export var sfx_max_distance: float = 1400.0
+## 衰减曲线指数：越大越"近处响、远处迅速变轻"，1 = 引擎默认。
+@export_range(0.1, 6.0) var sfx_attenuation: float = 1.0
 
 ## 战斗丢失计时器：累计"目标丢失 / 出 leash / 无视线"的时长，达到 combat_lose_time 即丢战。
 var combat_timer: float = 0.0
@@ -114,8 +163,6 @@ var _turn_last_ms: int = -1000000
 var _turn_pending: int = 0
 
 
-var move_speed: float = 1.0 * Globals.UNIT_SIZE
-
 var health: int
 var move_direction: int = 1
 var knockback: Vector2 = Vector2.ZERO
@@ -125,8 +172,7 @@ var invincible: bool = false
 var target: Node2D = null
 var last_damage_from: Node2D = null
 
-@onready var collision_shape: CollisionShape2D = $CollisionShape2D
-@onready var attack_area: Area2D = $AttackArea
+@onready var collision_shape: CollisionShape2D = $BodyCollisionShape2D
 @onready var drop_marker: Marker2D = $DropMarker
 ## 吐弹口：没有该子节点（纯近战怪）时为 null，发射时退化为自身中心。
 @onready var muzzle := get_node_or_null("Muzzle") as Marker2D
@@ -149,9 +195,11 @@ var last_damage_from: Node2D = null
 
 var audio_nodes: Dictionary = {}
 
+## 接触判定的形状查询参数：复用同一实例，避免每物理帧新建对象与数组。
+var _contact_query := PhysicsShapeQueryParameters2D.new()
+
 func _ready() -> void:
-	for child in $Audio.get_children():
-		audio_nodes[child.name] = child
+	_setup_audio()
 
 	health = mini(initial_health, max_health)
 	debug.setup_health(max_health, health)
@@ -172,22 +220,65 @@ func _ready() -> void:
 		if not action_animation_player.animation_changed.is_connected(_on_action_animation_changed):
 			action_animation_player.animation_changed.connect(_on_action_animation_changed)
 
-	if attack_area != null:
-		attack_area.monitoring = contact_damage_enabled
-	_set_contact_area_shapes_enabled(contact_damage_enabled)
+	_contact_query.collision_mask = Globals.LAYER_PLAYER
+	_contact_query.collide_with_bodies = true
+	_contact_query.collide_with_areas = false
+	_contact_query.exclude = [self.get_rid()]
 
 	if state_machine != null:
 		state_machine.start()
 
 
-func _apply_gravity(delta: float) -> void:
-	if not gravity_enabled or is_on_floor():
+## 收集 Audio 子节点，并统一写入 2D 衰减参数（距离衰减由引擎做，音量随距离自然变轻）。
+## 各敌人场景只需在 Audio 下挂 AudioStreamPlayer2D，距离参数在这里一次性接管。
+func _setup_audio() -> void:
+	var audio_root := get_node_or_null("Audio")
+	if audio_root == null:
 		return
-	velocity.y += gravity * delta
+	for child in audio_root.get_children():
+		audio_nodes[child.name] = child
+		if child is AudioStreamPlayer2D:
+			child.max_distance = sfx_max_distance
+			child.attenuation = sfx_attenuation
 
+
+## 本敌人此刻是否"玩家该听得见"：以当前镜头的可视矩形（四周外扩 sfx_screen_margin）为准。
+## 判定放在播放那一帧：屏幕外的敌人不发声，屏幕内的敌人照旧，且随距离自然衰减。
+## 拿不到相机（还没进树 / 关卡没相机）时退化为"距玩家 sfx_max_distance 内可听"，避免整场静音。
+func is_audible() -> bool:
+	if not sfx_only_on_screen:
+		return true
+	var rect := _audible_rect()
+	if rect.size.x <= 0.0 or rect.size.y <= 0.0:
+		return _within_sfx_distance()
+	return rect.has_point(global_position)
+
+## 可听矩形：镜头中心 ± 半屏（按 zoom 折算）再外扩 sfx_screen_margin。
+## 用 get_screen_center_position() 而不是 camera.global_position —— 相机被 limit 卡住时
+## 两者不相等，前者才是真正的画面中心。
+func _audible_rect() -> Rect2:
+	var vp := get_viewport()
+	if vp == null:
+		return Rect2()
+	var cam := vp.get_camera_2d()
+	if cam == null or cam.zoom.x <= 0.0 or cam.zoom.y <= 0.0:
+		return Rect2()
+	var half := vp.get_visible_rect().size * 0.5 / cam.zoom
+	return Rect2(cam.get_screen_center_position() - half, half * 2.0).grow(sfx_screen_margin)
+
+## 无相机时的兜底判定：与玩家的距离在衰减半径内即可听。
+func _within_sfx_distance() -> bool:
+	var p := get_player()
+	if p == null:
+		return true
+	return global_position.distance_to(p.global_position) <= sfx_max_distance
+
+
+## 垂直运动：整体委托给 locomotion，基类不再替子类做重力 / 悬停 / 浮力分支。
+## 没有配 locomotion（理论上不会）时退化为"不动"，与飞行怪存活期的行为一致。
 func _apply_vertical_motion(delta: float) -> void:
-	if gravity_enabled:
-		_apply_gravity(delta)
+	if locomotion != null:
+		locomotion.apply_vertical(self, delta)
 
 
 func _apply_movement() -> void:
@@ -196,16 +287,33 @@ func _apply_movement() -> void:
 	move_and_slide()
 
 
+## ---- 地形探测：地面专属，基类给"通行无阻"的默认实现 ----
+## 飞行怪 / 水下怪没有落脚点的概念，直接沿用基类默认即可，地面怪（EnemyGround）重写。
+## chase / return / patrol 的通用逻辑一律通过这几个函数问路，不要写 `as EnemyGround` 强转：
+## 强转会让整段逻辑对第三种怪（水下）直接不可用。
+
+## move_x（±1）方向的前方有没有落脚点。返回 true = 有地，可以走。
+func has_ground_ahead(_move_x: float) -> bool:
+	return true
+
+## 挑一个"踩得实"的横向方向：优先 preferred_x，它踏空时退而用另一侧；两侧都踏空返回 0.0。
+func safe_step_x(preferred_x: float) -> float:
+	return preferred_x
+
+## 当前朝向的前方是否撞墙。地面怪查 WallDetector；飞行 / 水下怪恒 false。
+func wall_ahead() -> bool:
+	return false
+
+
 ## 左右换向：逻辑朝向（move_direction，+1 = 向右）立刻翻转，
-## 攻击判定区、掉落点、以及子类挂在 _flip_extra() 上的探测器 / 吐弹口也跟着立刻翻（它们只影响逻辑）；
+## 掉落点、以及子类挂在 _flip_extra() 上的探测器 / 吐弹口也跟着立刻翻（它们只影响逻辑）；
+## 接触判定用的是身体碰撞形状（居中对称），不需要跟着翻。
 ## 精灵画面朝向则可能被转身动画接管，见 _flip_sprite()。
 ## 注意精灵是"按 scale.x 当前符号取反"，所以素材本身朝左的怪（如 crawlid）
 ## 必须在场景里把 EnemyAnimatedSprite.scale.x 预置成 -1，让它与 move_direction = +1 对齐；
 ## 那不是多余的镜像，删掉就会出现"头朝反方向走路"。
 func _flip_direction() -> void:
 	move_direction *= -1
-	attack_area.scale.x *= -1
-	attack_area.reset_physics_interpolation()
 	for marker in [drop_marker]:
 		marker.position.x *= -1
 		marker.reset_physics_interpolation()
@@ -347,6 +455,13 @@ func kill() -> void:
 func _on_hit_timer_timeout() -> void:
 	invincible = false
 
+## 视线检测用的碰撞层：默认沿用 collision_mask。
+## 水下怪等可在 Locomotion.sight_mask 上单独指定（例如让视线穿过水体本身），0 = 沿用。
+func _sight_mask() -> int:
+	if locomotion != null:
+		return locomotion.get_sight_mask(collision_mask)
+	return collision_mask
+
 ## 玩家是否在视线内（无遮挡）。use_line_of_sight=false 时恒为 true。
 func has_line_of_sight() -> bool:
 	if not use_line_of_sight:
@@ -356,7 +471,7 @@ func has_line_of_sight() -> bool:
 		return false
 	var space := get_world_2d().direct_space_state
 	var query := PhysicsRayQueryParameters2D.create(global_position, p.global_position)
-	query.collision_mask = collision_mask
+	query.collision_mask = _sight_mask()
 	query.exclude = [self.get_rid()]
 	var result := space.intersect_ray(query)
 	if result.is_empty():
@@ -418,27 +533,55 @@ func enter_combat_zone() -> void:
 		return
 	_set_combat(true)
 
+## 是否只沿水平移动（贴地走 = true，全向 = false）。由 locomotion 决定，
+## 调用点不再传 planar_only —— 那会把"运动介质"泄漏到每个状态里。
+func is_planar_mover() -> bool:
+	return locomotion != null and locomotion.nav_planar_only
+
+## 本敌人此刻是否处在可活动的介质中：地面怪 / 飞行怪恒 true；
+## 水下怪只在水体内为 true —— 出水即搁浅，chase / patrol 会据此放弃当前行为转 return 回巢。
+## 由 locomotion.can_occupy() 判定（见 resources/characters/enemies/_shared/locomotion/enemy_locomotion.gd），
+## SwimmingLocomotion 已重写该函数，消费端（本函数与各状态）无需再动。
+func is_in_medium() -> bool:
+	if locomotion == null:
+		return true
+	return locomotion.can_occupy(self, global_position)
+
 ## 用 NavigationAgent2D 计算朝 target_pos 的本帧期望速度，由追击状态调用并写回 enemy.velocity。
 ## speed：期望移动速度（像素/秒）。
-## planar_only=true 时只保留水平分量（陆地怪仅沿 x 轴移动，垂直交给重力）。
+## 是否只取水平分量由 locomotion.nav_planar_only 决定（见 is_planar_mover）。
 ## 已抵达终点时返回零向量；若导航网格缺失/未烘焙，agent 会原地返回，此时退化为直线趋近，保证仍可移动。
-func nav_velocity(target_pos: Vector2, speed: float, planar_only: bool = false) -> Vector2:
-	if navigation_agent == null:
-		return Vector2.ZERO
+func nav_velocity(target_pos: Vector2, speed: float) -> Vector2:
 	if global_position.distance_to(target_pos) <= nav_arrive_distance:
 		return Vector2.ZERO
-	navigation_agent.target_position = target_pos
-	var next_pos := navigation_agent.get_next_path_position()
-	# 导航网格不可用时 agent 返回自身位置，退化为直接朝目标移动。
-	if next_pos.is_equal_approx(global_position):
-		next_pos = target_pos
+	var next_pos := target_pos
+	# 没有 NavigationAgent2D 子节点时 next_pos 保持为目标点，退化为直线趋近，
+	# 而不是返回零向量把怪钉在原地。
+	if navigation_agent != null:
+		navigation_agent.target_position = target_pos
+		next_pos = navigation_agent.get_next_path_position()
+		# 导航网格不可用时 agent 返回自身位置，退化为直接朝目标移动。
+		if next_pos.is_equal_approx(global_position):
+			next_pos = target_pos
 	var dir := global_position.direction_to(next_pos)
-	if planar_only:
+	if is_planar_mover():
 		dir.y = 0.0
 		if dir.x == 0.0:
 			return Vector2.ZERO
 		dir = Vector2(signf(dir.x), 0.0)
 	return dir * speed
+
+## 接触判定：拿自己的身体碰撞形状去查玩家，替代原来的 AttackArea.overlaps_body()。
+## 用 intersect_shape 而不是矩形相交：玩家是 80×150 的胶囊（player.tscn 的 2_capsule），
+## 把玩家当点测会要求玩家中心深陷怪物体内，手感不对。
+## 身体形状换成多边形（ConvexPolygonShape2D 等）时本函数无需改动。
+func _body_overlaps_player(p: Node2D) -> bool:
+	if collision_shape == null or collision_shape.shape == null or p == null:
+		return false
+	_contact_query.shape = collision_shape.shape
+	_contact_query.transform = collision_shape.global_transform
+	var hits := get_world_2d().direct_space_state.intersect_shape(_contact_query, 1)
+	return not hits.is_empty() and hits[0].get("collider", null) == p
 
 func try_hit_player(from_contact: bool = true) -> bool:
 	if dead or contact_timer.time_left > 0.0:
@@ -448,34 +591,24 @@ func try_hit_player(from_contact: bool = true) -> bool:
 	var p := get_player()
 	if p == null or not p.has_method("take_damage"):
 		return false
-	if attack_area == null or not attack_area.overlaps_body(p):
+	if not _body_overlaps_player(p):
 		return false
 	p.take_damage(contact_damage, self)
 	contact_timer.start()
 	return true
 
-func set_contact_damage_enabled(enabled: bool) -> void:
-	contact_damage_enabled = enabled
-	if attack_area != null:
-		attack_area.monitoring = enabled
-	_set_contact_area_shapes_enabled(enabled)
-
-func _set_contact_area_shapes_enabled(enabled: bool) -> void:
-	if attack_area == null:
-		return
-	for child in attack_area.get_children():
-		if child is CollisionShape2D:
-			if enabled:
-				child.position = Vector2.ZERO
-			child.set_deferred("disabled", not enabled)
+## 玩家缓存：未开战时 target 为 null，若每次都扫 group 会每物理帧构造一个 Array。
+## 只在引用失效（玩家换场景 / 关卡重开）时才重新扫描，其余时候直接命中。
+var _player_cache: Node2D = null
 
 func get_player() -> Node2D:
 	if is_instance_valid(target) and target.has_method("take_damage"):
 		return target
+	if is_instance_valid(_player_cache) and _player_cache.has_method("take_damage"):
+		return _player_cache
 	var players := get_tree().get_nodes_in_group("player")
-	if players.is_empty():
-		return null
-	return players[0] as Node2D
+	_player_cache = players[0] as Node2D if not players.is_empty() else null
+	return _player_cache
 
 ## 吐弹（远程攻击）：从 muzzle（无则自身中心）朝目标发射一枚投射物。
 ## 未配置 projectile_scene 时直接返回 —— 纯近战怪的 attack 状态可无条件调用。
@@ -515,14 +648,13 @@ func has_projectile() -> bool:
 
 
 ## 检查器减负：按当前配置隐藏用不上的导出项，只影响编辑器显示，不改变数值与序列化。
-## 例：飞行怪 gravity_enabled=false → 隐藏 gravity；近战怪未配 projectile_scene → 隐藏全部远程项。
-## 子类（EnemyFlying 等）若要追加规则，重写后先调用 super._validate_property(property)。
+## 例：近战怪未配 projectile_scene → 隐藏全部远程项。
+## 子类（EnemyGround 等）若要追加规则，重写后先调用 super._validate_property(property)。
+## 注意：新增一种运动介质通常**不需要**改这里 —— 介质专属参数应挂在对应的
+## EnemyLocomotion 资源上（如 SwimmingLocomotion），而不是往基类继续堆导出项。
 func _validate_property(property: Dictionary) -> void:
 	match property.name:
-		"gravity":
-			if not gravity_enabled:
-				property.usage = HIDDEN_BUT_SAVED
-		"attack_range":
+		"melee_attack_range":
 			# 远程怪看 shoot_range，只有纯近战怪才需要贴身距离。
 			if projectile_scene != null:
 				property.usage = HIDDEN_BUT_SAVED
@@ -534,4 +666,7 @@ func _validate_property(property: Dictionary) -> void:
 				property.usage = HIDDEN_BUT_SAVED
 		"drop_scatter":
 			if drop_table == null:
+				property.usage = HIDDEN_BUT_SAVED
+		"sfx_screen_margin":
+			if not sfx_only_on_screen:
 				property.usage = HIDDEN_BUT_SAVED

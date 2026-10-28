@@ -35,6 +35,9 @@ const _GRASSCUT_1 := preload("res://assets/sounds/plants/grass_cut_1.ogg")
 @export_range(1, 10, 1, "or_greater") var hits_to_die: int = 1
 ## 割草音效池（留空则默认加载 grass_cut_0/1）。
 @export var grasscut_streams: Array[AudioStream] = []
+## 尸体纵向偏移（像素）：枯死后把枯死精灵沿 y 轴挪动这么多，
+## 用于微调躺尸的纵向位置，让不同素材的枯死尸体贴合地面（正 = 向下，负 = 向上）。0 = 不偏移。
+@export var corpse_y_offset: float = 0.0
 
 @onready var _anim: AnimatedSprite2D = $IdleAnimatedSprite2D
 @onready var _death_anim: AnimatedSprite2D = $DeathAnimatedSprite2D
@@ -153,6 +156,9 @@ func _die() -> void:
 	_death_anim.frame = 0
 	_death_anim.visible = true
 	_death_anim.play()
+	# 1.1 枯死尸体纵向偏移：贴合不同素材的躺尸位置。
+	if not is_zero_approx(corpse_y_offset):
+		_death_anim.position.y += corpse_y_offset
 
 	# 2. 随机割草音效
 	if not grasscut_streams.is_empty():

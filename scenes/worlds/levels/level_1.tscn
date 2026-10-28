@@ -8,11 +8,12 @@
 [ext_resource type="Texture2D" uid="uid://cucdtk38ti2vg" path="res://assets/sprites/backgrounds/bg_4.png" id="5_8jedn"]
 [ext_resource type="PackedScene" uid="uid://dbjleohr8a1u2" path="res://scenes/props/floor.tscn" id="5_bd7ha"]
 [ext_resource type="Texture2D" uid="uid://b2rove6y8y4dd" path="res://assets/sprites/backgrounds/bg_3.png" id="5_l8c12"]
-[ext_resource type="PackedScene" uid="uid://projsplit01" path="res://scenes/projectiles/projectile_split.tscn" id="7_6c23j"]
 [ext_resource type="PackedScene" uid="uid://cwtmrqxf83kjo" path="res://scenes/characters/enemies/enemy_ground_crawlid/crawlid.tscn" id="7_xo2r0"]
 [ext_resource type="PackedScene" uid="uid://cc7bpmgddem53" path="res://scenes/characters/enemies/enemy_ground/enemy_ground.tscn" id="8_3bc65"]
 [ext_resource type="PackedScene" uid="uid://projspread01" path="res://scenes/projectiles/projectile_spread.tscn" id="8_nygb8"]
+[ext_resource type="PackedScene" uid="uid://dbrmlcm3kxitm" path="res://scenes/characters/enemies/enemy_flying_vengefly/vengefly.tscn" id="9_cm34k"]
 [ext_resource type="PackedScene" uid="uid://cg7ionofoem53" path="res://scenes/characters/enemies/enemy_flying/enemy_flying.tscn" id="9_nygb8"]
+[ext_resource type="PackedScene" uid="uid://bqsqwrfub1mkt" path="res://scenes/characters/enemies/enemy_ground_mosscreep/mosscreep.tscn" id="10_cm34k"]
 [ext_resource type="PackedScene" uid="uid://dyuk18suxru7s" path="res://scenes/worlds/enemy_zone.tscn" id="11_zone"]
 [ext_resource type="PackedScene" uid="uid://bq438wduv3nk8" path="res://scenes/effects/plants/grass.tscn" id="12_nvw4u"]
 [ext_resource type="PackedScene" path="res://scenes/props/moss_floor.tscn" id="13_uoxyj"]
@@ -36,9 +37,9 @@ func _on_zoom_camera_lock_body_exited(_body: Node2D) -> void:
 size = Vector2(40, 40)
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_yq11q"]
-vertices = PackedVector2Array(4903.1406, 6.96875, -2709.9297, -14.96875, -2692.0625, -2712.1484, 4943.8516, -2836.8281)
+vertices = PackedVector2Array(4943.8516, -2837.0078, 4903.1406, 7.0625, -4278.133, 67.92969, -4317.8594, -2847.9766)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(-2702, -2722, -2720, -5, 4913, 17, 4954, -2847)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-4328, -2858, -4288, 78, 4913, 17, 4954, -2847)])
 
 [node name="WorldTest" unique_id=560156841 instance=ExtResource("1_h76fn")]
 script = SubResource("GDScript_c5aoa")
@@ -122,54 +123,54 @@ position = Vector2(-1200, 422)
 
 [node name="Grass0" parent="Efffects_0/G0" index="0" unique_id=1672507866 instance=ExtResource("12_nvw4u")]
 hits_to_die = 2
+corpse_y_offset = 5.0
 
 [node name="MossFloor" parent="Efffects_0/G0" index="1" unique_id=2005529879 instance=ExtResource("13_uoxyj")]
 position = Vector2(0, 66)
 scale = Vector2(2.2, 1)
 
 [node name="G2" type="Node2D" parent="Efffects_0" index="1" unique_id=1219452682]
-position = Vector2(600, 10)
+position = Vector2(-2000, 10)
 
 [node name="Grass2" parent="Efffects_0/G2" index="0" unique_id=1888133126 instance=ExtResource("12_nvw4u")]
 idle_animation = &"grass_2"
 death_animation = &"grass_2"
 hits_to_die = 2
+corpse_y_offset = -5.0
 
 [node name="MossFloor" parent="Efffects_0/G2" index="1" unique_id=608866006 instance=ExtResource("13_uoxyj")]
 position = Vector2(5, 64)
 scale = Vector2(2.2, 1)
 
 [node name="Crawlid" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=220108385 instance=ExtResource("7_xo2r0")]
-position = Vector2(-800, 423)
+position = Vector2(-1000, 423)
+enemy_zone = NodePath("../../EnemyZones/EnemyZone2")
+
+[node name="Vengefly" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="1" unique_id=1746772293 instance=ExtResource("9_cm34k")]
+position = Vector2(-1200, 0)
 enemy_zone = NodePath("../../EnemyZones/EnemyZone2")
 projectile_scene = null
 
-[node name="EnemyGround" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="1" unique_id=588911125 instance=ExtResource("8_3bc65")]
+[node name="Mosscreep" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="2" unique_id=972801678 instance=ExtResource("10_cm34k")]
+position = Vector2(-3000, 446)
+enemy_zone = NodePath("../../EnemyZones/EnemyZone3")
+
+[node name="EnemyGround" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="3" unique_id=588911125 instance=ExtResource("8_3bc65")]
 position = Vector2(1650, 200)
 enemy_zone = NodePath("../../EnemyZones/EnemyZone")
 
-[node name="EnemyFlying" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="2" unique_id=775034443 instance=ExtResource("9_nygb8")]
-position = Vector2(1035, 300)
-enemy_zone = NodePath("../../EnemyZones/EnemyZone")
-projectile_scene = ExtResource("7_6c23j")
-attack_range = 100.0
-
-[node name="EnemyFlying2" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="3" unique_id=1746772293 instance=ExtResource("9_nygb8")]
+[node name="EnemyFlying2" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="4" unique_id=1557758048 instance=ExtResource("9_nygb8")]
 position = Vector2(770, 300)
-keep_distance = 0.0
-fly_speed_multiplier = 2.0
+chase_speed_multiplier = 2.0
 enemy_zone = NodePath("../../EnemyZones/EnemyZone")
 projectile_scene = ExtResource("8_nygb8")
-attack_range = 100.0
 projectile_damage = 0
+shoot_keep_distance = 0.0
 
 [node name="Player" parent="." index="9" unique_id=1112432844]
-position = Vector2(32, 300)
+position = Vector2(-2200, 300)
 
-[node name="Foreground" parent="." index="10" unique_id=1812575969]
-visible = false
-
-[node name="Layer_0" type="Parallax2D" parent="Foreground" index="0" unique_id=1048978077]
+[node name="Layer_0" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=1048978077]
 repeat_size = Vector2(6000, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="Foreground/Layer_0" index="0" unique_id=94120090]
@@ -178,14 +179,14 @@ scale = Vector2(1.5, 1.5)
 texture = ExtResource("5_8jedn")
 offset = Vector2(0, 369)
 
-[node name="Layer_1" type="Parallax2D" parent="Foreground" index="1" unique_id=80876967]
+[node name="Layer_1" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="1" unique_id=80876967]
 
 [node name="Sprite2D" type="Sprite2D" parent="Foreground/Layer_1" index="0" unique_id=431540785]
 position = Vector2(400, 438)
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("5_l8c12")
 
-[node name="Layer_2" type="Parallax2D" parent="Foreground" index="2" unique_id=476770090]
+[node name="Layer_2" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="2" unique_id=476770090]
 
 [node name="Sprite2D" type="Sprite2D" parent="Foreground/Layer_2" index="0" unique_id=1746045946]
 position = Vector2(-400, 440)
@@ -193,12 +194,13 @@ scale = Vector2(2, 2)
 texture = ExtResource("5_l8c12")
 
 [node name="G1" type="Node2D" parent="Effects" parent_id_path=PackedInt32Array(996629329) index="0" unique_id=146498545]
-position = Vector2(-900, 423)
+position = Vector2(-2800, 423)
 
 [node name="Grass1" parent="Effects/G1" index="0" unique_id=33662686 instance=ExtResource("12_nvw4u")]
 idle_animation = &"grass_1"
 death_animation = &"grass_1"
 hits_to_die = 2
+corpse_y_offset = 8.0
 
 [node name="MossFloor" parent="Effects/G1" index="1" unique_id=637239354 instance=ExtResource("13_uoxyj")]
 position = Vector2(2, 64)
@@ -223,6 +225,10 @@ size = Vector2(1200, 700)
 [node name="EnemyZone2" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="1" unique_id=1673687519 instance=ExtResource("11_zone")]
 position = Vector2(-1006, 170)
 size = Vector2(1200, 700)
+
+[node name="EnemyZone3" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="2" unique_id=652932006 instance=ExtResource("11_zone")]
+position = Vector2(-3000, 170)
+size = Vector2(800, 700)
 
 [node name="RightCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="0" unique_id=1421588960 node_paths=PackedStringArray("vertical_lock_marker")]
 position = Vector2(426, 207)

@@ -1,0 +1,52 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://7rb1m82ndlbm"]
+
+[ext_resource type="Texture2D" uid="uid://xegod3057lec" path="res://assets/animations/characters/enemies/crawlid/death/0.png" id="1_56obj"]
+[ext_resource type="Texture2D" uid="uid://bqg6n1yjuswic" path="res://assets/animations/characters/enemies/crawlid/death/1.png" id="2_adtk1"]
+[ext_resource type="Texture2D" uid="uid://cce3md1lsstom" path="res://assets/animations/characters/enemies/crawlid/turn/0.png" id="7_f4bcc"]
+[ext_resource type="Texture2D" uid="uid://b1gtx4bo3dnsx" path="res://assets/animations/characters/enemies/crawlid/turn/1.png" id="8_coti2"]
+[ext_resource type="Texture2D" uid="uid://i483mtcp0ggk" path="res://assets/animations/characters/enemies/crawlid/move/0.png" id="9_fcmi3"]
+[ext_resource type="Texture2D" uid="uid://ceyedcasipdup" path="res://assets/animations/characters/enemies/crawlid/move/1.png" id="10_cgrji"]
+[ext_resource type="Texture2D" uid="uid://csulyevlxvsii" path="res://assets/animations/characters/enemies/crawlid/move/2.png" id="11_tx8mc"]
+[ext_resource type="Texture2D" uid="uid://cv8850an33av4" path="res://assets/animations/characters/enemies/crawlid/move/3.png" id="12_55ydn"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_56obj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_adtk1")
+}],
+"loop": 0,
+"name": &"death",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_fcmi3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_cgrji")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_tx8mc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_55ydn")
+}],
+"loop": 1,
+"name": &"move",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_f4bcc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_coti2")
+}],
+"loop": 0,
+"name": &"turn",
+"speed": 2.0
+}]

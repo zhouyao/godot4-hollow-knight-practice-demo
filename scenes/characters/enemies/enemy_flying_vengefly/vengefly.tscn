@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://dbrmlcm3kxitm"]
+
+[ext_resource type="PackedScene" uid="uid://cg7ionofoem53" path="res://scenes/characters/enemies/enemy_flying/enemy_flying.tscn" id="1_tsxcx"]
+[ext_resource type="SpriteFrames" uid="uid://col3ifuooo8p0" path="res://resources/characters/enemies/vengefly/vengefly_sprite.tres" id="9_fttn0"]
+[ext_resource type="AnimationLibrary" uid="uid://bcg1df0njrniv" path="res://resources/characters/enemies/vengefly/vengefly_player.res" id="10_b3i1w"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e1oj7"]
+size = Vector2(99, 100)
+
+[node name="Vengefly" unique_id=1746772293 instance=ExtResource("1_tsxcx")]
+corpse_lifetime = -1.0
+corpse_y_offset = 25.0
+turn_animation = &""
+
+[node name="Muzzle" parent="." index="4" unique_id=1436587748]
+position = Vector2(61, 61)
+
+[node name="BodyCollisionShape2D" parent="." index="5" unique_id=366153699]
+position = Vector2(6.5, 11)
+shape = SubResource("RectangleShape2D_e1oj7")
+
+[node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(953898085) index="0" unique_id=1162166538]
+scale = Vector2(-1, 1)
+sprite_frames = ExtResource("9_fttn0")
+
+[node name="ActionAnimationPlayer" parent="Animation" parent_id_path=PackedInt32Array(953898085) index="1" unique_id=736473467]
+libraries/ = ExtResource("10_b3i1w")

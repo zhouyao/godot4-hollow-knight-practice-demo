@@ -2,6 +2,8 @@ extends Enemy
 class_name EnemyGround
 
 
+## 巡逻总开关已上提到 Enemy 基类（地面怪与飞行怪共用），这里不再重复声明。
+
 @onready var wall_detector: RayCast2D = $WallDetector
 @onready var ledge_detector: RayCast2D = $LedgeDetector
 
@@ -33,12 +35,13 @@ func _probe_length() -> float:
 
 
 ## move_x（±1）方向的前方有没有落脚点。返回 true = 有地，可以走。
+## 重写 Enemy 基类的默认实现（基类恒 true = 通行无阻，供飞行 / 水下怪沿用）。
 ## 与"当前朝向"解耦（只用传入的方向），并且每次即时查询而非读 RayCast2D 的缓存：
 ## 探测器会随翻面立刻换边，而 RayCast2D.is_colliding() 是上一物理帧的结果，
 ## 两者叠加会让追击状态在同一帧里"看着悬崖掉头、下一帧又掉回来"，形成逐帧左右翻面。
 func has_ground_ahead(move_x: float) -> bool:
 	if move_x == 0.0 or not is_on_floor():
-		return true  # 空中不做悬崖限制（沿用原 ledge_ahead 语义）
+		return true  # 空中不做悬崖限制
 	var offset := _probe_offset()
 	var from := global_position + Vector2(offset.x * signf(move_x), offset.y)
 	var to := from + Vector2(0.0, _probe_length())
@@ -60,10 +63,11 @@ func safe_step_x(preferred_x: float) -> float:
 	return 0.0
 
 
-## 站在地面且当前朝向的前方探测不到地面（悬崖 / 平台边缘）时返回 true。
-## 巡逻与战斗陆地移动都用它来避免踏空；飞行怪无 ledge_detector，恒为 false。
-## 判定已改为按 move_direction 即时探测，语义不变，但不再受探测器换边时序影响。
-func ledge_ahead() -> bool:
-	if ledge_detector == null or not is_on_floor():
+## 当前朝向前方是否撞墙（重写基类默认实现）。
+## force_raycast_update()：RayCast2D 的碰撞结果是上一物理帧的缓存，查询前先按当前位置
+## 刷新一次，免得读到"翻面前那一侧"的旧结果。探测器已由 _flip_extra() 跟着朝向换边。
+func wall_ahead() -> bool:
+	if wall_detector == null:
 		return false
-	return not has_ground_ahead(float(move_direction))
+	wall_detector.force_raycast_update()
+	return wall_detector.is_colliding()

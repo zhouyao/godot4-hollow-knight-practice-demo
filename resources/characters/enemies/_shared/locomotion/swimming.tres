@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SwimmingLocomotion" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/characters/enemies/_shared/locomotion/swimming_locomotion.gd" id="1_s"]
+
+[resource]
+script = ExtResource("1_s")
+nav_planar_only = false
+water_mask = 0
+buoyancy = -520.0
+drag = 900.0
+max_rise_speed = 120.0
+death_sink = 240.0
+corpse_settle_time = 0.8

@@ -74,7 +74,7 @@ var invincible: bool = false
 
 @onready var camera_marker: Marker2D = $CameraPosition
 
-@onready var collision_shape = $CollisionShape2D
+@onready var collision_shape = $BodyCollisionShape2D
 @onready var front_attack_area = $FrontAttackArea
 @onready var up_attack_area = $UpAttackArea
 @onready var down_attack_area = $DownAttackArea

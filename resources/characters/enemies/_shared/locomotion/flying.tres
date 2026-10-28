@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="FlyingLocomotion" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/characters/enemies/_shared/locomotion/flying_locomotion.gd" id="1_f"]
+
+[resource]
+script = ExtResource("1_f")
+nav_planar_only = false
+hover_damping = 0.0
+death_gravity = 2304.0

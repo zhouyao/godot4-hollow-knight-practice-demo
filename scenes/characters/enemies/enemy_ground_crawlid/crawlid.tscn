@@ -2,20 +2,22 @@
 
 [ext_resource type="PackedScene" uid="uid://cc7bpmgddem53" path="res://scenes/characters/enemies/enemy_ground/enemy_ground.tscn" id="1_sgcrh"]
 [ext_resource type="AudioStream" uid="uid://ckelgorscj7ip" path="res://assets/sounds/characters/enemies/crawlid/crawlid_walk.ogg" id="2_nxsdj"]
-[ext_resource type="SpriteFrames" uid="uid://7rb1m82ndlbm" path="res://resources/characters/enemies/crawlid_sprite.tres" id="3_r7r7o"]
-[ext_resource type="AnimationLibrary" uid="uid://b0yir7rm0vs0" path="res://resources/characters/enemies/crawlid_player.res" id="4_cekqu"]
+[ext_resource type="SpriteFrames" uid="uid://7rb1m82ndlbm" path="res://resources/characters/enemies/crawlid/crawlid_sprite.tres" id="3_r7r7o"]
+[ext_resource type="AnimationLibrary" uid="uid://b0yir7rm0vs0" path="res://resources/characters/enemies/crawlid/crawlid_player.res" id="4_cekqu"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_aafgk"]
-size = Vector2(108, 80)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fysxx"]
+size = Vector2(104, 82)
 
-[node name="EnemyGround" unique_id=220108385 instance=ExtResource("1_sgcrh")]
+[node name="Crawlid" unique_id=220108385 instance=ExtResource("1_sgcrh")]
+projectile_scene = null
 corpse_lifetime = -1.0
+corpse_y_offset = -5.0
 
 [node name="patrol" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="2" unique_id=2000000001]
 patrol_speed_multiplier = 1.0
 
 [node name="chase" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="3" unique_id=1057346826]
-speed_multiplier = 1.5
+chase_speed_multiplier = 1.5
 
 [node name="walk" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(1887151212) index="3" unique_id=217334190]
 stream = ExtResource("2_nxsdj")
@@ -23,20 +25,20 @@ stream = ExtResource("2_nxsdj")
 [node name="Muzzle" parent="." index="4" unique_id=1436587748]
 position = Vector2(74, 7)
 
-[node name="CollisionShape2D" parent="." index="5" unique_id=366153699]
-position = Vector2(-1, 30)
-shape = SubResource("RectangleShape2D_aafgk")
+[node name="BodyCollisionShape2D" parent="." index="5" unique_id=366153699]
+position = Vector2(-2, 30)
+shape = SubResource("RectangleShape2D_fysxx")
 
-[node name="WallDetector" parent="." index="8" unique_id=1710783293]
+[node name="WallDetector" parent="." index="7" unique_id=1710783293]
 position = Vector2(54, 28)
 
-[node name="LedgeDetector" parent="." index="9" unique_id=311882515]
+[node name="LedgeDetector" parent="." index="8" unique_id=311882515]
 position = Vector2(58, 61)
 
 [node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(953898085) index="0" unique_id=1162166538]
 scale = Vector2(-1, 1)
 sprite_frames = ExtResource("3_r7r7o")
-animation = &"turn"
+animation = &"move"
 frame = 1
 
 [node name="ActionAnimationPlayer" parent="Animation" parent_id_path=PackedInt32Array(953898085) index="1" unique_id=736473467]
