@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bq438wduv3nk8"]
 
-[ext_resource type="Script" uid="uid://csyimls64jy8h" path="res://scenes/effects/plants/grass.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://csyimls64jy8h" path="res://scenes/props/plants/grass.gd" id="1_script"]
 [ext_resource type="SpriteFrames" uid="uid://cry6wi6fyub7c" path="res://resources/effects/plants/grass/grass.tres" id="2_frames"]
 [ext_resource type="SpriteFrames" uid="uid://bq7xk0nv2a5cp" path="res://resources/effects/plants/grass/grass_death.tres" id="3_death_frames"]
 [ext_resource type="AudioStream" uid="uid://ds7xo06xcbc1w" path="res://assets/sounds/plants/grass_cut_0.ogg" id="7_cut0"]

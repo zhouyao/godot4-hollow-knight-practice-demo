@@ -1,0 +1,89 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/effects/chest/chest_burst.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cax0me5wwc1er" path="res://assets/animations/props/chest/particles.png" id="2_tex"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0"]
+atlas = ExtResource("2_tex")
+region = Rect2(0, 0, 54, 78)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1"]
+atlas = ExtResource("2_tex")
+region = Rect2(0, 78, 54, 78)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2"]
+atlas = ExtResource("2_tex")
+region = Rect2(0, 156, 54, 78)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3"]
+atlas = ExtResource("2_tex")
+region = Rect2(0, 234, 54, 78)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4"]
+atlas = ExtResource("2_tex")
+region = Rect2(0, 312, 54, 78)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5"]
+atlas = ExtResource("2_tex")
+region = Rect2(0, 390, 54, 78)
+
+[sub_resource type="Gradient" id="Gradient_fade"]
+offsets = PackedFloat32Array(0.0, 0.4, 0.85, 1.0)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.35, 1, 1, 1, 0)
+
+[node name="chest_burst" type="Node2D" unique_id=301000001]
+script = ExtResource("1_script")
+
+[node name="Pieces0" type="CPUParticles2D" parent="." unique_id=301000002]
+texture = SubResource("AtlasTexture_0")
+amount = 3
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+color_ramp = SubResource("Gradient_fade")
+emitting = false
+
+[node name="Pieces1" type="CPUParticles2D" parent="." unique_id=301000003]
+texture = SubResource("AtlasTexture_1")
+amount = 3
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+color_ramp = SubResource("Gradient_fade")
+emitting = false
+
+[node name="Pieces2" type="CPUParticles2D" parent="." unique_id=301000004]
+texture = SubResource("AtlasTexture_2")
+amount = 3
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+color_ramp = SubResource("Gradient_fade")
+emitting = false
+
+[node name="Pieces3" type="CPUParticles2D" parent="." unique_id=301000005]
+texture = SubResource("AtlasTexture_3")
+amount = 2
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+color_ramp = SubResource("Gradient_fade")
+emitting = false
+
+[node name="Pieces4" type="CPUParticles2D" parent="." unique_id=301000006]
+texture = SubResource("AtlasTexture_4")
+amount = 2
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+color_ramp = SubResource("Gradient_fade")
+emitting = false
+
+[node name="Pieces5" type="CPUParticles2D" parent="." unique_id=301000007]
+texture = SubResource("AtlasTexture_5")
+amount = 2
+lifetime = 1.5
+one_shot = true
+explosiveness = 1.0
+color_ramp = SubResource("Gradient_fade")
+emitting = false

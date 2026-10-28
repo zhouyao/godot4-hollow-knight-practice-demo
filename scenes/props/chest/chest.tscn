@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://c5xedyh6vkreu"]
+
+[ext_resource type="Script" uid="uid://butm6tgbqly3f" path="res://scenes/props/chest/chest.gd" id="1_wehic"]
+[ext_resource type="Texture2D" uid="uid://yvop6r3ubwxl" path="res://assets/animations/props/chest/idle/0.png" id="2_idle"]
+[ext_resource type="Texture2D" uid="uid://dpfccjx5od7c5" path="res://assets/animations/props/chest/death/0.png" id="3_death"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0yb27"]
+radius = 65.0
+height = 184.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qd448"]
+radius = 79.78
+height = 216.98
+
+[node name="Chest" type="StaticBody2D" unique_id=476091609]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_wehic")
+
+[node name="BodyCollisionShape2D" type="CollisionShape2D" parent="." unique_id=476091610]
+position = Vector2(0, -90)
+shape = SubResource("CapsuleShape2D_0yb27")
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=476091611]
+collision_layer = 256
+collision_mask = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=476091612]
+position = Vector2(0, -103.5)
+shape = SubResource("CapsuleShape2D_qd448")
+
+[node name="Visual" type="Node2D" parent="." unique_id=476091613]
+
+[node name="IdleSprite" type="Sprite2D" parent="Visual" unique_id=476091614]
+texture = ExtResource("2_idle")
+centered = false
+offset = Vector2(-78, -180)
+
+[node name="DeathSprite" type="Sprite2D" parent="Visual" unique_id=476091615]
+visible = false
+texture = ExtResource("3_death")
+centered = false
+offset = Vector2(-78, -148)
+
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

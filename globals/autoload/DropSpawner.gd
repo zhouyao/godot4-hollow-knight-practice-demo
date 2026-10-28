@@ -17,6 +17,21 @@ func _physics_process(_delta: float) -> void:
 			_live.remove_at(i)
 
 
+## 直接生成 count 个指定掉落实体，不走掉落表：
+## 用于"每次受击固定迸出 min~max 枚"这类与掉落表无关的场景（如宝箱每刀掉钱）。
+## 抛飞初速沿用 Pickup 自身的 launch_speed_x / launch_speed_y（x 左右随机、y 向上），
+## 落地 / 弹跳 / 磁吸 / 超时清理全部由 Pickup 基类负责，与死亡掉落完全一致。
+func spawn_pickups(scene: PackedScene, count: int, at: Vector2,
+		item_id: StringName = &"coin") -> void:
+	if scene == null or count <= 0:
+		return
+	var rng := RandomNumberGenerator.new()
+	for i in count:
+		if _live.size() >= MAX_PICKUPS:
+			return
+		_spawn(scene, at, item_id, 1, rng)
+
+
 ## 掷一张掉落表并在 at 附近生成实体。scatter 为水平/垂直散布（像素）。
 func spawn_table(table: DropTable, at: Vector2, scatter: float = 28.0) -> void:
 	if table == null:

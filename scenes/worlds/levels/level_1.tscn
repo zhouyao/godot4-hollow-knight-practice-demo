@@ -15,8 +15,9 @@
 [ext_resource type="PackedScene" uid="uid://cg7ionofoem53" path="res://scenes/characters/enemies/enemy_flying/enemy_flying.tscn" id="9_nygb8"]
 [ext_resource type="PackedScene" uid="uid://bqsqwrfub1mkt" path="res://scenes/characters/enemies/enemy_ground_mosscreep/mosscreep.tscn" id="10_cm34k"]
 [ext_resource type="PackedScene" uid="uid://dyuk18suxru7s" path="res://scenes/worlds/enemy_zone.tscn" id="11_zone"]
-[ext_resource type="PackedScene" uid="uid://bq438wduv3nk8" path="res://scenes/effects/plants/grass.tscn" id="12_nvw4u"]
+[ext_resource type="PackedScene" uid="uid://bq438wduv3nk8" path="res://scenes/props/plants/grass.tscn" id="12_nvw4u"]
 [ext_resource type="PackedScene" path="res://scenes/props/moss_floor.tscn" id="13_uoxyj"]
+[ext_resource type="PackedScene" uid="uid://c5xedyh6vkreu" path="res://scenes/props/chest/chest.tscn" id="14_chest"]
 
 [sub_resource type="GDScript" id="GDScript_c5aoa"]
 script/source = "extends WorldTemplate
@@ -115,6 +116,9 @@ scale = Vector2(50, 0.16)
 modulate = Color(0, 0, 0, 1)
 position = Vector2(-3700, 500)
 scale = Vector2(50, 0.16)
+
+[node name="Chest" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="5" unique_id=1778910463 instance=ExtResource("14_chest")]
+position = Vector2(-1800, 503)
 
 [node name="Efffects_0" type="Node2D" parent="." index="7" unique_id=1504885066]
 position = Vector2(-1200, 422)

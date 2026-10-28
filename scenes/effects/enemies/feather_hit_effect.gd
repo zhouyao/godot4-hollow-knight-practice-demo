@@ -65,6 +65,8 @@ func _distribute_amounts() -> Array[CPUParticles2D]:
 	if layers.is_empty():
 		return layers
 	var n := maxi(total_feathers, 0)
+	# 这里就是要整数除法：羽毛必须按整只分给各层，余数再补给前几层。
+	@warning_ignore("integer_division")
 	var base := n / layers.size()
 	var extra := n % layers.size()
 	for i in layers.size():
