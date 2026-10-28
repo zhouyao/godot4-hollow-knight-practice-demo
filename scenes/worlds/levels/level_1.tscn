@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bbxqi0g2gt6vm" path="res://assets/sprites/backgrounds/bg_1.png" id="2_56bq6"]
 [ext_resource type="Script" uid="uid://0anauft5nso" path="res://addons/camera_director/AuCameraLockArea.gd" id="2_p6tgj"]
 [ext_resource type="Texture2D" uid="uid://ciidxwely181f" path="res://assets/sprites/backgrounds/bg_2.png" id="3_c3uki"]
-[ext_resource type="PackedScene" uid="uid://bukv7vkqpvb33" path="res://scenes/effects/fog.tscn" id="4_6yx3g"]
+[ext_resource type="PackedScene" uid="uid://bukv7vkqpvb33" path="res://scenes/effects/environment/fog.tscn" id="4_6yx3g"]
 [ext_resource type="Texture2D" uid="uid://cucdtk38ti2vg" path="res://assets/sprites/backgrounds/bg_4.png" id="5_8jedn"]
 [ext_resource type="PackedScene" uid="uid://dbjleohr8a1u2" path="res://scenes/props/floor.tscn" id="5_bd7ha"]
 [ext_resource type="Texture2D" uid="uid://b2rove6y8y4dd" path="res://assets/sprites/backgrounds/bg_3.png" id="5_l8c12"]

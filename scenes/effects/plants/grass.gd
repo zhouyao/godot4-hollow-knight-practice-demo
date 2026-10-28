@@ -11,7 +11,8 @@ class_name Grass
 const GRASS_FRAMES := preload("res://resources/effects/plants/grass/grass.tres")
 const GRASS_DEATH_FRAMES := preload("res://resources/effects/plants/grass/grass_death.tres")
 const LEAF_BURST := preload("res://scenes/effects/plants/leaf_burst.tscn")
-# 受击刀光使用 hit_spark 类的静态方法 spawn()（hit_spark.gd 已声明 class_name hit_spark）。
+# 受击刀光改用 HitEffect 统一分发（hit_effect.gd）：特效由本节点 hit_effect_by_source 配置，
+# 按来源种类（如玩家挥砍 &"slash"）选择场景；查不到则回落默认键，再否则回落通用 nail 刀光。
 
 const _GRASSCUT_0 := preload("res://assets/sounds/plants/grass_cut_0.ogg")
 const _GRASSCUT_1 := preload("res://assets/sounds/plants/grass_cut_1.ogg")
@@ -33,6 +34,15 @@ const _GRASSCUT_1 := preload("res://assets/sounds/plants/grass_cut_1.ogg")
 ## 砍几刀才死亡。实际所需刀数在 1 ~ hits_to_die 之间随机抽取：
 ## 配 1 → 必定 1 刀死；配 2 → 1 刀或 2 刀死（各 50%）；配 N → 1~N 随机。
 @export_range(1, 10, 1, "or_greater") var hits_to_die: int = 1
+## 受击刀光数量随机范围（闭区间）：每次受击按此范围摇一个数量。
+@export_range(0, 24, 1, "or_greater") var hit_effect_count_min: int = 1
+@export_range(0, 24, 1, "or_greater") var hit_effect_count_max: int = 1
+## 多份刀光在受击点周围的散布半径（像素），0 = 全部叠在同一点。
+@export var hit_effect_scatter: float = 6.0
+## 受击特效表：键为来源 get_damage_kind() 返回的 StringName，值为场景。
+## 约定键 &"slash" 为默认受击表现（玩家挥砍）；查不到来源种类时回落到 &"slash"；
+## 仍无匹配则回落 _NAIL（通用刀光）。草默认用 nail 刀光。
+@export var hit_effect_by_source: Dictionary = {}
 ## 割草音效池（留空则默认加载 grass_cut_0/1）。
 @export var grasscut_streams: Array[AudioStream] = []
 ## 尸体纵向偏移（像素）：枯死后把枯死精灵沿 y 轴挪动这么多，
@@ -134,20 +144,22 @@ func take_damage(_amount: int = 1, _from: Node2D = null) -> void:
 
 	_hits_taken += 1
 	if _hits_taken >= _hits_required:
-		_die()
+		_die(_from)
 	else:
-		_hit()
+		_hit(_from)
 
 ## 未致死的一次挥砍：割草音效 + 刀光，草还在。
-func _hit() -> void:
+func _hit(_from: Node2D = null) -> void:
 	if not grasscut_streams.is_empty():
 		_audio.stream = grasscut_streams.pick_random()
 		_audio.pitch_scale = randf_range(0.9, 1.1)
 		_audio.play()
 
-	hit_spark.spawn(global_position, get_parent())
+	# 受击命中特效：谁被砍谁生成（场景由本节点 hit_effect_by_source 决定，可按来源细分）。
+	HitEffect.spawn(self, global_position, get_parent(),
+			hit_effect_count_min, hit_effect_count_max, hit_effect_scatter, _from)
 
-func _die() -> void:
+func _die(_from: Node2D = null) -> void:
 	_is_dead = true
 
 	# 1. 播放枯死动画，停止 idle
@@ -174,8 +186,9 @@ func _die() -> void:
 	# 而本体的父节点（关卡里的 G0/G1 等分组节点）自身带位移，会导致特效被二次偏移。
 	burst.global_position = global_position
 
-	# 4. 受击刀光（通用复用）
-	hit_spark.spawn(global_position, host)
+	# 4. 受击刀光：由本节点 hit_effect_by_source 决定（默认 &"slash" → nail 刀光），可按来源细分。
+	HitEffect.spawn(self, global_position, host,
+			hit_effect_count_min, hit_effect_count_max, hit_effect_scatter, _from)
 
 	# 5. 关闭碰撞体，不再可交互
 	# take_damage 是在 Area2D 的 area_entered 信号回调里被调用的，此时物理服务器仍在派发信号，

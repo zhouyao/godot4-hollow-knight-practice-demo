@@ -16,11 +16,18 @@ const MAX_SPEED_SCALE := 20.0
 ## 与 PlayerState.SKILL_STATES 的 key 一致，施放时按它登记冷却。
 const SKILL_ID: StringName = &"dash"
 
+## 当前 dash 产生的残影实例；exit 时收尾并置空，保证一份 dash 对应一份残影（重复触发约束）。
+var _dash_effect: PlayerDashEffect
+
 
 func enter(_from: StringName) -> void:
 	# 起手即扣能量并上冷却：冲刺本身的 0.2 秒也计入，中途被 jump / 挥砍打断不退还。
 	player.spend_skill_energy(SKILL_ID)
 	player.start_skill_cooldown(SKILL_ID)
+	# 生成冲刺残影（地面 / 空中共用，内部按 is_on_floor() 做状态判定）。
+	# 冷却与能量门槛已在 PlayerState._try_cast_skill 把关，进入本状态即代表一次合法 dash，
+	# 因此这里每次 enter 只生成一份，天然满足"冷却 / 重复触发约束"；exit 时统一收尾。
+	_dash_effect = PlayerDashEffect.spawn(player, player.get_parent())
 	var anim := PlayerStateNames.DASH if player.is_on_floor() else PlayerStateNames.DASH_AIR
 	_play_audio(PlayerStateNames.DASH)
 	# 倍率必须加在 AnimationPlayer 上：帧号由它的 frame 轨道驱动，
@@ -35,6 +42,10 @@ func enter(_from: StringName) -> void:
 func exit(_to: StringName) -> void:
 	if _to == PlayerStateNames.SLASH_FORWARD:
 		player.start_dash_carry(player.move_direction)
+	# dash 结束（自然结束 / 被打断 / 死亡切 DEATH）统一收尾：淡出并自动销毁残影。
+	if is_instance_valid(_dash_effect):
+		_dash_effect.finish()
+		_dash_effect = null
 
 
 ## 冲刺期间水平匀速，朝向锁定进入时的方向，不吃重力。

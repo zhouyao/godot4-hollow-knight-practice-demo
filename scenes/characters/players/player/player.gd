@@ -294,8 +294,6 @@ func _hit_enemy(body: Node2D) -> void:
 	if body is Enemy:
 		var landed: bool = not body.dead and not body.invincible
 		body.take_damage(slash_damage, self)
-		# 反馈 D：任意对象受击都生成一次短促刀光（通用复用）
-		hit_spark.spawn(body.global_position, get_tree().current_scene)
 		if landed:
 			energy = mini(energy + 1, max_energy)
 			_refresh_energy_bar()
@@ -308,6 +306,11 @@ func _hit_enemy(body: Node2D) -> void:
 		elif away.x < 0.0:
 			recoil_dir_x = -1.0
 		knockback = Vector2(recoil_dir_x, 0.0) * attacker_recoil_x
+
+## 伤害来源种类：供被砍目标按来源选择特效。默认 &"slash"，不同技能可返回不同种类
+## （如冲刺斩返回 &"dash"）。目标在 hit_effect_by_source 里配置对应种类即可细分特效。
+func get_damage_kind() -> StringName:
+	return &"slash"
 
 # ---- 反馈 B：攻击区域命中草等 Area2D 对象（草是 Area2D，body_entered 检测不到） ----
 func _on_attack_area_area_entered(area: Node) -> void:

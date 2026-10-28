@@ -51,6 +51,17 @@ const HIDDEN_BUT_SAVED := PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_STORAGE
 @export_group("受击")
 ## 受击后的无敌帧时长（秒），由 HitTimer 计时，期间不再结算伤害。
 @export var invincible_time: float = 0.3
+## 受击特效表：键为来源 get_damage_kind() 返回的 StringName，值为场景。
+## 约定键 &"slash" 为默认受击表现（玩家挥砍）；查不到来源种类时回落到 &"slash"；
+## 仍无匹配则回落 _NAIL（通用刀光）。例：{&"slash": puff, &"fire": fire_spark}
+@export var hit_effect_by_source: Dictionary = {
+	&"slash": preload("res://scenes/effects/enemies/puff_hit_effect.tscn")
+}
+## 命中特效数量随机范围（闭区间）：每次受击按此范围摇一个数量。
+@export_range(0, 24, 1, "or_greater") var hit_effect_count_min: int = 2
+@export_range(0, 24, 1, "or_greater") var hit_effect_count_max: int = 4
+## 多份特效在命中点周围的散布半径（像素），0 = 全部叠在同一点。
+@export var hit_effect_scatter: float = 100.0
 
 @export_group("接触伤害")
 ## 接触伤害总开关：false 时贴身不掉血（纯远程怪 / 中立怪 / 装饰物）。
@@ -401,6 +412,9 @@ func _on_action_animation_changed(_old_name: StringName, new_name: StringName) -
 func take_damage(amount: int, from: Node2D = null) -> void:
 	if dead or invincible:
 		return
+	# 受击命中特效：谁被砍谁生成（场景由本节点配置决定，可按来源种类细分）。
+	HitEffect.spawn(self, global_position, get_tree().current_scene,
+			hit_effect_count_min, hit_effect_count_max, hit_effect_scatter, from)
 	health -= amount
 	_refresh_health_bar()
 	damaged.emit(amount, from)

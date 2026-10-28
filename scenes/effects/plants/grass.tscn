@@ -17,7 +17,7 @@ grasscut_streams = Array[AudioStream]([ExtResource("7_cut0"), ExtResource("8_cut
 [node name="IdleAnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1616020901]
 sprite_frames = ExtResource("2_frames")
 animation = &"grass_0"
-frame_progress = 0.23136985
+frame_progress = 0.25263315
 
 [node name="DeathAnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=842766744]
 visible = false

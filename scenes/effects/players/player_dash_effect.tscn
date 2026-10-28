@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://bho4aeviq2viv"]
+
+[ext_resource type="Texture2D" uid="uid://sw7err7iduf0" path="res://assets/animations/characters/players/player/dash_effect.png" id="1_rydfy"]
+[ext_resource type="Script" uid="uid://d3peoo5kb817n" path="res://scenes/effects/players/player_dash_effect.gd" id="1_we8n6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g6y07"]
+atlas = ExtResource("1_rydfy")
+region = Rect2(0, 0, 639, 285)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ka024"]
+atlas = ExtResource("1_rydfy")
+region = Rect2(639, 0, 639, 285)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_avtfw"]
+atlas = ExtResource("1_rydfy")
+region = Rect2(0, 285, 639, 285)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0in4d"]
+atlas = ExtResource("1_rydfy")
+region = Rect2(639, 285, 639, 285)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8tivf"]
+atlas = ExtResource("1_rydfy")
+region = Rect2(0, 570, 639, 285)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oo2j8"]
+atlas = ExtResource("1_rydfy")
+region = Rect2(639, 570, 639, 285)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rywq7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g6y07")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ka024")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_avtfw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0in4d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8tivf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oo2j8")
+}],
+"loop": 1,
+"name": &"dash_effect",
+"speed": 5.0
+}]
+
+[node name="PlayerDashEffect" type="Node2D" unique_id=2126668583]
+script = ExtResource("1_we8n6")
+
+[node name="Anchor" type="Node2D" parent="." unique_id=1642858336]
+
+[node name="DashEffect" type="AnimatedSprite2D" parent="Anchor" unique_id=1902322185]
+sprite_frames = SubResource("SpriteFrames_rywq7")
+animation = &"dash_effect"

@@ -177,7 +177,7 @@ disabled = true
 [node name="PlayerAnimatedSprite" type="AnimatedSprite2D" parent="Animation" unique_id=458371313]
 material = SubResource("CanvasItemMaterial_2n40l")
 sprite_frames = ExtResource("26_qkgkx")
-animation = &"idle"
+animation = &"dash"
 
 [node name="ActionAnimationPlayer" type="AnimationPlayer" parent="Animation" unique_id=1051654828]
 root_node = NodePath("../..")

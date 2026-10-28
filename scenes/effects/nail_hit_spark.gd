@@ -1,5 +1,5 @@
 extends AnimatedSprite2D
-class_name hit_spark
+class_name nail_hit_spark
 
 ## 通用受击刀光特效：任意对象（草、敌人、宝箱等）受击时，
 ## 在受击点生成一次短促刀光，播完自动销毁。
@@ -20,8 +20,8 @@ func _ready() -> void:
 ## （preload 放在函数内，避免 hit_spark.gd 与 hit_spark.tscn 互相预载的循环依赖）
 ## 注意：必须先 add_child 再赋 global_position，否则 at 会被当成父节点局部坐标，
 ## 若 parent 自身有位移/缩放，刀光就会偏离受击点。
-static func spawn(at: Vector2, parent: Node) -> hit_spark:
-	var scene := preload("res://scenes/effects/hit_spark.tscn")
+static func spawn(at: Vector2, parent: Node) -> nail_hit_spark:
+	var scene := preload("res://scenes/effects/nail_hit_spark.tscn")
 	var spark := scene.instantiate()
 	parent.add_child(spark)
 	spark.global_position = at

@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bqsqwrfub1mkt"]
 
+[ext_resource type="PackedScene" uid="uid://d4gmmmun3itl7" path="res://scenes/effects/enemies/feather_hit_effect.tscn" id="1_feather"]
 [ext_resource type="PackedScene" uid="uid://cc7bpmgddem53" path="res://scenes/characters/enemies/enemy_ground/enemy_ground.tscn" id="1_ne33h"]
 [ext_resource type="Texture2D" uid="uid://bsqq4e3bqxouj" path="res://assets/animations/characters/enemies/mosscreep/death/0.png" id="2_75ffa"]
 [ext_resource type="Texture2D" uid="uid://b5h8wblaxf3mj" path="res://assets/animations/characters/enemies/mosscreep/appear/0.png" id="2_fysxx"]
@@ -314,10 +315,16 @@ _data = {
 }
 
 [node name="Mosscreep" unique_id=220108385 instance=ExtResource("1_ne33h")]
+initial_health = 5
+hit_effect_by_source = {
+&"slash": ExtResource("1_feather")
+}
+hit_effect_count_min = 1
+hit_effect_count_max = 1
 patrol_enabled = false
 projectile_scene = null
 corpse_lifetime = -1.0
-corpse_y_offset = -5.0
+corpse_y_offset = 18.0
 
 [node name="idle" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="6" unique_id=2000000010]
 arrive_animation = &"bury"

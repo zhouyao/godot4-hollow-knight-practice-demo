@@ -1,0 +1,104 @@
+[gd_scene format=3 uid="uid://d4gmmmun3itl7"]
+
+[ext_resource type="Script" uid="uid://cuffhmi607x88" path="res://scenes/effects/enemies/feather_hit_effect.gd" id="1_2ni3d"]
+[ext_resource type="Texture2D" uid="uid://uaxom7tu24kc" path="res://assets/animations/effects/feather_hit_effect/0.png" id="1_6vjua"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ni3d"]
+atlas = ExtResource("1_6vjua")
+region = Rect2(74, 0, 74, 60)
+
+[sub_resource type="Gradient" id="Gradient_6vjua"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rpmch"]
+atlas = ExtResource("1_6vjua")
+region = Rect2(148, 0, 74, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lr1dd"]
+atlas = ExtResource("1_6vjua")
+region = Rect2(296, 0, 74, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6vjua"]
+atlas = ExtResource("1_6vjua")
+region = Rect2(370, 0, 74, 60)
+
+[node name="FeatherHitEffect" type="Node2D" unique_id=333760255]
+script = ExtResource("1_2ni3d")
+rear_distance = 60.0
+
+[node name="Feather1" type="CPUParticles2D" parent="." unique_id=975412554]
+emitting = false
+texture = SubResource("AtlasTexture_2ni3d")
+lifetime = 1.2
+one_shot = true
+explosiveness = 1.0
+emission_shape = 6
+emission_ring_inner_radius = 12.0
+emission_ring_radius = 65.0
+direction = Vector2(0, -1)
+gravity = Vector2(0, 147)
+initial_velocity_min = 75.0
+initial_velocity_max = 125.0
+angular_velocity_min = 100.0
+angular_velocity_max = 150.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+color_ramp = SubResource("Gradient_6vjua")
+
+[node name="Feather2" type="CPUParticles2D" parent="." unique_id=2079442591]
+emitting = false
+texture = SubResource("AtlasTexture_rpmch")
+lifetime = 1.2
+one_shot = true
+explosiveness = 1.0
+emission_shape = 6
+emission_ring_inner_radius = 12.0
+emission_ring_radius = 65.0
+direction = Vector2(0, -1)
+gravity = Vector2(0, 147)
+initial_velocity_min = 75.0
+initial_velocity_max = 125.0
+angular_velocity_min = 100.0
+angular_velocity_max = 150.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+color_ramp = SubResource("Gradient_6vjua")
+
+[node name="Feather3" type="CPUParticles2D" parent="." unique_id=998603947]
+emitting = false
+texture = SubResource("AtlasTexture_lr1dd")
+lifetime = 1.2
+one_shot = true
+explosiveness = 1.0
+emission_shape = 6
+emission_ring_inner_radius = 12.0
+emission_ring_radius = 65.0
+direction = Vector2(0, -1)
+gravity = Vector2(0, 147)
+initial_velocity_min = 75.0
+initial_velocity_max = 125.0
+angular_velocity_min = 100.0
+angular_velocity_max = 150.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+color_ramp = SubResource("Gradient_6vjua")
+
+[node name="Feather4" type="CPUParticles2D" parent="." unique_id=1815481863]
+emitting = false
+texture = SubResource("AtlasTexture_6vjua")
+lifetime = 1.2
+one_shot = true
+explosiveness = 1.0
+emission_shape = 6
+emission_ring_inner_radius = 12.0
+emission_ring_radius = 65.0
+direction = Vector2(0, -1)
+gravity = Vector2(0, 147)
+initial_velocity_min = 75.0
+initial_velocity_max = 125.0
+angular_velocity_min = 100.0
+angular_velocity_max = 150.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+color_ramp = SubResource("Gradient_6vjua")

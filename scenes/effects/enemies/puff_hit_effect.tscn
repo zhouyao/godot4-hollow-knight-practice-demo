@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://due4lb6oty1cx"]
+
+[ext_resource type="Script" uid="uid://nsj5ksyxrx2k" path="res://scenes/effects/enemies/puff_hit_effect.gd" id="1_amyng"]
+[ext_resource type="Texture2D" uid="uid://dqsqe41ayajxq" path="res://assets/animations/effects/puff_hit_effect/0.png" id="1_tpffv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iqs03"]
+atlas = ExtResource("1_tpffv")
+region = Rect2(0, 0, 82, 77)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fwwsm"]
+atlas = ExtResource("1_tpffv")
+region = Rect2(82, 0, 82, 77)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ns33p"]
+atlas = ExtResource("1_tpffv")
+region = Rect2(164, 0, 82, 77)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ukjum"]
+atlas = ExtResource("1_tpffv")
+region = Rect2(246, 0, 82, 77)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7718m"]
+atlas = ExtResource("1_tpffv")
+region = Rect2(328, 0, 82, 77)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lwhwr"]
+atlas = ExtResource("1_tpffv")
+region = Rect2(410, 0, 82, 77)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qd01c"]
+atlas = ExtResource("1_tpffv")
+region = Rect2(492, 0, 82, 77)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g83h7"]
+atlas = ExtResource("1_tpffv")
+region = Rect2(574, 0, 82, 77)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_egbtb"]
+atlas = ExtResource("1_tpffv")
+region = Rect2(656, 0, 82, 77)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_iqs03"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iqs03")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fwwsm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ns33p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ukjum")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7718m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lwhwr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qd01c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g83h7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_egbtb")
+}],
+"loop": 0,
+"name": &"orange_pull_hit",
+"speed": 8.0
+}]
+
+[node name="PuffHitEffect" type="AnimatedSprite2D" unique_id=782096448]
+sprite_frames = SubResource("SpriteFrames_iqs03")
+animation = &"orange_pull_hit"
+frame = 8
+frame_progress = 1.0
+script = ExtResource("1_amyng")
+fade_duration_scale = 3.0
