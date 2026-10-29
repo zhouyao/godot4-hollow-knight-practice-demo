@@ -140,9 +140,14 @@ func resting_state() -> StringName:
 @export var corpse_y_offset: float = 0.0
 
 @export_group("转身")
+## 朝向死区（像素）：目标与自身的横向距离小于该值时**既不横移、也不翻面**。
+## 必须与横移共用这一个阈值 —— 以前"朝向按死区不动、位移按导航方向照走"，
+## 两者在玩家位于正上 / 正下方时给出相反答案，就是"walk 动画朝向反了"的根因。
+## 判据统一由 EnemySteering.step_x() 裁决，各状态不要再自己算一遍。
+@export var face_deadzone: float = 8.0
 ## 转身动作名：ActionAnimationPlayer 里的同名 clip。留空 = 关闭转身动画。
 ## 每次翻面（patrol 撞墙/悬崖/端点、chase 面朝目标、return 回巢）都会自动播一次，
-## 播完自动回到翻面前正在播的那个动作。敌人没配这个 clip 时行为与现在完全一致（瞬时翻面）。
+## 播完自动回到当前状态声明的循环动作（move / idle）。敌人没配这个 clip 时行为与现在完全一致（瞬时翻面）。
 @export var turn_animation: StringName = &"turn"
 ## 两次转身动画之间的最小间隔（秒）：目标在朝向死区边缘抖动时，防止把动画反复重放到卡顿。
 @export var turn_min_interval: float = 0.2
@@ -167,11 +172,21 @@ var combat_timer: float = 0.0
 ## 当前是否处于战斗（仇恨）状态。
 var combat_active: bool = false
 
-## 转身表现状态：正在播放 / 播完后要恢复的动作名 / 上次播放时刻（毫秒，负值 = 从未播放过）/ 攒下的翻面次数。
+## 转身表现状态：正在播放 / 上次播放时刻（毫秒，负值 = 从未播放过）。
+## 不再有"攒下的翻面次数"：画面朝向一律由 move_direction 派生（见 _sync_facing），
+## 转身期间翻几次都不影响最终结果，所以不需要记账；少一个计数器就少一处会算错的地方。
 var _turning: bool = false
-var _turn_resume: StringName = &""
 var _turn_last_ms: int = -1000000
-var _turn_pending: int = 0
+## DEBUG 自检：画面朝向 / 逻辑朝向 / 实际位移 三者不一致的持续时长（秒）。负值 = 当前一致。
+var _facing_mismatch_t: float = -1.0
+## 素材基准朝向：+1 = 原画朝右，-1 = 原画朝左（如 crawlid）。
+## _ready() 时从精灵在场景里预置的 scale.x 符号读一次，之后画面朝向一律由
+## 「_sprite_base_sign × move_direction」派生，不再做 scale.x *= -1 的累乘。
+var _sprite_base_sign: float = 1.0
+## 当前"应当持续播放"的循环动作（move / idle），由状态通过 set_locomotion_clip() 声明。
+## 转身动画结束后恢复到它 —— 不再从 AnimationPlayer.current_animation 反推：
+## 那会把 appear（钻出地面）/ bury（缩回）这类一次性演出记成恢复目标，转身播完再演一遍。
+var _locomotion_clip: StringName = &"idle"
 
 
 var health: int
@@ -211,6 +226,10 @@ var _contact_query := PhysicsShapeQueryParameters2D.new()
 
 func _ready() -> void:
 	_setup_audio()
+
+	# 素材基准朝向 = 场景里预置的 scale.x 符号（crawlid 这类原画朝左的怪是 -1）。
+	# 必须在任何翻面发生之前读一次，之后画面朝向都由它 × move_direction 派生。
+	_sprite_base_sign = signf(animated_sprite.scale.x)
 
 	health = mini(initial_health, max_health)
 	debug.setup_health(max_health, health)
@@ -316,13 +335,85 @@ func wall_ahead() -> bool:
 	return false
 
 
+## ---- 横向裁决与施加：朝向 + 位移的唯一出口 ----
+## 所有状态（chase / return / patrol …）都只提供"目标 x"，下面三个函数负责把目标 x
+## 变成"朝哪 + 走哪"。判据只有一份（EnemySteering.step_x），所以朝向与位移不可能打架；
+## 新增状态只要给出目标点即可，不必再复制一遍死区 / 踏空 / 翻面逻辑。
+
+## 目标 x → 本帧横向步向（±1，0 = 站定）。deadzone <= 0 时沿用自身的 face_deadzone，
+## 状态可用 _tuning() 解析出的值覆盖（EnemyState._deadzone()）。
+## 本函数只做"采集输入"，裁决规则本身在 EnemySteering.step_x()（纯函数，有单测覆盖）。
+func decide_step_x(target_x: float, deadzone: float = -1.0) -> int:
+	var limit := face_deadzone if deadzone <= 0.0 else deadzone
+	var dx := target_x - global_position.x
+	var planar := is_planar_mover()
+	var ground_ahead := true
+	# 探测只对"已经过了死区的候选方向"做：死区内反正要站定，不必查询。
+	if planar and absf(dx) > limit:
+		ground_ahead = has_ground_ahead(float(1 if dx > 0.0 else -1))
+	return EnemySteering.step_x(global_position.x, target_x, limit, planar, ground_ahead)
+
+
+## 目标是否在朝向死区内：chase 用它区分"目标就在头顶"和"前方踏空"两种站定原因
+## （前者不该累计放弃战斗的计时，后者才该）。阈值与 decide_step_x() 同源。
+func is_within_face_deadzone(target_x: float, deadzone: float = -1.0) -> bool:
+	var limit := face_deadzone if deadzone <= 0.0 else deadzone
+	return absf(target_x - global_position.x) <= limit
+
+
+## 施加一步：翻面（含吐弹口 / 探测器 / 掉落点）+ 横移。step == 0 时站定且不翻面。
+## 这里是"朝向"与"位移"唯一的共同出口 —— 两者同源，不可能出现倒着走。
+func apply_step(step: int, speed: float) -> void:
+	if step != 0 and step != move_direction:
+		_flip_direction()
+	# 转身动画期间画面仍停在旧朝向（turn 素材自己画 180° 旋转，必须等播完再翻）。
+	# 此时若继续按新方向全速位移，看到的就是"朝着旧方向倒着走" ——
+	# 玩家从 mosscreep 头顶跳过（强制一次转身）时最明显；来回横跳时更是长时间保持反向。
+	# 所以转身时站定：动画一结束即恢复移动，绝不出现位移与画面朝向相反的画面。
+	if _turning:
+		velocity.x = 0.0
+		return
+	velocity.x = float(step) * speed
+
+
+## 只改朝向、不移动（站定吐弹 / 够不到目标的张望）。带死区，避免目标在正上方时原地抖动翻面。
+func face_toward(target_x: float, deadzone: float = -1.0) -> void:
+	var limit := face_deadzone if deadzone <= 0.0 else deadzone
+	var dx := target_x - global_position.x
+	if absf(dx) <= limit:
+		return
+	face_step(1 if dx > 0.0 else -1)
+
+
+## 按方向（±1）设置朝向，不移动。0 = 保持当前朝向。
+func face_step(step: int) -> void:
+	if step != 0 and step != move_direction:
+		_flip_direction()
+
+
+## 播放 ActionAnimationPlayer 里的动作：动画不存在（如某只怪没建 attack clip）时静默跳过，不刷错误。
+## 各状态通过 EnemyState._play_action() 转发到这里 —— 实现只有一份，免得两处各自演化。
+func _play_action(anim_name: StringName) -> void:
+	var player := action_animation_player
+	if player == null or not player.has_animation(anim_name):
+		return
+	player.play(anim_name)
+
+## 声明本状态"应当持续播放"的循环动作（move / idle），并立刻播放。
+## 一次性演出（attack / hurt / death / appear / bury）请继续用 _play_action()，
+## 它们不该成为转身动画的恢复目标。
+func set_locomotion_clip(clip: StringName) -> void:
+	_locomotion_clip = clip
+	_play_action(clip)
+
+
 ## 左右换向：逻辑朝向（move_direction，+1 = 向右）立刻翻转，
 ## 掉落点、以及子类挂在 _flip_extra() 上的探测器 / 吐弹口也跟着立刻翻（它们只影响逻辑）；
 ## 接触判定用的是身体碰撞形状（居中对称），不需要跟着翻。
 ## 精灵画面朝向则可能被转身动画接管，见 _flip_sprite()。
-## 注意精灵是"按 scale.x 当前符号取反"，所以素材本身朝左的怪（如 crawlid）
-## 必须在场景里把 EnemyAnimatedSprite.scale.x 预置成 -1，让它与 move_direction = +1 对齐；
-## 那不是多余的镜像，删掉就会出现"头朝反方向走路"。
+## 注意素材本身朝左的怪（如 crawlid）必须在场景里把 EnemyAnimatedSprite.scale.x 预置成 -1，
+## 让它与 move_direction = +1 对齐；那不是多余的镜像，删掉就会出现"头朝反方向走路"。
+## 预置值由 _sprite_base_sign 记录，画面朝向按它派生（见 _sync_facing）。
 func _flip_direction() -> void:
 	move_direction *= -1
 	for marker in [drop_marker]:
@@ -337,73 +428,132 @@ func _flip_extra() -> void:
 		muzzle.position.x *= -1
 		muzzle.reset_physics_interpolation()
 
-## 精灵的左右翻面：能播转身动画时交给动画收尾，否则立即翻。
-## 关键点：turn 素材的两帧本身画了 180° 转向（第 0 帧画旧朝向、最后一帧画新朝向），
-## 所以动画期间必须保持旧的 scale，等播完再翻一次。若像最早那样"先翻 scale 再播动画"，
-## 画面会变成 新朝向 → 第0帧退回旧朝向 → 第1帧又到新朝向，看起来就是"多扭一次/多回一次头"。
-## 动画中又翻面（目标来回横跳）时不打断动画，只把翻面次数攒起来，播完一次性结算。
+## 精灵的左右翻面：能播转身动画时把翻转延后到动画收尾，否则立刻对齐。
+## 关键点：turn 素材本身画了 180° 转向（旧朝向 → 新朝向），所以动画期间必须保持旧的 scale，
+## 等播完再对齐一次。若像最早那样"先翻 scale 再播动画"，画面会变成
+## 新朝向 → 退回旧朝向 → 又到新朝向，看起来就是"多扭一次 / 多回一次头"。
 func _flip_sprite() -> void:
-	if _turning and action_animation_player != null \
-			and action_animation_player.current_animation == turn_animation:
-		_turn_pending += 1
+	if _turning:
+		# 转身动画期间不再动画面：move_direction 已经跟着翻了，收尾时按最新值一次性对齐。
+		# 兜底：万一动画被顶掉却漏了 animation_changed（理论上不会），别把朝向卡住。
+		if action_animation_player == null \
+				or action_animation_player.current_animation != turn_animation:
+			_finish_turn()
 		return
 	if _try_start_turn():
-		_turn_pending = 1
-		return
-	_apply_sprite_flip()  # 没配转身动画 / 还在冷却：退回瞬时翻面
+		return  # 画面交给转身动画，播完由 _on_action_animation_finished 对齐
+	_sync_facing()  # 没配转身动画 / 冷却中 / 正在播一次性演出：立刻对齐
 
-func _apply_sprite_flip() -> void:
-	animated_sprite.scale.x *= -1
+## 画面朝向对齐：把精灵 scale.x 按 move_direction 重算一遍。
+## 用"赋值"而不是 scale.x *= -1 —— 累乘是有状态开关，调用次数一旦被异步回调
+## （动画结束 / 状态抢占 / 受击打断）打乱，朝向就会与 move_direction 永久错位，
+## 表现为"倒着走"且极难复现。改成派生式后，调 0 次 / 1 次 / 3 次结果完全一致。
+func _sync_facing() -> void:
+	var want := EnemySteering.facing_scale_x(
+			_sprite_base_sign, animated_sprite.scale.x, move_direction)
+	if OS.is_debug_build() and not is_equal_approx(animated_sprite.scale.x, want):
+		push_warning("%s: 精灵朝向与 move_direction 不一致，已自愈 (%.2f → %.2f)"
+				% [name, animated_sprite.scale.x, want])
+	animated_sprite.scale.x = want
 	animated_sprite.reset_physics_interpolation()
 
+## 画面朝向是否与 move_direction 一致（转身动画播放那 0.15s 按设计为 false）。
+func is_facing_consistent() -> bool:
+	var want := signf(EnemySteering.facing_scale_x(_sprite_base_sign, 1.0, move_direction))
+	return is_equal_approx(signf(animated_sprite.scale.x), want)
+
+## 兜底 + 自检，逐物理帧跑。
+## 兜底：turn 动画若因任何原因没收尾（信号丢失 / 被静默顶掉），_turning 会一直为 true，
+## 之后每次翻面都会被 _flip_sprite() 的 _turning 分支直接吞掉 —— 精灵从此再也不翻，
+## 表现就是"起身后 walk 动画永久朝向反了"。这里按"动画时长 + 250ms"强制结算。
+func _physics_process(delta: float) -> void:
+	if _turning:
+		var p := action_animation_player
+		var overdue := p == null or p.current_animation != turn_animation
+		if not overdue and p.has_animation(turn_animation):
+			var len_ms := int(p.get_animation(turn_animation).length * 1000.0)
+			overdue = Time.get_ticks_msec() - _turn_last_ms > len_ms + 250
+		if overdue:
+			push_warning("%s: turn 动画超时未收尾，强制结算画面朝向" % name)
+			_finish_turn()
+	if OS.is_debug_build():
+		_check_facing(delta)
+
+## DEBUG 自检：朝向与位移不一致且持续超过 0.5s 就告警（转身动画那 0.15s 不算）。
+## 一次输出给出三者取值与当前 clip，用来一眼分辨是"没翻面""位移被覆盖"还是"clip 卡住"。
+func _check_facing(delta: float) -> void:
+	var moving := absf(velocity.x) > 1.0
+	var bad := (not is_facing_consistent()) \
+			or (moving and signf(velocity.x) != float(move_direction))
+	if bad:
+		_facing_mismatch_t = 0.0 if _facing_mismatch_t < 0.0 else _facing_mismatch_t + delta
+		if _facing_mismatch_t > 0.5:
+			push_warning("%s[%s]: 朝向/位移不一致 %.2fs — move_direction=%d, scale.x=%.2f, velocity.x=%.1f, clip=%s"
+					% [name,
+					state_machine.get_state_name() if state_machine != null else &"?",
+					move_direction, animated_sprite.scale.x, velocity.x,
+					action_animation_player.current_animation if action_animation_player != null else &"?"])
+	else:
+		_facing_mismatch_t = -1.0
+
 ## 尝试起一次转身动画。守卫让"不是每只怪都配了转身动画"成为默认值：
-##   1. turn_animation 为空 / 没有同名 clip → false（调用方立刻翻面，行为与以前一致）；
-##   2. 距上次转身不足 turn_min_interval → false（防目标在朝向死区边缘抖动把动画打卡顿）。
+##   1. turn_animation 为空 / 没有同名 clip → false（调用方立刻对齐，行为与以前一致）；
+##   2. 当前播放的不是循环动作（正在播 appear 钻出 / bury 缩回 / death / attack 这类
+##      一次性演出）→ false，否则转身播完会把演出重放一遍；
+##      这里用"集合判断"而不是比对 _locomotion_clip，免得某些怪没建 idle clip 就永久关掉转身；
+##   3. 距上次转身不足 turn_min_interval → false（防目标在死区边缘抖动把动画打卡顿）。
 func _try_start_turn() -> bool:
 	var player := action_animation_player
 	if player == null or turn_animation == &"" or not player.has_animation(turn_animation):
+		return false
+	if player.current_animation != EnemyStateNames.MOVE \
+			and player.current_animation != EnemyStateNames.IDLE:
 		return false
 	var now := Time.get_ticks_msec()
 	if now - _turn_last_ms < int(turn_min_interval * 1000.0):
 		return false
 	_turn_last_ms = now
 	_turning = true
-	_turn_pending = 0
-	# 记下当前动作：转身是一次性动画，播完必须还给 idle / walk。
-	var current := player.current_animation
-	if current == &"" or current == turn_animation or not player.has_animation(current):
-		current = &"idle"
-	_turn_resume = current if player.has_animation(current) else &""
 	player.play(turn_animation)
 	return true
 
-## 收尾：把转身期间攒下的精灵翻面一次性结算（奇数才真的翻），并清空状态。
-## 绝不能漏掉这一步 —— 否则精灵会一直停在旧朝向，与 move_direction 长期不一致。
+## 转身收尾：按当前 move_direction 重新对齐画面朝向。
+## 幂等，所以"转身期间又翻了几次"不需要记账 —— 中途翻几次都不影响最终结果。
 func _finish_turn() -> void:
 	_turning = false
-	if _turn_pending % 2 == 1:
-		_apply_sprite_flip()
-	_turn_pending = 0
-	_turn_resume = &""
+	_sync_facing()
 
-## 转身动画播完：把动作还给原来那个（idle / walk），并结算精灵翻面。
+## 转身动画播完：把动作还给状态声明的循环动作（move / idle），并对齐朝向。
 ## 顺序很重要：先 play + seek 把精灵切到恢复动画的第 0 帧，再翻 scale。
 ## 反过来的话会有一帧出现"scale 已翻、精灵还停在 turn 最后一帧"的组合，
 ## 那一帧的朝向会弹回旧方向（轻微版"多回一次头"）。两者在同一回调内完成，渲染前不会露出来。
 func _on_action_animation_finished(anim_name: StringName) -> void:
 	if anim_name != turn_animation:
 		return
-	var resume := _turn_resume
 	var player := action_animation_player
 	_turning = false  # 先落旗，避免下面的 play() 触发 animation_changed 时重复结算
-	if player != null and resume != &"" and player.has_animation(resume):
+	var resume := _resume_clip()
+	if player != null and resume != &"":
 		player.play(resume)
 		player.seek(0.0, true)
 	_finish_turn()
 
+## 转身结束后要恢复到的循环动作：优先状态声明的那个，没建就退回 move → idle。
+## 兜底是必要的 —— 某些怪只建了 move，没有兜底的话转身播完会停在 turn 的最后一帧。
+func _resume_clip() -> StringName:
+	var player := action_animation_player
+	if player == null:
+		return &""
+	if player.has_animation(_locomotion_clip):
+		return _locomotion_clip
+	for fallback in [EnemyStateNames.MOVE, EnemyStateNames.IDLE]:
+		if player.has_animation(fallback):
+			return fallback
+	return &""
+
 ## 转身动画被别的动作顶掉（受击硬直、切状态抢播 idle、死亡等）：
-## 立刻结算精灵翻面，别让它停在旧朝向。
-## 注：本回调在 play(_turn_resume) 时也会触发，但那时 _turning 已为 false，不会重复结算。
+## 立刻对齐画面朝向，别让它停在旧朝向。
+## 注：本回调在 play(_locomotion_clip) 时也会触发，但那时 _turning 已为 false，不会重复结算。
 func _on_action_animation_changed(_old_name: StringName, new_name: StringName) -> void:
 	if _turning and new_name != turn_animation:
 		_finish_turn()

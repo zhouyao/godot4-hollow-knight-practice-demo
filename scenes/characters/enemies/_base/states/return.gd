@@ -28,7 +28,8 @@ var _escape_time: float = 0.0
 var _ignore_ledge: bool = false
 
 func enter(_from: StringName) -> void:
-	_play_action(EnemyStateNames.MOVE)
+	# 声明循环动作：转身动画播完要恢复到它（见 Enemy.set_locomotion_clip）。
+	enemy.set_locomotion_clip(EnemyStateNames.MOVE)
 	_escape_dir = 0.0
 	_escape_origin = 0.0
 	_escape_time = 0.0
@@ -92,8 +93,7 @@ func _planar_return_move(delta: float) -> void:
 				>= _tuning(&"escape_distance", escape_distance):
 			_escape_dir = 0.0  # 走满承诺距离，回到正常逻辑重新找路
 		else:
-			_face_dir(_escape_dir)
-			enemy.velocity.x = _escape_dir * speed
+			enemy.apply_step(int(_escape_dir), speed)
 			return
 
 	if not _ignore_ledge:
@@ -104,17 +104,15 @@ func _planar_return_move(delta: float) -> void:
 			# 朝家的下一步会踏空：往身后的实地退开一段，退出去再找路。
 			_escape_dir = safe
 			_escape_origin = enemy.global_position.x
-			_face_dir(_escape_dir)
-			enemy.velocity.x = _escape_dir * speed
+			enemy.apply_step(int(_escape_dir), speed)
 			return
 
-	_face_dir(step_x)
-	enemy.velocity.x = dir.x
+	enemy.apply_step(int(step_x), speed)
 
 ## 全向回巢（飞行 / 水下）：直奔出生点，并保持头朝前进方向。
 func _omni_return_move() -> void:
 	enemy.velocity = enemy.nav_velocity(enemy.spawn_position, _return_speed())
 	# 回家途中头要朝前进方向：不补这句会一直保持 chase 留下的朝向（面朝玩家），
-	# 看起来就是"头朝后倒着飞回巢"。用带死区的 _face_target_x 而不是 signf(dir.x)：
+	# 看起来就是"头朝后倒着飞回巢"。用带死区的 _face_toward 而不是 signf(dir.x)：
 	# 导航方向在接近出生点时可能逐帧抖动变号，直接取符号会原地疯狂翻面。
-	_face_target_x(enemy.spawn_position.x)
+	_face_toward(enemy.spawn_position.x)

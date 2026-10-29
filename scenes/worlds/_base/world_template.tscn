@@ -25,12 +25,12 @@ collision_mask = 3
 
 [node name="Items" type="Node2D" parent="." unique_id=397992784]
 
-[node name="Drops" type="Node2D" parent="." unique_id=1475784248]
-
 [node name="Enemies" type="Node2D" parent="." unique_id=1028343445]
 
 [node name="Player" parent="." unique_id=1112432844 instance=ExtResource("2_sl0o5")]
 position = Vector2(19, -27)
+
+[node name="Drops" type="Node2D" parent="." unique_id=1475784248]
 
 [node name="Foreground" type="Node2D" parent="." unique_id=1812575969]
 
@@ -65,6 +65,6 @@ metadata/_custom_type_script = "uid://dos4hols5h4c2"
 
 [node name="Hud" parent="." unique_id=732429858 instance=ExtResource("4_bqeei")]
 
-[node name="SkillBar" parent="." instance=ExtResource("5_sbar")]
+[node name="SkillBar" parent="." unique_id=919093118 instance=ExtResource("5_sbar")]
 
 [connection signal="body_entered" from="KillBox" to="." method="_on_kill_box_body_entered"]

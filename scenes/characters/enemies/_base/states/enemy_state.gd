@@ -17,16 +17,11 @@ func update(delta: float) -> void:
 	enemy.try_hit_player()
 
 ## 播放动作动画：动画不存在（如未在 AnimationPlayer 里建 attack）时静默跳过，不刷错误。
+## 转发到 Enemy._play_action() —— 播放逻辑只在那里写一份。
 func _play_action(anim_name: StringName) -> void:
-	var player := enemy.action_animation_player
-	if player == null or not player.has_animation(anim_name):
+	if enemy == null:
 		return
-	player.play(anim_name)
-
-## 朝向迟滞（像素）：目标与自身的横向距离小于该值时保持当前朝向，不翻面。
-## 不用 @export 是为了不给每个状态节点都塞一条多半用不上的检查器项；
-## 需要改时在本文件或子类里直接改这个默认值即可。
-var face_deadzone: float = 8.0
+	enemy._play_action(anim_name)
 
 ## 三级取值：tuning 预设 > 敌人根节点同名导出（逐只微调） > 状态自身的默认值。
 ## -1 或该属性不存在都表示"不覆盖，往下层要值"，所以不填任何字段的 tuning 等价于没配。
@@ -76,20 +71,22 @@ func _flash_white(duration: float = -1.0) -> void:
 	var tween := enemy.animated_sprite.create_tween()
 	tween.tween_property(enemy.animated_sprite, "modulate", Color.WHITE, d)
 
-## 按左右方向（-1 / +1）设置朝向；只有方向真的改变时才翻面。
-## 请优先用它，而不是"拿自身 x ± 1 当哨兵"的旧写法：后者把方向塞进距离里，
-## 一旦迟滞/死区介入就会失效。
-func _face_dir(dir_x: float) -> void:
-	var desired := 1 if dir_x > 0.0 else -1
-	if desired != enemy.move_direction:
-		enemy._flip_direction()
+## ---- 朝向 / 位移：一律委托给 Enemy，状态不要再自己算一遍 ----
+## 以前每个状态各算一次"朝哪 / 往哪走"，chase 甚至用两套判据（朝向按死区、位移按导航），
+## 目标在正上 / 正下方时给出相反答案 → "walk 动画朝向反了"。
+## 现在判据只有一份（EnemySteering.step_x，有单测覆盖），状态只负责提供"目标 x"。
 
-## 面朝世界坐标 world_x：横向差小于 face_deadzone 时保持原朝向。
-## 迟滞是必须的 —— 目标一旦与自己水平重合（例如站在正上方的平台上够不到），
-## 直接取符号会在 ±1 之间逐帧抖动，敌人就会原地疯狂左右翻面。
-func _face_target_x(world_x: float, deadzone: float = -1.0) -> void:
-	var limit := face_deadzone if deadzone <= 0.0 else deadzone
-	var dx := world_x - enemy.global_position.x
-	if absf(dx) <= limit:
-		return
-	_face_dir(dx)
+## 朝向死区取值：tuning > 敌人根节点 face_deadzone。返回 -1 = 交给敌人根节点的默认值。
+func _deadzone() -> float:
+	return _tuning(&"face_deadzone", -1.0)
+
+## 朝目标走一步：翻面 + 横移由 Enemy 统一裁决（朝向与位移同源，不可能倒着走）。
+## 返回本帧实际步向（±1，0 = 站定：目标在死区内，或贴地怪前方踏空）。
+func _step_toward(target_x: float, speed: float) -> int:
+	var step := enemy.decide_step_x(target_x, _deadzone())
+	enemy.apply_step(step, speed)
+	return step
+
+## 只朝向目标、不移动（站定吐弹、够不到目标时的张望）。带死区，目标在正上方时不抖动翻面。
+func _face_toward(target_x: float) -> void:
+	enemy.face_toward(target_x, _deadzone())

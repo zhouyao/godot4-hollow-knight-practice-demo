@@ -1,0 +1,111 @@
+[gd_scene format=3 uid="uid://cb66xhglsot3g"]
+
+[ext_resource type="Script" uid="uid://debdodtqcvl7q" path="res://addons/environment_fx/fog.gd" id="1_fog"]
+[ext_resource type="Shader" uid="uid://cu6fmp7fg38sy" path="res://addons/environment_fx/fog.gdshader" id="2_shader"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mask"]
+noise_type = 2
+frequency = 0.0025
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mask"]
+noise = SubResource("FastNoiseLite_mask")
+seamless = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_lsb1l"]
+noise_type = 4
+frequency = 0.0075
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_nakkq"]
+width = 1920
+height = 1080
+noise = SubResource("FastNoiseLite_lsb1l")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tfb1r"]
+resource_local_to_scene = true
+shader = ExtResource("2_shader")
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_nakkq")
+shader_parameter/density = 0.23
+shader_parameter/speed = Vector2(0.02, 0.01)
+shader_parameter/thickness = 0.849
+shader_parameter/fog_color = Vector3(1, 1, 1)
+shader_parameter/region_enabled = true
+shader_parameter/region_min = Vector2(-960, -540)
+shader_parameter/region_max = Vector2(960, 540)
+shader_parameter/region_fade = 400.0
+shader_parameter/elliptical = false
+shader_parameter/mask_noise_texture = SubResource("NoiseTexture2D_mask")
+shader_parameter/cloud_noise_scale = 0.0016
+shader_parameter/coverage = 0.22
+shader_parameter/softness = 1.0
+shader_parameter/edge_noise = 320.0
+shader_parameter/edge_seed = 0.0
+shader_parameter/density_variation = 0.3
+shader_parameter/edge_margin = 0.04
+shader_parameter/edge_gamma = 1.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_zone"]
+size = Vector2(1920, 1080)
+
+[node name="Fog" type="Node2D" unique_id=144440326]
+script = ExtResource("1_fog")
+
+[node name="Layers" type="Node2D" parent="." unique_id=804775397]
+
+[node name="Layer_1" type="Parallax2D" parent="Layers" unique_id=9291912]
+repeat_size = Vector2(4800, 2700)
+
+[node name="ColorRect" type="ColorRect" parent="Layers/Layer_1" unique_id=1874201829]
+material = SubResource("ShaderMaterial_tfb1r")
+offset_left = -2400.0
+offset_top = -1350.0
+offset_right = 2400.0
+offset_bottom = 1350.0
+mouse_filter = 2
+
+[node name="Layer_2" type="Parallax2D" parent="Layers" unique_id=1608531758]
+visible = false
+repeat_size = Vector2(4800, 2700)
+
+[node name="ColorRect" type="ColorRect" parent="Layers/Layer_2" unique_id=439736833]
+material = SubResource("ShaderMaterial_tfb1r")
+offset_left = -2400.0
+offset_top = -1350.0
+offset_right = 2400.0
+offset_bottom = 1350.0
+mouse_filter = 2
+
+[node name="Layer_3" type="Parallax2D" parent="Layers" unique_id=1275054391]
+visible = false
+repeat_size = Vector2(4800, 2700)
+
+[node name="ColorRect" type="ColorRect" parent="Layers/Layer_3" unique_id=1077207559]
+material = SubResource("ShaderMaterial_tfb1r")
+offset_left = -2400.0
+offset_top = -1350.0
+offset_right = 2400.0
+offset_bottom = 1350.0
+mouse_filter = 2
+
+[node name="Layer_4" type="Parallax2D" parent="Layers" unique_id=577911845]
+visible = false
+repeat_size = Vector2(4800, 2700)
+
+[node name="ColorRect" type="ColorRect" parent="Layers/Layer_4" unique_id=554865917]
+material = SubResource("ShaderMaterial_tfb1r")
+offset_left = -2400.0
+offset_top = -1350.0
+offset_right = 2400.0
+offset_bottom = 1350.0
+mouse_filter = 2
+
+[node name="PlayerZone" type="Area2D" parent="." unique_id=1883000392]
+visible = false
+collision_layer = 0
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerZone" unique_id=1680612495]
+shape = SubResource("RectangleShape2D_zone")
+debug_color = Color(1, 0.55, 0.1, 0.25)

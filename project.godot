@@ -28,6 +28,7 @@ Settings="*uid://byknb1nladkm7"
 UiAudio="*uid://b0xaosluegwol"
 TransitionLayer="*uid://b7cjeemjxyyyp"
 AuCameraDirector="*uid://dwvbfunxlwt7s"
+AuZoneDirector="*res://addons/zone_director/AuZoneDirector.gd"
 Skills="*res://resources/skills/skills_autoload.gd"
 
 [display]
@@ -38,7 +39,7 @@ window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/camera_director/plugin.cfg", "res://addons/sprite_frames_to_animation_player/plugin.cfg")
+enabled=PackedStringArray("res://addons/camera_director/plugin.cfg", "res://addons/environment_fx/plugin.cfg", "res://addons/gdUnit4/plugin.cfg", "res://addons/sprite_frames_to_animation_player/plugin.cfg", "res://addons/zone_director/plugin.cfg")
 
 [file_customization]
 

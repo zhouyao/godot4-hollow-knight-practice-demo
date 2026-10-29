@@ -10,6 +10,14 @@
 .godot/mono/
 *.tmp
 
+# 本地测试脚本（不入库，仅本地跑 GdUnit4 用）
+/test/
+
+# 测试报告（GdUnit4 每次运行都会生成 reports/report_N/）
+# 保留 .gdignore，让 Godot 始终忽略该目录（不扫描/不导入/不打包）
+/reports/*
+!/reports/.gdignore
+
 # macOS 元数据
 .DS_Store
 **/.DS_Store

@@ -4,19 +4,21 @@
 [ext_resource type="Texture2D" uid="uid://bbxqi0g2gt6vm" path="res://assets/sprites/backgrounds/bg_1.png" id="2_56bq6"]
 [ext_resource type="Script" uid="uid://0anauft5nso" path="res://addons/camera_director/AuCameraLockArea.gd" id="2_p6tgj"]
 [ext_resource type="Texture2D" uid="uid://ciidxwely181f" path="res://assets/sprites/backgrounds/bg_2.png" id="3_c3uki"]
-[ext_resource type="PackedScene" uid="uid://bukv7vkqpvb33" path="res://scenes/effects/environment/fog.tscn" id="4_6yx3g"]
+[ext_resource type="PackedScene" uid="uid://dh324tslddcd4" path="res://addons/environment_fx/rain.tscn" id="4_0yb27"]
 [ext_resource type="Texture2D" uid="uid://cucdtk38ti2vg" path="res://assets/sprites/backgrounds/bg_4.png" id="5_8jedn"]
 [ext_resource type="PackedScene" uid="uid://dbjleohr8a1u2" path="res://scenes/props/floor.tscn" id="5_bd7ha"]
 [ext_resource type="Texture2D" uid="uid://b2rove6y8y4dd" path="res://assets/sprites/backgrounds/bg_3.png" id="5_l8c12"]
+[ext_resource type="PackedScene" uid="uid://cb66xhglsot3g" path="res://addons/environment_fx/fog.tscn" id="5_tqina"]
+[ext_resource type="PackedScene" uid="uid://cakt81jhr2nea" path="res://addons/environment_fx/snow.tscn" id="6_1d5ey"]
 [ext_resource type="PackedScene" uid="uid://cwtmrqxf83kjo" path="res://scenes/characters/enemies/enemy_ground_crawlid/crawlid.tscn" id="7_xo2r0"]
 [ext_resource type="PackedScene" uid="uid://cc7bpmgddem53" path="res://scenes/characters/enemies/enemy_ground/enemy_ground.tscn" id="8_3bc65"]
 [ext_resource type="PackedScene" uid="uid://projspread01" path="res://scenes/projectiles/projectile_spread.tscn" id="8_nygb8"]
 [ext_resource type="PackedScene" uid="uid://dbrmlcm3kxitm" path="res://scenes/characters/enemies/enemy_flying_vengefly/vengefly.tscn" id="9_cm34k"]
 [ext_resource type="PackedScene" uid="uid://cg7ionofoem53" path="res://scenes/characters/enemies/enemy_flying/enemy_flying.tscn" id="9_nygb8"]
 [ext_resource type="PackedScene" uid="uid://bqsqwrfub1mkt" path="res://scenes/characters/enemies/enemy_ground_mosscreep/mosscreep.tscn" id="10_cm34k"]
-[ext_resource type="PackedScene" uid="uid://dyuk18suxru7s" path="res://scenes/worlds/enemy_zone.tscn" id="11_zone"]
+[ext_resource type="PackedScene" path="res://addons/zone_director/scenes/zone.tscn" id="11_zone"]
 [ext_resource type="PackedScene" uid="uid://bq438wduv3nk8" path="res://scenes/props/plants/grass.tscn" id="12_nvw4u"]
-[ext_resource type="PackedScene" path="res://scenes/props/moss_floor.tscn" id="13_uoxyj"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/grass_zone.tscn" id="13_uoxyj"]
 [ext_resource type="PackedScene" uid="uid://c5xedyh6vkreu" path="res://scenes/props/chest/chest.tscn" id="14_chest"]
 
 [sub_resource type="GDScript" id="GDScript_c5aoa"]
@@ -81,16 +83,19 @@ position = Vector2(37, 299)
 scale = Vector2(3, 3)
 texture = ExtResource("3_c3uki")
 
-[node name="Fog" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="0" unique_id=1411732847 instance=ExtResource("4_6yx3g")]
-scroll_scale = Vector2(0.85, 0.85)
+[node name="Rain" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="0" unique_id=1633012946 instance=ExtResource("4_0yb27")]
+z_index = 100
+position = Vector2(-2500, 200)
+draw_z = 100
 
-[node name="Fog2" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="1" unique_id=1439210959 instance=ExtResource("4_6yx3g")]
+[node name="Fog" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="1" unique_id=144440326 instance=ExtResource("5_tqina")]
+z_index = 100
+position = Vector2(-600, 200)
+density = 0.35
+draw_z = 100
 
-[node name="Fog3" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="2" unique_id=1242619942 instance=ExtResource("4_6yx3g")]
-scroll_scale = Vector2(1.15, 1.15)
-
-[node name="Fog4" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="3" unique_id=2081719686 instance=ExtResource("4_6yx3g")]
-scroll_scale = Vector2(1.3, 1.3)
+[node name="Snow" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="2" unique_id=613339209 instance=ExtResource("6_1d5ey")]
+position = Vector2(1300, 200)
 
 [node name="Floor3" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="0" unique_id=282550612 instance=ExtResource("5_bd7ha")]
 modulate = Color(0, 0, 0, 0.8)
@@ -120,32 +125,6 @@ scale = Vector2(50, 0.16)
 [node name="Chest" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="5" unique_id=1778910463 instance=ExtResource("14_chest")]
 position = Vector2(-1800, 503)
 
-[node name="Efffects_0" type="Node2D" parent="." index="7" unique_id=1504885066]
-position = Vector2(-1200, 422)
-
-[node name="G0" type="Node2D" parent="Efffects_0" index="0" unique_id=229419568]
-
-[node name="Grass0" parent="Efffects_0/G0" index="0" unique_id=1672507866 instance=ExtResource("12_nvw4u")]
-hits_to_die = 2
-corpse_y_offset = 5.0
-
-[node name="MossFloor" parent="Efffects_0/G0" index="1" unique_id=2005529879 instance=ExtResource("13_uoxyj")]
-position = Vector2(0, 66)
-scale = Vector2(2.2, 1)
-
-[node name="G2" type="Node2D" parent="Efffects_0" index="1" unique_id=1219452682]
-position = Vector2(-2000, 10)
-
-[node name="Grass2" parent="Efffects_0/G2" index="0" unique_id=1888133126 instance=ExtResource("12_nvw4u")]
-idle_animation = &"grass_2"
-death_animation = &"grass_2"
-hits_to_die = 2
-corpse_y_offset = -5.0
-
-[node name="MossFloor" parent="Efffects_0/G2" index="1" unique_id=608866006 instance=ExtResource("13_uoxyj")]
-position = Vector2(5, 64)
-scale = Vector2(2.2, 1)
-
 [node name="Crawlid" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=220108385 instance=ExtResource("7_xo2r0")]
 position = Vector2(-1000, 423)
 enemy_zone = NodePath("../../EnemyZones/EnemyZone2")
@@ -156,7 +135,7 @@ enemy_zone = NodePath("../../EnemyZones/EnemyZone2")
 projectile_scene = null
 
 [node name="Mosscreep" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="2" unique_id=972801678 instance=ExtResource("10_cm34k")]
-position = Vector2(-3000, 446)
+position = Vector2(-2200, 446)
 enemy_zone = NodePath("../../EnemyZones/EnemyZone3")
 
 [node name="EnemyGround" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="3" unique_id=588911125 instance=ExtResource("8_3bc65")]
@@ -171,8 +150,34 @@ projectile_scene = ExtResource("8_nygb8")
 projectile_damage = 0
 shoot_keep_distance = 0.0
 
-[node name="Player" parent="." index="9" unique_id=1112432844]
-position = Vector2(-2200, 300)
+[node name="Efffects_0" type="Node2D" parent="." index="7" unique_id=1504885066]
+position = Vector2(-1200, 422)
+
+[node name="G0" type="Node2D" parent="Efffects_0" index="0" unique_id=229419568]
+
+[node name="Grass0" parent="Efffects_0/G0" index="0" unique_id=1672507866 instance=ExtResource("12_nvw4u")]
+hits_to_die = 2
+corpse_y_offset = 5.0
+
+[node name="GrassZone" parent="Efffects_0/G0" index="1" unique_id=2005529879 instance=ExtResource("13_uoxyj")]
+position = Vector2(0, 66)
+scale = Vector2(2.2, 1)
+
+[node name="G2" type="Node2D" parent="Efffects_0" index="1" unique_id=1219452682]
+position = Vector2(-2000, 10)
+
+[node name="Grass2" parent="Efffects_0/G2" index="0" unique_id=1888133126 instance=ExtResource("12_nvw4u")]
+idle_animation = &"grass_2"
+death_animation = &"grass_2"
+hits_to_die = 2
+corpse_y_offset = -5.0
+
+[node name="GrassZone" parent="Efffects_0/G2" index="1" unique_id=608866006 instance=ExtResource("13_uoxyj")]
+position = Vector2(5, 64)
+scale = Vector2(2.2, 1)
+
+[node name="Player" parent="." index="8" unique_id=1112432844]
+position = Vector2(-3000, 300)
 
 [node name="Layer_0" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=1048978077]
 repeat_size = Vector2(6000, 0)
@@ -206,7 +211,7 @@ death_animation = &"grass_1"
 hits_to_die = 2
 corpse_y_offset = 8.0
 
-[node name="MossFloor" parent="Effects/G1" index="1" unique_id=637239354 instance=ExtResource("13_uoxyj")]
+[node name="GrassZone" parent="Effects/G1" index="1" unique_id=637239354 instance=ExtResource("13_uoxyj")]
 position = Vector2(2, 64)
 scale = Vector2(2.2, 1)
 
@@ -218,7 +223,7 @@ idle_animation = &"grass_3"
 death_animation = &"grass_3"
 hits_to_die = 2
 
-[node name="MossFloor" parent="Effects/G3" index="1" unique_id=390967002 instance=ExtResource("13_uoxyj")]
+[node name="GrassZone" parent="Effects/G3" index="1" unique_id=390967002 instance=ExtResource("13_uoxyj")]
 position = Vector2(3, 64)
 scale = Vector2(2.2, 1)
 
@@ -231,8 +236,8 @@ position = Vector2(-1006, 170)
 size = Vector2(1200, 700)
 
 [node name="EnemyZone3" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="2" unique_id=652932006 instance=ExtResource("11_zone")]
-position = Vector2(-3000, 170)
-size = Vector2(800, 700)
+position = Vector2(-2800, 170)
+size = Vector2(1400, 700)
 
 [node name="RightCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="0" unique_id=1421588960 node_paths=PackedStringArray("vertical_lock_marker")]
 position = Vector2(426, 207)

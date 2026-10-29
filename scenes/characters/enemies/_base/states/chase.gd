@@ -38,7 +38,9 @@ var _attack_timer := 0.0
 var _blocked_time := 0.0
 
 func enter(_from: StringName) -> void:
-	_play_action(EnemyStateNames.MOVE)
+	# 声明循环动作（而不是只 _play_action）：转身动画播完要恢复到它，
+	# 且一次性演出（appear / death …）不会被误当成恢复目标。
+	enemy.set_locomotion_clip(EnemyStateNames.MOVE)
 	# 每次进入追击重新计时（含吐弹后摇结束回追击）。
 	# 旧版飞行侧这里按 _from 分了两支，但两支都是把计时器置 0，是死分支。
 	_attack_timer = 0.0
@@ -117,24 +119,29 @@ func _chase_move(player: Node2D, delta: float) -> void:
 
 ## 贴地靠近：远程怪追到保持距离内就停下（仍面朝目标），且全程不踏空。
 func _planar_chase_move(player: Node2D, delta: float) -> void:
+	var target_x := player.global_position.x
 	var keep := _keep_distance()
-	if keep > 0.0 and absf(player.global_position.x - enemy.global_position.x) <= keep:
-		_face_target_x(player.global_position.x)  # 站定吐弹，朝向目标
+	if keep > 0.0 and absf(target_x - enemy.global_position.x) <= keep:
+		_face_toward(target_x)  # 站定吐弹，朝向目标
 		enemy.velocity.x = 0.0
 		_blocked_time = 0.0
 		return
 
-	var dir := enemy.nav_velocity(player.global_position, _chase_speed())
-	if dir.x == 0.0:
+	# 目标几乎在自己的正上 / 正下方（玩家从头顶跳过、或站在头顶的平台上）：
+	# 横向根本没有"该走的方向"。这里必须站定，不能"按 sign(dx) 走一步" ——
+	# 位移会不断把 |dx| 缩小，怪物永远出不了死区、朝向也就永远不更新，于是长期倒着走
+	# （玩家从 idle 的 mosscreep 头顶跳过后就命中这个分支）。站定不算"够不到"，不累计放弃计时。
+	if enemy.is_within_face_deadzone(target_x, _deadzone()):
+		_face_toward(target_x)
 		enemy.velocity.x = 0.0
-		_blocked_time = 0.0
 		return
 
 	# 前方踏空（悬崖 / 平台边缘）：站定并面朝玩家，绝不踏空。
 	# 旧逻辑是"掉头往回走"，但悬崖探测器随朝向立刻换边 —— 下一帧它已经指向来路（有地），
 	# 于是马上又掉头冲向悬崖，形成每物理帧一次的来回翻面。这里改成固定张望 + 到点丢战。
-	if not enemy.has_ground_ahead(signf(dir.x)):
-		_face_target_x(player.global_position.x)
+	# 朝向与位移同源于 _step_toward()，不存在"朝哪 / 走哪"两套判据。
+	if _step_toward(target_x, _chase_speed()) == 0:
+		_face_toward(target_x)
 		enemy.velocity.x = 0.0
 		_blocked_time += delta
 		if _blocked_time >= _tuning(&"blocked_give_up_time", blocked_give_up_time):
@@ -142,11 +149,6 @@ func _planar_chase_move(player: Node2D, delta: float) -> void:
 		return
 
 	_blocked_time = 0.0
-	# 朝向取"目标方位"而不是导航方向的符号：目标在正上/正下方、或距离在临界点附近时，
-	# nav 方向的 sign() 会随导航重算噪声逐帧变号，同样会造成疯狂翻面（见 _face_target_x）。
-	# 代价是绕障碍时可能出现"面朝玩家倒着走"，若以后加入真正需要绕行的地形，再回来加迟滞处理。
-	_face_target_x(player.global_position.x)
-	enemy.velocity.x = dir.x
 
 ## 全向靠近（飞行 / 水下）：朝目标飞，进入保持距离后只保留纵向分量（站定吐弹的水平间距）。
 func _omni_chase_move(player: Node2D) -> void:
@@ -156,6 +158,6 @@ func _omni_chase_move(player: Node2D) -> void:
 	if absf(target_pos.x - enemy.global_position.x) <= _keep_distance():
 		dir.x = 0.0
 	enemy.velocity = dir
-	# 朝向必须用带死区的 _face_target_x，不能用 signf(dir.x)：
+	# 朝向必须用带死区的 _face_toward，不能用 signf(dir.x)：
 	# 玩家几乎在正上 / 正下方时 x 差会在 0 附近抖动，取符号会导致原地疯狂翻面。
-	_face_target_x(target_pos.x)
+	_face_toward(target_pos.x)

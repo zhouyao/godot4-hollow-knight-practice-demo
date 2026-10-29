@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://cakt81jhr2nea"]
+
+[ext_resource type="Script" uid="uid://tm0i11ohko1m" path="res://addons/environment_fx/snow.gd" id="1_snow"]
+[ext_resource type="Shader" uid="uid://bhv3uucs24kx6" path="res://addons/environment_fx/snow.gdshader" id="2_shader"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mask"]
+noise_type = 2
+frequency = 0.0025
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mask"]
+noise = SubResource("FastNoiseLite_mask")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4xxe1"]
+resource_local_to_scene = true
+shader = ExtResource("2_shader")
+shader_parameter/snow_color = Vector3(0.95, 0.97, 1)
+shader_parameter/density = 0.5
+shader_parameter/speed = Vector2(0.087155744, 0.9961947)
+shader_parameter/fall_speed = 1.0
+shader_parameter/thickness = 0.1
+shader_parameter/coverage = 0.5
+shader_parameter/softness = 1.0
+shader_parameter/chaos = 0.85
+shader_parameter/flake_shape = 2
+shader_parameter/region_enabled = false
+shader_parameter/region_min = Vector2(-960, -540)
+shader_parameter/region_max = Vector2(960, 540)
+shader_parameter/region_fade = 400.0
+shader_parameter/elliptical = false
+shader_parameter/mask_noise_texture = SubResource("NoiseTexture2D_mask")
+shader_parameter/cloud_noise_scale = 0.0016
+shader_parameter/edge_noise = 320.0
+shader_parameter/edge_seed = 0.0
+shader_parameter/density_variation = 0.3
+shader_parameter/edge_margin = 0.04
+shader_parameter/edge_gamma = 1.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_zone"]
+size = Vector2(1920, 1080)
+
+[node name="Snow" type="Node2D" unique_id=613339209]
+script = ExtResource("1_snow")
+
+[node name="Layers" type="Node2D" parent="." unique_id=1293380280]
+
+[node name="Layer_1" type="Parallax2D" parent="Layers" unique_id=1296443980]
+repeat_size = Vector2(4800, 4800)
+
+[node name="ColorRect" type="ColorRect" parent="Layers/Layer_1" unique_id=2099973718]
+material = SubResource("ShaderMaterial_4xxe1")
+offset_left = -2400.0
+offset_top = -2400.0
+offset_right = 2400.0
+offset_bottom = 2400.0
+mouse_filter = 2
+
+[node name="Layer_2" type="Parallax2D" parent="Layers" unique_id=1649004358]
+visible = false
+repeat_size = Vector2(4800, 4800)
+
+[node name="ColorRect" type="ColorRect" parent="Layers/Layer_2" unique_id=857052932]
+material = SubResource("ShaderMaterial_4xxe1")
+offset_left = -2400.0
+offset_top = -2400.0
+offset_right = 2400.0
+offset_bottom = 2400.0
+mouse_filter = 2
+
+[node name="Layer_3" type="Parallax2D" parent="Layers" unique_id=2041165407]
+visible = false
+repeat_size = Vector2(4800, 4800)
+
+[node name="ColorRect" type="ColorRect" parent="Layers/Layer_3" unique_id=1047084428]
+material = SubResource("ShaderMaterial_4xxe1")
+offset_left = -2400.0
+offset_top = -2400.0
+offset_right = 2400.0
+offset_bottom = 2400.0
+mouse_filter = 2
+
+[node name="Layer_4" type="Parallax2D" parent="Layers" unique_id=1050914851]
+visible = false
+repeat_size = Vector2(4800, 4800)
+
+[node name="ColorRect" type="ColorRect" parent="Layers/Layer_4" unique_id=938323815]
+material = SubResource("ShaderMaterial_4xxe1")
+offset_left = -2400.0
+offset_top = -2400.0
+offset_right = 2400.0
+offset_bottom = 2400.0
+mouse_filter = 2
+
+[node name="PlayerZone" type="Area2D" parent="." unique_id=1970530186]
+visible = false
+collision_layer = 0
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerZone" unique_id=1597960409]
+shape = SubResource("RectangleShape2D_zone")
+debug_color = Color(1, 0.55, 0.1, 0.25)

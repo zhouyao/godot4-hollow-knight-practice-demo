@@ -29,7 +29,8 @@ var _wait: float = 0.0
 
 func enter(_from: StringName) -> void:
 	# 巡逻开启时本状态才会被进入（关巡逻的怪走 idle 状态），所以恒播移动动作。
-	_play_action(EnemyStateNames.MOVE)
+	# 用 set_locomotion_clip 声明：转身动画播完要恢复到它。
+	enemy.set_locomotion_clip(EnemyStateNames.MOVE)
 	_dir = enemy.move_direction
 	_wait = 0.0  # 地面版原先漏了这行：端点等待途中被打断会带着残留值回到巡逻
 
@@ -62,14 +63,14 @@ func _flip_end(wait_scale: float = 1.0) -> void:
 	# 名字对不上（状态叫 wait_time、tuning 叫 patrol_wait_time）是故意的：
 	# EnemyTuning 里所有巡逻项统一 patrol_ 前缀，避免和 Timer.wait_time 之类撞名。
 	_wait = _tuning(&"patrol_wait_time", wait_time) * wait_scale
-	_face_dir(float(_dir))
+	enemy.face_step(_dir)
 	_stop()
 
 ## 当前要走向的端点的世界 x。绑了领地时按领地的左右端（与运动介质无关）。
 func _end_x() -> float:
 	var zone := enemy.get_node_or_null(enemy.enemy_zone)
-	if zone is EnemyZone:
-		var half := (zone as EnemyZone).size.x * 0.5
+	if zone is AuZone:
+		var half := (zone as AuZone).size.x * 0.5
 		return zone.global_position.x + float(_dir) * half
 	return enemy.spawn_position.x + float(_dir) * _tuning(&"patrol_radius", patrol_radius)
 
@@ -108,8 +109,9 @@ func _planar_patrol_move() -> void:
 		Vector2(target_x, enemy.global_position.y), _patrol_speed())
 	# dir.x == 0：导航给不出路（含抵达端点），掉头换个方向再试。
 	if dir.x != 0.0:
-		_face_dir(signf(dir.x))
-		enemy.velocity.x = dir.x
+		# 贴地怪 nav_velocity 的水平分量就是 ±speed，这里用 apply_step 统一施加：
+		# 翻面与位移同源，不会出现"面朝一侧却往另一侧走"。
+		enemy.apply_step(int(signf(dir.x)), _patrol_speed())
 		return
 	_flip_end()
 
@@ -130,6 +132,6 @@ func _omni_patrol_move() -> void:
 	var amp := _tuning(&"bob_amplitude", bob_amplitude)
 	var freq := _tuning(&"bob_frequency", bob_frequency)
 	enemy.velocity = dir + Vector2(0.0, cos(elapsed * freq) * amp * freq)
-	# 朝向必须用带死区的 _face_target_x，不能用 signf(dir.x)：
+	# 朝向必须用带死区的 _face_toward，不能用 signf(dir.x)：
 	# 端点附近 x 分量在 0 附近抖动，取符号会原地疯狂翻面（chase / return 同理）。
-	_face_target_x(target_x)
+	_face_toward(target_x)
