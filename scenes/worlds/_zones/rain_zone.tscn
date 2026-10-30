@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://ctqrjufww6mnn"]
+
+[ext_resource type="Script" uid="uid://bkrxo037rrewo" path="res://scenes/worlds/_zones/rain_zone.gd" id="1_6nkmd"]
+[ext_resource type="PackedScene" path="res://addons/zone_director/scenes/zone.tscn" id="2_u2dgq"]
+[ext_resource type="Script" uid="uid://bvy15idrjb48q" path="res://addons/zone_director/behaviors/AuFootstepBehavior.gd" id="3_2pp0w"]
+[ext_resource type="AudioStream" uid="uid://dnmyvxk6lmisu" path="res://assets/sounds/characters/players/player/player_waterwalk.ogg" id="4_3dhf3"]
+[ext_resource type="Script" uid="uid://dpsmw5co2vfua" path="res://scenes/worlds/_zones/behaviors/wet_splash_behavior.gd" id="5_6nkmd"]
+[ext_resource type="Texture2D" uid="uid://b75ky7yasduhs" path="res://assets/animations/characters/players/player/wet_walk_effect.png" id="6_j463b"]
+[ext_resource type="PackedScene" uid="uid://dh324tslddcd4" path="res://addons/environment_fx/rain.tscn" id="7_c2dxy"]
+
+[node name="RainZone" type="Node2D" unique_id=2055492805]
+script = ExtResource("1_6nkmd")
+zone_size = Vector2(1920, 1080)
+
+[node name="Zone" parent="." unique_id=143147378 instance=ExtResource("2_u2dgq")]
+surface = &"water"
+ambient = &"rain"
+size = Vector2(1920, 1080)
+
+[node name="FootstepBehavior2" type="Node" parent="Zone" unique_id=489258642]
+script = ExtResource("3_2pp0w")
+step_interval = 0.3
+footstep_streams = Array[AudioStream]([ExtResource("4_3dhf3")])
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Zone/FootstepBehavior2" unique_id=1659041653]
+bus = &"Sound"
+
+[node name="WetSplashBehavior" type="Node" parent="Zone" unique_id=1196246937]
+script = ExtResource("5_6nkmd")
+effect_sheet = ExtResource("6_j463b")
+splash_z_index = 1000
+
+[node name="Rain" parent="." unique_id=344677835 instance=ExtResource("7_c2dxy")]
+z_index = 100
+region_fade = 200.0
+elliptical = true
+draw_z = 100

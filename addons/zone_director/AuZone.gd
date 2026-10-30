@@ -252,6 +252,22 @@ func _ensure_shape() -> void:
 		collision.owner = owner
 	elif collision.shape == null or not (collision.shape is RectangleShape2D):
 		collision.shape = RectangleShape2D.new()
+	_own_shape(collision)
+
+
+## 兜底：每个实例必须独占自己的 RectangleShape2D（正常由 .tscn 里的
+## resource_local_to_scene 保证）。子资源默认在同场景的多个实例间共享，一旦共享，
+## 改某个 Zone 的 size 会把所有 Zone 的碰撞盒一起改掉 —— 编辑器里表现为
+## "调整一个 EnemyZone，其它 EnemyZone 的大小也跟着变"。
+func _own_shape(collision: CollisionShape2D) -> void:
+	var shape := collision.shape as RectangleShape2D
+	if shape == null or shape.resource_local_to_scene:
+		return
+	if Engine.is_editor_hint():
+		# 编辑器里换新的 resource 会往关卡场景里写一条 shape override，交给
+		# resource_local_to_scene 兜住，这里不介入。
+		return
+	collision.shape = shape.duplicate()
 
 
 func _apply_size() -> void:

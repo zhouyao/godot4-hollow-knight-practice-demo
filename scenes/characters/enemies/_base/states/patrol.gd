@@ -44,6 +44,12 @@ func update(delta: float) -> void:
 		_patrol_move(delta)
 	super.update(delta)
 
+## 巡逻中被玩家贴身撞上：掉血的同时开战，下一帧 get_transition() 里 combat_active 已为 true → 转 chase。
+## 伤害本身由基类 update() → EnemyState._tick_contact() 结算，这里只声明"要不要开战"。
+## 开战同样受 contact_damage_enabled 约束（try_hit_player 内部那道闸），关掉接触伤害就不会被撞醒。
+func _contact_opens_combat() -> bool:
+	return true
+
 func get_transition(_delta: float) -> StringName:
 	if enemy.combat_active:
 		return EnemyStateNames.CHASE

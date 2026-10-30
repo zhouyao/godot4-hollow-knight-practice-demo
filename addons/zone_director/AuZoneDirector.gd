@@ -27,7 +27,7 @@ const ALL_CHANNELS: Array[StringName] = [&"surface", &"ambient", &"lighting", &"
 
 ## 离开区域后的宽限时长（秒）：边界上反复横跳时避免表现闪烁。
 ## 期间若进入任何区域，待退出会被一并取消（交接不闪断）。
-@export var exit_grace: float = 0.15
+@export var exit_grace: float = 0.05
 
 
 var _active: Array[AuZone] = []

@@ -45,10 +45,20 @@ func exit(_to: StringName) -> void:
 
 func update(delta: float) -> void:
 	_stop()
+	_tick_contact()
 	if _performing != &"":
 		_perform_watchdog -= delta
 		if _perform_watchdog <= 0.0:
 			_on_perform_finished(_performing)  # 信号丢失时的兜底
+
+## 站桩怪也必须结算接触伤害 + 碰触即开战。
+## 为什么要在 update() 里自己调一次 EnemyState._tick_contact()：接触结算的入口在基类
+## update()，而本状态重写了 update、且刻意不施加位移与重力（站桩），走不到那条路径 ——
+## 于是 patrol_enabled = false 的怪在 idle 期间完全没有接触伤害，玩家能直接穿过身体且不掉血。
+## 为什么不改成 super.update(delta)：那会让 idle 也开始吃重力、每帧 move_and_slide，
+## 站桩怪的落地 / 悬停手感会跟着变。只借接触结算，不动运动。
+func _contact_opens_combat() -> bool:
+	return true
 
 func get_transition(_delta: float) -> StringName:
 	if not enemy.combat_active:

@@ -8,7 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://cwnc3hqpw27qq" path="res://assets/sounds/characters/enemies/_common/death.ogg" id="6_qaw06"]
 [ext_resource type="PackedScene" path="res://scenes/debug/character_debug.tscn" id="7_dbg"]
 [ext_resource type="Script" uid="uid://ch8mvqx0p2knt" path="res://scenes/characters/enemies/_base/states/hurt.gd" id="9_hurt"]
-[ext_resource type="Script" path="res://scenes/characters/enemies/_base/states/idle.gd" id="10_idle"]
+[ext_resource type="Script" uid="uid://d212jddobfkj1" path="res://scenes/characters/enemies/_base/states/idle.gd" id="10_idle"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h6q0h"]
 
@@ -132,7 +132,7 @@ metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
 script = ExtResource("4_death")
 metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
 
-[node name="idle" type="Node" parent="StateMachine" unique_id=2000000010 index="6"]
+[node name="idle" type="Node" parent="StateMachine" unique_id=2000000010]
 script = ExtResource("10_idle")
 metadata/_custom_type_script = "uid://xyw8ryqy76l2e"
 

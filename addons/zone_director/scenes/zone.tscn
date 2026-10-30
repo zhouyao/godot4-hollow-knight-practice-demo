@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://addons/zone_director/AuZone.gd" id="1_zone"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_zone"]
+resource_local_to_scene = true
 size = Vector2(256, 128)
 
 [node name="Zone" type="Area2D"]

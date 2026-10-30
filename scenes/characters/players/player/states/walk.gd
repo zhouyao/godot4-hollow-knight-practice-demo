@@ -13,7 +13,7 @@ const STOP_EPS := 1.0
 var _step_timer: float = 0.0
 
 func enter(_from: StringName) -> void:
-	_play_audio(PlayerStateNames.WALK)
+	_play_default_step()
 	_play_action(PlayerStateNames.WALK)
 	_step_timer = 0.0
 	if step_interval <= 0.0:
@@ -27,7 +27,15 @@ func update(delta: float) -> void:
 		_step_timer += delta
 		if _step_timer >= step_interval:
 			_step_timer -= step_interval
-			_play_audio(PlayerStateNames.WALK)
+			_play_default_step()
+
+func _play_default_step() -> void:
+	# 处于声明了地面材质(surface)的区域时，脚步声由 zone 的 FootstepBehavior 提供，
+	# 这里压掉玩家自带的默认脚步，避免双重脚步声。
+	var director = get_node_or_null("/root/AuZoneDirector")
+	if director != null and director.surface() != &"default":
+		return
+	_play_audio(PlayerStateNames.WALK)
 
 func exit(_to: StringName) -> void:
 	_stop_audio(PlayerStateNames.WALK)

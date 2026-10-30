@@ -1,0 +1,152 @@
+[gd_scene format=3 uid="uid://buf7ckj7d41uo"]
+
+[ext_resource type="Script" uid="uid://btp2nfp0r0ivr" path="res://scenes/characters/bosses/_base/boss.gd" id="1_boss"]
+[ext_resource type="Script" uid="uid://dbjq3hplhf027" path="res://scenes/characters/bosses/_base/BossStateMachine.gd" id="2_bsm"]
+[ext_resource type="Script" uid="uid://cmvshvmnw5ove" path="res://scenes/characters/bosses/_base/boss_arena.gd" id="3_arena"]
+[ext_resource type="PackedScene" path="res://scenes/debug/character_debug.tscn" id="4_dbg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(96, 192)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_sprite"]
+light_mode = 1
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_boss"]
+animations = [{
+"frames": [],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_slash"]
+size = Vector2(120, 60)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_attackrange"]
+size = Vector2(240, 200)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_arena"]
+size = Vector2(1200, 600)
+
+[node name="Boss" type="CharacterBody2D" unique_id=170488292 groups=["enemy"]]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("1_boss")
+max_health = 200
+initial_health = 200
+patrol_enabled = false
+corpse_lifetime = 0.0
+
+[node name="BodyCollisionShape2D" type="CollisionShape2D" parent="." unique_id=1005066086]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="DropMarker" type="Marker2D" parent="." unique_id=1197587479]
+
+[node name="Timer" type="Node" parent="." unique_id=72660490]
+
+[node name="HitTimer" type="Timer" parent="Timer" unique_id=2146049795]
+one_shot = true
+
+[node name="ContactTimer" type="Timer" parent="Timer" unique_id=1428991090]
+one_shot = true
+
+[node name="Animation" type="Node2D" parent="." unique_id=55078650]
+
+[node name="EnemyAnimatedSprite" type="AnimatedSprite2D" parent="Animation" unique_id=1331468369]
+material = SubResource("CanvasItemMaterial_sprite")
+sprite_frames = SubResource("SpriteFrames_boss")
+animation = &"idle"
+
+[node name="ActionAnimationPlayer" type="AnimationPlayer" parent="Animation" unique_id=609070108]
+root_node = NodePath("../..")
+
+[node name="Audio" type="Node2D" parent="." unique_id=196072747]
+
+[node name="attack" type="AudioStreamPlayer2D" parent="Audio" unique_id=1185345612]
+bus = &"Sound"
+
+[node name="hurt" type="AudioStreamPlayer2D" parent="Audio" unique_id=1749486275]
+bus = &"Sound"
+
+[node name="death" type="AudioStreamPlayer2D" parent="Audio" unique_id=1598064983]
+bus = &"Sound"
+
+[node name="scream" type="AudioStreamPlayer2D" parent="Audio" unique_id=431038688]
+bus = &"Sound"
+
+[node name="dash" type="AudioStreamPlayer2D" parent="Audio" unique_id=817207740]
+bus = &"Sound"
+
+[node name="dashAntic" type="AudioStreamPlayer2D" parent="Audio" unique_id=1815302508]
+bus = &"Sound"
+
+[node name="teleport" type="AudioStreamPlayer2D" parent="Audio" unique_id=1404136097]
+bus = &"Sound"
+
+[node name="jump" type="AudioStreamPlayer2D" parent="Audio" unique_id=1882197397]
+bus = &"Sound"
+
+[node name="land" type="AudioStreamPlayer2D" parent="Audio" unique_id=976557350]
+bus = &"Sound"
+
+[node name="counter" type="AudioStreamPlayer2D" parent="Audio" unique_id=880774817]
+bus = &"Sound"
+
+[node name="riposte" type="AudioStreamPlayer2D" parent="Audio" unique_id=355082056]
+bus = &"Sound"
+
+[node name="Debug" parent="." unique_id=1659399408 instance=ExtResource("4_dbg")]
+
+[node name="Effects" type="Node2D" parent="." unique_id=232689711]
+
+[node name="EffectAnimatedSprite" type="AnimatedSprite2D" parent="Effects" unique_id=2028615876]
+visible = false
+sprite_frames = SubResource("SpriteFrames_boss")
+animation = &"idle"
+
+[node name="SlashHitBox" type="Area2D" parent="." unique_id=1001674404]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SlashHitBox" unique_id=1640443907]
+shape = SubResource("RectangleShape2D_slash")
+disabled = true
+
+[node name="AttackRange" type="Area2D" parent="." unique_id=2073026563]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange" unique_id=1267751504]
+shape = SubResource("RectangleShape2D_attackrange")
+
+[node name="TeleportWallDetection" type="RayCast2D" parent="." unique_id=2073672658]
+target_position = Vector2(400, 0)
+collision_mask = 4
+
+[node name="SlashesRange" type="RayCast2D" parent="." unique_id=768479413]
+target_position = Vector2(200, 0)
+collision_mask = 4
+
+[node name="Timers" type="Node" parent="." unique_id=526018665]
+
+[node name="SequenceTimer" type="Timer" parent="Timers" unique_id=1555748855]
+one_shot = true
+
+[node name="InitalScreamTimer" type="Timer" parent="Timers" unique_id=658303679]
+one_shot = true
+
+[node name="ScreamTimer" type="Timer" parent="Timers" unique_id=486302611]
+wait_time = 2.0
+one_shot = true
+
+[node name="BossArena" type="Area2D" parent="." unique_id=1782691414]
+collision_layer = 0
+script = ExtResource("3_arena")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BossArena" unique_id=1046364957]
+shape = SubResource("RectangleShape2D_arena")
+
+[node name="StateMachine" type="Node" parent="." unique_id=885825929]
+script = ExtResource("2_bsm")
+host_path = NodePath("..")
+initial_state = &"dormant"
+
+[connection signal="timeout" from="Timer/HitTimer" to="." method="_on_hit_timer_timeout"]

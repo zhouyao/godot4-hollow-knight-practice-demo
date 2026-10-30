@@ -2,6 +2,8 @@ extends CharacterBody2D
 class_name Enemy
 
 
+#region 信号
+
 ## 死亡瞬间发出一次（血量归零或被 kill() 调用），状态机据此切到 death 状态。
 signal enemy_death
 ## 每次成功结算伤害后发出（无敌帧内的伤害不会触发）。
@@ -11,6 +13,11 @@ signal damaged(amount: int, from: Node2D)
 signal enter_combat(target: Node2D)
 ## 离开战斗（丢失 / 回归）时发出。
 signal leave_combat
+
+#endregion
+
+
+#region 配置（检查器）
 
 ## _validate_property() 用的"隐藏但仍序列化"标记：等价于 @export_storage，
 ## 保证被隐藏的参数值依然写进 .tscn，不会因为切换配置而丢失。
@@ -73,9 +80,6 @@ const HIDDEN_BUT_SAVED := PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_STORAGE
 @export var contact_cooldown: float = 0.8
 
 
-## 出生点：用于 return 状态归位与 leash 范围判定，_ready 时记录。
-var spawn_position: Vector2 = Vector2.ZERO
-
 @export_group("巡逻")
 ## 巡逻总开关：true（默认）= 出生后绕出生点 / 领地来回巡逻；false = 原地待机（站岗 / 悬停）。
 ## 关闭后仍可被受击 / 领地触发进入战斗，战斗结束后回到巡逻状态继续待机。
@@ -95,9 +99,16 @@ func resting_state() -> StringName:
 @export var combat_lose_time: float = 10.0
 ## 视线丢失判定开关：true 时超出 leash 且无视线会累计丢失时间。
 @export var use_line_of_sight: bool = true
-## 绑定的领地（EnemyZone）：玩家踏入该领地时令本敌人开战。
+## 绑定的领地（AuZone / EnemyZone）：玩家在领地内时本敌人开战，离开领地后还会再追一段。
 ## 留空则不通过领地触发（仍可由受击开战）。在检查器里从世界的 EnemyZones 选择对应领地。
 @export var enemy_zone: NodePath = NodePath()
+## 玩家离开领地后继续追击的时长（秒）：宽限期结束才收兵回巢，期间不再看领地条件。
+## 0 = 立刻罢手（旧行为）。宽限期内同样不判 leash / 视线丢失 ——
+## 领地常常比 leash 宽（level_1 的 EnemyZone3 有 1400px，Mosscreep 的 leash 只有 700），
+## 若仍按 leash 判，玩家刚踏出领地就可能已经"追丢"，这段追击一秒都用不上。
+## 优先级：领地宽限 > leash_range / combat_lose_time / 视线丢失（宽限期内全部短路）。
+## 因此这是"时间预算"而不是"距离预算"：怪最多再追 zone_exit_chase_time × 追击速度 那么远。
+@export var zone_exit_chase_time: float = 5.0
 
 @export_group("攻击")
 ## 吐出的投射物场景：留空 = 纯近战怪，launch_projectile() 直接返回，不会报错。
@@ -167,36 +178,14 @@ func resting_state() -> StringName:
 ## 衰减曲线指数：越大越"近处响、远处迅速变轻"，1 = 引擎默认。
 @export_range(0.1, 6.0) var sfx_attenuation: float = 1.0
 
-## 战斗丢失计时器：累计"目标丢失 / 出 leash / 无视线"的时长，达到 combat_lose_time 即丢战。
-var combat_timer: float = 0.0
-## 当前是否处于战斗（仇恨）状态。
-var combat_active: bool = false
+## 抵达导航目标的判定距离（像素）：小于该值视为已到达并停止移动。
+## 导航内部参数，默认值已够用，故不在检查器显示；确需调整时直接改 .tscn 即可。
+@export_storage var nav_arrive_distance: float = 4.0
 
-## 转身表现状态：正在播放 / 上次播放时刻（毫秒，负值 = 从未播放过）。
-## 不再有"攒下的翻面次数"：画面朝向一律由 move_direction 派生（见 _sync_facing），
-## 转身期间翻几次都不影响最终结果，所以不需要记账；少一个计数器就少一处会算错的地方。
-var _turning: bool = false
-var _turn_last_ms: int = -1000000
-## DEBUG 自检：画面朝向 / 逻辑朝向 / 实际位移 三者不一致的持续时长（秒）。负值 = 当前一致。
-var _facing_mismatch_t: float = -1.0
-## 素材基准朝向：+1 = 原画朝右，-1 = 原画朝左（如 crawlid）。
-## _ready() 时从精灵在场景里预置的 scale.x 符号读一次，之后画面朝向一律由
-## 「_sprite_base_sign × move_direction」派生，不再做 scale.x *= -1 的累乘。
-var _sprite_base_sign: float = 1.0
-## 当前"应当持续播放"的循环动作（move / idle），由状态通过 set_locomotion_clip() 声明。
-## 转身动画结束后恢复到它 —— 不再从 AnimationPlayer.current_animation 反推：
-## 那会把 appear（钻出地面）/ bury（缩回）这类一次性演出记成恢复目标，转身播完再演一遍。
-var _locomotion_clip: StringName = &"idle"
+#endregion
 
 
-var health: int
-var move_direction: int = 1
-var knockback: Vector2 = Vector2.ZERO
-var dead: bool = false
-var invincible: bool = false
-
-var target: Node2D = null
-var last_damage_from: Node2D = null
+#region 节点引用
 
 @onready var collision_shape: CollisionShape2D = $BodyCollisionShape2D
 @onready var drop_marker: Marker2D = $DropMarker
@@ -213,42 +202,80 @@ var last_damage_from: Node2D = null
 @onready var state_machine: StateMachine = $StateMachine
 
 ## 寻路节点：飞行怪与陆地怪的追击都统一由此承接，绕开障碍/地形。
-@onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
+## 用 get_node_or_null 而不是 $路径：不靠导航移动的角色（BOSS 的位移由招式直接给 velocity）
+## 可以在场景里省掉这个节点，不必为了满足基类路径而挂一个用不上的 NavigationAgent2D。
+## 消费端 nav_velocity() 已有 null 兜底 —— 没有该节点时退化为直线趋近，而不是把角色钉在原地。
+@onready var navigation_agent := get_node_or_null("NavigationAgent2D") as NavigationAgent2D
 
-## 抵达导航目标的判定距离（像素）：小于该值视为已到达并停止移动。
-## 导航内部参数，默认值已够用，故不在检查器显示；确需调整时直接改 .tscn 即可。
-@export_storage var nav_arrive_distance: float = 4.0
+#endregion
 
-var audio_nodes: Dictionary = {}
+
+#region 运行时状态
+
+## 出生点：用于 return 状态归位与 leash 范围判定，_ready 时记录。
+var spawn_position: Vector2 = Vector2.ZERO
+
+## ---- 子系统 ----
+## 三个子系统各自保管自己的状态，Enemy 上不再有对应的裸字段。
+## 都必须在 _ready() 内、早于 state_machine.start() 调用 setup(self)。
+
+## 转身 / 朝向表现（见 facing/enemy_facing.gd）。
+var facing := EnemyFacing.new()
+## 感知与仇恨：视线 / leash / 领地（见 aggro/enemy_aggro.gd）。
+var aggro := EnemyAggro.new()
+## 音效：子节点收集 + 衰减参数 + 镜头可见性（见 audio/enemy_audio.gd）。
+var audio := EnemyAudio.new()
+
+## 当前是否处于战斗（仇恨）状态。
+## 代理到 aggro.combat_active：状态脚本读 enemy.combat_active 的调用面保持不变。
+var combat_active: bool:
+	get:
+		return aggro.combat_active
+	set(value):
+		aggro.combat_active = value
+
+
+var health: int
+var move_direction: int = 1
+var knockback: Vector2 = Vector2.ZERO
+var dead: bool = false
+var invincible: bool = false
+
+var target: Node2D = null
+var last_damage_from: Node2D = null
+
+## Audio 子节点表：代理到 audio.nodes（EnemyState._play_audio 直接读它）。
+var audio_nodes: Dictionary:
+	get:
+		return audio.nodes
+
+## 玩家缓存：未开战时 target 为 null，若每次都扫 group 会每物理帧构造一个 Array。
+## 只在引用失效（玩家换场景 / 关卡重开）时才重新扫描，其余时候直接命中。
+var _player_cache: Node2D = null
 
 ## 接触判定的形状查询参数：复用同一实例，避免每物理帧新建对象与数组。
 var _contact_query := PhysicsShapeQueryParameters2D.new()
 
-func _ready() -> void:
-	_setup_audio()
+#endregion
 
-	# 素材基准朝向 = 场景里预置的 scale.x 符号（crawlid 这类原画朝左的怪是 -1）。
-	# 必须在任何翻面发生之前读一次，之后画面朝向都由它 × move_direction 派生。
-	_sprite_base_sign = signf(animated_sprite.scale.x)
+
+#region 生命周期
+
+func _ready() -> void:
+	# 收集 Audio 子节点 + 统一套用 2D 衰减参数。
+	audio.setup(self)
+	# 读素材基准朝向 + 接转身动画回调。必须早于任何翻面（state_machine.start() 会触发 enter()）。
+	facing.setup(self)
+	# 解析并绑定领地。同样早于 state_machine.start()。
+	aggro.setup(self)
 
 	health = mini(initial_health, max_health)
 	debug.setup_health(max_health, health)
 
 	spawn_position = global_position
-	if not enemy_zone.is_empty():
-		var zone := get_node_or_null(enemy_zone)
-		if zone != null and zone.has_signal("player_entered") \
-				and not zone.player_entered.is_connected(_on_zone_player_entered):
-			zone.player_entered.connect(_on_zone_player_entered)
 
 	if contact_timer != null:
 		contact_timer.wait_time = contact_cooldown
-
-	if action_animation_player != null:
-		if not action_animation_player.animation_finished.is_connected(_on_action_animation_finished):
-			action_animation_player.animation_finished.connect(_on_action_animation_finished)
-		if not action_animation_player.animation_changed.is_connected(_on_action_animation_changed):
-			action_animation_player.animation_changed.connect(_on_action_animation_changed)
 
 	_contact_query.collision_mask = Globals.LAYER_PLAYER
 	_contact_query.collide_with_bodies = true
@@ -259,50 +286,30 @@ func _ready() -> void:
 		state_machine.start()
 
 
-## 收集 Audio 子节点，并统一写入 2D 衰减参数（距离衰减由引擎做，音量随距离自然变轻）。
-## 各敌人场景只需在 Audio 下挂 AudioStreamPlayer2D，距离参数在这里一次性接管。
-func _setup_audio() -> void:
-	var audio_root := get_node_or_null("Audio")
-	if audio_root == null:
-		return
-	for child in audio_root.get_children():
-		audio_nodes[child.name] = child
-		if child is AudioStreamPlayer2D:
-			child.max_distance = sfx_max_distance
-			child.attenuation = sfx_attenuation
+## 逐物理帧的顺序契约。
+## 三段的顺序**不能随便调**：领地宽限优先于战斗丢失判定（见 EnemyAggro.tick_combat 的
+## 短路分支），转身兜底放在最后，保证同一帧内领地先决定收兵、转身再对齐画面朝向。
+func _physics_process(delta: float) -> void:
+	aggro.tick_zone_aggro()
+	aggro.tick_exit_grace(delta)
+	facing.tick(delta)
 
 
-## 本敌人此刻是否"玩家该听得见"：以当前镜头的可视矩形（四周外扩 sfx_screen_margin）为准。
-## 判定放在播放那一帧：屏幕外的敌人不发声，屏幕内的敌人照旧，且随距离自然衰减。
-## 拿不到相机（还没进树 / 关卡没相机）时退化为"距玩家 sfx_max_distance 内可听"，避免整场静音。
+#endregion
+
+
+#region 音效
+
+## 收集 Audio 子节点、套用 2D 衰减参数、以及"此刻是否听得见"的判定，
+## 全部实现在 audio/enemy_audio.gd，这里只做转发 —— 各状态脚本的调用面因此不变。
+
 func is_audible() -> bool:
-	if not sfx_only_on_screen:
-		return true
-	var rect := _audible_rect()
-	if rect.size.x <= 0.0 or rect.size.y <= 0.0:
-		return _within_sfx_distance()
-	return rect.has_point(global_position)
+	return audio.is_audible()
 
-## 可听矩形：镜头中心 ± 半屏（按 zoom 折算）再外扩 sfx_screen_margin。
-## 用 get_screen_center_position() 而不是 camera.global_position —— 相机被 limit 卡住时
-## 两者不相等，前者才是真正的画面中心。
-func _audible_rect() -> Rect2:
-	var vp := get_viewport()
-	if vp == null:
-		return Rect2()
-	var cam := vp.get_camera_2d()
-	if cam == null or cam.zoom.x <= 0.0 or cam.zoom.y <= 0.0:
-		return Rect2()
-	var half := vp.get_visible_rect().size * 0.5 / cam.zoom
-	return Rect2(cam.get_screen_center_position() - half, half * 2.0).grow(sfx_screen_margin)
+#endregion
 
-## 无相机时的兜底判定：与玩家的距离在衰减半径内即可听。
-func _within_sfx_distance() -> bool:
-	var p := get_player()
-	if p == null:
-		return true
-	return global_position.distance_to(p.global_position) <= sfx_max_distance
 
+#region 运动与地形
 
 ## 垂直运动：整体委托给 locomotion，基类不再替子类做重力 / 悬停 / 浮力分支。
 ## 没有配 locomotion（理论上不会）时退化为"不动"，与飞行怪存活期的行为一致。
@@ -335,92 +342,59 @@ func wall_ahead() -> bool:
 	return false
 
 
+#endregion
+
+
+#region 朝向与转向
+
 ## ---- 横向裁决与施加：朝向 + 位移的唯一出口 ----
 ## 所有状态（chase / return / patrol …）都只提供"目标 x"，下面三个函数负责把目标 x
 ## 变成"朝哪 + 走哪"。判据只有一份（EnemySteering.step_x），所以朝向与位移不可能打架；
 ## 新增状态只要给出目标点即可，不必再复制一遍死区 / 踏空 / 翻面逻辑。
 
-## 目标 x → 本帧横向步向（±1，0 = 站定）。deadzone <= 0 时沿用自身的 face_deadzone，
-## 状态可用 _tuning() 解析出的值覆盖（EnemyState._deadzone()）。
-## 本函数只做"采集输入"，裁决规则本身在 EnemySteering.step_x()（纯函数，有单测覆盖）。
+## 目标 x → 本帧横向步向（±1，0 = 站定）。deadzone <= 0 时沿用自身的 face_deadzone。
+## 实现全部在 facing/enemy_facing.gd，这里只做转发 —— 各状态脚本的调用面因此不变。
 func decide_step_x(target_x: float, deadzone: float = -1.0) -> int:
-	var limit := face_deadzone if deadzone <= 0.0 else deadzone
-	var dx := target_x - global_position.x
-	var planar := is_planar_mover()
-	var ground_ahead := true
-	# 探测只对"已经过了死区的候选方向"做：死区内反正要站定，不必查询。
-	if planar and absf(dx) > limit:
-		ground_ahead = has_ground_ahead(float(1 if dx > 0.0 else -1))
-	return EnemySteering.step_x(global_position.x, target_x, limit, planar, ground_ahead)
+	return facing.decide_step_x(target_x, deadzone)
 
 
 ## 目标是否在朝向死区内：chase 用它区分"目标就在头顶"和"前方踏空"两种站定原因
 ## （前者不该累计放弃战斗的计时，后者才该）。阈值与 decide_step_x() 同源。
 func is_within_face_deadzone(target_x: float, deadzone: float = -1.0) -> bool:
-	var limit := face_deadzone if deadzone <= 0.0 else deadzone
-	return absf(target_x - global_position.x) <= limit
+	return facing.is_within_face_deadzone(target_x, deadzone)
 
 
 ## 施加一步：翻面（含吐弹口 / 探测器 / 掉落点）+ 横移。step == 0 时站定且不翻面。
-## 这里是"朝向"与"位移"唯一的共同出口 —— 两者同源，不可能出现倒着走。
 func apply_step(step: int, speed: float) -> void:
-	if step != 0 and step != move_direction:
-		_flip_direction()
-	# 转身动画期间画面仍停在旧朝向（turn 素材自己画 180° 旋转，必须等播完再翻）。
-	# 此时若继续按新方向全速位移，看到的就是"朝着旧方向倒着走" ——
-	# 玩家从 mosscreep 头顶跳过（强制一次转身）时最明显；来回横跳时更是长时间保持反向。
-	# 所以转身时站定：动画一结束即恢复移动，绝不出现位移与画面朝向相反的画面。
-	if _turning:
-		velocity.x = 0.0
-		return
-	velocity.x = float(step) * speed
+	facing.apply_step(step, speed)
 
 
 ## 只改朝向、不移动（站定吐弹 / 够不到目标的张望）。带死区，避免目标在正上方时原地抖动翻面。
 func face_toward(target_x: float, deadzone: float = -1.0) -> void:
-	var limit := face_deadzone if deadzone <= 0.0 else deadzone
-	var dx := target_x - global_position.x
-	if absf(dx) <= limit:
-		return
-	face_step(1 if dx > 0.0 else -1)
+	facing.face_toward(target_x, deadzone)
 
 
 ## 按方向（±1）设置朝向，不移动。0 = 保持当前朝向。
 func face_step(step: int) -> void:
-	if step != 0 and step != move_direction:
-		_flip_direction()
+	facing.face_step(step)
 
 
 ## 播放 ActionAnimationPlayer 里的动作：动画不存在（如某只怪没建 attack clip）时静默跳过，不刷错误。
-## 各状态通过 EnemyState._play_action() 转发到这里 —— 实现只有一份，免得两处各自演化。
+## 实现全部在 facing/enemy_facing.gd，这里只做转发 —— 各状态脚本的调用面因此不变。
 func _play_action(anim_name: StringName) -> void:
-	var player := action_animation_player
-	if player == null or not player.has_animation(anim_name):
-		return
-	player.play(anim_name)
+	facing.play_action(anim_name)
 
 ## 声明本状态"应当持续播放"的循环动作（move / idle），并立刻播放。
 ## 一次性演出（attack / hurt / death / appear / bury）请继续用 _play_action()，
 ## 它们不该成为转身动画的恢复目标。
 func set_locomotion_clip(clip: StringName) -> void:
-	_locomotion_clip = clip
-	_play_action(clip)
+	facing.set_locomotion_clip(clip)
 
 
-## 左右换向：逻辑朝向（move_direction，+1 = 向右）立刻翻转，
-## 掉落点、以及子类挂在 _flip_extra() 上的探测器 / 吐弹口也跟着立刻翻（它们只影响逻辑）；
-## 接触判定用的是身体碰撞形状（居中对称），不需要跟着翻。
-## 精灵画面朝向则可能被转身动画接管，见 _flip_sprite()。
-## 注意素材本身朝左的怪（如 crawlid）必须在场景里把 EnemyAnimatedSprite.scale.x 预置成 -1，
-## 让它与 move_direction = +1 对齐；那不是多余的镜像，删掉就会出现"头朝反方向走路"。
-## 预置值由 _sprite_base_sign 记录，画面朝向按它派生（见 _sync_facing）。
-func _flip_direction() -> void:
-	move_direction *= -1
-	for marker in [drop_marker]:
-		marker.position.x *= -1
-		marker.reset_physics_interpolation()
-	_flip_extra()
-	_flip_sprite()
+## ---- 翻面的子类扩展点 ----
+## 翻面的完整流程（逻辑朝向翻转 → 本扩展点 → 画面朝向派生）在 EnemyFacing._flip_direction()，
+## 它会回调到这里；子类（EnemyGround）只需重写本方法把探测器挂进来，不要自己搬流程。
+## 画面朝向的派生、转身动画时序与 DEBUG 自检都在 facing/enemy_facing.gd。
 
 func _flip_extra() -> void:
 	# 吐弹口跟着朝向翻转（无 Muzzle 的怪为 null，直接跳过）。
@@ -428,136 +402,16 @@ func _flip_extra() -> void:
 		muzzle.position.x *= -1
 		muzzle.reset_physics_interpolation()
 
-## 精灵的左右翻面：能播转身动画时把翻转延后到动画收尾，否则立刻对齐。
-## 关键点：turn 素材本身画了 180° 转向（旧朝向 → 新朝向），所以动画期间必须保持旧的 scale，
-## 等播完再对齐一次。若像最早那样"先翻 scale 再播动画"，画面会变成
-## 新朝向 → 退回旧朝向 → 又到新朝向，看起来就是"多扭一次 / 多回一次头"。
-func _flip_sprite() -> void:
-	if _turning:
-		# 转身动画期间不再动画面：move_direction 已经跟着翻了，收尾时按最新值一次性对齐。
-		# 兜底：万一动画被顶掉却漏了 animation_changed（理论上不会），别把朝向卡住。
-		if action_animation_player == null \
-				or action_animation_player.current_animation != turn_animation:
-			_finish_turn()
-		return
-	if _try_start_turn():
-		return  # 画面交给转身动画，播完由 _on_action_animation_finished 对齐
-	_sync_facing()  # 没配转身动画 / 冷却中 / 正在播一次性演出：立刻对齐
-
-## 画面朝向对齐：把精灵 scale.x 按 move_direction 重算一遍。
-## 用"赋值"而不是 scale.x *= -1 —— 累乘是有状态开关，调用次数一旦被异步回调
-## （动画结束 / 状态抢占 / 受击打断）打乱，朝向就会与 move_direction 永久错位，
-## 表现为"倒着走"且极难复现。改成派生式后，调 0 次 / 1 次 / 3 次结果完全一致。
-func _sync_facing() -> void:
-	var want := EnemySteering.facing_scale_x(
-			_sprite_base_sign, animated_sprite.scale.x, move_direction)
-	if OS.is_debug_build() and not is_equal_approx(animated_sprite.scale.x, want):
-		push_warning("%s: 精灵朝向与 move_direction 不一致，已自愈 (%.2f → %.2f)"
-				% [name, animated_sprite.scale.x, want])
-	animated_sprite.scale.x = want
-	animated_sprite.reset_physics_interpolation()
 
 ## 画面朝向是否与 move_direction 一致（转身动画播放那 0.15s 按设计为 false）。
 func is_facing_consistent() -> bool:
-	var want := signf(EnemySteering.facing_scale_x(_sprite_base_sign, 1.0, move_direction))
-	return is_equal_approx(signf(animated_sprite.scale.x), want)
+	return facing.is_facing_consistent()
 
-## 兜底 + 自检，逐物理帧跑。
-## 兜底：turn 动画若因任何原因没收尾（信号丢失 / 被静默顶掉），_turning 会一直为 true，
-## 之后每次翻面都会被 _flip_sprite() 的 _turning 分支直接吞掉 —— 精灵从此再也不翻，
-## 表现就是"起身后 walk 动画永久朝向反了"。这里按"动画时长 + 250ms"强制结算。
-func _physics_process(delta: float) -> void:
-	if _turning:
-		var p := action_animation_player
-		var overdue := p == null or p.current_animation != turn_animation
-		if not overdue and p.has_animation(turn_animation):
-			var len_ms := int(p.get_animation(turn_animation).length * 1000.0)
-			overdue = Time.get_ticks_msec() - _turn_last_ms > len_ms + 250
-		if overdue:
-			push_warning("%s: turn 动画超时未收尾，强制结算画面朝向" % name)
-			_finish_turn()
-	if OS.is_debug_build():
-		_check_facing(delta)
 
-## DEBUG 自检：朝向与位移不一致且持续超过 0.5s 就告警（转身动画那 0.15s 不算）。
-## 一次输出给出三者取值与当前 clip，用来一眼分辨是"没翻面""位移被覆盖"还是"clip 卡住"。
-func _check_facing(delta: float) -> void:
-	var moving := absf(velocity.x) > 1.0
-	var bad := (not is_facing_consistent()) \
-			or (moving and signf(velocity.x) != float(move_direction))
-	if bad:
-		_facing_mismatch_t = 0.0 if _facing_mismatch_t < 0.0 else _facing_mismatch_t + delta
-		if _facing_mismatch_t > 0.5:
-			push_warning("%s[%s]: 朝向/位移不一致 %.2fs — move_direction=%d, scale.x=%.2f, velocity.x=%.1f, clip=%s"
-					% [name,
-					state_machine.get_state_name() if state_machine != null else &"?",
-					move_direction, animated_sprite.scale.x, velocity.x,
-					action_animation_player.current_animation if action_animation_player != null else &"?"])
-	else:
-		_facing_mismatch_t = -1.0
+#endregion
 
-## 尝试起一次转身动画。守卫让"不是每只怪都配了转身动画"成为默认值：
-##   1. turn_animation 为空 / 没有同名 clip → false（调用方立刻对齐，行为与以前一致）；
-##   2. 当前播放的不是循环动作（正在播 appear 钻出 / bury 缩回 / death / attack 这类
-##      一次性演出）→ false，否则转身播完会把演出重放一遍；
-##      这里用"集合判断"而不是比对 _locomotion_clip，免得某些怪没建 idle clip 就永久关掉转身；
-##   3. 距上次转身不足 turn_min_interval → false（防目标在死区边缘抖动把动画打卡顿）。
-func _try_start_turn() -> bool:
-	var player := action_animation_player
-	if player == null or turn_animation == &"" or not player.has_animation(turn_animation):
-		return false
-	if player.current_animation != EnemyStateNames.MOVE \
-			and player.current_animation != EnemyStateNames.IDLE:
-		return false
-	var now := Time.get_ticks_msec()
-	if now - _turn_last_ms < int(turn_min_interval * 1000.0):
-		return false
-	_turn_last_ms = now
-	_turning = true
-	player.play(turn_animation)
-	return true
 
-## 转身收尾：按当前 move_direction 重新对齐画面朝向。
-## 幂等，所以"转身期间又翻了几次"不需要记账 —— 中途翻几次都不影响最终结果。
-func _finish_turn() -> void:
-	_turning = false
-	_sync_facing()
-
-## 转身动画播完：把动作还给状态声明的循环动作（move / idle），并对齐朝向。
-## 顺序很重要：先 play + seek 把精灵切到恢复动画的第 0 帧，再翻 scale。
-## 反过来的话会有一帧出现"scale 已翻、精灵还停在 turn 最后一帧"的组合，
-## 那一帧的朝向会弹回旧方向（轻微版"多回一次头"）。两者在同一回调内完成，渲染前不会露出来。
-func _on_action_animation_finished(anim_name: StringName) -> void:
-	if anim_name != turn_animation:
-		return
-	var player := action_animation_player
-	_turning = false  # 先落旗，避免下面的 play() 触发 animation_changed 时重复结算
-	var resume := _resume_clip()
-	if player != null and resume != &"":
-		player.play(resume)
-		player.seek(0.0, true)
-	_finish_turn()
-
-## 转身结束后要恢复到的循环动作：优先状态声明的那个，没建就退回 move → idle。
-## 兜底是必要的 —— 某些怪只建了 move，没有兜底的话转身播完会停在 turn 的最后一帧。
-func _resume_clip() -> StringName:
-	var player := action_animation_player
-	if player == null:
-		return &""
-	if player.has_animation(_locomotion_clip):
-		return _locomotion_clip
-	for fallback in [EnemyStateNames.MOVE, EnemyStateNames.IDLE]:
-		if player.has_animation(fallback):
-			return fallback
-	return &""
-
-## 转身动画被别的动作顶掉（受击硬直、切状态抢播 idle、死亡等）：
-## 立刻对齐画面朝向，别让它停在旧朝向。
-## 注：本回调在 play(_locomotion_clip) 时也会触发，但那时 _turning 已为 false，不会重复结算。
-func _on_action_animation_changed(_old_name: StringName, new_name: StringName) -> void:
-	if _turning and new_name != turn_animation:
-		_finish_turn()
-
+#region 伤害、死亡与掉落
 
 func take_damage(amount: int, from: Node2D = null) -> void:
 	if dead or invincible:
@@ -619,83 +473,49 @@ func kill() -> void:
 func _on_hit_timer_timeout() -> void:
 	invincible = false
 
-## 视线检测用的碰撞层：默认沿用 collision_mask。
-## 水下怪等可在 Locomotion.sight_mask 上单独指定（例如让视线穿过水体本身），0 = 沿用。
-func _sight_mask() -> int:
-	if locomotion != null:
-		return locomotion.get_sight_mask(collision_mask)
-	return collision_mask
+#endregion
 
-## 玩家是否在视线内（无遮挡）。use_line_of_sight=false 时恒为 true。
+
+#region 感知、仇恨与领地
+
+## 感知 / 仇恨 / 领地的全部状态与实现都在 aggro/enemy_aggro.gd，
+## 这里只保留一行转发 —— 各状态脚本的调用面因此不变。
+
+## 玩家是否在视线内（无遮挡）。use_line_of_sight = false 时恒为 true。
 func has_line_of_sight() -> bool:
-	if not use_line_of_sight:
-		return true
-	var p := get_player()
-	if p == null:
-		return false
-	var space := get_world_2d().direct_space_state
-	var query := PhysicsRayQueryParameters2D.create(global_position, p.global_position)
-	query.collision_mask = _sight_mask()
-	query.exclude = [self.get_rid()]
-	var result := space.intersect_ray(query)
-	if result.is_empty():
-		return true
-	return result.get("collider", null) == p
-
+	return aggro.has_line_of_sight()
 
 ## 目标是否仍在牵引范围内（出生点 leash_range 内）。未开战时视为在范围内。
 func is_within_leash() -> bool:
-	if not combat_active:
-		return true
-	var p := get_player()
-	if p == null:
-		return false
-	return spawn_position.distance_to(p.global_position) <= leash_range
+	return aggro.is_within_leash()
 
+## 玩家此刻是否在本敌人绑定的领地里。没配领地 / 领地已失效时为 false。
+func player_in_zone() -> bool:
+	return aggro.player_in_zone()
 
-## 推进战斗丢失计时：目标丢失 / 出 leash / 无视线时累计，达到宽限时间则丢战。
+## 推进战斗丢失计时：目标丢失 / 出 leash / 无视线时累计，达到 combat_lose_time 则丢战。
+## 由 chase / attack 逐帧调用。
 func tick_combat(delta: float) -> void:
-	if not combat_active:
-		return
-	var p := get_player()
-	var lost := false
-	if p == null:
-		lost = true
-	elif not is_within_leash():
-		lost = true
-	elif use_line_of_sight and not has_line_of_sight():
-		lost = true
-	if lost:
-		combat_timer += delta
-	else:
-		combat_timer = 0.0
-	if combat_timer >= combat_lose_time:
-		_set_combat(false)
+	aggro.tick_combat(delta)
 
+## 令本敌人开战。三个调用方：领地进入、接触命中、受击（经 _set_combat）。
+func enter_combat_zone() -> void:
+	aggro.enter_combat_zone()
 
-## 设置战斗（仇恨）状态并广播信号。开战时记录目标、清零丢失计时。
+## 设置战斗（仇恨）状态并广播 enter_combat / leave_combat。
+## 状态与计时器存在 aggro 里，信号由宿主广播 —— 子系统不越过宿主发信号。
 func _set_combat(active: bool) -> void:
-	if combat_active == active:
+	if not aggro.set_combat(active, get_player()):
 		return
-	combat_active = active
-	combat_timer = 0.0
 	if active:
-		var p := get_player()
-		if p != null:
-			target = p
 		enter_combat.emit(target)
 	else:
 		leave_combat.emit()
 
-## 领地（EnemyZone）进入回调：玩家踏入本敌人绑定的领地时开战。
-func _on_zone_player_entered(_zone: Node, _player: Node2D) -> void:
-	enter_combat_zone()
+#endregion
 
-## 由领地（EnemyZone）调用：令本敌人开战（受击开战仍由 take_damage 负责）。
-func enter_combat_zone() -> void:
-	if dead:
-		return
-	_set_combat(true)
+
+#region 导航、接触与投射物
 
 ## 是否只沿水平移动（贴地走 = true，全向 = false）。由 locomotion 决定，
 ## 调用点不再传 planar_only —— 那会把"运动介质"泄漏到每个状态里。
@@ -761,10 +581,6 @@ func try_hit_player(from_contact: bool = true) -> bool:
 	contact_timer.start()
 	return true
 
-## 玩家缓存：未开战时 target 为 null，若每次都扫 group 会每物理帧构造一个 Array。
-## 只在引用失效（玩家换场景 / 关卡重开）时才重新扫描，其余时候直接命中。
-var _player_cache: Node2D = null
-
 func get_player() -> Node2D:
 	if is_instance_valid(target) and target.has_method("take_damage"):
 		return target
@@ -811,6 +627,11 @@ func has_projectile() -> bool:
 	return projectile_scene != null and projectile_scene.can_instantiate()
 
 
+#endregion
+
+
+#region 检查器显隐
+
 ## 检查器减负：按当前配置隐藏用不上的导出项，只影响编辑器显示，不改变数值与序列化。
 ## 例：近战怪未配 projectile_scene → 隐藏全部远程项。
 ## 子类（EnemyGround 等）若要追加规则，重写后先调用 super._validate_property(property)。
@@ -834,3 +655,9 @@ func _validate_property(property: Dictionary) -> void:
 		"sfx_screen_margin":
 			if not sfx_only_on_screen:
 				property.usage = HIDDEN_BUT_SAVED
+		"zone_exit_chase_time":
+			# 没绑领地就没有"离开领地"这回事，宽限时长用不上。
+			if enemy_zone.is_empty():
+				property.usage = HIDDEN_BUT_SAVED
+
+#endregion

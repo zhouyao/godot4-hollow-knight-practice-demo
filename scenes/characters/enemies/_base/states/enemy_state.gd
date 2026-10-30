@@ -14,7 +14,29 @@ func update(delta: float) -> void:
 	enemy._apply_vertical_motion(delta)
 	enemy._apply_movement()
 
-	enemy.try_hit_player()
+	_tick_contact()
+
+## 接触伤害的唯一结算点。
+## 以前这里只有一行 enemy.try_hit_player()，谁重写了 update() 整条路径就消失
+## （idle 的怪因此能直接穿过玩家身体且不掉血）。现在结算收成独立函数：
+## 走标准运动的状态由基类 update() 调，重写了 update 的（idle）自己调。
+##
+## 开战条件直接挂在 try_hit_player() 的返回值上，不另设开关：
+##   contact_damage_enabled = false → 返回 false，关掉接触伤害就等于"不咬人也不开战"；
+##   冷却未走完 / 玩家不在接触范围内 → 返回 false，只有真打到玩家的那一帧才拉仇恨；
+##   开战之后由 combat_active 接管，各状态自己转 chase，这里不重复开战。
+func _tick_contact() -> void:
+	if enemy == null:
+		return
+	if not enemy.try_hit_player():
+		return
+	if _contact_opens_combat() and not enemy.combat_active:
+		enemy.enter_combat_zone()
+
+## 接触命中时是否顺带开战。默认 false：只有战斗之外的两态（idle / patrol）需要
+## "玩家贴上来即宣战"；return（收兵回巢）不该被擦碰打断，chase / attack 本来就在战斗里。
+func _contact_opens_combat() -> bool:
+	return false
 
 ## 播放动作动画：动画不存在（如未在 AnimationPlayer 里建 attack）时静默跳过，不刷错误。
 ## 转发到 Enemy._play_action() —— 播放逻辑只在那里写一份。

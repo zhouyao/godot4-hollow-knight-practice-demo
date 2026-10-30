@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://bbhv7cfxxo6bb"]
+
+[ext_resource type="Script" uid="uid://bepe51m4wv5nm" path="res://addons/zone_director/AuZone.gd" id="1_5e3x8"]
+[ext_resource type="Script" uid="uid://bvy15idrjb48q" path="res://addons/zone_director/behaviors/AuFootstepBehavior.gd" id="2_7unqr"]
+[ext_resource type="AudioStream" uid="uid://dci7xs2m7dnvx" path="res://assets/sounds/plants/grasswalk_0.ogg" id="3_476op"]
+[ext_resource type="AudioStream" uid="uid://dbjsitnkyc1yd" path="res://assets/sounds/plants/grasswalk_1.ogg" id="4_50ixr"]
+[ext_resource type="AudioStream" uid="uid://vdyxgv1k5xqp" path="res://assets/sounds/plants/grasswalk_2.ogg" id="5_bimm7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_grass"]
+size = Vector2(64, 32)
+
+[node name="GrassZone" type="Area2D" unique_id=1328526509]
+collision_layer = 0
+monitorable = false
+script = ExtResource("1_5e3x8")
+surface = &"grass"
+zone_priority = 1
+size = Vector2(64, 32)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=870556469]
+shape = SubResource("RectangleShape2D_grass")
+
+[node name="FootstepBehavior" type="Node" parent="." unique_id=1969310622]
+script = ExtResource("2_7unqr")
+footstep_streams = Array[AudioStream]([ExtResource("3_476op"), ExtResource("4_50ixr"), ExtResource("5_bimm7")])
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="FootstepBehavior" unique_id=1508750370]
+bus = &"Sound"
