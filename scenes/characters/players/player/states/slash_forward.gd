@@ -8,6 +8,8 @@ extends PlayerState
 @export var target_next: StringName = PlayerStateNames.IDLE
 
 func enter(_from: StringName) -> void:
+	# 本次挥砍的命中登记表清零：之后每个目标各结算一次，多个目标可穿透。
+	player.begin_attack()
 	_play_audio(PlayerStateNames.SLASH_FORWARD)
 	_play_action(PlayerStateNames.SLASH_FORWARD)
 

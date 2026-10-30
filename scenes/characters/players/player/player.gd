@@ -61,6 +61,8 @@ var _skill_cooldowns: Dictionary = {}
 @export var initial_health: int = 8
 ## 受击后的无敌帧时长（秒），由 HitTimer 计时，期间不再结算伤害。
 @export var invincible_time: float = 0.3
+## 冲刺（dash）期间是否免疫伤害：关掉后冲刺只保留位移，不提供无敌帧。
+@export var dash_invincible_enabled: bool = true
 
 ## 最大能量值，同时也是能量条上限。
 @export var max_energy: int = 10
@@ -71,6 +73,11 @@ var health: int
 var energy: int
 var dead: bool = false
 var invincible: bool = false
+
+## 冲刺无敌帧标记：只在 dash 状态期间为 true，由 dash 的 enter / exit 成对开关。
+## 独立于受击无敌帧 invincible —— 两个来源互不覆盖：dash 退出时只清自己这一位，
+## 既不会抹掉受击剩下的无敌帧，也不会被 HitTimer 的 timeout 顺手清掉。
+var dash_invincible: bool = false
 
 @onready var camera_marker: Marker2D = $CameraPosition
 
@@ -222,7 +229,7 @@ func kill():
 
 
 func take_damage(amount: int, from: Node2D = null) -> void:
-	if dead or invincible:
+	if dead or is_damage_immune():
 		return
 	health -= amount
 	_refresh_health_bar()
@@ -261,6 +268,8 @@ func set_attack_areas_disabled(disabled: bool) -> void:
 
 func end_attack() -> void:
 	set_attack_areas_disabled(true)
+	# 兜底清零：挥砍中途被受击打断（hurt.enter 也会走这里）时登记表不带入下一次挥砍。
+	_slash_hit_targets.clear()
 
 func _refresh_health_bar() -> void:
 	debug.set_health(health, max_health)
@@ -270,6 +279,45 @@ func _refresh_energy_bar() -> void:
 
 func _on_hit_timer_timeout() -> void:
 	invincible = false
+
+
+## 是否免疫伤害：受击无敌帧（HitTimer 计时）或冲刺无敌帧（dash 状态）任一为真即免疫。
+## 接触伤害（Enemy.try_hit_player）与投射物伤害（projectile.gd）都走 take_damage，
+## 因此这一处判定对两类伤害同时生效；敌人也可据此跳过接触冷却（见 Enemy.try_hit_player）。
+func is_damage_immune() -> bool:
+	return invincible or dash_invincible
+
+
+## 开启冲刺无敌帧：dash.enter() 调用；总开关 dash_invincible_enabled 关闭时为空操作。
+func start_dash_invincible() -> void:
+	dash_invincible = dash_invincible_enabled
+
+
+## 结束冲刺无敌帧：dash.exit() 调用（自然结束 / 被 jump 或挥砍打断 / 死亡都会走到）。
+## 只清冲刺这一位，受击无敌帧仍交给 HitTimer。
+func end_dash_invincible() -> void:
+	dash_invincible = false
+
+
+## 本次挥砍已结算过的目标表（键 = 被砍节点，值忽略，当集合用；节点按实例 id 比较）。
+## 生命周期 = 一次挥砍：slash_* 状态的 enter() 调 begin_attack() 清空，end_attack() 兜底再清。
+## 去重只按"目标"不按"次数" —— 所以一次挥砍能穿透多个敌人，
+## 但同一敌人只吃一次伤害、只回一次能量、只施加一次反冲。
+var _slash_hit_targets: Dictionary = {}
+
+
+## 起手一次挥砍：清空命中登记表。
+## 判定区不动 —— 它由动画轨道在 0.1s 处打开，这里提前打开会被 t=0 的关键帧（disabled=true）覆盖。
+func begin_attack() -> void:
+	_slash_hit_targets.clear()
+
+
+## 申领一次命中：本次挥砍内首次命中该目标返回 true（可以结算），重复命中返回 false。
+func _claim_hit(target: Node) -> bool:
+	if target == null or _slash_hit_targets.has(target):
+		return false
+	_slash_hit_targets[target] = true
+	return true
 
 
 func _on_front_attack_area_body_entered(body: Node2D) -> void:
@@ -287,10 +335,16 @@ func _on_down_attack_area_body_entered(body: Node2D) -> void:
 		return
 	if not (body is Enemy):
 		return
-	_hit_enemy(body)
-	velocity.y = slash_down_bounce_velocity
+	# 只在本次挥砍首次命中该目标时结算并反弹：弹起后再落回同一敌人既不结算、也不再弹。
+	if _hit_enemy(body):
+		velocity.y = slash_down_bounce_velocity
 
-func _hit_enemy(body: Node2D) -> void:
+## 结算一次挥砍命中，返回是否真的结算 —— 同一目标在一次挥砍内只返回一次 true。
+## 调用方（下劈）据此决定要不要追加"命中后反弹"这类演出。
+func _hit_enemy(body: Node2D) -> bool:
+	# 去重：本次挥砍已结算过该目标就直接跳过，伤害 / 能量 / 反冲 / 反弹一律不重复给。
+	if not _claim_hit(body):
+		return false
 	if body is Enemy:
 		var landed: bool = not body.dead and not body.invincible
 		body.take_damage(slash_damage, self)
@@ -298,7 +352,10 @@ func _hit_enemy(body: Node2D) -> void:
 			energy = mini(energy + 1, max_energy)
 			_refresh_energy_bar()
 		if state_machine != null and state_machine.get_state_name() == PlayerStateNames.SLASH_DOWN:
-			return
+			return true
+		# 反冲只在本次挥砍的首个命中目标上施加：穿透多个敌人时逐个覆盖会让手感发飘。
+		if _slash_hit_targets.size() > 1:
+			return true
 		var away := global_position - body.global_position
 		var recoil_dir_x: float = float(-move_direction)
 		if away.x > 0.0:
@@ -306,6 +363,7 @@ func _hit_enemy(body: Node2D) -> void:
 		elif away.x < 0.0:
 			recoil_dir_x = -1.0
 		knockback = Vector2(recoil_dir_x, 0.0) * attacker_recoil_x
+	return true
 
 ## 伤害来源种类：供被砍目标按来源选择特效。默认 &"slash"，不同技能可返回不同种类
 ## （如冲刺斩返回 &"dash"）。目标在 hit_effect_by_source 里配置对应种类即可细分特效。
@@ -324,5 +382,6 @@ func _on_attack_area_area_entered(area: Node) -> void:
 	# 跳过玩家自身的攻击子区域，只命中外部可受伤对象（草、宝箱等）
 	if area == self or area.get_parent() == self:
 		return
-	if area.has_method("take_damage"):
+	# 与 body 路径同一套去重：草 / 宝箱等 Area2D 目标在一次挥砍里同样只结算一次。
+	if area.has_method("take_damage") and _claim_hit(area):
 		area.take_damage(slash_damage, self)

@@ -8,6 +8,8 @@ extends PlayerState
 @export var target_grounded: StringName = PlayerStateNames.LAND
 
 func enter(_from: StringName) -> void:
+	# 本次挥砍的命中登记表清零（同一次下劈内可连砍多个目标，但每个目标只吃一次）。
+	player.begin_attack()
 	player.velocity.y = maxf(player.velocity.y, player.slash_down_dive_speed)
 	_play_audio(PlayerStateNames.SLASH_DOWN)
 	_play_action(PlayerStateNames.SLASH_DOWN)

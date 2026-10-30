@@ -575,6 +575,10 @@ func try_hit_player(from_contact: bool = true) -> bool:
 	var p := get_player()
 	if p == null or not p.has_method("take_damage"):
 		return false
+	# 玩家正处在无敌帧（受击无敌 / 冲刺无敌）时既不结算伤害、也不刷新接触冷却，
+	# 免得无敌帧刚结束就被贴身的怪立刻咬一口 —— 原来会白跑一次 contact_timer。
+	if p.has_method("is_damage_immune") and p.is_damage_immune():
+		return false
 	if not _body_overlaps_player(p):
 		return false
 	p.take_damage(contact_damage, self)

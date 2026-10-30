@@ -11,6 +11,8 @@ extends PlayerState
 @export var target_hold_up: StringName = PlayerStateNames.LOOK_UP
 
 func enter(_from: StringName) -> void:
+	# 本次挥砍的命中登记表清零：之后每个目标各结算一次，多个目标可穿透。
+	player.begin_attack()
 	_play_audio(PlayerStateNames.SLASH_UP)
 	_play_action(PlayerStateNames.SLASH_UP)
 
