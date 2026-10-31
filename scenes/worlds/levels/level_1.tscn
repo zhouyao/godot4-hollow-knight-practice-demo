@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://bq438wduv3nk8" path="res://scenes/props/plants/grass.tscn" id="12_nvw4u"]
 [ext_resource type="PackedScene" uid="uid://bbhv7cfxxo6bb" path="res://scenes/worlds/_zones/grass_zone.tscn" id="13_uoxyj"]
 [ext_resource type="PackedScene" uid="uid://c5xedyh6vkreu" path="res://scenes/props/chest/chest.tscn" id="14_chest"]
+[ext_resource type="PackedScene" uid="uid://c0pepo3g8tuu5" path="res://scenes/characters/bosses/hollow_knight/hollow_knight.tscn" id="17_8ihyp"]
 
 [sub_resource type="GDScript" id="GDScript_c5aoa"]
 script/source = "extends WorldTemplate
@@ -113,7 +114,7 @@ scale = Vector2(120, 0.4)
 [node name="Floor5" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="3" unique_id=498290294 instance=ExtResource("5_bd7ha")]
 modulate = Color(0, 0, 0, 1)
 position = Vector2(2000, 500)
-scale = Vector2(50, 0.16)
+scale = Vector2(60, 0.192)
 
 [node name="Floor6" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="4" unique_id=1778910462 instance=ExtResource("5_bd7ha")]
 modulate = Color(0, 0, 0, 1)
@@ -136,7 +137,7 @@ projectile_scene = null
 position = Vector2(-3000, 446)
 
 [node name="EnemyGround" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="3" unique_id=588911125 instance=ExtResource("8_3bc65")]
-position = Vector2(1650, 200)
+position = Vector2(1250, 200)
 enemy_zone = NodePath("../../EnemyZones/EnemyZone")
 
 [node name="EnemyFlying2" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="4" unique_id=1557758048 instance=ExtResource("9_nygb8")]
@@ -173,8 +174,11 @@ corpse_y_offset = -5.0
 position = Vector2(5, 64)
 scale = Vector2(2.2, 1)
 
-[node name="Player" parent="." index="8" unique_id=1112432844]
-position = Vector2(-3600, 300)
+[node name="HollowKnight" parent="." index="8" unique_id=170488292 instance=ExtResource("17_8ihyp")]
+position = Vector2(2963, 0)
+
+[node name="Player" parent="." index="9" unique_id=1112432844]
+position = Vector2(1700, 300)
 
 [node name="Layer_0" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=1048978077]
 repeat_size = Vector2(6000, 0)
@@ -225,24 +229,24 @@ position = Vector2(3, 64)
 scale = Vector2(2.2, 1)
 
 [node name="EnemyZone" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="0" unique_id=556081287 instance=ExtResource("11_zone")]
-position = Vector2(1200, 178)
-size = Vector2(1200, 700)
+position = Vector2(1000, 178)
+size = Vector2(1000, 700)
 
 [node name="EnemyZone2" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="1" unique_id=1673687519 instance=ExtResource("11_zone")]
 position = Vector2(-1006, 170)
 size = Vector2(1200, 700)
 
 [node name="RightCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="0" unique_id=1421588960 node_paths=PackedStringArray("vertical_lock_marker")]
-position = Vector2(426, 207)
+position = Vector2(384, 207)
 collision_layer = 16
 script = ExtResource("2_p6tgj")
 vertical_lock_marker = NodePath("../../Markers/vertical_lock")
 can_look_up = true
 can_look_down = true
-area_size = Vector2(6000, 600)
+area_size = Vector2(3000, 600)
 
 [node name="LeftCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="1" unique_id=324128848 node_paths=PackedStringArray("horizontal_lock_marker", "vertical_lock_marker")]
-position = Vector2(-863, 205)
+position = Vector2(-1863, 205)
 collision_layer = 16
 script = ExtResource("2_p6tgj")
 horizontal_lock_marker = NodePath("../../Markers/horizontal_lock")
@@ -260,11 +264,23 @@ can_look_up = true
 can_look_down = true
 area_size = Vector2(1500, 600)
 
+[node name="BossCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="3" unique_id=1273820883 node_paths=PackedStringArray("vertical_lock_marker")]
+position = Vector2(2953, 207)
+collision_layer = 16
+script = ExtResource("2_p6tgj")
+vertical_lock_marker = NodePath("../../Markers/boss_vertical_lock")
+can_look_up = true
+can_look_down = true
+area_size = Vector2(2134, 600)
+
 [node name="vertical_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="0" unique_id=1345446756]
 position = Vector2(-479, 155)
 
 [node name="horizontal_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="1" unique_id=708724070]
 position = Vector2(-470, 318)
+
+[node name="boss_vertical_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="2" unique_id=2003872933]
+position = Vector2(4000, 100)
 
 [connection signal="body_entered" from="CameraLock/Areas/ZoomCameraLock" to="." method="_on_zoom_camera_lock_body_entered"]
 [connection signal="body_exited" from="CameraLock/Areas/ZoomCameraLock" to="." method="_on_zoom_camera_lock_body_exited"]

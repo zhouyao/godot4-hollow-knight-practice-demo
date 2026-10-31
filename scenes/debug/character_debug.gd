@@ -5,6 +5,9 @@ class_name CharacterDebug
 ## 是否显示能量条（玩家为 true，普通敌人为 false）。关掉后能量条与能量文本一并隐藏。
 @export var has_energy := false
 
+## 调试 UI 整体的 Y 轴偏移（像素）。正值向下、负值向上，默认 -20 让整块 UI 上移以避开角色头顶。
+@export_range(-300.0, 300.0, 1.0, "suffix:px") var y_offset := -20.0
+
 ## 血条满血时的填充色。
 @export var health_color_full := Color(0.90, 0.15, 0.15)
 ## 血条濒死时的填充色：血量比例越低越接近该色，中间按比例插值。
@@ -22,6 +25,8 @@ var _health_fill: StyleBoxFlat
 var _energy_fill: StyleBoxFlat
 
 func _ready() -> void:
+	position.y += y_offset   # 按配置整体上/下偏移整块调试 UI
+
 	energy_bar.visible = has_energy
 	energy_label.visible = has_energy
 

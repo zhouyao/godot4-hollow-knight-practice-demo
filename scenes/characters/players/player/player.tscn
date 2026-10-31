@@ -44,7 +44,7 @@ damage_knockback_y = 600.0
 
 [node name="Timer" type="Node" parent="." unique_id=2135656479]
 
-[node name="HitTimer" type="Timer" parent="Timer" unique_id=1399737945]
+[node name="hurt_invincibility_timer" type="Timer" parent="Timer" unique_id=1399737945]
 one_shot = true
 
 [node name="StateMachine" type="Node" parent="." unique_id=1168596325]
@@ -189,7 +189,7 @@ root_node = NodePath("../..")
 [node name="Debug" parent="." unique_id=708961437 instance=ExtResource("35_aldr5")]
 has_energy = true
 
-[connection signal="timeout" from="Timer/HitTimer" to="." method="_on_hit_timer_timeout"]
+[connection signal="timeout" from="Timer/hurt_invincibility_timer" to="." method="_on_hurt_invincibility_timer_timeout"]
 [connection signal="area_entered" from="DownAttackArea" to="." method="_on_attack_area_area_entered"]
 [connection signal="body_entered" from="DownAttackArea" to="." method="_on_down_attack_area_body_entered"]
 [connection signal="area_entered" from="UpAttackArea" to="." method="_on_attack_area_area_entered"]

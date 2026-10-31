@@ -59,7 +59,7 @@ var _skill_cooldowns: Dictionary = {}
 @export var max_health: int = 10
 ## 初始血量：出生时取 min(initial_health, max_health)，可让角色残血出场。
 @export var initial_health: int = 8
-## 受击后的无敌帧时长（秒），由 HitTimer 计时，期间不再结算伤害。
+## 受击后的无敌帧时长（秒），由 hurt_invincibility_timer 计时，期间不再结算伤害。
 @export var invincible_time: float = 0.3
 ## 冲刺（dash）期间是否免疫伤害：关掉后冲刺只保留位移，不提供无敌帧。
 @export var dash_invincible_enabled: bool = true
@@ -76,7 +76,7 @@ var invincible: bool = false
 
 ## 冲刺无敌帧标记：只在 dash 状态期间为 true，由 dash 的 enter / exit 成对开关。
 ## 独立于受击无敌帧 invincible —— 两个来源互不覆盖：dash 退出时只清自己这一位，
-## 既不会抹掉受击剩下的无敌帧，也不会被 HitTimer 的 timeout 顺手清掉。
+## 既不会抹掉受击剩下的无敌帧，也不会被 hurt_invincibility_timer 的 timeout 顺手清掉。
 var dash_invincible: bool = false
 
 @onready var camera_marker: Marker2D = $CameraPosition
@@ -86,7 +86,7 @@ var dash_invincible: bool = false
 @onready var up_attack_area = $UpAttackArea
 @onready var down_attack_area = $DownAttackArea
 
-@onready var hit_timer: Timer = $Timer/HitTimer
+@onready var hurt_invincibility_timer: Timer = $Timer/hurt_invincibility_timer
 
 @onready var player_animated_sprite: AnimatedSprite2D = $Animation/PlayerAnimatedSprite
 
@@ -241,7 +241,7 @@ func take_damage(amount: int, from: Node2D = null) -> void:
 		_dead()
 		return
 	invincible = true
-	hit_timer.start(invincible_time)
+	hurt_invincibility_timer.start(invincible_time)
 	_apply_damage_knockback(from)
 	if state_machine != null:
 		state_machine.set_state(PlayerStateNames.HURT, true)
@@ -277,11 +277,11 @@ func _refresh_health_bar() -> void:
 func _refresh_energy_bar() -> void:
 	debug.set_energy(energy, max_energy)
 
-func _on_hit_timer_timeout() -> void:
+func _on_hurt_invincibility_timer_timeout() -> void:
 	invincible = false
 
 
-## 是否免疫伤害：受击无敌帧（HitTimer 计时）或冲刺无敌帧（dash 状态）任一为真即免疫。
+## 是否免疫伤害：受击无敌帧（hurt_invincibility_timer 计时）或冲刺无敌帧（dash 状态）任一为真即免疫。
 ## 接触伤害（Enemy.try_hit_player）与投射物伤害（projectile.gd）都走 take_damage，
 ## 因此这一处判定对两类伤害同时生效；敌人也可据此跳过接触冷却（见 Enemy.try_hit_player）。
 func is_damage_immune() -> bool:
@@ -294,7 +294,7 @@ func start_dash_invincible() -> void:
 
 
 ## 结束冲刺无敌帧：dash.exit() 调用（自然结束 / 被 jump 或挥砍打断 / 死亡都会走到）。
-## 只清冲刺这一位，受击无敌帧仍交给 HitTimer。
+## 只清冲刺这一位，受击无敌帧仍交给 hurt_invincibility_timer。
 func end_dash_invincible() -> void:
 	dash_invincible = false
 
@@ -333,8 +333,9 @@ func _on_up_attack_area_body_entered(body: Node2D) -> void:
 func _on_down_attack_area_body_entered(body: Node2D) -> void:
 	if state_machine == null or state_machine.get_state_name() != PlayerStateNames.SLASH_DOWN:
 		return
-	if not (body is Enemy):
-		return
+	# --- 暂不只针对于怪物，20261031
+	#if not (body is Enemy):
+	#	return
 	# 只在本次挥砍首次命中该目标时结算并反弹：弹起后再落回同一敌人既不结算、也不再弹。
 	if _hit_enemy(body):
 		velocity.y = slash_down_bounce_velocity

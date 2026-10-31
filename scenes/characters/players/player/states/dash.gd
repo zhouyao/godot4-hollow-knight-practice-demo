@@ -43,7 +43,7 @@ func enter(_from: StringName) -> void:
 ## 只有"冲刺接前刺"继承冲刺位移：上挑 / 下劈自己有垂直演出，再加横向余速会飘。
 func exit(_to: StringName) -> void:
 	# 无敌帧随 dash 一起结束：自然结束 / 被 jump 或挥砍打断 / 死亡切 DEATH 都会走到这里。
-	# 只清冲刺这一位，受击无敌帧仍由 HitTimer 自己走完。
+	# 只清冲刺这一位，受击无敌帧仍由 hurt_invincibility_timer 自己走完。
 	player.end_dash_invincible()
 	if _to == PlayerStateNames.SLASH_FORWARD:
 		player.start_dash_carry(player.move_direction)

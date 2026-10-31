@@ -112,10 +112,10 @@ max_health = 5
 
 [node name="Timer" type="Node" parent="." unique_id=213602058]
 
-[node name="HitTimer" type="Timer" parent="Timer" unique_id=1857819301]
+[node name="hurt_invincibility_timer" type="Timer" parent="Timer" unique_id=1857819301]
 one_shot = true
 
-[node name="ContactTimer" type="Timer" parent="Timer" unique_id=1857819302]
+[node name="contact_damage_cooldown" type="Timer" parent="Timer" unique_id=1857819302]
 one_shot = true
 
 [node name="StateMachine" type="Node" parent="." unique_id=1283964249]
@@ -172,4 +172,4 @@ libraries/ = SubResource("AnimationLibrary_actions")
 
 [node name="Debug" parent="." unique_id=282903970 instance=ExtResource("7_dbg")]
 
-[connection signal="timeout" from="Timer/HitTimer" to="." method="_on_hit_timer_timeout"]
+[connection signal="timeout" from="Timer/hurt_invincibility_timer" to="." method="_on_hurt_invincibility_timer_timeout"]

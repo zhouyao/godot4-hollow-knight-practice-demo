@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://c0pepo3g8tuu5"]
+
+[ext_resource type="PackedScene" uid="uid://buf7ckj7d41uo" path="res://scenes/characters/bosses/_base/boss.tscn" id="1_1qa0c"]
+[ext_resource type="Script" uid="uid://xfgehbda5ae2" path="res://scenes/characters/bosses/hollow_knight/states/dormant.gd" id="2_vvetm"]
+[ext_resource type="Texture2D" uid="uid://befmv1yx3lccy" path="res://assets/animations/characters/bosses/hollow_knight/dormant/0.png" id="3_4coxj"]
+[ext_resource type="Script" uid="uid://cd0vy3j33a5pj" path="res://scenes/characters/bosses/_base/states/dormant.gd" id="3_4lc3a"]
+[ext_resource type="Texture2D" uid="uid://c7tt0xl3cugs3" path="res://assets/animations/characters/bosses/hollow_knight/dormant/1.png" id="4_4lc3a"]
+[ext_resource type="Texture2D" uid="uid://lc318v2q3bk2" path="res://assets/animations/characters/bosses/hollow_knight/dormant/2.png" id="5_2x4qv"]
+[ext_resource type="Texture2D" uid="uid://b5raudme67bv4" path="res://assets/animations/characters/bosses/hollow_knight/dormant/3.png" id="6_hi4ij"]
+[ext_resource type="Texture2D" uid="uid://cjdq4telxj2n8" path="res://assets/animations/characters/bosses/hollow_knight/dormant/4.png" id="7_k6h11"]
+[ext_resource type="Texture2D" uid="uid://ppmg2i6hmaht" path="res://assets/animations/characters/bosses/hollow_knight/dormant/5.png" id="8_4vhpu"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4lc3a"]
+radius = 117.38
+height = 614.45
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ggiq1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_4coxj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_4lc3a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_2x4qv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_hi4ij")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_k6h11")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_4vhpu")
+}],
+"loop": 0,
+"name": &"dormant",
+"speed": 6.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1d5ey"]
+
+[node name="HollowKnight" unique_id=170488292 instance=ExtResource("1_1qa0c")]
+
+[node name="StateMachine" parent="." index="1" unique_id=885825929]
+host_path = NodePath("")
+
+[node name="dormant" parent="StateMachine" index="0" unique_id=1185701110]
+script = ExtResource("2_vvetm")
+frames_left_to_right = true
+
+[node name="Audio" parent="." index="2" unique_id=196072747]
+script = ExtResource("3_4lc3a")
+
+[node name="BodyCollisionShape2D" parent="." index="4" unique_id=1005066086]
+shape = SubResource("CapsuleShape2D_4lc3a")
+
+[node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="0" unique_id=1331468369]
+sprite_frames = SubResource("SpriteFrames_ggiq1")
+animation = &"dormant"
+
+[node name="EffectAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="1" unique_id=2028615876]
+sprite_frames = SubResource("SpriteFrames_1d5ey")
+animation = &"default"
+
+[node name="CollisionShape2D" parent="SlashHitBox" parent_id_path=PackedInt32Array(1001674404) index="0" unique_id=1640443907]
+shape = null
+
+[node name="CollisionShape2D" parent="AttackRange" parent_id_path=PackedInt32Array(2073026563) index="0" unique_id=1267751504]
+shape = null
+
+[node name="Debug" parent="." index="11" unique_id=1659399408]
+y_offset = -200.0

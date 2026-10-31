@@ -56,7 +56,7 @@ const HIDDEN_BUT_SAVED := PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_STORAGE
 @export var chase_speed_multiplier: float = -1.0
 
 @export_group("受击")
-## 受击后的无敌帧时长（秒），由 HitTimer 计时，期间不再结算伤害。
+## 受击后的无敌帧时长（秒），由 hurt_invincibility_timer 计时，期间不再结算伤害。
 @export var invincible_time: float = 0.3
 ## 受击特效表：键为来源 get_damage_kind() 返回的 StringName，值为场景。
 ## 约定键 &"slash" 为默认受击表现（玩家挥砍）；查不到来源种类时回落到 &"slash"；
@@ -76,7 +76,7 @@ const HIDDEN_BUT_SAVED := PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_STORAGE
 @export var contact_damage_enabled: bool = true
 ## 贴身接触或近战命中玩家时造成的伤害值。
 @export var contact_damage: int = 1
-## 两次伤害玩家之间的冷却（秒），避免贴身时逐帧掉血；由 ContactTimer 计时。
+## 两次伤害玩家之间的冷却（秒），避免贴身时逐帧掉血；由 contact_damage_cooldown 计时。
 @export var contact_cooldown: float = 0.8
 
 
@@ -192,8 +192,13 @@ func resting_state() -> StringName:
 ## 吐弹口：没有该子节点（纯近战怪）时为 null，发射时退化为自身中心。
 @onready var muzzle := get_node_or_null("Muzzle") as Marker2D
 
-@onready var hit_timer: Timer = $Timer/HitTimer
-@onready var contact_timer: Timer = $Timer/ContactTimer
+## 受击无敌计时器：怪物被打中时 take_damage() 里设 invincible = true 并 hurt_invincibility_timer.start(invincible_time)，
+## 超时由 _on_hurt_invincibility_timer_timeout() 把 invincible 改回 false。即"受击后短暂无敌、无法再被咬"的时长。
+@onready var hurt_invincibility_timer: Timer = $Timer/hurt_invincibility_timer
+## 接触伤害冷却计时器：怪物贴身/近战咬玩家的冷却，wait_time 在 _ready 里被设为
+## contact_cooldown（默认 0.8s）。try_hit_player() 用 time_left > 0 当闸门防止逐帧掉血，
+## 真正造成伤害的那一帧再 start() 重启冷却。与 hurt_invincibility_timer 方向相反：一个管"被咬"，一个管"咬人"。
+@onready var contact_damage_cooldown: Timer = $Timer/contact_damage_cooldown
 
 @onready var animated_sprite: AnimatedSprite2D = $Animation/EnemyAnimatedSprite
 @onready var action_animation_player: AnimationPlayer = $Animation/ActionAnimationPlayer
@@ -274,8 +279,8 @@ func _ready() -> void:
 
 	spawn_position = global_position
 
-	if contact_timer != null:
-		contact_timer.wait_time = contact_cooldown
+	if contact_damage_cooldown != null:
+		contact_damage_cooldown.wait_time = contact_cooldown
 
 	_contact_query.collision_mask = Globals.LAYER_PLAYER
 	_contact_query.collide_with_bodies = true
@@ -433,7 +438,7 @@ func take_damage(amount: int, from: Node2D = null) -> void:
 		state_machine.set_state(EnemyStateNames.HURT, true)
 		return
 	invincible = true
-	hit_timer.start(invincible_time)
+	hurt_invincibility_timer.start(invincible_time)
 
 func _refresh_health_bar() -> void:
 	debug.set_health(health, max_health)
@@ -470,7 +475,7 @@ func kill() -> void:
 	if not dead:
 		_dead()
 
-func _on_hit_timer_timeout() -> void:
+func _on_hurt_invincibility_timer_timeout() -> void:
 	invincible = false
 
 #endregion
@@ -568,7 +573,7 @@ func _body_overlaps_player(p: Node2D) -> bool:
 	return not hits.is_empty() and hits[0].get("collider", null) == p
 
 func try_hit_player(from_contact: bool = true) -> bool:
-	if dead or contact_timer.time_left > 0.0:
+	if dead or contact_damage_cooldown.time_left > 0.0:
 		return false
 	if from_contact and not contact_damage_enabled:
 		return false
@@ -576,13 +581,13 @@ func try_hit_player(from_contact: bool = true) -> bool:
 	if p == null or not p.has_method("take_damage"):
 		return false
 	# 玩家正处在无敌帧（受击无敌 / 冲刺无敌）时既不结算伤害、也不刷新接触冷却，
-	# 免得无敌帧刚结束就被贴身的怪立刻咬一口 —— 原来会白跑一次 contact_timer。
+	# 免得无敌帧刚结束就被贴身的怪立刻咬一口 —— 原来会白跑一次 contact_damage_cooldown。
 	if p.has_method("is_damage_immune") and p.is_damage_immune():
 		return false
 	if not _body_overlaps_player(p):
 		return false
 	p.take_damage(contact_damage, self)
-	contact_timer.start()
+	contact_damage_cooldown.start()
 	return true
 
 func get_player() -> Node2D:

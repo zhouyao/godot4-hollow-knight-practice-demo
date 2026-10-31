@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="GroundLocomotion" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="GroundLocomotion" format=3 uid="uid://bnjaqwmaerui7"]
 
-[ext_resource type="Script" path="res://resources/characters/enemies/_shared/locomotion/ground_locomotion.gd" id="1_g"]
+[ext_resource type="Script" uid="uid://baqgflgc0q54v" path="res://resources/characters/enemies/_shared/locomotion/ground_locomotion.gd" id="1_g"]
 
 [resource]
 script = ExtResource("1_g")
 nav_planar_only = true
-gravity = 2304.0

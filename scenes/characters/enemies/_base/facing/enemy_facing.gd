@@ -174,9 +174,7 @@ func _flip_sprite() -> void:
 func _sync_facing() -> void:
 	var sprite := _enemy.animated_sprite
 	var want := EnemySteering.facing_scale_x(base_sign, sprite.scale.x, _enemy.move_direction)
-	if OS.is_debug_build() and not is_equal_approx(sprite.scale.x, want):
-		push_warning("%s: 精灵朝向与 move_direction 不一致，已自愈 (%.2f → %.2f)"
-				% [_enemy.name, sprite.scale.x, want])
+	
 	sprite.scale.x = want
 	sprite.reset_physics_interpolation()
 
