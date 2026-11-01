@@ -26,14 +26,6 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_slash"]
-resource_local_to_scene = true
-size = Vector2(120, 60)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_attackrange"]
-resource_local_to_scene = true
-size = Vector2(240, 200)
-
 [node name="Boss" type="CharacterBody2D" unique_id=170488292 groups=["enemy"]]
 collision_layer = 2
 collision_mask = 4
@@ -83,18 +75,23 @@ animation = &"idle"
 [node name="ActionAnimationPlayer" type="AnimationPlayer" parent="Animation" unique_id=609070108]
 root_node = NodePath("../..")
 
-[node name="SlashHitBox" type="Area2D" parent="." unique_id=1001674404]
-collision_layer = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SlashHitBox" unique_id=1640443907]
-shape = SubResource("RectangleShape2D_slash")
-disabled = true
-
 [node name="AttackRange" type="Area2D" parent="." unique_id=2073026563]
 collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange" unique_id=1267751504]
-shape = SubResource("RectangleShape2D_attackrange")
+
+[node name="SlashHitBox" type="Area2D" parent="." unique_id=1001674404]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="SlashHitBox" unique_id=1209468046]
+disabled = true
+
+[node name="BossArena" parent="." unique_id=1548594151 instance=ExtResource("3_ggiq1")]
+size = Vector2(1920, 1080)
+
+[node name="BossArenaBehavior" type="Node" parent="BossArena" unique_id=1782691415]
+script = ExtResource("5_beh")
+auto_start_fight = false
 
 [node name="SlashesRange" type="RayCast2D" parent="." unique_id=768479413]
 target_position = Vector2(200, 0)
@@ -103,13 +100,6 @@ collision_mask = 4
 [node name="TeleportWallDetection" type="RayCast2D" parent="." unique_id=2073672658]
 target_position = Vector2(400, 0)
 collision_mask = 4
-
-[node name="BossArena" parent="." unique_id=1548594151 instance=ExtResource("3_ggiq1")]
-size = Vector2(1920, 1080)
-
-[node name="BossArenaBehavior" type="Node" parent="BossArena" unique_id=1782691415]
-script = ExtResource("5_beh")
-auto_start_fight = false
 
 [node name="Debug" parent="." unique_id=1659399408 instance=ExtResource("4_dbg")]
 

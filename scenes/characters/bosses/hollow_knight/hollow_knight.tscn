@@ -3,28 +3,63 @@
 [ext_resource type="PackedScene" uid="uid://buf7ckj7d41uo" path="res://scenes/characters/bosses/_base/boss.tscn" id="1_1qa0c"]
 [ext_resource type="Script" uid="uid://xfgehbda5ae2" path="res://scenes/characters/bosses/hollow_knight/states/dormant.gd" id="2_vvetm"]
 [ext_resource type="Texture2D" uid="uid://befmv1yx3lccy" path="res://assets/animations/characters/bosses/hollow_knight/dormant/0.png" id="3_4coxj"]
-[ext_resource type="Texture2D" uid="uid://dli06wh8hhq7s" path="res://assets/animations/characters/bosses/hollow_knight/_environment/final_boss_chain.png" id="4_2x4qv"]
+[ext_resource type="Texture2D" uid="uid://dli06wh8hhq7s" path="res://assets/animations/characters/bosses/hollow_knight/_environment/chain/final_boss_chain.png" id="4_2x4qv"]
 [ext_resource type="Texture2D" uid="uid://c7tt0xl3cugs3" path="res://assets/animations/characters/bosses/hollow_knight/dormant/1.png" id="4_4lc3a"]
 [ext_resource type="AudioStream" uid="uid://bnvoulx100o6w" path="res://assets/sounds/characters/bosses/hollow_knight/scream.ogg" id="4_k5t7t"]
 [ext_resource type="Script" uid="uid://dqmtw6yfnqi47" path="res://scenes/characters/bosses/hollow_knight/states/scream.gd" id="4_kiw46"]
 [ext_resource type="Texture2D" uid="uid://lc318v2q3bk2" path="res://assets/animations/characters/bosses/hollow_knight/dormant/2.png" id="5_2x4qv"]
 [ext_resource type="Script" uid="uid://cu6qksho5qatb" path="res://scenes/characters/bosses/hollow_knight/states/idle.gd" id="5_634ro"]
+[ext_resource type="Script" uid="uid://xy4wvkdxxs3r" path="res://scenes/characters/bosses/hollow_knight/states/slash.gd" id="6_ap1k7"]
 [ext_resource type="Texture2D" uid="uid://b5raudme67bv4" path="res://assets/animations/characters/bosses/hollow_knight/dormant/3.png" id="6_hi4ij"]
 [ext_resource type="Texture2D" uid="uid://cjdq4telxj2n8" path="res://assets/animations/characters/bosses/hollow_knight/dormant/4.png" id="7_k6h11"]
+[ext_resource type="Script" uid="uid://bq6bh8bi4keta" path="res://scenes/characters/bosses/hollow_knight/states/teleport.gd" id="7_usdmc"]
 [ext_resource type="Texture2D" uid="uid://ppmg2i6hmaht" path="res://assets/animations/characters/bosses/hollow_knight/dormant/5.png" id="8_4vhpu"]
+[ext_resource type="Script" uid="uid://x3pajsoxi8vi" path="res://scenes/characters/bosses/hollow_knight/states/counter.gd" id="8_384pv"]
+[ext_resource type="Script" uid="uid://bows7iykhmeap" path="res://scenes/characters/bosses/hollow_knight/states/jump.gd" id="9_3fpaq"]
+[ext_resource type="Texture2D" uid="uid://ge6im14i0ola" path="res://assets/animations/characters/bosses/hollow_knight/counter_antic/Counter Antic_000.png" id="10_2mrca"]
+[ext_resource type="Texture2D" uid="uid://nrkut15ubu8d" path="res://assets/animations/characters/bosses/hollow_knight/dash/Dash_000.png" id="10_5mhtq"]
+[ext_resource type="Script" uid="uid://c8j0qx0drr1so" path="res://scenes/characters/bosses/hollow_knight/states/evade.gd" id="10_t22ue"]
 [ext_resource type="Texture2D" uid="uid://cm47fntrprphl" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_000.png" id="11_7ta6u"]
+[ext_resource type="Script" uid="uid://bfxc5pdgdu2y1" path="res://scenes/characters/bosses/hollow_knight/states/walk.gd" id="11_8clad"]
+[ext_resource type="Texture2D" uid="uid://d01ahhg4f3vp6" path="res://assets/animations/characters/bosses/hollow_knight/counter_antic/Counter Antic_001.png" id="11_8lwpf"]
+[ext_resource type="Texture2D" uid="uid://bye2e54tane6h" path="res://assets/animations/characters/bosses/hollow_knight/dash/Dash_001.png" id="11_cm24f"]
+[ext_resource type="Script" uid="uid://bgr6lr0iyf0i7" path="res://scenes/characters/bosses/hollow_knight/states/dstab.gd" id="12_bs317"]
+[ext_resource type="Texture2D" uid="uid://b3o5nmdc28qg0" path="res://assets/animations/characters/bosses/hollow_knight/dash/Dash_002.png" id="12_l0fg7"]
+[ext_resource type="Texture2D" uid="uid://ch1om8gd3acmr" path="res://assets/animations/characters/bosses/hollow_knight/counter_antic/Counter Antic_002.png" id="12_mb3py"]
 [ext_resource type="Texture2D" uid="uid://cqtywa1dsrwqu" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_001.png" id="12_x67xo"]
+[ext_resource type="Texture2D" uid="uid://b8g25fwbuvjy3" path="res://assets/animations/characters/bosses/hollow_knight/counter_block/Counter Block_000.png" id="13_ape4t"]
+[ext_resource type="Texture2D" uid="uid://cdsl26keawkyw" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_000.png" id="13_cooc3"]
 [ext_resource type="Texture2D" uid="uid://cbwldaiqm80jl" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_002.png" id="13_thuc6"]
 [ext_resource type="Texture2D" uid="uid://b0xs25lfmdxfs" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_003.png" id="14_6582o"]
+[ext_resource type="Texture2D" uid="uid://c6dxxd4jhi8th" path="res://assets/animations/characters/bosses/hollow_knight/counter_block/Counter Block_001.png" id="14_hjtgt"]
+[ext_resource type="Texture2D" uid="uid://c1vkpkpmf1mnl" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_001.png" id="14_l0jjy"]
 [ext_resource type="Texture2D" uid="uid://c66w28kbvwvpr" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_004.png" id="15_nj7oh"]
+[ext_resource type="Texture2D" uid="uid://cqhoersqt18ad" path="res://assets/animations/characters/bosses/hollow_knight/counter_block/Counter Block_002.png" id="15_ou7jq"]
+[ext_resource type="Texture2D" uid="uid://dpmfxpwwmp40u" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_002.png" id="15_uveg1"]
+[ext_resource type="Texture2D" uid="uid://bknyaqaadida8" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_003.png" id="16_2mrca"]
+[ext_resource type="Texture2D" uid="uid://34axs5m0wy0t" path="res://assets/animations/characters/bosses/hollow_knight/counter_block/Counter Block_003.png" id="16_4x060"]
 [ext_resource type="Texture2D" uid="uid://bb6icmv2p8c6e" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_005.png" id="16_lg4n2"]
+[ext_resource type="Texture2D" uid="uid://r4mib7rurfpc" path="res://assets/animations/characters/bosses/hollow_knight/counter_block/Counter Block_004.png" id="17_6dlua"]
+[ext_resource type="Texture2D" uid="uid://b77algn83tgo2" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_004.png" id="17_8lwpf"]
 [ext_resource type="Texture2D" uid="uid://d0ykkikbvbea8" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_006.png" id="17_qndfb"]
+[ext_resource type="Texture2D" uid="uid://ckkt2kitg00u5" path="res://assets/animations/characters/bosses/hollow_knight/counter_end/Counter End_000.png" id="18_82dlx"]
+[ext_resource type="Texture2D" uid="uid://b08qo3f8lu7d" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_005.png" id="18_mb3py"]
 [ext_resource type="Texture2D" uid="uid://doa1ul2nog83y" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_007.png" id="18_nnfex"]
+[ext_resource type="Texture2D" uid="uid://chli40gj0civl" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_006.png" id="19_0jbsx"]
+[ext_resource type="Texture2D" uid="uid://bussqonjthl6q" path="res://assets/animations/characters/bosses/hollow_knight/counter_end/Counter End_001.png" id="19_8pbsa"]
 [ext_resource type="Texture2D" uid="uid://xvxj0sqmeadt" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Fall_000.png" id="19_k5t7t"]
 [ext_resource type="Texture2D" uid="uid://cwqje04j1mix0" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Fall_001.png" id="20_kiw46"]
+[ext_resource type="Texture2D" uid="uid://bro2fpg5xlvbg" path="res://assets/animations/characters/bosses/hollow_knight/counter_end/Counter End_002.png" id="20_nmmjx"]
+[ext_resource type="Texture2D" uid="uid://d0b4kxphg0vvd" path="res://assets/animations/characters/bosses/hollow_knight/dash_recover/Dash Recover_000.png" id="20_qsus0"]
 [ext_resource type="Texture2D" uid="uid://cbyv6cr1ks15o" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_000.png" id="21_kmsvc"]
+[ext_resource type="Texture2D" uid="uid://bhuwosygrhms5" path="res://assets/animations/characters/bosses/hollow_knight/counter_ready/Counter Ready_000.png" id="21_nmmjx"]
+[ext_resource type="Texture2D" uid="uid://dun6u2cchvn72" path="res://assets/animations/characters/bosses/hollow_knight/dash_recover/Dash Recover_001.png" id="21_sdm23"]
 [ext_resource type="Texture2D" uid="uid://bcfvh07x7h3gx" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_001.png" id="22_225s8"]
+[ext_resource type="Texture2D" uid="uid://dfdej3wif0ieg" path="res://assets/animations/characters/bosses/hollow_knight/counter_ready/Counter Ready_001.png" id="22_384pv"]
+[ext_resource type="Texture2D" uid="uid://cp0owvi7psxow" path="res://assets/animations/characters/bosses/hollow_knight/dash_recover/Dash Recover_002.png" id="22_jpejn"]
+[ext_resource type="Texture2D" uid="uid://cx0swr2dqe6f3" path="res://assets/animations/characters/bosses/hollow_knight/counter_ready/Counter Ready_002.png" id="23_3fpaq"]
 [ext_resource type="Texture2D" uid="uid://b5y503806i0v1" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_002.png" id="23_vwrhs"]
+[ext_resource type="Texture2D" uid="uid://bw3y4bv01mu6l" path="res://assets/animations/characters/bosses/hollow_knight/dash_recover/Dash Recover_003.png" id="23_xh3u2"]
 [ext_resource type="Texture2D" uid="uid://bs5up0u2ccofp" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_003.png" id="24_llaku"]
 [ext_resource type="Texture2D" uid="uid://btxan5h84dvd5" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_004.png" id="25_bggi3"]
 [ext_resource type="Script" uid="uid://crbedooy84vg5" path="res://scenes/characters/bosses/hollow_knight/states/dormant_end.gd" id="26_drmnt"]
@@ -44,11 +79,71 @@
 [ext_resource type="Texture2D" uid="uid://dokpwo0jdawq7" path="res://assets/animations/characters/bosses/hollow_knight/idle/Idle_003.png" id="31_usdmc"]
 [ext_resource type="Texture2D" uid="uid://dqskxhkr17mru" path="res://assets/animations/characters/bosses/hollow_knight/scream/Roar Init_004.png" id="32_ncwh0"]
 [ext_resource type="Texture2D" uid="uid://b6wr2s4ccakne" path="res://assets/animations/characters/bosses/hollow_knight/idle/Idle_004.png" id="32_nnei2"]
-[ext_resource type="AudioStream" uid="uid://btkcva3u6x26k" path="res://assets/sounds/characters/bosses/hollow_knight/pre_fight/Sealed Vessel phase 1+2 - S61-216 Hollow Knight.ogg" id="32_nnfex"]
+[ext_resource type="AudioStream" uid="uid://btkcva3u6x26k" path="res://assets/sounds/characters/bosses/hollow_knight/Sealed Vessel phase 1+2 - S61-216 Hollow Knight.ogg" id="32_nnfex"]
 [ext_resource type="Texture2D" uid="uid://dmwphafvjqdqx" path="res://assets/animations/characters/bosses/hollow_knight/scream/Roar Init_005.png" id="33_evwh2"]
 [ext_resource type="Texture2D" uid="uid://b5e7nywnmdc2h" path="res://assets/animations/characters/bosses/hollow_knight/idle/Idle_005.png" id="33_pp3n2"]
 [ext_resource type="Texture2D" uid="uid://c0gbdmykar232" path="res://assets/animations/characters/bosses/hollow_knight/scream/Roar Init_006.png" id="34_d5vfu"]
 [ext_resource type="Texture2D" uid="uid://c7mha2nq4xcft" path="res://assets/animations/characters/bosses/hollow_knight/idle/Idle_006.png" id="34_jb3sq"]
+[ext_resource type="Texture2D" uid="uid://b5j4bo8unjvt4" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_000.png" id="45_cgssl"]
+[ext_resource type="Texture2D" uid="uid://bk373l5eayl6p" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_001.png" id="46_056bd"]
+[ext_resource type="Texture2D" uid="uid://c11knplr2mi4o" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_002.png" id="47_nvgv4"]
+[ext_resource type="Texture2D" uid="uid://dt63fuubxw8kg" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_003.png" id="48_n8147"]
+[ext_resource type="Texture2D" uid="uid://ddoff4e5c7ll8" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_004.png" id="49_u0h7n"]
+[ext_resource type="Texture2D" uid="uid://bfdk4x7fuachr" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_005.png" id="50_sb46r"]
+[ext_resource type="Texture2D" uid="uid://6bxl5ec35q8e" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_006.png" id="51_y0dus"]
+[ext_resource type="Texture2D" uid="uid://dphw3psfdx2ww" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_007.png" id="52_w0qus"]
+[ext_resource type="Texture2D" uid="uid://cv8dup6trox7w" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_008.png" id="53_0iyxu"]
+[ext_resource type="Texture2D" uid="uid://dkxv7t31fweyk" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_009.png" id="54_5mhtq"]
+[ext_resource type="Texture2D" uid="uid://bqslp6qbv4bnt" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_010.png" id="55_cm24f"]
+[ext_resource type="Texture2D" uid="uid://dl23lga8x6r4p" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_011.png" id="56_l0fg7"]
+[ext_resource type="Texture2D" uid="uid://dq25h84oag88o" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_012.png" id="57_jriyd"]
+[ext_resource type="Texture2D" uid="uid://b5xsw2lb8ubdl" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_013.png" id="58_uxsbn"]
+[ext_resource type="Texture2D" uid="uid://c87gu6i71hk2d" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_014.png" id="59_x1n7y"]
+[ext_resource type="Texture2D" uid="uid://cauoo3hyukpgi" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_015.png" id="60_fl107"]
+[ext_resource type="Texture2D" uid="uid://cv2ifir0gpdhy" path="res://assets/animations/characters/bosses/hollow_knight/slash/Slashes_016.png" id="61_leb67"]
+[ext_resource type="Texture2D" uid="uid://e63f13wlggh" path="res://assets/animations/characters/bosses/hollow_knight/evade/Evade_000.png" id="61_rdlov"]
+[ext_resource type="Texture2D" uid="uid://c1hbahrotssro" path="res://assets/animations/characters/bosses/hollow_knight/teleport_in/Tele In_000.png" id="62_licxc"]
+[ext_resource type="Texture2D" uid="uid://cjf6lkfeak34j" path="res://assets/animations/characters/bosses/hollow_knight/evade/Evade_001.png" id="62_t22ue"]
+[ext_resource type="Texture2D" uid="uid://da5amy6v8c1n5" path="res://assets/animations/characters/bosses/hollow_knight/teleport_in/Tele In_001.png" id="63_6npay"]
+[ext_resource type="Texture2D" uid="uid://cbe24yyb4yht1" path="res://assets/animations/characters/bosses/hollow_knight/evade/Evade_002.png" id="63_8clad"]
+[ext_resource type="Texture2D" uid="uid://dxflppdp407pl" path="res://assets/animations/characters/bosses/hollow_knight/dstab_antic/DStab Antic_000.png" id="64_0iid0"]
+[ext_resource type="Texture2D" uid="uid://bae408qroc508" path="res://assets/animations/characters/bosses/hollow_knight/teleport_in/Tele In_002.png" id="64_8swxi"]
+[ext_resource type="Texture2D" uid="uid://dqdne8p355yfq" path="res://assets/animations/characters/bosses/hollow_knight/teleport_in/Tele In_003.png" id="65_cooc3"]
+[ext_resource type="Texture2D" uid="uid://dlp0bnc2lpje8" path="res://assets/animations/characters/bosses/hollow_knight/dstab_antic/DStab Antic_001.png" id="65_t7hej"]
+[ext_resource type="Texture2D" uid="uid://q4q6fimqrpde" path="res://assets/animations/characters/bosses/hollow_knight/dstab_antic/DStab Antic_002.png" id="66_1helb"]
+[ext_resource type="Texture2D" uid="uid://dk6ejmnv163kt" path="res://assets/animations/characters/bosses/hollow_knight/teleport_in/Tele In_004.png" id="66_l0jjy"]
+[ext_resource type="Texture2D" uid="uid://cam0adqwxaicy" path="res://assets/animations/characters/bosses/hollow_knight/dstab_antic/DStab Antic_003.png" id="67_63iaj"]
+[ext_resource type="Texture2D" uid="uid://bwsch7twsbp0b" path="res://assets/animations/characters/bosses/hollow_knight/teleport_in/Tele In_005.png" id="67_uveg1"]
+[ext_resource type="Texture2D" uid="uid://b2aadx5x75xbj" path="res://assets/animations/characters/bosses/hollow_knight/dstab_antic/DStab Antic_004.png" id="68_4yi87"]
+[ext_resource type="Texture2D" uid="uid://o5s7momguisg" path="res://assets/animations/characters/bosses/hollow_knight/teleport_out/Tele Out_000.png" id="68_y0dus"]
+[ext_resource type="Texture2D" uid="uid://qhacbgbfhari" path="res://assets/animations/characters/bosses/hollow_knight/dstab_land/DStab Land_000.png" id="69_iouyg"]
+[ext_resource type="Texture2D" uid="uid://dt7bjucktcnr4" path="res://assets/animations/characters/bosses/hollow_knight/teleport_out/Tele Out_001.png" id="69_w0qus"]
+[ext_resource type="Texture2D" uid="uid://ct5jpnj7ny1xa" path="res://assets/animations/characters/bosses/hollow_knight/teleport_out/Tele Out_002.png" id="70_0iyxu"]
+[ext_resource type="Texture2D" uid="uid://07hwsta7amdh" path="res://assets/animations/characters/bosses/hollow_knight/dstab_land/DStab Land_001.png" id="70_lspea"]
+[ext_resource type="Texture2D" uid="uid://cfpsdlw5l0uq8" path="res://assets/animations/characters/bosses/hollow_knight/teleport_out/Tele Out_003.png" id="71_5mhtq"]
+[ext_resource type="Texture2D" uid="uid://bxds0l3xqirco" path="res://assets/animations/characters/bosses/hollow_knight/dstab_land/DStab Land_002.png" id="71_p1g4q"]
+[ext_resource type="Texture2D" uid="uid://3iwar2ulefw" path="res://assets/animations/characters/bosses/hollow_knight/teleport_out/Tele Out_004.png" id="72_cm24f"]
+[ext_resource type="Texture2D" uid="uid://cjss2mx2ht7gf" path="res://assets/animations/characters/bosses/hollow_knight/jump/Jump_000.png" id="73_37eyb"]
+[ext_resource type="Texture2D" uid="uid://cvru3h7u1na8a" path="res://assets/animations/characters/bosses/hollow_knight/teleport_out/Tele Out_005.png" id="73_l0fg7"]
+[ext_resource type="Texture2D" uid="uid://dskwt61hxsace" path="res://assets/animations/characters/bosses/hollow_knight/jump/Jump_001.png" id="74_bs317"]
+[ext_resource type="Texture2D" uid="uid://desi2jhcfssm4" path="res://assets/animations/characters/bosses/hollow_knight/jump/Jump_002.png" id="75_aafx7"]
+[ext_resource type="Texture2D" uid="uid://dmbsdoydsa2os" path="res://assets/animations/characters/bosses/hollow_knight/counter_flash/Counter Flash_000.png" id="99_6dlua"]
+[ext_resource type="Texture2D" uid="uid://dfk4rdi4w5y47" path="res://assets/animations/characters/bosses/hollow_knight/counter_flash/Counter Flash_001.png" id="100_82dlx"]
+[ext_resource type="Texture2D" uid="uid://8o1al2tk8y1o" path="res://assets/animations/characters/bosses/hollow_knight/counter_flash/Counter Flash_002.png" id="101_8pbsa"]
+[ext_resource type="Texture2D" uid="uid://dv5o1hh2ldjh4" path="res://assets/animations/characters/bosses/hollow_knight/counter_flash/Counter Flash_003.png" id="102_nmmjx"]
+[ext_resource type="Texture2D" uid="uid://e0ak7kq8fy4u" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_000.png" id="112_x8jo3"]
+[ext_resource type="Texture2D" uid="uid://cxt4kj8vlnjr6" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_001.png" id="113_vd1oi"]
+[ext_resource type="Texture2D" uid="uid://d2e6ne4i5hjfx" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_002.png" id="114_3j3fn"]
+[ext_resource type="Texture2D" uid="uid://bpfpyjo5un48n" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_003.png" id="115_31w2s"]
+[ext_resource type="Texture2D" uid="uid://cgmrgkl58urit" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_004.png" id="116_dyr61"]
+[ext_resource type="Texture2D" uid="uid://dy4e72dgco3l0" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_005.png" id="117_lkluo"]
+[ext_resource type="Texture2D" uid="uid://hp6ujcyvokmx" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_006.png" id="118_0iid0"]
+[ext_resource type="Texture2D" uid="uid://cbtitk7jjqk6w" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_007.png" id="119_t7hej"]
+[ext_resource type="Texture2D" uid="uid://df50vj1y6fl78" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_008.png" id="120_1helb"]
+[ext_resource type="Texture2D" uid="uid://docidehl438pq" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_009.png" id="121_63iaj"]
+[ext_resource type="Texture2D" uid="uid://crqrm0u728c7u" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_010.png" id="122_4yi87"]
+[ext_resource type="Texture2D" uid="uid://xw7ypxg5q12" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_011.png" id="123_iouyg"]
+[ext_resource type="Texture2D" uid="uid://cu4ela04xv7tl" path="res://assets/animations/characters/bosses/hollow_knight/walk/Walk_012.png" id="124_lspea"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4lc3a"]
 radius = 111.21
@@ -56,6 +151,130 @@ height = 531.92
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ggiq1"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_2mrca")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_8lwpf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_mb3py")
+}],
+"loop": 0,
+"name": &"counter_anticipation",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_ape4t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_hjtgt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_ou7jq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_4x060")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_6dlua")
+}],
+"loop": 0,
+"name": &"counter_block",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_82dlx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_8pbsa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_nmmjx")
+}],
+"loop": 0,
+"name": &"counter_end",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("21_nmmjx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_384pv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_3fpaq")
+}],
+"loop": 1,
+"name": &"counter_ready",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_5mhtq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_cm24f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_l0fg7")
+}],
+"loop": 1,
+"name": &"dash",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_cooc3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_l0jjy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_uveg1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_2mrca")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_8lwpf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_mb3py")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_0jbsx")
+}],
+"loop": 0,
+"name": &"dash_anticipation",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": 1,
+"name": &"dash_preparation",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_qsus0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_sdm23")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_jpejn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_xh3u2")
+}],
+"loop": 0,
+"name": &"dash_recover",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("3_4coxj")
@@ -131,6 +350,54 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("64_0iid0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("65_t7hej")
+}, {
+"duration": 1.0,
+"texture": ExtResource("66_1helb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("67_63iaj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("68_4yi87")
+}],
+"loop": 1,
+"name": &"dstab_anticipation",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("69_iouyg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("70_lspea")
+}, {
+"duration": 1.0,
+"texture": ExtResource("71_p1g4q")
+}],
+"loop": 1,
+"name": &"dstab_land",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("61_rdlov")
+}, {
+"duration": 1.0,
+"texture": ExtResource("62_t22ue")
+}, {
+"duration": 1.0,
+"texture": ExtResource("63_8clad")
+}],
+"loop": 1,
+"name": &"evade",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("28_r61h0")
 }, {
 "duration": 1.0,
@@ -153,6 +420,20 @@ animations = [{
 }],
 "loop": 1,
 "name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("73_37eyb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("74_bs317")
+}, {
+"duration": 1.0,
+"texture": ExtResource("75_aafx7")
+}],
+"loop": 1,
+"name": &"jump",
 "speed": 5.0
 }, {
 "frames": [{
@@ -180,9 +461,173 @@ animations = [{
 "loop": 0,
 "name": &"scream",
 "speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("45_cgssl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_056bd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_nvgv4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_n8147")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49_u0h7n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50_sb46r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_y0dus")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_w0qus")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_0iyxu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("54_5mhtq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55_cm24f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("56_l0fg7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("57_jriyd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("58_uxsbn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("59_x1n7y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("60_fl107")
+}, {
+"duration": 1.0,
+"texture": ExtResource("61_leb67")
+}],
+"loop": 0,
+"name": &"slash",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("62_licxc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("63_6npay")
+}, {
+"duration": 1.0,
+"texture": ExtResource("64_8swxi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("65_cooc3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("66_l0jjy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("67_uveg1")
+}],
+"loop": 0,
+"name": &"teleport_in",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("68_y0dus")
+}, {
+"duration": 1.0,
+"texture": ExtResource("69_w0qus")
+}, {
+"duration": 1.0,
+"texture": ExtResource("70_0iyxu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("71_5mhtq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("72_cm24f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("73_l0fg7")
+}],
+"loop": 0,
+"name": &"teleport_out",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("112_x8jo3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("113_vd1oi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("114_3j3fn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("115_31w2s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("116_dyr61")
+}, {
+"duration": 1.0,
+"texture": ExtResource("117_lkluo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("118_0iid0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("119_t7hej")
+}, {
+"duration": 1.0,
+"texture": ExtResource("120_1helb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("121_63iaj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("122_4yi87")
+}, {
+"duration": 1.0,
+"texture": ExtResource("123_iouyg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("124_lspea")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_1d5ey"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("99_6dlua")
+}, {
+"duration": 1.0,
+"texture": ExtResource("100_82dlx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("101_8pbsa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("102_nmmjx")
+}],
+"loop": 0,
+"name": &"counter_flash",
+"speed": 5.0
+}]
 
 [sub_resource type="Animation" id="Animation_x67xo"]
 length = 0.001
@@ -462,6 +907,9 @@ _data = {
 &"scream": SubResource("Animation_ap1k7")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_vchv1"]
+radius = 330.0
+
 [node name="HollowKnight" unique_id=170488292 instance=ExtResource("1_1qa0c")]
 
 [node name="StateMachine" parent="." index="1" unique_id=885825929]
@@ -482,6 +930,34 @@ metadata/_custom_type_script = "uid://dqmtw6yfnqi47"
 [node name="idle" type="Node" parent="StateMachine" index="3" unique_id=2075357031]
 script = ExtResource("5_634ro")
 metadata/_custom_type_script = "uid://cu6qksho5qatb"
+
+[node name="slash" type="Node" parent="StateMachine" index="4" unique_id=172351794]
+script = ExtResource("6_ap1k7")
+metadata/_custom_type_script = "uid://xy4wvkdxxs3r"
+
+[node name="teleport" type="Node" parent="StateMachine" index="5" unique_id=613006846]
+script = ExtResource("7_usdmc")
+metadata/_custom_type_script = "uid://bq6bh8bi4keta"
+
+[node name="counter" type="Node" parent="StateMachine" index="6" unique_id=444648199]
+script = ExtResource("8_384pv")
+metadata/_custom_type_script = "uid://x3pajsoxi8vi"
+
+[node name="jump" type="Node" parent="StateMachine" index="7" unique_id=1123570042]
+script = ExtResource("9_3fpaq")
+metadata/_custom_type_script = "uid://bows7iykhmeap"
+
+[node name="evade" type="Node" parent="StateMachine" index="8" unique_id=2121119188]
+script = ExtResource("10_t22ue")
+metadata/_custom_type_script = "uid://c8j0qx0drr1so"
+
+[node name="walk" type="Node" parent="StateMachine" index="9" unique_id=727752279]
+script = ExtResource("11_8clad")
+metadata/_custom_type_script = "uid://bfxc5pdgdu2y1"
+
+[node name="dstab" type="Node" parent="StateMachine" index="10" unique_id=1394363348]
+script = ExtResource("12_bs317")
+metadata/_custom_type_script = "uid://bgr6lr0iyf0i7"
 
 [node name="scream" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="1" unique_id=1858904689]
 stream = ExtResource("4_k5t7t")
@@ -513,22 +989,34 @@ texture = ExtResource("4_2x4qv")
 
 [node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="0" unique_id=1331468369]
 sprite_frames = SubResource("SpriteFrames_ggiq1")
+animation = &"dormant_end"
+frame = 14
 
 [node name="EffectAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="1" unique_id=2028615876]
+visible = false
 sprite_frames = SubResource("SpriteFrames_1d5ey")
-animation = &"default"
+animation = &"counter_flash"
+frame = 3
+frame_progress = 1.0
 
 [node name="ActionAnimationPlayer" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="2" unique_id=609070108]
 libraries/ = SubResource("AnimationLibrary_x67xo")
 
-[node name="CollisionShape2D" parent="SlashHitBox" parent_id_path=PackedInt32Array(1001674404) index="0" unique_id=1640443907]
-shape = null
-
 [node name="CollisionShape2D" parent="AttackRange" parent_id_path=PackedInt32Array(2073026563) index="0" unique_id=1267751504]
-shape = null
+shape = SubResource("CircleShape2D_vchv1")
 
-[node name="BossArena" parent="." index="11" unique_id=1548594151]
+[node name="CollisionShape2D" parent="SlashHitBox" parent_id_path=PackedInt32Array(1001674404) index="0" unique_id=1209468046]
+polygon = PackedVector2Array(-113, -1, 249, -206, 315, -102, 329, -7, 310, 112, 259, 211)
+
+[node name="BossArena" parent="." index="9" unique_id=1548594151]
 size = Vector2(2800, 1080)
+
+[node name="SlashesRange" parent="." index="10" unique_id=768479413]
+position = Vector2(3, 115)
+target_position = Vector2(600, 0)
+
+[node name="TeleportWallDetection" parent="." index="11" unique_id=2073672658]
+target_position = Vector2(800, 0)
 
 [node name="Debug" parent="." index="12" unique_id=1659399408]
 y_offset = -200.0

@@ -1,0 +1,2 @@
+extends BossState
+class_name HollowKnightDstabState

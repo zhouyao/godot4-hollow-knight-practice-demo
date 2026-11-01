@@ -6,7 +6,7 @@ class_name PlayerFreezeState
 ## 演出结束后自动回到 idle / 空中状态。冻结期间照常可被击中（受击会打断进入 hurt）。
 
 ## 冻结时长（秒），与 boss 吼叫演出对齐。
-@export var freeze_duration: float = 3.0
+@export var freeze_duration: float = 2.0
 
 func enter(_from: StringName) -> void:
 	player.velocity.x = 0.0

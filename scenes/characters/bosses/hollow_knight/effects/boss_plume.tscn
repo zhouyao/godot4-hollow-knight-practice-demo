@@ -1,0 +1,100 @@
+[gd_scene format=3 uid="uid://cdgwvuddpc65f"]
+
+[ext_resource type="Script" uid="uid://dkv88bjvwwsol" path="res://scenes/characters/bosses/hollow_knight/effects/boss_plume.gd" id="1_cfe65"]
+[ext_resource type="Texture2D" uid="uid://xi2xyx73v006" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_antic/Plume Antic_000.png" id="2_5fto0"]
+[ext_resource type="Texture2D" uid="uid://bx1n2hha02g5q" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_burst/Plume Burst_000.png" id="2_bxoxh"]
+[ext_resource type="Texture2D" uid="uid://cahvhkemtpd4g" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_burst/Plume Burst_001.png" id="3_nrvcm"]
+[ext_resource type="Texture2D" uid="uid://dfrd4acwrrd1l" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_antic/Plume Antic_001.png" id="3_t8mq7"]
+[ext_resource type="Texture2D" uid="uid://7clvhodci54f" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_burst/Plume Burst_002.png" id="4_3qgh5"]
+[ext_resource type="Texture2D" uid="uid://dge8pk8me52v1" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_antic/Plume Antic_002.png" id="4_n7fgw"]
+[ext_resource type="Texture2D" uid="uid://dd0yyp7nfymhs" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_antic/Plume Antic_003.png" id="5_i6fw4"]
+[ext_resource type="Texture2D" uid="uid://dbbti4g7omdkm" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_burst/Plume Burst_003.png" id="5_s5rnx"]
+[ext_resource type="Texture2D" uid="uid://cpehcud7ype64" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_antic/Plume Antic_004.png" id="6_125k5"]
+[ext_resource type="Texture2D" uid="uid://hpunght606ha" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_burst/Plume Burst_004.png" id="6_um10h"]
+[ext_resource type="Texture2D" uid="uid://cr5o86o7a767x" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_burst/Plume Burst_005.png" id="7_fbsxt"]
+[ext_resource type="Texture2D" uid="uid://bqug7wlm0u4pv" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_antic/Plume Antic_005.png" id="7_y3m3p"]
+[ext_resource type="Texture2D" uid="uid://cjon0w5wnsnko" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_burst/Plume Burst_006.png" id="8_5fto0"]
+[ext_resource type="Texture2D" uid="uid://2agogwncsvg0" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_burst/Plume Burst_007.png" id="9_t8mq7"]
+[ext_resource type="Texture2D" uid="uid://bx5bs2heddpvy" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_burst/Plume Burst_008.png" id="10_n7fgw"]
+[ext_resource type="Texture2D" uid="uid://dueiwfjpfvg7m" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_burst/Plume Burst_009.png" id="11_i6fw4"]
+[ext_resource type="Texture2D" uid="uid://cj5hptdecmdem" path="res://assets/animations/characters/bosses/hollow_knight/_environment/plume_burst/Plume Burst_010.png" id="12_125k5"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cfe65"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_5fto0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_t8mq7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_n7fgw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_i6fw4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_125k5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_y3m3p")
+}],
+"loop": 0,
+"name": &"plume_antic",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_bxoxh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_nrvcm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_3qgh5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_s5rnx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_um10h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_fbsxt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_5fto0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_t8mq7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_n7fgw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_i6fw4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_125k5")
+}],
+"loop": 0,
+"name": &"plume_burst",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y3m3p"]
+size = Vector2(61, 407)
+
+[node name="BossPlume" type="Area2D" unique_id=2092967834]
+script = ExtResource("1_cfe65")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1732774782]
+sprite_frames = SubResource("SpriteFrames_cfe65")
+animation = &"plume_burst"
+frame = 10
+frame_progress = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1773549290]
+position = Vector2(7.5, 5.5)
+shape = SubResource("RectangleShape2D_y3m3p")
