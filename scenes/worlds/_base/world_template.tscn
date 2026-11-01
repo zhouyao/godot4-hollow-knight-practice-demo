@@ -42,7 +42,7 @@ position = Vector2(19, -27)
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="Lights" unique_id=617027591]
 color = Color(0.5803922, 0.42745098, 0.27058825, 1)
-energy = 1.5
+energy = 2.0
 blend_mode = 1
 
 [node name="OcclusionLayer" type="Node2D" parent="." unique_id=67740318]

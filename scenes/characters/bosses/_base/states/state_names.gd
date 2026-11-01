@@ -8,6 +8,9 @@ class_name BossStateNames
 # 战斗的主干：沉睡 → 入场 → 出招 → （阶段切换）→ 击败。
 ## 沉睡 / 待机：未开战，可能挂在锁链上或站着不动。
 const DORMANT: StringName = &"dormant"
+## 苏醒坠落：四根 BossChain 被砍断后的"挣脱锁链 → 下落"一次性演出，
+## 对应 HollowKnight ActionAnimationPlayer 的 dormant_end 动画（第 9 帧起施加重力）。纯演出，落地即停。
+const DORMANT_END: StringName = &"dormant_end"
 ## 入场演出：挣脱锁链、苏醒、从天而降等一次性表演。
 const INTRO: StringName = &"intro"
 ## 出招枢纽：唯一负责"选下一招"的状态，选完立刻切到对应招式状态。

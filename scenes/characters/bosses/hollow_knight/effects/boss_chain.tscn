@@ -1,0 +1,206 @@
+[gd_scene format=3 uid="uid://34xyraq1r58p"]
+
+[ext_resource type="Texture2D" uid="uid://b2l0e0lww8gx0" path="res://assets/animations/characters/bosses/hollow_knight/_environment/chain_base.png" id="1_fyjcq"]
+[ext_resource type="AudioStream" uid="uid://dx315mpbvupwj" path="res://assets/sounds/characters/bosses/hollow_knight/chain_cut.ogg" id="1_i7qds"]
+[ext_resource type="Texture2D" uid="uid://dli06wh8hhq7s" path="res://assets/animations/characters/bosses/hollow_knight/_environment/final_boss_chain.png" id="1_orp21"]
+[ext_resource type="Script" uid="uid://dd2fet5ei1ii5" path="res://scenes/characters/bosses/hollow_knight/effects/boss_chain.gd" id="1_smafw"]
+[ext_resource type="AudioStream" uid="uid://bhabw56d7hkjj" path="res://assets/sounds/characters/bosses/hollow_knight/chain_break.ogg" id="2_ey3mr"]
+[ext_resource type="Texture2D" uid="uid://bnf5q7txnga4k" path="res://assets/animations/characters/bosses/hollow_knight/_environment/chain_base_break_1.png" id="2_orp21"]
+[ext_resource type="Texture2D" uid="uid://p20l3pr41nop" path="res://assets/animations/characters/bosses/hollow_knight/_environment/chain_base_break_2.png" id="3_smafw"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ey3mr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_fyjcq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_orp21")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_smafw")
+}],
+"loop": 0,
+"name": &"break",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_smafw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Audio/Break:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ChainBase:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Chain1:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Chain2:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Chain3:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_orp21"]
+resource_name = "break"
+length = 2.9000000000000004
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Audio/Break:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-0.49999997, 0),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ChainBase:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.06666667, 0.39999998, 0.6666667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Chain1:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.23333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Chain2:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Chain3:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.8333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_smafw"]
+_data = {
+&"RESET": SubResource("Animation_smafw"),
+&"break": SubResource("Animation_orp21")
+}
+
+[node name="BossChain" type="StaticBody2D" unique_id=18913694]
+collision_layer = 256
+collision_mask = 0
+script = ExtResource("1_smafw")
+
+[node name="Chain1" type="Sprite2D" parent="." unique_id=255697563]
+position = Vector2(-135, -188)
+rotation = -0.6719518
+texture = ExtResource("1_orp21")
+
+[node name="Chain2" type="Sprite2D" parent="." unique_id=1374113352]
+position = Vector2(-360, -471)
+rotation = -0.6719518
+texture = ExtResource("1_orp21")
+
+[node name="Chain3" type="Sprite2D" parent="." unique_id=1089149227]
+position = Vector2(-586, -753)
+rotation = -0.6719518
+texture = ExtResource("1_orp21")
+
+[node name="ChainBase" type="AnimatedSprite2D" parent="." unique_id=913326183]
+position = Vector2(15, -43)
+sprite_frames = SubResource("SpriteFrames_ey3mr")
+animation = &"break"
+
+[node name="Audio" type="Node2D" parent="." unique_id=1753595145]
+
+[node name="Cut" type="AudioStreamPlayer2D" parent="Audio" unique_id=1754702974]
+stream = ExtResource("1_i7qds")
+bus = &"Sound"
+
+[node name="Break" type="AudioStreamPlayer2D" parent="Audio" unique_id=1860277374]
+stream = ExtResource("2_ey3mr")
+bus = &"Sound"
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=991234567]
+collision_layer = 256
+collision_mask = 32
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox" unique_id=991234568]
+polygon = PackedVector2Array(-707, -880, -57, -62, -65, 18, -137, 53, 164, 60, -10, -54, -686, -897)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2048698757]
+libraries/ = SubResource("AnimationLibrary_smafw")
+
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

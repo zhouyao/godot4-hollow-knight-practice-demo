@@ -3,16 +3,32 @@
 [ext_resource type="PackedScene" uid="uid://buf7ckj7d41uo" path="res://scenes/characters/bosses/_base/boss.tscn" id="1_1qa0c"]
 [ext_resource type="Script" uid="uid://xfgehbda5ae2" path="res://scenes/characters/bosses/hollow_knight/states/dormant.gd" id="2_vvetm"]
 [ext_resource type="Texture2D" uid="uid://befmv1yx3lccy" path="res://assets/animations/characters/bosses/hollow_knight/dormant/0.png" id="3_4coxj"]
-[ext_resource type="Script" uid="uid://cd0vy3j33a5pj" path="res://scenes/characters/bosses/_base/states/dormant.gd" id="3_4lc3a"]
+[ext_resource type="Texture2D" uid="uid://dli06wh8hhq7s" path="res://assets/animations/characters/bosses/hollow_knight/_environment/final_boss_chain.png" id="4_2x4qv"]
 [ext_resource type="Texture2D" uid="uid://c7tt0xl3cugs3" path="res://assets/animations/characters/bosses/hollow_knight/dormant/1.png" id="4_4lc3a"]
 [ext_resource type="Texture2D" uid="uid://lc318v2q3bk2" path="res://assets/animations/characters/bosses/hollow_knight/dormant/2.png" id="5_2x4qv"]
 [ext_resource type="Texture2D" uid="uid://b5raudme67bv4" path="res://assets/animations/characters/bosses/hollow_knight/dormant/3.png" id="6_hi4ij"]
 [ext_resource type="Texture2D" uid="uid://cjdq4telxj2n8" path="res://assets/animations/characters/bosses/hollow_knight/dormant/4.png" id="7_k6h11"]
 [ext_resource type="Texture2D" uid="uid://ppmg2i6hmaht" path="res://assets/animations/characters/bosses/hollow_knight/dormant/5.png" id="8_4vhpu"]
+[ext_resource type="Texture2D" uid="uid://cm47fntrprphl" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_000.png" id="11_7ta6u"]
+[ext_resource type="Texture2D" uid="uid://cqtywa1dsrwqu" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_001.png" id="12_x67xo"]
+[ext_resource type="Texture2D" uid="uid://cbwldaiqm80jl" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_002.png" id="13_thuc6"]
+[ext_resource type="Texture2D" uid="uid://b0xs25lfmdxfs" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_003.png" id="14_6582o"]
+[ext_resource type="Texture2D" uid="uid://c66w28kbvwvpr" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_004.png" id="15_nj7oh"]
+[ext_resource type="Texture2D" uid="uid://bb6icmv2p8c6e" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_005.png" id="16_lg4n2"]
+[ext_resource type="Texture2D" uid="uid://d0ykkikbvbea8" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_006.png" id="17_qndfb"]
+[ext_resource type="Texture2D" uid="uid://doa1ul2nog83y" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_007.png" id="18_nnfex"]
+[ext_resource type="Texture2D" uid="uid://xvxj0sqmeadt" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Fall_000.png" id="19_k5t7t"]
+[ext_resource type="Texture2D" uid="uid://cwqje04j1mix0" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Fall_001.png" id="20_kiw46"]
+[ext_resource type="Texture2D" uid="uid://cbyv6cr1ks15o" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_000.png" id="21_kmsvc"]
+[ext_resource type="Texture2D" uid="uid://bcfvh07x7h3gx" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_001.png" id="22_225s8"]
+[ext_resource type="Texture2D" uid="uid://b5y503806i0v1" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_002.png" id="23_vwrhs"]
+[ext_resource type="Texture2D" uid="uid://bs5up0u2ccofp" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_003.png" id="24_llaku"]
+[ext_resource type="Texture2D" uid="uid://btxan5h84dvd5" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_004.png" id="25_bggi3"]
+[ext_resource type="Script" uid="uid://crbedooy84vg5" path="res://scenes/characters/bosses/hollow_knight/states/dormant_end.gd" id="26_drmnt"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4lc3a"]
-radius = 117.38
-height = 614.45
+radius = 111.21
+height = 521.92
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ggiq1"]
 animations = [{
@@ -38,9 +54,192 @@ animations = [{
 "loop": 0,
 "name": &"dormant",
 "speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_7ta6u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_x67xo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_thuc6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_6582o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_nj7oh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_lg4n2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_qndfb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_nnfex")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_k5t7t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_kiw46")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_kmsvc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_225s8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_vwrhs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_llaku")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_bggi3")
+}],
+"loop": 0,
+"name": &"dormant_end",
+"speed": 5.0
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_1d5ey"]
+
+[sub_resource type="Animation" id="Animation_x67xo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DormantSuspensionChains/LeftLowerChain:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("DormantSuspensionChains/RightLowerChain:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("DormantSuspensionChains/LeftUpperChain:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("DormantSuspensionChains/RightUpperChain:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_7ta6u"]
+resource_name = "dormant_end"
+length = 3.0000000000000004
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"dormant_end"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("DormantSuspensionChains/LeftLowerChain:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.033333335, 0.26666668),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("DormantSuspensionChains/RightLowerChain:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.033333335, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("DormantSuspensionChains/LeftUpperChain:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.033333335, 0.96666664),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("DormantSuspensionChains/RightUpperChain:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.033333335, 1.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_x67xo"]
+_data = {
+&"RESET": SubResource("Animation_x67xo"),
+&"dormant_end": SubResource("Animation_7ta6u")
+}
 
 [node name="HollowKnight" unique_id=170488292 instance=ExtResource("1_1qa0c")]
 
@@ -51,19 +250,46 @@ host_path = NodePath("")
 script = ExtResource("2_vvetm")
 frames_left_to_right = true
 
-[node name="Audio" parent="." index="2" unique_id=196072747]
-script = ExtResource("3_4lc3a")
+[node name="dormant_end" type="Node" parent="StateMachine" index="1" unique_id=1539436828]
+script = ExtResource("26_drmnt")
+metadata/_custom_type_script = "uid://crbedooy84vg5"
 
 [node name="BodyCollisionShape2D" parent="." index="4" unique_id=1005066086]
 shape = SubResource("CapsuleShape2D_4lc3a")
 
+[node name="DormantSuspensionChains" type="Node2D" parent="." index="5" unique_id=1016608870]
+
+[node name="LeftLowerChain" type="Sprite2D" parent="DormantSuspensionChains" index="0" unique_id=408315080]
+position = Vector2(-198, -236)
+rotation = -0.6981317
+texture = ExtResource("4_2x4qv")
+
+[node name="LeftUpperChain" type="Sprite2D" parent="DormantSuspensionChains" index="1" unique_id=670739358]
+position = Vector2(-428, -510)
+rotation = -0.6981317
+texture = ExtResource("4_2x4qv")
+
+[node name="RightLowerChain" type="Sprite2D" parent="DormantSuspensionChains" index="2" unique_id=69022009]
+position = Vector2(224, -237)
+rotation = 0.6981317
+texture = ExtResource("4_2x4qv")
+
+[node name="RightUpperChain" type="Sprite2D" parent="DormantSuspensionChains" index="3" unique_id=865563663]
+position = Vector2(456, -513)
+rotation = 0.6981317
+texture = ExtResource("4_2x4qv")
+
 [node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="0" unique_id=1331468369]
 sprite_frames = SubResource("SpriteFrames_ggiq1")
-animation = &"dormant"
+animation = &"dormant_end"
+frame = 14
 
 [node name="EffectAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="1" unique_id=2028615876]
 sprite_frames = SubResource("SpriteFrames_1d5ey")
 animation = &"default"
+
+[node name="ActionAnimationPlayer" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="2" unique_id=609070108]
+libraries/ = SubResource("AnimationLibrary_x67xo")
 
 [node name="CollisionShape2D" parent="SlashHitBox" parent_id_path=PackedInt32Array(1001674404) index="0" unique_id=1640443907]
 shape = null
@@ -71,5 +297,14 @@ shape = null
 [node name="CollisionShape2D" parent="AttackRange" parent_id_path=PackedInt32Array(2073026563) index="0" unique_id=1267751504]
 shape = null
 
-[node name="Debug" parent="." index="11" unique_id=1659399408]
+[node name="BossArena" parent="." index="11" unique_id=1548594151]
+size = Vector2(2800, 1080)
+
+[node name="Debug" parent="." index="12" unique_id=1659399408]
 y_offset = -200.0
+
+[node name="PreFightMusic" type="AudioStreamPlayer" parent="." index="13" unique_id=183000001]
+bus = &"Sound"
+
+[connection signal="area_entered" from="BossArena" to="." method="_on_boss_arena_area_entered"]
+[connection signal="area_exited" from="BossArena" to="." method="_on_boss_arena_area_exited"]
