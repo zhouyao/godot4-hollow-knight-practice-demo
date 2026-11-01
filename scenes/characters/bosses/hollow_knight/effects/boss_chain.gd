@@ -1,15 +1,11 @@
 extends StaticBody2D
 
-signal breaking
 signal broke
 
 var health: int = 2
 ## 是否已断：唯一的"再砍没反应"守卫。断后不再扣血、不再重播断裂动画。
 var _broken: bool = false
-@onready var chain_base: AnimatedSprite2D = $ChainBase
-@onready var chain1: Sprite2D = $Chain1
-@onready var chain2: Sprite2D = $Chain2
-@onready var chain3: Sprite2D = $Chain3
+
 @onready var cut_audio: AudioStreamPlayer2D = $Audio/Cut
 @onready var break_audio: AudioStreamPlayer2D = $Audio/Break
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
@@ -24,15 +20,8 @@ func hit(_direction, damage):
 	if health < 0:
 		_broken = true
 		break_audio.play()
-		break_chain()
-
-
-func break_chain():
-	breaking.emit()
-	animation_player.play("break")
-	# 链子一断立刻发 broke，不再依赖断裂动画的方法轨道（轨道若不触发会导致信号漏发，
-	# 4 根断完也累计不到 4、不切 dormant_end）。dormant 状态 enter 时已接好 broke 计数。
-	broke.emit()
+		animation_player.play("break")
+		broke.emit()
 
 
 ## ---- 受击盒（Area2D）接线：让玩家攻击区能命中本链子 ----

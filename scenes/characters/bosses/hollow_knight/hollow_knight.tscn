@@ -5,7 +5,10 @@
 [ext_resource type="Texture2D" uid="uid://befmv1yx3lccy" path="res://assets/animations/characters/bosses/hollow_knight/dormant/0.png" id="3_4coxj"]
 [ext_resource type="Texture2D" uid="uid://dli06wh8hhq7s" path="res://assets/animations/characters/bosses/hollow_knight/_environment/final_boss_chain.png" id="4_2x4qv"]
 [ext_resource type="Texture2D" uid="uid://c7tt0xl3cugs3" path="res://assets/animations/characters/bosses/hollow_knight/dormant/1.png" id="4_4lc3a"]
+[ext_resource type="AudioStream" uid="uid://bnvoulx100o6w" path="res://assets/sounds/characters/bosses/hollow_knight/scream.ogg" id="4_k5t7t"]
+[ext_resource type="Script" uid="uid://dqmtw6yfnqi47" path="res://scenes/characters/bosses/hollow_knight/states/scream.gd" id="4_kiw46"]
 [ext_resource type="Texture2D" uid="uid://lc318v2q3bk2" path="res://assets/animations/characters/bosses/hollow_knight/dormant/2.png" id="5_2x4qv"]
+[ext_resource type="Script" uid="uid://cu6qksho5qatb" path="res://scenes/characters/bosses/hollow_knight/states/idle.gd" id="5_634ro"]
 [ext_resource type="Texture2D" uid="uid://b5raudme67bv4" path="res://assets/animations/characters/bosses/hollow_knight/dormant/3.png" id="6_hi4ij"]
 [ext_resource type="Texture2D" uid="uid://cjdq4telxj2n8" path="res://assets/animations/characters/bosses/hollow_knight/dormant/4.png" id="7_k6h11"]
 [ext_resource type="Texture2D" uid="uid://ppmg2i6hmaht" path="res://assets/animations/characters/bosses/hollow_knight/dormant/5.png" id="8_4vhpu"]
@@ -25,10 +28,31 @@
 [ext_resource type="Texture2D" uid="uid://bs5up0u2ccofp" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_003.png" id="24_llaku"]
 [ext_resource type="Texture2D" uid="uid://btxan5h84dvd5" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_004.png" id="25_bggi3"]
 [ext_resource type="Script" uid="uid://crbedooy84vg5" path="res://scenes/characters/bosses/hollow_knight/states/dormant_end.gd" id="26_drmnt"]
+[ext_resource type="AudioStream" uid="uid://c156b8w2hoc12" path="res://assets/sounds/characters/bosses/hollow_knight/pre_fight/Hollow Knight pre-fight - S61-161 Suspence 1.ogg" id="26_x67xo"]
+[ext_resource type="AudioStream" uid="uid://c7ye5yn05ponw" path="res://assets/sounds/characters/bosses/hollow_knight/pre_fight/Hollow Knight pre-fight - S61-161 Suspence 2.ogg" id="27_thuc6"]
+[ext_resource type="AudioStream" uid="uid://kxldr4x0tup2" path="res://assets/sounds/characters/bosses/hollow_knight/pre_fight/Hollow Knight pre-fight - S61-161 Suspence 3.ogg" id="28_6582o"]
+[ext_resource type="Texture2D" uid="uid://bg5vc08hx75wx" path="res://assets/animations/characters/bosses/hollow_knight/idle/Idle_000.png" id="28_r61h0"]
+[ext_resource type="Texture2D" uid="uid://b8q0n4mo6qq8b" path="res://assets/animations/characters/bosses/hollow_knight/scream/Roar Init_000.png" id="28_uu8u8"]
+[ext_resource type="Texture2D" uid="uid://ds0wjbototspu" path="res://assets/animations/characters/bosses/hollow_knight/idle/Idle_001.png" id="29_634ro"]
+[ext_resource type="Texture2D" uid="uid://cn0lcl4fm2oar" path="res://assets/animations/characters/bosses/hollow_knight/scream/Roar Init_001.png" id="29_lldac"]
+[ext_resource type="AudioStream" uid="uid://cgjoq868brhdr" path="res://assets/sounds/characters/bosses/hollow_knight/pre_fight/Hollow Knight pre-fight - S61-161 Suspence 4.ogg" id="29_nj7oh"]
+[ext_resource type="Texture2D" uid="uid://bck2j0avwosm4" path="res://assets/animations/characters/bosses/hollow_knight/idle/Idle_002.png" id="30_ap1k7"]
+[ext_resource type="AudioStream" uid="uid://nn2di1j28h45" path="res://assets/sounds/characters/bosses/hollow_knight/pre_fight/false_knight_land_1st_time.ogg" id="30_lg4n2"]
+[ext_resource type="Texture2D" uid="uid://ciwwmlijn1wim" path="res://assets/animations/characters/bosses/hollow_knight/scream/Roar Init_002.png" id="30_nin2w"]
+[ext_resource type="AudioStream" uid="uid://c2ay6jd6vlgwp" path="res://assets/sounds/characters/bosses/hollow_knight/pre_fight/Hollow Knight pre-fight - S61-161 Suspence 5.ogg" id="30_qndfb"]
+[ext_resource type="Texture2D" uid="uid://dqcdsdaro7msc" path="res://assets/animations/characters/bosses/hollow_knight/scream/Roar Init_003.png" id="31_p8t2r"]
+[ext_resource type="Texture2D" uid="uid://dokpwo0jdawq7" path="res://assets/animations/characters/bosses/hollow_knight/idle/Idle_003.png" id="31_usdmc"]
+[ext_resource type="Texture2D" uid="uid://dqskxhkr17mru" path="res://assets/animations/characters/bosses/hollow_knight/scream/Roar Init_004.png" id="32_ncwh0"]
+[ext_resource type="Texture2D" uid="uid://b6wr2s4ccakne" path="res://assets/animations/characters/bosses/hollow_knight/idle/Idle_004.png" id="32_nnei2"]
+[ext_resource type="AudioStream" uid="uid://btkcva3u6x26k" path="res://assets/sounds/characters/bosses/hollow_knight/pre_fight/Sealed Vessel phase 1+2 - S61-216 Hollow Knight.ogg" id="32_nnfex"]
+[ext_resource type="Texture2D" uid="uid://dmwphafvjqdqx" path="res://assets/animations/characters/bosses/hollow_knight/scream/Roar Init_005.png" id="33_evwh2"]
+[ext_resource type="Texture2D" uid="uid://b5e7nywnmdc2h" path="res://assets/animations/characters/bosses/hollow_knight/idle/Idle_005.png" id="33_pp3n2"]
+[ext_resource type="Texture2D" uid="uid://c0gbdmykar232" path="res://assets/animations/characters/bosses/hollow_knight/scream/Roar Init_006.png" id="34_d5vfu"]
+[ext_resource type="Texture2D" uid="uid://c7mha2nq4xcft" path="res://assets/animations/characters/bosses/hollow_knight/idle/Idle_006.png" id="34_jb3sq"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4lc3a"]
 radius = 111.21
-height = 521.92
+height = 531.92
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ggiq1"]
 animations = [{
@@ -104,6 +128,58 @@ animations = [{
 "loop": 0,
 "name": &"dormant_end",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("28_r61h0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_634ro")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_ap1k7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_usdmc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_nnei2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_pp3n2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_jb3sq")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("28_uu8u8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_lldac")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_nin2w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_p8t2r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_ncwh0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_evwh2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_d5vfu")
+}],
+"loop": 0,
+"name": &"scream",
+"speed": 7.0
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_1d5ey"]
@@ -158,10 +234,46 @@ tracks/3/keys = {
 "update": 1,
 "values": [true]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("FightAudio/Chain4:playing")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("FightAudio/boss_land:playing")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("FightAudio/boss_bg_loop:playing")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="Animation" id="Animation_7ta6u"]
 resource_name = "dormant_end"
-length = 3.0000000000000004
+length = 6.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -181,10 +293,10 @@ tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.26666668, 0.46666667, 0.6666667, 1, 1.2333333, 1.4666667, 1.8666667, 2.2, 2.4333334, 2.8, 3.1666667, 3.6333334, 4.1, 4.4333334, 4.8, 5.233333, 5.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+"values": [0, 1, 2, 3, 1, 3, 4, 5, 6, 5, 7, 8, 9, 10, 11, 12, 13, 14]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -234,11 +346,120 @@ tracks/5/keys = {
 "update": 1,
 "values": [true, false]
 }
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("FightAudio/Chain4:playing")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("FightAudio/boss_land:playing")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(4.1),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("FightAudio/boss_bg_loop:playing")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(5.233333),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/9/type = "method"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("StateMachine/dormant_end")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(3.7666667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"falling"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_634ro"]
+resource_name = "idle"
+length = 1.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6]
+}
+
+[sub_resource type="Animation" id="Animation_ap1k7"]
+resource_name = "scream"
+length = 0.9999999999999998
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"scream"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.14285715, 0.2857143, 0.42857143, 0.5714286, 0.71428573, 0.85714287),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_x67xo"]
 _data = {
 &"RESET": SubResource("Animation_x67xo"),
-&"dormant_end": SubResource("Animation_7ta6u")
+&"dormant_end": SubResource("Animation_7ta6u"),
+&"idle": SubResource("Animation_634ro"),
+&"scream": SubResource("Animation_ap1k7")
 }
 
 [node name="HollowKnight" unique_id=170488292 instance=ExtResource("1_1qa0c")]
@@ -253,6 +474,17 @@ frames_left_to_right = true
 [node name="dormant_end" type="Node" parent="StateMachine" index="1" unique_id=1539436828]
 script = ExtResource("26_drmnt")
 metadata/_custom_type_script = "uid://crbedooy84vg5"
+
+[node name="scream" type="Node" parent="StateMachine" index="2" unique_id=1676635769]
+script = ExtResource("4_kiw46")
+metadata/_custom_type_script = "uid://dqmtw6yfnqi47"
+
+[node name="idle" type="Node" parent="StateMachine" index="3" unique_id=2075357031]
+script = ExtResource("5_634ro")
+metadata/_custom_type_script = "uid://cu6qksho5qatb"
+
+[node name="scream" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="1" unique_id=1858904689]
+stream = ExtResource("4_k5t7t")
 
 [node name="BodyCollisionShape2D" parent="." index="4" unique_id=1005066086]
 shape = SubResource("CapsuleShape2D_4lc3a")
@@ -281,8 +513,6 @@ texture = ExtResource("4_2x4qv")
 
 [node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="0" unique_id=1331468369]
 sprite_frames = SubResource("SpriteFrames_ggiq1")
-animation = &"dormant_end"
-frame = 14
 
 [node name="EffectAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="1" unique_id=2028615876]
 sprite_frames = SubResource("SpriteFrames_1d5ey")
@@ -303,8 +533,35 @@ size = Vector2(2800, 1080)
 [node name="Debug" parent="." index="12" unique_id=1659399408]
 y_offset = -200.0
 
-[node name="PreFightMusic" type="AudioStreamPlayer" parent="." index="13" unique_id=183000001]
-bus = &"Sound"
+[node name="FightAudio" type="Node2D" parent="." index="13" unique_id=770654751]
+
+[node name="Chain0" type="AudioStreamPlayer2D" parent="FightAudio" index="0" unique_id=1445487002]
+stream = ExtResource("26_x67xo")
+bus = &"Music"
+
+[node name="Chain1" type="AudioStreamPlayer2D" parent="FightAudio" index="1" unique_id=77746359]
+stream = ExtResource("27_thuc6")
+bus = &"Music"
+
+[node name="Chain2" type="AudioStreamPlayer2D" parent="FightAudio" index="2" unique_id=1889004157]
+stream = ExtResource("28_6582o")
+bus = &"Music"
+
+[node name="Chain3" type="AudioStreamPlayer2D" parent="FightAudio" index="3" unique_id=141949455]
+stream = ExtResource("29_nj7oh")
+bus = &"Music"
+
+[node name="Chain4" type="AudioStreamPlayer2D" parent="FightAudio" index="4" unique_id=1427965863]
+stream = ExtResource("30_qndfb")
+bus = &"Music"
+
+[node name="boss_land" type="AudioStreamPlayer2D" parent="FightAudio" index="5" unique_id=2071793554]
+stream = ExtResource("30_lg4n2")
+bus = &"Music"
+
+[node name="boss_bg_loop" type="AudioStreamPlayer2D" parent="FightAudio" index="6" unique_id=1340224297]
+stream = ExtResource("32_nnfex")
+bus = &"Music"
 
 [connection signal="area_entered" from="BossArena" to="." method="_on_boss_arena_area_entered"]
 [connection signal="area_exited" from="BossArena" to="." method="_on_boss_arena_area_exited"]

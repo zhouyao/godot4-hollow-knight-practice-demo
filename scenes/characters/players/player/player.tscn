@@ -28,6 +28,7 @@
 [ext_resource type="AnimationLibrary" uid="uid://chcmuoef0l46l" path="res://resources/characters/players/player/player_action_player.tres" id="30_muvqv"]
 [ext_resource type="PackedScene" path="res://scenes/debug/character_debug.tscn" id="35_aldr5"]
 [ext_resource type="Script" uid="uid://f7sp6wnvwghi" path="res://scenes/characters/players/player/states/dash.gd" id="36_dash"]
+[ext_resource type="Script" path="res://scenes/characters/players/player/states/freeze.gd" id="37_freez"]
 
 [sub_resource type="CapsuleShape2D" id="2_capsule"]
 radius = 40.0
@@ -92,6 +93,9 @@ script = ExtResource("14_dmgst")
 
 [node name="dash" type="Node" parent="StateMachine" unique_id=1477849673]
 script = ExtResource("36_dash")
+
+[node name="freeze" type="Node" parent="StateMachine" unique_id=2010000007]
+script = ExtResource("37_freez")
 
 [node name="Audio" type="Node2D" parent="." unique_id=290561661]
 

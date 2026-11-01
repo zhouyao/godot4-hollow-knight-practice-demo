@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://c2ay6jd6vlgwp"
+path="res://.godot/imported/Hollow Knight pre-fight - S61-161 Suspence 5.ogg-472d66a84d98645e7d3477dc3eadb96b.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/sounds/characters/bosses/hollow_knight/pre_fight/Hollow Knight pre-fight - S61-161 Suspence 5.ogg"
+dest_files=["res://.godot/imported/Hollow Knight pre-fight - S61-161 Suspence 5.ogg-472d66a84d98645e7d3477dc3eadb96b.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

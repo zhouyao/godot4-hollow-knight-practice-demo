@@ -1,22 +1,24 @@
 extends BossState
 class_name HollowKnightDormantState
 
-## 战前悬疑 BGM：按"剩余链条数"选轨。
-##   剩 4 根（进入领地 / 未砍）→ PREFIGHT_TRACKS[0]（Suspence 1）
-##   剩 3 根（砍 1）→ PREFIGHT_TRACKS[1]（Suspence 2）
-##   剩 2 根（砍 2）→ PREFIGHT_TRACKS[2]（Suspence 3）
-##   剩 1 根（砍 3）→ PREFIGHT_TRACKS[3]（Suspence 4）
-##   剩 0 根（砍 4）→ 不播 PREFIGHT_TRACKS[4]，沿用上一轨进入苏醒演出。
-const PREFIGHT_TRACKS: Array[AudioStream] = [
-	preload("res://assets/sounds/characters/bosses/hollow_knight/background/Hollow Knight pre-fight - S61-161 Suspence 1.ogg"),
-	preload("res://assets/sounds/characters/bosses/hollow_knight/background/Hollow Knight pre-fight - S61-161 Suspence 2.ogg"),
-	preload("res://assets/sounds/characters/bosses/hollow_knight/background/Hollow Knight pre-fight - S61-161 Suspence 3.ogg"),
-	preload("res://assets/sounds/characters/bosses/hollow_knight/background/Hollow Knight pre-fight - S61-161 Suspence 4.ogg"),
-	preload("res://assets/sounds/characters/bosses/hollow_knight/background/Hollow Knight pre-fight - S61-161 Suspence 5.ogg"),
+## 战前悬疑 BGM：按"剩余链条数"选 FightAudio 下的 Chain 节点播放。
+##   剩 4 根（进入领地 / 未砍）→ FightAudio/Chain0（Suspence 1）
+##   剩 3 根（砍 1）→ FightAudio/Chain1（Suspence 2）
+##   剩 2 根（砍 2）→ FightAudio/Chain2（Suspence 3）
+##   剩 1 根（砍 3）→ FightAudio/Chain3（Suspence 4）
+##   剩 0 根（砍 4）→ 不播 Chain4，沿用上一轨进入苏醒演出。
+## 战前悬疑 BGM：按"已砍断链条数"选 FightAudio 下的 Chain 节点播放。
+##   Chain0=砍0根/Suspence1 … Chain3=砍3根/Suspence4，Chain4=Suspence5 作第5轨备选。
+const PREFIGHT_CHAIN_NODES: Array[String] = [
+	"Chain0", "Chain1", "Chain2", "Chain3", "Chain4",
 ]
 
-## 战前 BGM 播放器（hollow_knight.tscn 里 Boss 节点下的非定位 AudioStreamPlayer）。
-var _music: AudioStreamPlayer
+var _boss_bg_loop: AudioStreamPlayer2D 
+
+## FightAudio 节点（Boss 节点下），Chain0~4 是其子 AudioStreamPlayer2D。
+var _fight_audio: Node2D
+## 当前正在播放的战前悬疑轨，用于切轨/停播时停掉上一轨。
+var _current_chain: AudioStreamPlayer2D
 var _arena_connected := false
 
 ## 沉睡状态：玩家进入 BossArena 后，boss 的头会一直盯着玩家。
@@ -101,11 +103,13 @@ func _ensure_refs() -> void:
 
 
 ## ---- 锁链断裂 → 触发 dormant_end ----
-## level_1.tscn 里四根 BossChain 的 broke 信号没有接，这里自包含在 dormant 内扫描父节点
-## HollowKnightScene 完成计数，满 4 根即切到 DORMANT_END。不动 level_1.tscn。
-const TOTAL_CHAINS := 4
+var _total_chains := 0
 var _broken_count := 0
 var _chains_connected := false
+## 重置后再次进入领地时，给 2 秒缓冲再苏醒（让玩家看清"回到 dormant"的效果）。
+var _awaken_timer: SceneTreeTimer = null
+## 玩家此刻是否在 BossArena 内（由 enter/exit 信号维护，用于苏醒计时的兜底判定）。
+var _player_in_arena := false
 
 func _connect_chains() -> void:
 	if _chains_connected:
@@ -116,6 +120,7 @@ func _connect_chains() -> void:
 	for child in scene.get_children():
 		if child == enemy or not child.has_signal("broke"):
 			continue
+		_total_chains += 1
 		child.broke.connect(_on_chain_broke)
 	_chains_connected = true
 
@@ -137,53 +142,122 @@ func _connect_arena() -> void:
 
 
 func _on_player_entered_arena(_zone: Node, _player: Node2D) -> void:
+	_player_in_arena = true
+	# 四根链子已全断：玩家再次踏入领地 → 延迟 2 秒再苏醒，让玩家看清"回到 dormant"的效果。
+	if _total_chains > 0 and _broken_count >= _total_chains:
+		_start_awaken_delay()
+		return
 	# 进入领地也按"当前已砍断的链条数"选轨（与砍链同一套映射；含 4 根全断则不播）。
 	_play_for_current_chains()
 
 
-## 按当前已砍断的链条数选轨：砍 0/1/2/3 根 → PREFIGHT_TRACKS[0/1/2/3]；4 根全断不播。
+## 按当前已砍断的链条数选轨：砍 0/1/2/3 根 → FightAudio/Chain0~3；4 根全断不播。
 func _play_for_current_chains() -> void:
-	if _broken_count < TOTAL_CHAINS:
+	if _broken_count <= _total_chains:
 		_play_track(_broken_count)
+	
 
 
 func _on_player_exited_arena(_zone: Node, _player: Node2D) -> void:
+	_player_in_arena = false
 	_stop_music()
+	if _boss_bg_loop != null and _boss_bg_loop.playing:
+		_boss_bg_loop.stop()
+	# 四根链子已全断时，玩家离开领地即整场重置回 dormant（苏醒阶段或已开打都算）。
+	if _total_chains > 0 and _broken_count >= _total_chains:
+		_reset_encounter()
+
+
+## 整场重置：四根链子全断后，玩家在苏醒阶段或开打后逃离领地时调用。
+## 链子保持断裂（不恢复）；仅把 boss 复位到初始：退战斗 → 停演出 → 回出生点 → 满血/清阶段 → 回 dormant。
+## 玩家再次踏入领地时，_on_player_entered_arena 会直接转回 dormant_end。
+func _reset_encounter() -> void:
+	if boss == null:
+		return
+	# 0) 取消可能挂起的苏醒计时（玩家在 2 秒缓冲内又逃出）。
+	_cancel_awaken_delay()
+	# 1) 退出战斗：清仇恨、广播 leave_combat（停 BGM / 解锁等）。
+	boss._set_combat(false)
+	# 2) 停止苏醒/战斗演出，回到 RESET（含 BOSS 身上装饰链 DormantSuspensionChains）。
+	if boss.action_animation_player != null:
+		boss.action_animation_player.stop()
+		boss.action_animation_player.play("RESET")
+	if _boss_bg_loop != null and _boss_bg_loop.playing:
+		_boss_bg_loop.stop()
+	# 3) 回出生点、清零速度/无敌、阶段归零、满血。
+	boss.velocity = Vector2.ZERO
+	boss.global_position = boss.spawn_position
+	boss.invincible = false
+	boss.phase_index = 0
+	boss.health = boss.initial_health
+	boss._refresh_health_bar()
+	# 4) 链子计数保持不变（仍为全断）；切回 dormant（让 enter 重新接好领地信号）。
+	_arena_connected = false
+	machine.set_state(BossStateNames.DORMANT)
+
+
+## 取消挂起的苏醒计时（若存在）。
+func _cancel_awaken_delay() -> void:
+	if _awaken_timer != null:
+		if _awaken_timer.timeout.is_connected(_on_awaken_timer_timeout):
+			_awaken_timer.timeout.disconnect(_on_awaken_timer_timeout)
+		_awaken_timer = null
+
+
+## 重置后玩家再次进入领地：2 秒后再切到 dormant_end，
+## 期间 boss 保持在 dormant 展示复位效果，让玩家看清"回到初始"。
+func _start_awaken_delay() -> void:
+	_cancel_awaken_delay()
+	_awaken_timer = get_tree().create_timer(2.0)
+	_awaken_timer.timeout.connect(_on_awaken_timer_timeout)
+
+
+## 2 秒到时：仅当玩家仍在场内、且 boss 没被再次重置（仍是 dormant）才真正苏醒。
+func _on_awaken_timer_timeout() -> void:
+	_awaken_timer = null
+	if _player_in_arena and machine != null \
+			and machine.current_state_name == BossStateNames.DORMANT:
+		machine.set_state(BossStateNames.DORMANT_END)
 
 
 func _on_chain_broke() -> void:
 	_broken_count += 1
-	# 按"剩余链条数"选轨：剩 4/3/2/1 根（即砍断 0/1/2/3 根）→ PREFIGHT_TRACKS[0/1/2/3]。
-	# 4 根全断（剩 0 根）不切到第 5 轨 PREFIGHT_TRACKS[4]，沿用上一轨进入苏醒演出。
-	# 等价：砍断第 1~3 根才切到对应轨，砍断第 4 根不切轨。
-	if _broken_count < TOTAL_CHAINS:
-		_play_track(_broken_count)
-	if _broken_count >= TOTAL_CHAINS:
+	
+	_play_for_current_chains()
+	if _broken_count >= _total_chains:
+		
 		machine.set_state(BossStateNames.DORMANT_END)
+		
+		#if _arena.player_entered.is_connected(_on_player_entered_arena):
+		#	_arena.player_entered.disconnect(_on_player_entered_arena)
+		#if _arena.player_exited.is_connected(_on_player_exited_arena):
+		#	_arena.player_exited.disconnect(_on_player_exited_arena)
+			
+		_arena_connected = false
 
 
 ## ---- 战前 BGM 播放器 ----
 func _ensure_music() -> void:
-	if _music != null and is_instance_valid(_music):
+	if _fight_audio != null and is_instance_valid(_fight_audio):
 		return
 	if boss == null:
 		return
-	_music = boss.get_node_or_null("PreFightMusic") as AudioStreamPlayer
+	_fight_audio = boss.get_node_or_null("FightAudio") as Node2D
+	_boss_bg_loop = _fight_audio.get_node_or_null("boss_bg_loop") as AudioStreamPlayer2D
 
-
-## 切到指定战前悬疑轨（index 对应 PREFIGHT_TRACKS）。
-## OGG 循环写到流上：背景悬疑音持续铺底，直到下一事件切轨或开战停播。
+## 切到指定战前悬疑轨（index 对应 PREFIGHT_CHAIN_NODES），直接播放 FightAudio/ChainX。
 func _play_track(index: int) -> void:
-	if _music == null or index < 0 or index >= PREFIGHT_TRACKS.size():
+	if _fight_audio == null or index < 0 or index >= PREFIGHT_CHAIN_NODES.size():
 		return
-	var stream: AudioStream = PREFIGHT_TRACKS[index]
-	if stream == null:
+	var node := _fight_audio.get_node_or_null(PREFIGHT_CHAIN_NODES[index]) as AudioStreamPlayer2D
+	if node == null:
 		return
-	if stream is AudioStreamOggVorbis:
-		(stream as AudioStreamOggVorbis).loop = true
-	_music.stream = stream
-	_music.stop()
-	_music.play()
+	# 与上一轨不同则先停掉上一轨，避免叠播。
+	if _current_chain != null and _current_chain != node and _current_chain.playing:
+		_current_chain.stop()
+	_current_chain = node
+	if not node.playing:
+		node.play()
 
 
 func _on_boss_enter_combat(_target: Node2D) -> void:
@@ -191,5 +265,6 @@ func _on_boss_enter_combat(_target: Node2D) -> void:
 
 
 func _stop_music() -> void:
-	if _music != null and _music.playing:
-		_music.stop()
+	if _current_chain != null and _current_chain.playing:
+		_current_chain.stop()
+	_current_chain = null
