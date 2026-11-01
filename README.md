@@ -1,4 +1,4 @@
-# Misted / 雾隐
+# godot4-hollow-knight-practice-demo
 
 2D 横版动作 Demo（Godot 4.7）。
 
