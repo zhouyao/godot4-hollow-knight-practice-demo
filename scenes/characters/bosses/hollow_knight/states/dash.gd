@@ -17,9 +17,7 @@ class_name HollowKnightDashState
 
 # ---- 可调参数 ----
 @export var dash_speed: float = 1200.0          ## 冲刺速度（像素 / 秒）
-@export var max_dash_distance: float = 900.0    ## 单次冲刺最大距离（像素）
-@export var min_dash_distance: float = 240.0    ## 单次冲刺最短距离（像素）：太近时别只蹭一下
-@export var dash_overshoot: float = 60.0        ## 冲过玩家多少像素后收招（>0 才能用身体撞到玩家）
+@export var max_dash_distance: float = 1000.0    ## 单次冲刺最大距离（像素）
 @export var deals_contact_damage: bool = true   ## 冲刺中是否用身体接触结算伤害
 @export var antic_fallback_time: float = 1.4    ## 无 dash_anticipation 动画时的前摇兜底时长（秒）
 @export var recover_fallback_time: float = 0.8  ## 无 dash_recover 动画时的后摇兜底时长（秒）
@@ -63,13 +61,7 @@ func enter(_from: StringName) -> void:
 	# 强制朝向冲刺方向（commit 时不应被死区挡住翻面，否则会出现"背对玩家冲"的朝向错位）。
 	boss.face_step(_dir)
 
-	# 目标距离：按发动瞬间到玩家的距离自适应，冲到"刚好越过玩家一点"即收。
-	# 固定 900 在 160~300 距离时会飞过玩家 600+ 像素，落地已经在玩家背后很远，
-	# 下一步只能再走回来 —— 这是"BOSS 总是冲过头"的根因。
-	if p != null:
-		_target_distance = clampf(absf(dx) + dash_overshoot, min_dash_distance, max_dash_distance)
-	else:
-		_target_distance = max_dash_distance
+	_target_distance = max_dash_distance
 
 	if ap != null and ap.has_animation(&"dash_anticipation"):
 		ap.play(&"dash_anticipation")

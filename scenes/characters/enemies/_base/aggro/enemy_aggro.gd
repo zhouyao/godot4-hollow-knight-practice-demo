@@ -29,11 +29,14 @@ var _player_in_zone: bool = false
 ## 归零的那一帧由 tick_combat() 收兵回巢；玩家重新踏进领地时由 enter 回调清零。
 var _zone_exit_timer: float = 0.0
 
-var _enemy: Enemy
+## 宿主敌人引用。故意不标类型（不用 `: Enemy`），否则会与 enemy.gd 形成
+## class_name 循环引用，导致本脚本解析失败（"Cyclic reference"）。所有字段 / 方法
+## 访问都走动态派发，运行期行为完全一致。
+var _enemy
 
 
 ## 绑定宿主并接上领地信号。必须在 _ready() 内、早于 state_machine.start()。
-func setup(enemy: Enemy) -> void:
+func setup(enemy) -> void:
 	_enemy = enemy
 	_bind_enemy_zone()
 
@@ -43,7 +46,7 @@ func setup(enemy: Enemy) -> void:
 ## 视线检测用的碰撞层：默认沿用 collision_mask。
 ## 水下怪等可在 Locomotion.sight_mask 上单独指定（例如让视线穿过水体本身），0 = 沿用。
 func _sight_mask() -> int:
-	var loc := _enemy.locomotion
+	var loc = _enemy.locomotion
 	if loc != null:
 		return loc.get_sight_mask(_enemy.collision_mask)
 	return _enemy.collision_mask
@@ -53,14 +56,14 @@ func _sight_mask() -> int:
 func has_line_of_sight() -> bool:
 	if not _enemy.use_line_of_sight:
 		return true
-	var p := _enemy.get_player()
+	var p = _enemy.get_player()
 	if p == null:
 		return false
-	var space := _enemy.get_world_2d().direct_space_state
+	var space = _enemy.get_world_2d().direct_space_state
 	var query := PhysicsRayQueryParameters2D.create(_enemy.global_position, p.global_position)
 	query.collision_mask = _sight_mask()
 	query.exclude = [_enemy.get_rid()]
-	var result := space.intersect_ray(query)
+	var result = space.intersect_ray(query)
 	if result.is_empty():
 		return true
 	return result.get("collider", null) == p
@@ -79,7 +82,7 @@ func has_line_of_sight() -> bool:
 func is_within_leash() -> bool:
 	if not combat_active:
 		return true
-	var p := _enemy.get_player()
+	var p = _enemy.get_player()
 	if p == null:
 		return false
 	if player_in_zone():
@@ -213,7 +216,7 @@ func tick_combat(delta: float) -> void:
 	# 里被调用，玩家消失时 chase 会提前 return，宽限将永远推不完。
 	if _zone_exit_timer > 0.0:
 		return
-	var p := _enemy.get_player()
+	var p = _enemy.get_player()
 	var lost := false
 	if p == null:
 		lost = true

@@ -14,7 +14,8 @@ extends EnemyStateMachine
 ##   1. 初始状态是 dormant（沉睡 / 挂锁链），不是 patrol。
 ##      EnemyStateMachine._ready() 里"关巡逻 → 进 idle"的重定向只对默认 PATROL 生效，
 ##      不会顶掉这里指定的 dormant（见该函数的守卫注释）。
-##   2. 死亡转 defeat，不是 death —— 击败演出由 BOSS 自己的状态接管。
+##   2. 死亡转 death（击败演出状态，HollowKnight 等把该节点命名为 death，沿用敌人/玩家惯例），
+##      击败演出由 BOSS 自己的状态接管。
 ##
 ## 状态分两层，但共用同一个状态机：
 ##   流程层  dormant / intro / combat / phase_transition / defeat
@@ -27,4 +28,4 @@ func _init() -> void:
 
 
 func _on_enemy_death() -> void:
-	set_state(BossStateNames.DEFEAT)
+	set_state(BossStateNames.DEATH)

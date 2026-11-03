@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://cnyo3pdq86gc1" path="res://scenes/characters/players/player/states/jump.gd" id="5_5ft4q"]
 [ext_resource type="Script" uid="uid://bieyqjtp3ed" path="res://scenes/characters/players/player/states/fall.gd" id="6_hu24a"]
 [ext_resource type="Script" uid="uid://ca8t3tnq0h5vf" path="res://scenes/characters/players/player/states/land.gd" id="7_tuh0m"]
-[ext_resource type="Script" uid="uid://drqeaw71drqys" path="res://scenes/characters/players/player/states/death.gd" id="8_3sgfg"]
+[ext_resource type="Script" uid="uid://f7sp6wnvwghi" path="res://scenes/characters/players/player/states/dash.gd" id="8_inudu"]
 [ext_resource type="Script" uid="uid://bq3d4kwn0fooq" path="res://scenes/characters/players/player/states/look_up.gd" id="9_l2q18"]
 [ext_resource type="Script" uid="uid://blgrmoov26drs" path="res://scenes/characters/players/player/states/look_down.gd" id="10_3vu16"]
 [ext_resource type="Script" uid="uid://bgntrngripevl" path="res://scenes/characters/players/player/states/slash_forward.gd" id="11_eqn8m"]
@@ -32,7 +32,6 @@
 [ext_resource type="AudioStream" uid="uid://cvj0nrnyflx2" path="res://assets/sounds/characters/players/player/voice_cure.ogg" id="29_iaomr"]
 [ext_resource type="AnimationLibrary" uid="uid://chcmuoef0l46l" path="res://resources/characters/players/player/player_action_player.tres" id="30_muvqv"]
 [ext_resource type="PackedScene" path="res://scenes/debug/character_debug.tscn" id="35_aldr5"]
-[ext_resource type="Script" uid="uid://f7sp6wnvwghi" path="res://scenes/characters/players/player/states/dash.gd" id="36_dash"]
 [ext_resource type="Script" path="res://scenes/characters/players/player/states/freeze.gd" id="37_freez"]
 
 [sub_resource type="CapsuleShape2D" id="2_capsule"]
@@ -76,7 +75,7 @@ script = ExtResource("6_hu24a")
 script = ExtResource("7_tuh0m")
 
 [node name="death" type="Node" parent="StateMachine" unique_id=1209192914]
-script = ExtResource("8_3sgfg")
+script = ExtResource("8_inudu")
 
 [node name="look_up" type="Node" parent="StateMachine" unique_id=2010000001]
 script = ExtResource("9_l2q18")
@@ -96,9 +95,6 @@ script = ExtResource("13_vvfi6")
 [node name="hurt" type="Node" parent="StateMachine" unique_id=2010000006]
 script = ExtResource("14_dmgst")
 
-[node name="dash" type="Node" parent="StateMachine" unique_id=1477849673]
-script = ExtResource("36_dash")
-
 [node name="freeze" type="Node" parent="StateMachine" unique_id=2010000007]
 script = ExtResource("37_freez")
 
@@ -109,6 +105,9 @@ metadata/_custom_type_script = "uid://d0bj0v8c3tqof"
 [node name="cure" type="Node" parent="StateMachine" unique_id=751614522]
 script = ExtResource("18_iaomr")
 metadata/_custom_type_script = "uid://crdqw8cbnjm4g"
+
+[node name="dash" type="Node" parent="StateMachine" unique_id=517757447]
+script = ExtResource("8_inudu")
 
 [node name="Audio" type="Node2D" parent="." unique_id=290561661]
 

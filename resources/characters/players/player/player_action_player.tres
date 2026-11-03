@@ -105,7 +105,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Animation_thabd"]
 resource_name = "cure"
-length = 0.9999999999999997
+length = 0.9999999999999996
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true

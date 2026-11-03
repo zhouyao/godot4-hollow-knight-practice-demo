@@ -12,15 +12,19 @@ func enter(_from: StringName) -> void:
 	var p := enemy.get_player() as PlayerInitial
 	if p != null and p.state_machine != null:
 		p.state_machine.set_state(PlayerStateNames.FREEZE, true)
-	AuCameraDirector.shake_heavy()
+	# 相机摇晃：一阶段用 heavy，二阶段更急更剧烈（更高振幅、更慢衰减）。
+	if boss.phase_index < 1:
+		AuCameraDirector.shake_heavy()
+	else:
+		AuCameraDirector.shake(36.0, 0.55)
 	# boss 动画：ActionAnimationPlayer/scream（驱动精灵切到 scream 并逐帧播放）。
 	if boss.action_animation_player != null and boss.action_animation_player.has_animation("scream"):
 		boss.action_animation_player.play("scream")
 	boss.velocity = Vector2.ZERO  # 落地残留速度清零，boss 站定。
-	# 音效：Audio/scream。
-	var scream_audio := boss.get_node_or_null("Audio/scream") as AudioStreamPlayer2D
-	if scream_audio != null:
-		scream_audio.play()
+	# 音效：一二阶段都用入场 scream 音效。
+	var sfx := boss.get_node_or_null("Audio/scream") as AudioStreamPlayer2D
+	if sfx != null:
+		sfx.play()
 	# 冻结 2 秒后转入 idle（中断兜底：若中途被切走则不强行跳转）。
 	await get_tree().create_timer(SCREAM_DURATION).timeout
 	if machine != null and machine.get_state_name() == BossStateNames.SCREAM:

@@ -21,6 +21,8 @@ const COMBAT: StringName = &"combat"
 const PHASE_TRANSITION: StringName = &"phase_transition"
 ## 击败：死亡演出，播完竞技场解锁。
 const DEFEAT: StringName = &"defeat"
+## 击败演出（HollowKnight 等把 defeat 演出节点直接命名为 death，复用敌人/玩家的 death 命名惯例）。
+const DEATH: StringName = &"death"
 
 const IDLE: StringName = &"idle"
 
@@ -60,3 +62,9 @@ const DSTAB_ANTIC: StringName = &"dstab_antic"
 const DSTAB: StringName = &"dstab"
 ## 下砸落地。
 const DSTAB_LAND: StringName = &"dstab_land"
+
+## 二阶段·跳跃下砸（朝玩家头顶跃击，原地版 Desolate Dive）：状态节点名即 down_smash。
+const DOWN_SMASH: StringName = &"down_smash"
+
+## 二阶段·瞬移下杀（瞬移到玩家头顶快速下砸，Desolate Dive 瞬移版）：状态节点名即 teleport_smash。
+const TELEPORT_SMASH: StringName = &"teleport_smash"

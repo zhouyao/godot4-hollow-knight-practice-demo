@@ -138,6 +138,21 @@ func _dead() -> void:
 
 ## BOSS 不做尸体淡出。
 ## _dead() 里的 _start_corpse_fade() 会在 corpse_lifetime 秒后把节点 queue_free 掉，
-## 那会打断击败演出（动画没播完、信号没发完）。演出与清理全部交给 defeat 状态。
+## 那会打断击败演出（动画没播完、信号没发完）。演出与清理全部交给 death 状态。
 func _start_corpse_fade() -> void:
 	pass
+
+
+## BOSS 的奖励掉落延后到击败演出（death 状态）收尾再撒，
+## 避免"一断气就爆金币"打断 boss 升天淡出的演出节奏。
+## 基类 Enemy._dead() 里调用的 _drop_loot() 在此改为空操作，真正的掉落交给下面的 drop_loot()。
+func _drop_loot() -> void:
+	pass
+
+
+## 击败演出收尾时由 death 状态调用：在 at 处（默认跟随 DropMarker）撒落奖励。
+func drop_loot(at: Vector2 = Vector2.ZERO) -> void:
+	if drop_table == null:
+		return
+	var pos := at if at != Vector2.ZERO else (drop_marker.global_position if drop_marker != null else global_position)
+	DropSpawner.spawn_table(drop_table, pos, drop_scatter)

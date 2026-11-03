@@ -48,9 +48,8 @@ func update(delta: float) -> void:
 		_land_timer += delta
 		if _land_timer >= LAND_TO_SCREAM_DELAY \
 				and machine != null and machine.get_state_name() == BossStateNames.DORMANT_END:
-			# dormant_end 结束：解除无敌，玩家自此可攻击 boss。
-			if boss != null:
-				boss.invincible = false
+			# 这里不解锁：scream 仍属于过场（见 HollowKnight.is_cutscene_invulnerable），
+			# 真正的解锁收口在 idle.enter() —— 过场全部播完才算"可以攻击"。
 			machine.set_state(BossStateNames.SCREAM)
 			var bg_loop := boss.get_node_or_null("FightAudio/boss_bg_loop") as AudioStreamPlayer2D
 			if bg_loop != null and not bg_loop.playing:

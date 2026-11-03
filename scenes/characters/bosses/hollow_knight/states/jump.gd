@@ -1,2 +1,0 @@
-extends BossState
-class_name HollowKnightJumpState

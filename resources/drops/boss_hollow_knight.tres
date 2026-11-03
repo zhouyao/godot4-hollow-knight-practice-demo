@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="DropTable" format=3 uid="uid://cwg4jh0mvmcbg"]
+
+[ext_resource type="Script" uid="uid://d0emdc03j66x7" path="res://resources/drops/drop_table.gd" id="1_tbl"]
+[ext_resource type="Script" uid="uid://c3fh1kim240ss" path="res://resources/drops/drop_entry.gd" id="2_ent"]
+[ext_resource type="PackedScene" uid="uid://cfnktgjb8ajfp" path="res://scenes/drops/coin_pickup.tscn" id="3_coin"]
+
+[sub_resource type="Resource" id="Resource_coin"]
+script = ExtResource("2_ent")
+scene = ExtResource("3_coin")
+min_amount = 18
+max_amount = 28
+max_pickups = 30
+
+[resource]
+script = ExtResource("1_tbl")
+entries = Array[ExtResource("2_ent")]([SubResource("Resource_coin")])
+max_pickups = 30

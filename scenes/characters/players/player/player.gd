@@ -425,7 +425,9 @@ func _hit_enemy(body: Node2D) -> bool:
 	if not _claim_hit(body):
 		return false
 	if body is Enemy:
-		var landed: bool = not body.dead and not body.invincible
+		# 用目标的统一免疫判据：死亡 / 受击无敌帧 / BOSS 过场锁定（沉睡、苏醒演出）都算"没打中"，
+		# 不给能量、不施加反冲 —— 否则砍沉睡中的 boss 会有"打到了"的手感。
+		var landed: bool = not body.is_invulnerable()
 		body.take_damage(slash_damage, self)
 		if landed:
 			energy = mini(energy + 1, max_energy)

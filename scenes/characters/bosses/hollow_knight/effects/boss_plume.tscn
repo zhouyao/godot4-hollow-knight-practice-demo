@@ -92,9 +92,8 @@ script = ExtResource("1_cfe65")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1732774782]
 sprite_frames = SubResource("SpriteFrames_cfe65")
 animation = &"plume_burst"
-frame = 10
-frame_progress = 1.0
+offset = Vector2(0, -207.5)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1773549290]
-position = Vector2(7.5, 5.5)
+position = Vector2(7.5, -203.5)
 shape = SubResource("RectangleShape2D_y3m3p")

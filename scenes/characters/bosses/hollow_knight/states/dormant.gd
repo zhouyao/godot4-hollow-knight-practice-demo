@@ -36,9 +36,14 @@ var _frame_count: int = 0
 
 
 func enter(_from: StringName) -> void:
-	# 沉睡阶段（挂锁链）不可被玩家攻击：只有 dormant_end 结束（进入 scream）后才解除。
+	# 沉睡阶段（挂锁链）不可被玩家攻击：真正的判据是 HollowKnight.is_cutscene_invulnerable()，
+	# 这里再置一次 invincible，让玩家侧"是否命中生效"的判定也一致。
+	# 顺手停掉上一轮残留的受击无敌计时：它超时会把 invincible 改回 false，
+	# 让"战斗中被玩家逃出领地而重置回 dormant"的 boss 变成可攻击。
 	if boss != null:
 		boss.invincible = true
+		if boss.hurt_invincibility_timer != null:
+			boss.hurt_invincibility_timer.stop()
 	_ensure_refs()
 	_start_dormant_sprite()
 	_track_head()
@@ -150,6 +155,9 @@ func _connect_arena() -> void:
 
 
 func _on_player_entered_arena(_zone: Node, _player: Node2D) -> void:
+	# BOSS 已死：踏入领地不再有任何效果（不播战前 BGM、不苏醒、不重置）。
+	if boss != null and boss.dead:
+		return
 	_player_in_arena = true
 	# 四根链子已全断：玩家再次踏入领地 → 延迟 2 秒再苏醒，让玩家看清"回到 dormant"的效果。
 	if _total_chains > 0 and _broken_count >= _total_chains:
@@ -167,6 +175,9 @@ func _play_for_current_chains() -> void:
 
 
 func _on_player_exited_arena(_zone: Node, _player: Node2D) -> void:
+	# BOSS 已死：离开领地不再有任何效果（不重置、不复活、不切回 dormant）。
+	if boss != null and boss.dead:
+		return
 	_player_in_arena = false
 	_stop_music()
 	if _boss_bg_loop != null and _boss_bg_loop.playing:
@@ -192,10 +203,14 @@ func _reset_encounter() -> void:
 		boss.action_animation_player.play("RESET")
 	if _boss_bg_loop != null and _boss_bg_loop.playing:
 		_boss_bg_loop.stop()
-	# 3) 回出生点、清零速度/无敌、阶段归零、满血。
+	# 3) 回出生点、清零速度/击退/无敌、阶段归零、满血。
 	boss.velocity = Vector2.ZERO
+	boss.knockback = Vector2.ZERO
 	boss.global_position = boss.spawn_position
 	boss.invincible = false
+	# 停掉上一轮战斗残留的受击无敌计时，避免它超时后把 dormant 的无敌清掉。
+	if boss.hurt_invincibility_timer != null:
+		boss.hurt_invincibility_timer.stop()
 	boss.phase_index = 0
 	boss.health = boss.initial_health
 	boss._refresh_health_bar()

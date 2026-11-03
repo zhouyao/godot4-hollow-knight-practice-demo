@@ -455,8 +455,15 @@ func is_facing_consistent() -> bool:
 
 #region 伤害、死亡与掉落
 
+## 是否免疫玩家伤害：死亡 / 受击无敌帧，子类可再叠加"剧情锁定"（如 BOSS 沉睡、过场）。
+## take_damage() 的首行守卫与玩家侧"这次命中是否生效"的判定共用本方法，
+## 避免两处判据漂移 —— 伤害被挡下了，玩家却照样回能量 / 被反冲。
+func is_invulnerable() -> bool:
+	return dead or invincible
+
+
 func take_damage(amount: int, from: Node2D = null) -> void:
-	if dead or invincible:
+	if is_invulnerable():
 		return
 	# 受击命中特效：谁被砍谁生成（场景由本节点配置决定，可按来源种类细分）。
 	HitEffect.spawn(self, global_position, get_tree().current_scene,
