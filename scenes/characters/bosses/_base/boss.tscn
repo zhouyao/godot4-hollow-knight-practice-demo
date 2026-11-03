@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://buf7ckj7d41uo"]
 
 [ext_resource type="Script" uid="uid://btp2nfp0r0ivr" path="res://scenes/characters/bosses/_base/boss.gd" id="1_boss"]
-[ext_resource type="Script" uid="uid://cd0vy3j33a5pj" path="res://scenes/characters/bosses/_base/states/dormant.gd" id="2_ggiq1"]
 [ext_resource type="PackedScene" path="res://scenes/debug/character_debug.tscn" id="4_dbg"]
 [ext_resource type="Script" uid="uid://dbjq3hplhf027" path="res://scenes/characters/bosses/_base/BossStateMachine.gd" id="6_bsm"]
 [ext_resource type="Texture2D" uid="uid://j2o25agvlkow" path="res://assets/sprites/placeholders/Square/Square-0006.png" id="7_sq"]
@@ -44,10 +43,6 @@ one_shot = true
 [node name="StateMachine" type="Node" parent="." unique_id=885825929]
 script = ExtResource("6_bsm")
 host_path = NodePath("..")
-
-[node name="dormant" type="Node" parent="StateMachine" unique_id=1185701110]
-script = ExtResource("2_ggiq1")
-metadata/_custom_type_script = "uid://cd0vy3j33a5pj"
 
 [node name="Audio" type="Node2D" parent="." unique_id=196072747]
 

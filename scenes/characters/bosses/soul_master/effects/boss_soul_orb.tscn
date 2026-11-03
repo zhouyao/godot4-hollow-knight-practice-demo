@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://cf82fm2kb15jx"]
+
+[ext_resource type="Script" uid="uid://ciik2a2ryga0u" path="res://scenes/characters/bosses/soul_master/effects/boss_soul_orb.gd" id="1_6e3q7"]
+[ext_resource type="Texture2D" uid="uid://bgigtmn5arcvw" path="res://assets/animations/characters/bosses/soul_master/_environment/soul_orb.png" id="2_yeylx"]
+
+[node name="BossSoulOrb" type="Node2D" unique_id=2119658723]
+script = ExtResource("1_6e3q7")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=309896637]
+texture = ExtResource("2_yeylx")

@@ -204,13 +204,35 @@ func _spawn_splash(body: Node2D, strength: float = 1.0) -> void:
 	spr.centered = true
 	spr.scale = Vector2.ONE * strength
 	spr.z_index = splash_z_index
-	# 挂在宿主区域所在的父节点（即 RainZone）下，随雨区出树一起清理。
-	var host := get_zone()
-	var parent := host.get_parent() if host != null else get_tree().current_scene
+	# 挂在关卡根/特效容器上（变换近似恒等），而不是宿主区域的父节点（RainZone）。
+	# 雨区根节点常被摆在离落点很远的位置（level_1 里 RainZone 在 (-2800,0)、
+	# RainZone2 在 (5965,0)，而地面在 y≈500），父节点离落点越远，
+	# 入树时的插值基准就越偏 —— 见下面的 reset_physics_interpolation()。
+	var parent := _splash_parent()
 	parent.add_child(spr)
 	# 必须先入树、再设 global_position：否则父节点（如 RainZone 在关卡里的 -2800,0）
 	# 的全局变换会被二次叠加，水花被甩到屏幕外（表现为"节点生成了却看不见"）。
 	spr.global_position = body.global_position + foot_offset \
 		+ Vector2(randf_range(-jitter_x, jitter_x), 0.0)
+	# 项目开了 physics/common/physics_interpolation：新节点入树时记录的插值基准
+	# 是它当时的变换（父节点下的原点），而坐标是入树之后才写进去的。
+	# 不重置的话，首帧会从"父节点原点"插值到"脚下"，表现为水花在玩家头顶闪一下
+	# （雨区根节点 y=0，玩家脚下 y≈500，差 500px 正好越过角色）。
+	# 顺序不能反：必须在写入新坐标之后调用。
+	spr.reset_physics_interpolation()
 	spr.play(&"splash")
 	spr.animation_finished.connect(spr.queue_free)
+
+
+## 水花挂载点：优先关卡根（变换近似恒等，离落点最近，插值基准不会跑偏）；
+## 关卡根不可用时退回宿主区域的父节点，最后退回场景树根，保证任何关卡下都能工作。
+## 水花是 5 帧后自毁的一次性特效，挂到关卡根不会残留在雨区之外。
+func _splash_parent() -> Node:
+	if is_inside_tree():
+		var scene := get_tree().current_scene
+		if scene != null and scene != self:
+			return scene
+	var host := get_zone()
+	if host != null and host.get_parent() != null:
+		return host.get_parent()
+	return get_tree().root

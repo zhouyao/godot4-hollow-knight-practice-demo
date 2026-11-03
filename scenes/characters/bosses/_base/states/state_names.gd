@@ -15,6 +15,8 @@ const DORMANT: StringName = &"dormant"
 const DORMANT_END: StringName = &"dormant_end"
 ## 苏醒吼叫 / 入场演出：HollowKnight 实际使用的入场节点名。
 const SCREAM: StringName = &"scream"
+## 入场浮现：玩家踏入领地后 BOSS 从虚无中现身（SoulMaster 使用；dormant 负责候场与复位）。
+const ENTRANCE: StringName = &"entrance"
 ## 击败演出：播完由 death 状态收尾（掉落 / 关碰撞 / 停 BGM）。
 const DEATH: StringName = &"death"
 

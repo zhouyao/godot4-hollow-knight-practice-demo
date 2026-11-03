@@ -5,7 +5,6 @@
 [ext_resource type="Script" uid="uid://0anauft5nso" path="res://addons/camera_director/AuCameraLockArea.gd" id="2_p6tgj"]
 [ext_resource type="Texture2D" uid="uid://ciidxwely181f" path="res://assets/sprites/backgrounds/bg_2.png" id="3_c3uki"]
 [ext_resource type="PackedScene" uid="uid://ctqrjufww6mnn" path="res://scenes/worlds/_zones/rain_zone.tscn" id="5_1d5ey"]
-[ext_resource type="Texture2D" uid="uid://cucdtk38ti2vg" path="res://assets/sprites/backgrounds/bg_4.png" id="5_8jedn"]
 [ext_resource type="PackedScene" uid="uid://dbjleohr8a1u2" path="res://scenes/props/floor.tscn" id="5_bd7ha"]
 [ext_resource type="Texture2D" uid="uid://b2rove6y8y4dd" path="res://assets/sprites/backgrounds/bg_3.png" id="5_l8c12"]
 [ext_resource type="PackedScene" uid="uid://cb66xhglsot3g" path="res://addons/environment_fx/fog.tscn" id="5_tqina"]
@@ -24,6 +23,7 @@
 [ext_resource type="PackedScene" uid="uid://34xyraq1r58p" path="res://scenes/characters/bosses/hollow_knight/effects/boss_chain.tscn" id="18_8ihyp"]
 [ext_resource type="Script" uid="uid://dk34x4net1iyr" path="res://scenes/characters/bosses/_base/behaviors/boss_arena_behavior.gd" id="20_beh"]
 [ext_resource type="Script" uid="uid://6o0ekifsw70h" path="res://scenes/worlds/levels/level_1.gd" id="21_lvl"]
+[ext_resource type="PackedScene" uid="uid://dcw0gneskq823" path="res://scenes/characters/bosses/soul_master/soul_master.tscn" id="22_n30dk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rywq7"]
 size = Vector2(40, 40)
@@ -84,6 +84,9 @@ draw_z = 100
 [node name="Snow" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="2" unique_id=613339209 instance=ExtResource("6_1d5ey")]
 position = Vector2(1300, 200)
 
+[node name="RainZone2" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="3" unique_id=2055492805 instance=ExtResource("5_1d5ey")]
+position = Vector2(6000, 0)
+
 [node name="Floor3" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="0" unique_id=282550612 instance=ExtResource("5_bd7ha")]
 modulate = Color(0, 0, 0, 0.8)
 position = Vector2(-200, 200)
@@ -102,14 +105,19 @@ scale = Vector2(120, 0.4)
 [node name="Floor5" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="3" unique_id=498290294 instance=ExtResource("5_bd7ha")]
 modulate = Color(0, 0, 0, 1)
 position = Vector2(2000, 500)
-scale = Vector2(89, 0.192)
+scale = Vector2(95, 0.192)
 
 [node name="Floor6" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="4" unique_id=1778910462 instance=ExtResource("5_bd7ha")]
 modulate = Color(0, 0, 0, 1)
 position = Vector2(-3700, 500)
 scale = Vector2(50, 0.16)
 
-[node name="Chest" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="5" unique_id=1778910463 instance=ExtResource("14_chest")]
+[node name="Floor7" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="5" unique_id=1506304031 instance=ExtResource("5_bd7ha")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(5000, 500)
+scale = Vector2(89, 0.192)
+
+[node name="Chest" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="6" unique_id=1778910463 instance=ExtResource("14_chest")]
 position = Vector2(-1800, 503)
 
 [node name="Crawlid" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=220108385 instance=ExtResource("7_xo2r0")]
@@ -193,28 +201,34 @@ max_health = 3
 initial_health = 2
 patrol_enabled = false
 
-[node name="Player" parent="." index="9" unique_id=1112432844]
-position = Vector2(1700, 200)
+[node name="SoulMasterScene" type="Node2D" parent="." index="9" unique_id=932599692]
+
+[node name="BossArena" parent="SoulMasterScene" index="0" unique_id=469432595 instance=ExtResource("11_zone")]
+position = Vector2(5000, -200)
+size = Vector2(1920, 700)
+centered = false
+
+[node name="BossArenaBehavior" type="Node" parent="SoulMasterScene/BossArena" index="1" unique_id=122894332]
+script = ExtResource("20_beh")
+auto_start_fight = false
+boss_node = NodePath("../../SoulMaster")
+
+[node name="SoulMaster" parent="SoulMasterScene" index="1" unique_id=979105824 instance=ExtResource("22_n30dk")]
+position = Vector2(5983, -88)
+
+[node name="Player" parent="." index="10" unique_id=1112432844]
+position = Vector2(4700, 200)
 max_health = 100
 initial_health = 100
 
-[node name="Layer_0" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=1048978077]
-repeat_size = Vector2(6000, 0)
-
-[node name="Sprite2D" type="Sprite2D" parent="Foreground/Layer_0" index="0" unique_id=94120090]
-position = Vector2(400, -75)
-scale = Vector2(1.5, 1.5)
-texture = ExtResource("5_8jedn")
-offset = Vector2(0, 369)
-
-[node name="Layer_1" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="1" unique_id=80876967]
+[node name="Layer_1" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=80876967]
 
 [node name="Sprite2D" type="Sprite2D" parent="Foreground/Layer_1" index="0" unique_id=431540785]
 position = Vector2(400, 438)
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("5_l8c12")
 
-[node name="Layer_2" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="2" unique_id=476770090]
+[node name="Layer_2" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="1" unique_id=476770090]
 
 [node name="Sprite2D" type="Sprite2D" parent="Foreground/Layer_2" index="0" unique_id=1746045946]
 position = Vector2(-400, 440)
@@ -288,15 +302,30 @@ can_look_down = true
 area_size = Vector2(1900, 600)
 centered = false
 
-[node name="BossCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="3" unique_id=1273820883 node_paths=PackedStringArray("vertical_lock_marker")]
+[node name="HollowKnightCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="3" unique_id=1273820883 node_paths=PackedStringArray("horizontal_lock_marker", "vertical_lock_marker")]
 position = Vector2(1953, -41)
 collision_layer = 16
 monitorable = false
 script = ExtResource("2_p6tgj")
-vertical_lock_marker = NodePath("../../Markers/boss_vertical_lock")
+horizontal_lock_marker = NodePath("../../Markers/hollow_knight_lock")
+vertical_lock_marker = NodePath("../../Markers/hollow_knight_lock")
+horizontal_range = 600.0
 can_look_up = true
 can_look_down = true
 area_size = Vector2(3134, 600)
+centered = false
+
+[node name="SoulMasterCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="4" unique_id=147958072 node_paths=PackedStringArray("horizontal_lock_marker", "vertical_lock_marker")]
+position = Vector2(5000, -200)
+collision_layer = 16
+monitorable = false
+script = ExtResource("2_p6tgj")
+horizontal_lock_marker = NodePath("../../Markers/soul_master_lock")
+vertical_lock_marker = NodePath("../../Markers/soul_master_lock")
+horizontal_range = 100.0
+can_look_up = true
+can_look_down = true
+area_size = Vector2(1920, 700)
 centered = false
 
 [node name="vertical_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="0" unique_id=1345446756]
@@ -305,10 +334,13 @@ position = Vector2(0, 155)
 [node name="horizontal_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="1" unique_id=708724070]
 position = Vector2(-870, 318)
 
-[node name="boss_vertical_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="2" unique_id=2003872933]
-position = Vector2(4000, 100)
+[node name="hollow_knight_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="2" unique_id=2003872933]
+position = Vector2(3378, 111)
+
+[node name="soul_master_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="3" unique_id=529168333]
+position = Vector2(5979, 111)
 
 [connection signal="body_entered" from="CameraLock/Areas/ZoomCameraLock" to="." method="_on_zoom_camera_lock_body_entered"]
 [connection signal="body_exited" from="CameraLock/Areas/ZoomCameraLock" to="." method="_on_zoom_camera_lock_body_exited"]
-[connection signal="body_entered" from="CameraLock/Areas/BossCameraLock" to="." method="_on_boss_camera_lock_body_entered"]
-[connection signal="body_exited" from="CameraLock/Areas/BossCameraLock" to="." method="_on_boss_camera_lock_body_exited"]
+[connection signal="body_entered" from="CameraLock/Areas/HollowKnightCameraLock" to="." method="_on_boss_camera_lock_body_entered"]
+[connection signal="body_exited" from="CameraLock/Areas/HollowKnightCameraLock" to="." method="_on_boss_camera_lock_body_exited"]

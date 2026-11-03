@@ -1,0 +1,536 @@
+[gd_scene format=3 uid="uid://dcw0gneskq823"]
+
+[ext_resource type="PackedScene" uid="uid://buf7ckj7d41uo" path="res://scenes/characters/bosses/_base/boss.tscn" id="1_e4ahp"]
+[ext_resource type="Script" uid="uid://buq6qxnhilui2" path="res://scenes/characters/bosses/soul_master/soul_master.gd" id="2_6ncju"]
+[ext_resource type="Resource" uid="uid://cwg4jh0mvmcbg" path="res://resources/drops/boss_hollow_knight.tres" id="3_ct8p8"]
+[ext_resource type="Texture2D" uid="uid://bc8q3gjc3fydm" path="res://assets/animations/characters/bosses/soul_master/dash/0.png" id="3_kjrk5"]
+[ext_resource type="Texture2D" uid="uid://ckxy0fgneolcj" path="res://assets/animations/characters/bosses/soul_master/idle/0.png" id="3_magkm"]
+[ext_resource type="Texture2D" uid="uid://bvv3tpc4cbvmx" path="res://assets/animations/characters/bosses/soul_master/death/0.png" id="3_qsy22"]
+[ext_resource type="Texture2D" uid="uid://betcpqrk0kne2" path="res://assets/animations/characters/bosses/soul_master/death/1.png" id="4_euaf3"]
+[ext_resource type="Script" uid="uid://bbn7qrag258t1" path="res://scenes/characters/bosses/soul_master/states/entrance.gd" id="4_p2y33"]
+[ext_resource type="Texture2D" uid="uid://jvbrmqbo6v2x" path="res://assets/animations/characters/bosses/soul_master/idle/1.png" id="4_qr8rn"]
+[ext_resource type="Texture2D" uid="uid://dyfuuxpusdv7i" path="res://assets/animations/characters/bosses/soul_master/dash/1.png" id="4_y1e1l"]
+[ext_resource type="Texture2D" uid="uid://c8nstdb0o4cpa" path="res://assets/animations/characters/bosses/soul_master/dash/2.png" id="5_6wrtd"]
+[ext_resource type="Texture2D" uid="uid://cullh5i4paju3" path="res://assets/animations/characters/bosses/soul_master/idle/2.png" id="5_28c4j"]
+[ext_resource type="Texture2D" uid="uid://cis7x7awcj3a3" path="res://assets/animations/characters/bosses/soul_master/death/2.png" id="5_ifem2"]
+[ext_resource type="Script" uid="uid://bxo8s1o3rcvgh" path="res://scenes/characters/bosses/soul_master/states/idle.gd" id="5_nv7c8"]
+[ext_resource type="Texture2D" uid="uid://cvrqicbv0p802" path="res://assets/animations/characters/bosses/soul_master/idle/3.png" id="6_41th6"]
+[ext_resource type="AudioStream" uid="uid://dhx6s41cw58ty" path="res://assets/sounds/characters/bosses/soul_master/roar.ogg" id="6_77din"]
+[ext_resource type="Texture2D" uid="uid://dsl5gwo6ssxf2" path="res://assets/animations/characters/bosses/soul_master/death/3.png" id="6_kjrk5"]
+[ext_resource type="Texture2D" uid="uid://u6t32ulekcwb" path="res://assets/animations/characters/bosses/soul_master/dash_start/0.png" id="6_l4wxk"]
+[ext_resource type="Texture2D" uid="uid://dvcct073omyd4" path="res://assets/animations/characters/bosses/soul_master/idle/4.png" id="7_j3xts"]
+[ext_resource type="Texture2D" uid="uid://ca7cf3g0xrkg0" path="res://assets/animations/characters/bosses/soul_master/dash_start/1.png" id="7_qbcd7"]
+[ext_resource type="Texture2D" uid="uid://dju5mxcsu177d" path="res://assets/animations/characters/bosses/soul_master/death/4.png" id="7_y1e1l"]
+[ext_resource type="Texture2D" uid="uid://omw1wlf6bu6l" path="res://assets/animations/characters/bosses/soul_master/death/5.png" id="8_6wrtd"]
+[ext_resource type="Texture2D" uid="uid://d2d346btah8cj" path="res://assets/animations/characters/bosses/soul_master/idle/5.png" id="8_0557o"]
+[ext_resource type="Texture2D" uid="uid://btbp5lu1twxb5" path="res://assets/animations/characters/bosses/soul_master/dash_start/2.png" id="8_qyo0a"]
+[ext_resource type="Texture2D" uid="uid://cy08833fas1qg" path="res://assets/animations/characters/bosses/soul_master/dash_start/3.png" id="9_2r6mc"]
+[ext_resource type="Texture2D" uid="uid://bkwxcl0e8ilyo" path="res://assets/animations/characters/bosses/soul_master/death/6.png" id="9_60w7i"]
+[ext_resource type="Texture2D" uid="uid://cjww8mici26vy" path="res://assets/animations/characters/bosses/soul_master/dash_start/4.png" id="10_evxlf"]
+[ext_resource type="Texture2D" uid="uid://jqby1rusbjl" path="res://assets/animations/characters/bosses/soul_master/dash_start/5.png" id="11_ntc8i"]
+[ext_resource type="Texture2D" uid="uid://rkrqniglhrga" path="res://assets/animations/characters/bosses/soul_master/teleport/0.png" id="25_gdyqg"]
+[ext_resource type="Texture2D" uid="uid://dlg64r2acsgda" path="res://assets/animations/characters/bosses/soul_master/quake_down/Quake.png" id="25_gvvkx"]
+[ext_resource type="Texture2D" uid="uid://bfdx7agh8s7ms" path="res://assets/animations/characters/bosses/soul_master/quake_air/StartQuake.png" id="25_smtyn"]
+[ext_resource type="Texture2D" uid="uid://c8msgx8sw7rgl" path="res://assets/animations/characters/bosses/soul_master/teleport/1.png" id="26_67kj0"]
+[ext_resource type="Texture2D" uid="uid://b2rrgca10xp3l" path="res://assets/animations/characters/bosses/soul_master/teleport/2.png" id="27_4fwk6"]
+[ext_resource type="Texture2D" uid="uid://cwaqvpbwn5s0b" path="res://assets/animations/characters/bosses/soul_master/summon/0.png" id="27_wetfh"]
+[ext_resource type="Texture2D" uid="uid://dso8wtcruegpu" path="res://assets/animations/characters/bosses/soul_master/teleport/3.png" id="28_b6iid"]
+[ext_resource type="Texture2D" uid="uid://bls32ikwqfrh3" path="res://assets/animations/characters/bosses/soul_master/summon/1.png" id="28_nrbbf"]
+[ext_resource type="Texture2D" uid="uid://cpjngfdyj28et" path="res://assets/animations/characters/bosses/soul_master/teleport/4.png" id="29_7kjjp"]
+[ext_resource type="Texture2D" uid="uid://dlu6ddakp6yhn" path="res://assets/animations/characters/bosses/soul_master/summon/2.png" id="29_tx8yu"]
+[ext_resource type="Texture2D" uid="uid://dp2ggsembi7gw" path="res://assets/animations/characters/bosses/soul_master/teleport/5.png" id="30_gvvkx"]
+[ext_resource type="Texture2D" uid="uid://dxbdtis0rg7ft" path="res://assets/animations/characters/bosses/soul_master/summon/3.png" id="30_vtd86"]
+[ext_resource type="Texture2D" uid="uid://2xqmm74lljmt" path="res://assets/animations/characters/bosses/soul_master/teleport/6.png" id="31_smtyn"]
+[ext_resource type="Texture2D" uid="uid://e6ke6olsexbx" path="res://assets/animations/characters/bosses/soul_master/summon_start/0.png" id="31_vtd86"]
+[ext_resource type="Texture2D" uid="uid://b6cy6pnn2jwvh" path="res://assets/animations/characters/bosses/soul_master/teleport_effect/0.png" id="32_7kjjp"]
+[ext_resource type="Texture2D" uid="uid://bfdltut32h2he" path="res://assets/animations/characters/bosses/soul_master/summon_start/1.png" id="32_ct8p8"]
+[ext_resource type="Texture2D" uid="uid://ckyrna5l84eo8" path="res://assets/animations/characters/bosses/soul_master/teleport_effect/1.png" id="33_gvvkx"]
+[ext_resource type="Texture2D" uid="uid://yy1eoo5yixsf" path="res://assets/animations/characters/bosses/soul_master/summon_start/2.png" id="33_p2y33"]
+[ext_resource type="Texture2D" uid="uid://bycd7bmvfsnrr" path="res://assets/animations/characters/bosses/soul_master/teleport_effect/2.png" id="34_smtyn"]
+[ext_resource type="Texture2D" uid="uid://bifova32ybqly" path="res://assets/animations/characters/bosses/soul_master/teleport_effect/3.png" id="35_kngdi"]
+[ext_resource type="Texture2D" uid="uid://e4d1qkow2ksx" path="res://assets/animations/characters/bosses/soul_master/_environment/roar_effect.png" id="44_3ujpu"]
+[ext_resource type="AudioStream" uid="uid://06diy6eonaet" path="res://assets/sounds/characters/bosses/soul_master/bgm.ogg" id="50_tlrax"]
+[ext_resource type="Script" path="res://scenes/characters/bosses/soul_master/states/dormant.gd" id="7_dorm"]
+[ext_resource type="Resource" path="res://resources/characters/enemies/_shared/locomotion/flying.tres" id="8_loco"]
+[ext_resource type="Script" path="res://scenes/characters/bosses/soul_master/states/death.gd" id="9_dth"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_magkm"]
+radius = 142.08
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y3tf2"]
+atlas = ExtResource("25_smtyn")
+region = Rect2(420, 0, 420, 307)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_utio7"]
+atlas = ExtResource("25_smtyn")
+region = Rect2(840, 0, 420, 307)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wetfh"]
+atlas = ExtResource("25_smtyn")
+region = Rect2(1260, 0, 420, 307)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nrbbf"]
+atlas = ExtResource("25_smtyn")
+region = Rect2(0, 307, 420, 307)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tx8yu"]
+atlas = ExtResource("25_smtyn")
+region = Rect2(420, 307, 420, 307)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vtd86"]
+atlas = ExtResource("25_smtyn")
+region = Rect2(840, 307, 420, 307)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_e4ahp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_kjrk5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_y1e1l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_6wrtd")
+}],
+"loop": 1,
+"name": &"dash",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_l4wxk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_qbcd7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_qyo0a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_2r6mc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_evxlf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_ntc8i")
+}],
+"loop": 0,
+"name": &"dash_start",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 3.0,
+"texture": ExtResource("3_qsy22")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_euaf3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ifem2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_kjrk5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_y1e1l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_6wrtd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_60w7i")
+}],
+"loop": 1,
+"name": &"death",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.2,
+"texture": ExtResource("3_magkm")
+}, {
+"duration": 1.2,
+"texture": ExtResource("4_qr8rn")
+}, {
+"duration": 1.2,
+"texture": ExtResource("5_28c4j")
+}, {
+"duration": 1.2,
+"texture": ExtResource("6_41th6")
+}, {
+"duration": 1.2,
+"texture": ExtResource("7_j3xts")
+}, {
+"duration": 1.2,
+"texture": ExtResource("8_0557o")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_y3tf2")
+}, {
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_utio7")
+}, {
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_wetfh")
+}, {
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_nrbbf")
+}, {
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_tx8yu")
+}, {
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_vtd86")
+}],
+"loop": 1,
+"name": &"quake_air",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("25_gvvkx")
+}],
+"loop": 1,
+"name": &"quake_down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("27_wetfh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_nrbbf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_tx8yu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_vtd86")
+}],
+"loop": 1,
+"name": &"summon",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 0.5,
+"texture": ExtResource("31_vtd86")
+}, {
+"duration": 0.5,
+"texture": ExtResource("32_ct8p8")
+}, {
+"duration": 0.5,
+"texture": ExtResource("33_p2y33")
+}],
+"loop": 0,
+"name": &"summon_start",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("25_gdyqg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_67kj0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_4fwk6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_b6iid")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_7kjjp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_gvvkx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_smtyn")
+}],
+"loop": 0,
+"name": &"teleport",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gdyqg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("44_3ujpu")
+}],
+"loop": 0,
+"name": &"roar_effect",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("32_7kjjp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_gvvkx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_smtyn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_kngdi")
+}],
+"loop": 0,
+"name": &"teleport_effect",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_utio7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EffectAnimatedSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EffectAnimatedSprite:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"teleport_effect"]
+}
+
+[sub_resource type="Animation" id="Animation_7kjjp"]
+resource_name = "dash"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"dash"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.33333334, 0.6666667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_gvvkx"]
+resource_name = "dash_start"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"dash_start"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.16666667, 0.33333334, 0.5, 0.6666667, 0.8333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+
+[sub_resource type="Animation" id="Animation_smtyn"]
+resource_name = "death"
+length = 1.2857142857142854
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"death"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.42857143, 0.5714286, 0.71428573, 0.85714287, 1, 1.1428572),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6]
+}
+
+[sub_resource type="Animation" id="Animation_kngdi"]
+resource_name = "idle"
+length = 1.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+
+[sub_resource type="Animation" id="Animation_y3tf2"]
+resource_name = "teleport"
+length = 1.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"teleport"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Animation/EffectAnimatedSprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.76666665, 1, 1.1333333, 1.2333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Animation/EffectAnimatedSprite:animation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"teleport_effect"]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_utio7"]
+_data = {
+&"RESET": SubResource("Animation_utio7"),
+&"dash": SubResource("Animation_7kjjp"),
+&"dash_start": SubResource("Animation_gvvkx"),
+&"death": SubResource("Animation_smtyn"),
+&"idle": SubResource("Animation_kngdi"),
+&"teleport": SubResource("Animation_y3tf2")
+}
+
+[node name="Boss" unique_id=170488292 instance=ExtResource("1_e4ahp")]
+script = ExtResource("2_6ncju")
+max_health = 100
+initial_health = 3
+drop_table = ExtResource("3_ct8p8")
+corpse_lifetime = 3.0
+locomotion = ExtResource("8_loco")
+
+[node name="entrance" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="0" unique_id=1741521293]
+script = ExtResource("4_p2y33")
+metadata/_custom_type_script = "uid://bbn7qrag258t1"
+
+[node name="idle" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="1" unique_id=1708482697]
+script = ExtResource("5_nv7c8")
+metadata/_custom_type_script = "uid://bxo8s1o3rcvgh"
+
+[node name="dormant" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="2" unique_id=1289209417]
+script = ExtResource("7_dorm")
+
+[node name="death" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="3" unique_id=1720945311]
+script = ExtResource("9_dth")
+
+[node name="entrance" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="1" unique_id=1841063679]
+stream = ExtResource("6_77din")
+bus = &"Sound"
+
+[node name="BodyCollisionShape2D" parent="." index="4" unique_id=1005066086]
+shape = SubResource("CircleShape2D_magkm")
+
+[node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="0" unique_id=1331468369]
+sprite_frames = SubResource("SpriteFrames_e4ahp")
+
+[node name="EffectAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="1" unique_id=2028615876]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_gdyqg")
+animation = &"teleport_effect"
+frame = 3
+
+[node name="ActionAnimationPlayer" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="2" unique_id=609070108]
+libraries/ = SubResource("AnimationLibrary_utio7")
+
+[node name="BGM" type="AudioStreamPlayer2D" parent="." index="8" unique_id=1848578009]
+stream = ExtResource("50_tlrax")
+bus = &"Music"
+volume_db = -4.0
+attenuation = 0.0

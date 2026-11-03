@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bq4nvvx2v411a" path="res://scenes/characters/bosses/hollow_knight/hollow_knight.gd" id="2_4yi87"]
 [ext_resource type="Script" uid="uid://xfgehbda5ae2" path="res://scenes/characters/bosses/hollow_knight/states/dormant.gd" id="2_vvetm"]
 [ext_resource type="Texture2D" uid="uid://befmv1yx3lccy" path="res://assets/animations/characters/bosses/hollow_knight/dormant/0.png" id="3_4coxj"]
-[ext_resource type="Resource" path="res://resources/drops/boss_hollow_knight.tres" id="3_kx5bg"]
+[ext_resource type="Resource" uid="uid://cwg4jh0mvmcbg" path="res://resources/drops/boss_hollow_knight.tres" id="3_kx5bg"]
 [ext_resource type="Texture2D" uid="uid://dli06wh8hhq7s" path="res://assets/animations/characters/bosses/hollow_knight/_environment/chain/final_boss_chain.png" id="4_2x4qv"]
 [ext_resource type="Texture2D" uid="uid://c7tt0xl3cugs3" path="res://assets/animations/characters/bosses/hollow_knight/dormant/1.png" id="4_4lc3a"]
 [ext_resource type="AudioStream" uid="uid://bnvoulx100o6w" path="res://assets/sounds/characters/bosses/hollow_knight/scream.ogg" id="4_k5t7t"]
@@ -1509,57 +1509,56 @@ corpse_lifetime = 3.0
 [node name="StateMachine" parent="." index="1" unique_id=885825929]
 host_path = NodePath("")
 
-[node name="dormant" parent="StateMachine" index="0" unique_id=1185701110]
-script = ExtResource("2_vvetm")
-frames_left_to_right = true
-
-[node name="dormant_end" type="Node" parent="StateMachine" index="1" unique_id=1539436828]
+[node name="dormant_end" type="Node" parent="StateMachine" index="0" unique_id=1539436828]
 script = ExtResource("26_drmnt")
 metadata/_custom_type_script = "uid://crbedooy84vg5"
 
-[node name="scream" type="Node" parent="StateMachine" index="2" unique_id=1676635769]
+[node name="scream" type="Node" parent="StateMachine" index="1" unique_id=1676635769]
 script = ExtResource("4_kiw46")
 metadata/_custom_type_script = "uid://dqmtw6yfnqi47"
 
-[node name="idle" type="Node" parent="StateMachine" index="3" unique_id=2075357031]
+[node name="idle" type="Node" parent="StateMachine" index="2" unique_id=2075357031]
 script = ExtResource("5_634ro")
-show_decision_debug = true
 metadata/_custom_type_script = "uid://cu6qksho5qatb"
 
-[node name="slash" type="Node" parent="StateMachine" index="4" unique_id=172351794]
+[node name="slash" type="Node" parent="StateMachine" index="3" unique_id=172351794]
 script = ExtResource("6_ap1k7")
 metadata/_custom_type_script = "uid://xy4wvkdxxs3r"
 
-[node name="teleport" type="Node" parent="StateMachine" index="5" unique_id=613006846]
+[node name="teleport" type="Node" parent="StateMachine" index="4" unique_id=613006846]
 script = ExtResource("7_usdmc")
 metadata/_custom_type_script = "uid://bq6bh8bi4keta"
 
-[node name="counter" type="Node" parent="StateMachine" index="6" unique_id=444648199]
+[node name="counter" type="Node" parent="StateMachine" index="5" unique_id=444648199]
 script = ExtResource("8_384pv")
 metadata/_custom_type_script = "uid://x3pajsoxi8vi"
 
-[node name="evade" type="Node" parent="StateMachine" index="7" unique_id=2121119188]
+[node name="evade" type="Node" parent="StateMachine" index="6" unique_id=2121119188]
 script = ExtResource("10_t22ue")
 metadata/_custom_type_script = "uid://c8j0qx0drr1so"
 
-[node name="walk" type="Node" parent="StateMachine" index="8" unique_id=727752279]
+[node name="walk" type="Node" parent="StateMachine" index="7" unique_id=727752279]
 script = ExtResource("11_8clad")
 metadata/_custom_type_script = "uid://bfxc5pdgdu2y1"
 
-[node name="dash" type="Node" parent="StateMachine" index="9" unique_id=470407546]
+[node name="dash" type="Node" parent="StateMachine" index="8" unique_id=470407546]
 script = ExtResource("13_63iaj")
 metadata/_custom_type_script = "uid://t7bwpnmggs0s"
 
-[node name="down_smash" type="Node" parent="StateMachine" index="10" unique_id=505436599]
+[node name="down_smash" type="Node" parent="StateMachine" index="9" unique_id=505436599]
 script = ExtResource("13_vairf")
 metadata/_custom_type_script = "uid://cve0iqp83sbsw"
 
-[node name="teleport_smash" type="Node" parent="StateMachine" index="11" unique_id=923116398]
+[node name="teleport_smash" type="Node" parent="StateMachine" index="10" unique_id=923116398]
 script = ExtResource("14_eatcv")
 metadata/_custom_type_script = "uid://csc2yhd3fgjel"
 
-[node name="death" type="Node" parent="StateMachine" index="12" unique_id=2117850660]
+[node name="death" type="Node" parent="StateMachine" index="11" unique_id=2117850660]
 script = ExtResource("15_rx53k")
+
+[node name="dormant" type="Node" parent="StateMachine" index="12" unique_id=1467413298]
+script = ExtResource("2_vvetm")
+metadata/_custom_type_script = "uid://xfgehbda5ae2"
 
 [node name="death" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="0" unique_id=1598064983]
 stream = ExtResource("40_death")

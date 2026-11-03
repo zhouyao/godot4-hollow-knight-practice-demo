@@ -2,6 +2,11 @@
 extends Node2D
 class_name RainParallax2D
 
+## 噪声扭曲幅度相对包络衰减宽度的上限比例。
+## 超过这个比例，"雨下多大一片"就由噪声决定而不是由 size 决定：同样配置的两个雨区
+## 只要位置不同，就会一个铺满屏幕、一个只剩一半。0.5 = 只允许把边界揉皱，不允许改尺寸。
+const EDGE_NOISE_FADE_RATIO := 0.5
+
 ## 玩家进入区域时发出（仅在 activate_with_player 打开时才会检测）。
 signal player_entered(zone: Node, player: Node2D)
 ## 玩家离开区域时发出（仅在 activate_with_player 打开时才会检测）。
@@ -52,6 +57,8 @@ signal player_exited(zone: Node, player: Node2D)
 		_apply_region()
 
 ## 区域包络的噪声扭曲幅度（像素）：让"区域边界"本身也不是直线/直角，而是有机形状。
+## 实际生效值会被限制在 region_fade * EDGE_NOISE_FADE_RATIO 以内 —— 噪声只负责把边界揉皱，
+## 不允许反过来决定"这块雨多大"，否则雨区大小会随世界坐标随机变化（看起来只有一半在下雨）。
 @export var edge_noise: float = 320.0:
 	set(value):
 		edge_noise = value
@@ -394,6 +401,12 @@ func _apply_region() -> void:
 	var local := _local_region_rect()
 	var origin := global_position + local.position
 	var maximum := origin + local.size
+	# 边界扰动幅度不得超过衰减宽度的 EDGE_NOISE_FADE_RATIO 倍：
+	# 否则噪声会盖过 distance field，雨区变成"世界坐标的随机形状"，
+	# 表现为两块配置完全相同的雨看起来一大一小（一块只剩一半）。
+	var eff_edge_noise := minf(
+		maxf(edge_noise, 0.0), maxf(region_fade, 0.0) * EDGE_NOISE_FADE_RATIO
+	)
 	for rect in _color_rects():
 		var mat := rect.material as ShaderMaterial
 		if mat == null:
@@ -403,7 +416,7 @@ func _apply_region() -> void:
 		mat.set_shader_parameter(&"region_max", maximum)
 		mat.set_shader_parameter(&"region_fade", maxf(region_fade, 0.0))
 		mat.set_shader_parameter(&"cloud_noise_scale", maxf(cloud_noise_scale, 0.0001))
-		mat.set_shader_parameter(&"edge_noise", maxf(edge_noise, 0.0))
+		mat.set_shader_parameter(&"edge_noise", eff_edge_noise)
 		mat.set_shader_parameter(&"density_variation", clampf(density_variation, 0.0, 1.0))
 		mat.set_shader_parameter(&"elliptical", elliptical)
 		mat.set_shader_parameter(&"edge_margin", clampf(edge_margin, 0.0, 0.5))

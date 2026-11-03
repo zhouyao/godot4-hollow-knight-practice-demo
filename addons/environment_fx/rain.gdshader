@@ -212,10 +212,15 @@ void fragment() {
 	float mask = 1.0;
 
 	if (region_enabled) {
+		// 区域中心：距离场与噪声都以它为原点。
+		// 噪声必须用"相对区域中心"的局部坐标采样：用 world_pos 时，同一个雨区挪个位置
+		// 就等于换了整张噪声图，"雨下多大一片"由所处世界坐标决定 —— 表现为一模一样
+		// 的两个雨区，一个铺满屏幕、另一个只剩一半（形状随位置随机变化）。
+		vec2 center = (region_min + region_max) * 0.5;
+
 		// 1) 区域有符号距离场（像素，区域内为正）
 		float sdf;
 		if (elliptical) {
-			vec2 center = (region_min + region_max) * 0.5;
 			vec2 half_size = max((region_max - region_min) * 0.5, vec2(1.0));
 			sdf = (1.0 - length((world_pos - center) / half_size)) * min(half_size.x, half_size.y);
 		} else {
@@ -225,7 +230,7 @@ void fragment() {
 		}
 
 		// 2) 三个八度噪声（拉伸对比度后）
-		vec2 base = world_pos * cloud_noise_scale + vec2(edge_seed);
+		vec2 base = (world_pos - center) * cloud_noise_scale + vec2(edge_seed);
 		float w1 = stretch(texture(mask_noise_texture, base).r);
 		float w2 = stretch(texture(mask_noise_texture, base * 2.9 + vec2(0.37, 0.61) + vec2(edge_seed)).r);
 		float w3 = stretch(texture(mask_noise_texture, base * 7.3 + vec2(0.11, 0.83) + vec2(edge_seed)).r);
