@@ -14,7 +14,10 @@ class_name HollowKnightCounterState
 ## “挡下伤害”由 Boss 的 blocking/blocked 完成，本状态只管听信号 + 接反击演出。
 
 
-const COUNTER_WINDOW := 2.0   ## 招架窗口时长（秒）= counter_ready 持续时长
+## 招架窗口时长（秒）= counter_ready 持续时长。
+## 从 2.0 收到 0.8：2 秒窗口会让玩家只能"等 BOSS 站完"，节奏是断的；
+## 0.8 秒仍保留"看招 → 格挡 → 反击"的辨识度，同时让"骗招 / 等收招"成为有效的玩家策略。
+const COUNTER_WINDOW := 0.8
 const MELEE_OPEN := 0.7        ## 反击命中盒开启时长（秒）
 
 enum _Phase { ANTIC, READY, BLOCK, END }

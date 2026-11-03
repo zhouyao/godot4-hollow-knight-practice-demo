@@ -18,7 +18,10 @@ const RETREAT_RANGE := 90.0
 # 后撤要拉开到的安全距离（超过即停后撤、回 idle）。
 const RETREAT_SAFE_RANGE := 220.0
 
-@export var walk_speed_multiplier: float = 2.0  ## 乘以 Boss 基础移动速度
+## 乘以 Boss 基础移动速度（96 × 2.4 ≈ 230 px/s）。
+## 玩家跑速 384，BOSS 走速原本 192 追不上，会被纯走路风筝到死；提高到 230 后
+## 玩家仍需冲刺才能拉开，同时又不至于完全甩不掉。
+@export var walk_speed_multiplier: float = 2.4
 
 var _retreating: bool = false
 

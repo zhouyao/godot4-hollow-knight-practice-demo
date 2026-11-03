@@ -4,8 +4,8 @@ class_name HollowKnightDashState
 ## 冲刺技能（Hollow Knight 的突进位移）。
 ## 单状态内部分三段，靠 _phase 推进，不拆成多个状态节点：
 ##   1) ANTIC   前摇：播放 dash_anticipation，锁定冲刺方向（朝玩家），原地蓄力；
-##   2) DASH    冲刺中：播放 dash，朝锁定方向匀速位移，累计位移；固定冲 900 像素，
-##                    途中仅当前方有墙或探测到悬崖（前方无地）才提前停下，否则冲满 900。
+##   2) DASH    冲刺中：播放 dash，朝锁定方向匀速位移，累计位移；目标距离按"发动时到玩家的距离"
+##                    自适应（冲到刚好越过玩家一点即收），途中前方有墙或探测到悬崖（前方无地）则提前停下。
 ##   3) RECOVER 后摇：播放 dash_recover，站定硬直，时间到回 idle（给玩家反击窗口）。
 ##
 ## 相位推进用「动画时长计时器」而非 animation_finished 信号：信号链路一旦因任何原因
@@ -18,6 +18,8 @@ class_name HollowKnightDashState
 # ---- 可调参数 ----
 @export var dash_speed: float = 1200.0          ## 冲刺速度（像素 / 秒）
 @export var max_dash_distance: float = 900.0    ## 单次冲刺最大距离（像素）
+@export var min_dash_distance: float = 240.0    ## 单次冲刺最短距离（像素）：太近时别只蹭一下
+@export var dash_overshoot: float = 60.0        ## 冲过玩家多少像素后收招（>0 才能用身体撞到玩家）
 @export var deals_contact_damage: bool = true   ## 冲刺中是否用身体接触结算伤害
 @export var antic_fallback_time: float = 1.4    ## 无 dash_anticipation 动画时的前摇兜底时长（秒）
 @export var recover_fallback_time: float = 0.8  ## 无 dash_recover 动画时的后摇兜底时长（秒）
@@ -58,11 +60,16 @@ func enter(_from: StringName) -> void:
 	_dir = 1 if dx >= 0.0 else -1
 	if is_zero_approx(dx):
 		_dir = boss.move_direction
-	# 强制朝向冲刺方向（commit 时不应被死区挡住翻面，否则会出现“背对玩家冲”的朝向错位）。
+	# 强制朝向冲刺方向（commit 时不应被死区挡住翻面，否则会出现"背对玩家冲"的朝向错位）。
 	boss.face_step(_dir)
 
-	# 目标距离：固定每次冲 900 像素，不再按到玩家的距离截断。
-	_target_distance = max_dash_distance
+	# 目标距离：按发动瞬间到玩家的距离自适应，冲到"刚好越过玩家一点"即收。
+	# 固定 900 在 160~300 距离时会飞过玩家 600+ 像素，落地已经在玩家背后很远，
+	# 下一步只能再走回来 —— 这是"BOSS 总是冲过头"的根因。
+	if p != null:
+		_target_distance = clampf(absf(dx) + dash_overshoot, min_dash_distance, max_dash_distance)
+	else:
+		_target_distance = max_dash_distance
 
 	if ap != null and ap.has_animation(&"dash_anticipation"):
 		ap.play(&"dash_anticipation")
@@ -116,9 +123,8 @@ func _dash_update(delta: float) -> void:
 	if deals_contact_damage:
 		_tick_contact()
 
-	# 停止条件：1) 前方有墙（撞墙）即停；2) 冲满固定 900 像素即停。
+	# 停止条件：1) 前方有墙（撞墙）即停；2) 冲满本次目标距离即停。
 	# 注意：悬崖已在每帧开头由 ledge_detector 单独判定（见上方），此处不再重复。
-	# 即“提前停止”只由前方有墙或前方悬崖触发，到距只是 900 满程的收尾。
 	if boss.is_on_wall():
 		_begin_recover()
 	elif _distance_travelled >= _target_distance:
