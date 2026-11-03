@@ -44,9 +44,8 @@ func enter(_from: StringName) -> void:
 	_antic_timer = 0.0
 	_recover_timer = 0.0
 
-	var ap := boss.action_animation_player
-	_antic_length = _anim_length(ap, &"dash_anticipation", antic_fallback_time)
-	_recover_length = _anim_length(ap, &"dash_recover", recover_fallback_time)
+	_antic_length = anim_length(&"dash_anticipation", antic_fallback_time)
+	_recover_length = anim_length(&"dash_recover", recover_fallback_time)
 
 	# 锁定冲刺方向：朝玩家（cast 时定死，玩家中途闪避不改向）。
 	var p := boss.get_player()
@@ -63,8 +62,7 @@ func enter(_from: StringName) -> void:
 
 	_target_distance = max_dash_distance
 
-	if ap != null and ap.has_animation(&"dash_anticipation"):
-		ap.play(&"dash_anticipation")
+	play_action(&"dash_anticipation")
 
 
 func update(delta: float) -> void:
@@ -87,8 +85,8 @@ func update(delta: float) -> void:
 			boss._apply_movement()
 			# 后摇按动画时长计时；时间到回 idle。
 			_recover_timer += delta
-			if _recover_timer >= _recover_length and machine != null:
-				machine.set_state(BossStateNames.IDLE)
+			if _recover_timer >= _recover_length:
+				go_idle()
 
 
 func exit(_to: StringName) -> void:
@@ -100,8 +98,8 @@ func exit(_to: StringName) -> void:
 ## 撞墙或冲满 900 则停。即提前停止只有两种：前方有墙、前方是悬崖。
 func _dash_update(delta: float) -> void:
 	# 前方是悬崖：本帧就收，不迈出那一步。
-	boss.ledge_detector.force_raycast_update()
-	if !boss.ledge_detector.is_colliding():
+	# 判定走 Boss.has_ground_ahead(方向)：与当前朝向解耦，且即时打射线（不吃 RayCast2D 的上一帧缓存）。
+	if not boss.has_ground_ahead(float(_dir)):
 		_begin_recover()
 		return
 
@@ -116,7 +114,7 @@ func _dash_update(delta: float) -> void:
 		_tick_contact()
 
 	# 停止条件：1) 前方有墙（撞墙）即停；2) 冲满本次目标距离即停。
-	# 注意：悬崖已在每帧开头由 ledge_detector 单独判定（见上方），此处不再重复。
+	# 注意：悬崖已在每帧开头由 has_ground_ahead 单独判定（见上方），此处不再重复。
 	if boss.is_on_wall():
 		_begin_recover()
 	elif _distance_travelled >= _target_distance:
@@ -128,9 +126,7 @@ func _begin_dash() -> void:
 		return
 	_phase = _Phase.DASH
 	_distance_travelled = 0.0
-	var ap := boss.action_animation_player if boss != null else null
-	if ap != null and ap.has_animation(&"dash"):
-		ap.play(&"dash")
+	play_action(&"dash")
 
 
 func _begin_recover() -> void:
@@ -140,13 +136,4 @@ func _begin_recover() -> void:
 	_recover_timer = 0.0
 	if boss != null:
 		boss.velocity.x = 0.0
-	var ap := boss.action_animation_player if boss != null else null
-	if ap != null and ap.has_animation(&"dash_recover"):
-		ap.play(&"dash_recover")
-
-
-## 取动画时长，取不到就用兜底值（保证相位推进不被缺动画卡住）。
-func _anim_length(ap: AnimationPlayer, anim_name: StringName, fallback: float) -> float:
-	if ap != null and ap.has_animation(anim_name):
-		return ap.get_animation(anim_name).length
-	return fallback
+	play_action(&"dash_recover")

@@ -49,11 +49,9 @@ func enter(_from: StringName) -> void:
 		boss.guard_broken.disconnect(_on_guard_broken)
 	boss.guard_broken.connect(_on_guard_broken)
 
-	if _ap != null:
-		if not _ap.animation_finished.is_connected(_on_anim_finished):
-			_ap.animation_finished.connect(_on_anim_finished)
-		if _ap.has_animation(&"counter_anticipation"):
-			_ap.play(&"counter_anticipation")
+	if _ap != null and not _ap.animation_finished.is_connected(_on_anim_finished):
+		_ap.animation_finished.connect(_on_anim_finished)
+	play_action(&"counter_anticipation")
 
 
 func update(delta: float) -> void:
@@ -73,8 +71,8 @@ func update(delta: float) -> void:
 		_Phase.READY:
 			# 招架窗口锁定朝向：不再跟随玩家，玩家绕到背后即破招（背击，_is_front_damage 为 false）。
 			_window_timer += delta
-			if _window_timer >= COUNTER_WINDOW and machine != null:
-				machine.set_state(BossStateNames.IDLE)
+			if _window_timer >= COUNTER_WINDOW:
+				go_idle()
 		_Phase.BLOCK:
 			_melee_timer += delta
 			if _melee_timer >= MELEE_OPEN:
@@ -90,8 +88,8 @@ func _on_anim_finished(anim_name: StringName) -> void:
 			if _phase == _Phase.BLOCK:
 				_enter_end()
 		&"counter_end":
-			if _phase == _Phase.END and machine != null:
-				machine.set_state(BossStateNames.IDLE)
+			if _phase == _Phase.END:
+				go_idle()
 
 
 func _enter_ready() -> void:
@@ -99,8 +97,7 @@ func _enter_ready() -> void:
 	_window_timer = 0.0
 	if boss != null:
 		boss.blocking = true
-	if _ap != null and _ap.has_animation(&"counter_ready"):
-		_ap.play(&"counter_ready")
+	play_action(&"counter_ready")
 
 
 func _on_blocked(_from: Node2D) -> void:
@@ -110,10 +107,10 @@ func _on_blocked(_from: Node2D) -> void:
 
 
 func _on_guard_broken(_from: Node2D) -> void:
-	if boss == null or machine == null:
+	if boss == null:
 		return
 	# 背刺破招：立刻解除招架，回 idle 重新决策（伤害已由 super.take_damage 结算）。
-	machine.set_state(BossStateNames.IDLE)
+	go_idle()
 
 
 func _enter_block() -> void:
@@ -123,8 +120,7 @@ func _enter_block() -> void:
 		boss.blocking = false         # 反击期间不再挡，正常结算
 		boss.enable_melee_attack()     # 开命中盒，MELEE_OPEN 秒后由 update 关闭
 		_play_audio(&"counter_block")  # Audio/counter_block 节点
-	if _ap != null and _ap.has_animation(&"counter_block"):
-		_ap.play(&"counter_block")
+	play_action(&"counter_block")
 
 
 func _enter_end() -> void:
@@ -134,8 +130,7 @@ func _enter_end() -> void:
 	if boss != null:
 		boss.blocking = false
 		boss.disable_melee_attack()
-	if _ap != null and _ap.has_animation(&"counter_end"):
-		_ap.play(&"counter_end")
+	play_action(&"counter_end")
 
 
 func exit(_to: StringName) -> void:

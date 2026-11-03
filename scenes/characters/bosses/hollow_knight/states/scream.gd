@@ -18,8 +18,7 @@ func enter(_from: StringName) -> void:
 	else:
 		AuCameraDirector.shake(36.0, 0.55)
 	# boss 动画：ActionAnimationPlayer/scream（驱动精灵切到 scream 并逐帧播放）。
-	if boss.action_animation_player != null and boss.action_animation_player.has_animation("scream"):
-		boss.action_animation_player.play("scream")
+	play_action(&"scream")
 	boss.velocity = Vector2.ZERO  # 落地残留速度清零，boss 站定。
 	# 音效：一二阶段都用入场 scream 音效。
 	var sfx := boss.get_node_or_null("Audio/scream") as AudioStreamPlayer2D

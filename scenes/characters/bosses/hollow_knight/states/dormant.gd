@@ -44,6 +44,9 @@ func enter(_from: StringName) -> void:
 		boss.invincible = true
 		if boss.hurt_invincibility_timer != null:
 			boss.hurt_invincibility_timer.stop()
+		# 关掉可能残留的近战命中盒：上一场若在出招途中被重置（玩家逃离领地），
+		# 收尾帧不会触发、命中盒保持开启，沉睡期会误伤玩家（"沉睡 boss 反手打人"）。
+		boss.disable_melee_attack()
 	_ensure_refs()
 	_start_dormant_sprite()
 	_track_head()
@@ -102,15 +105,14 @@ func _neutral_frame(count: int) -> int:
 
 
 func _ensure_refs() -> void:
+	if boss == null:
+		return
 	if _sprite == null:
-		_sprite = enemy.animated_sprite
+		_sprite = boss.animated_sprite
 	if _arena == null:
-		# 竞技场已迁移到关卡场景（HollowKnightScene 下，与 boss 平级），不再挂在 boss 节点下。
-		_arena = enemy.get_node_or_null("BossArena") as AuZone
-		if _arena == null:
-			var scene := enemy.get_parent()
-			if scene != null:
-				_arena = scene.get_node_or_null("BossArena") as AuZone
+		# 竞技场查找统一走 Boss.arena_zone()（先查自己、再查父节点），
+		# 不再在这里重复一遍"自身 → 父节点"的查找逻辑。
+		_arena = boss.arena_zone()
 	if _sprite != null and _sprite.sprite_frames != null:
 		_frame_count = _sprite.sprite_frames.get_frame_count(&"dormant")
 

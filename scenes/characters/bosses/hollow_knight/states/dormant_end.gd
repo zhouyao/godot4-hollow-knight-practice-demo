@@ -37,8 +37,7 @@ func enter(_from: StringName) -> void:
 	boss.animated_sprite.stop()
 	boss.animated_sprite.animation = &"dormant_end"
 	boss.animated_sprite.frame = 0
-	if boss.action_animation_player != null:
-		boss.action_animation_player.play("dormant_end")
+	play_action(&"dormant_end")
 
 func update(delta: float) -> void:
 	if boss == null:
@@ -46,11 +45,9 @@ func update(delta: float) -> void:
 	if _landed:
 		# 落地后停留 2 秒（让落地音效 / 战斗 BGM 等收尾），再进入 scream。
 		_land_timer += delta
-		if _land_timer >= LAND_TO_SCREAM_DELAY \
-				and machine != null and machine.get_state_name() == BossStateNames.DORMANT_END:
+		if _land_timer >= LAND_TO_SCREAM_DELAY and goto_if_current(BossStateNames.SCREAM):
 			# 这里不解锁：scream 仍属于过场（见 HollowKnight.is_cutscene_invulnerable），
 			# 真正的解锁收口在 idle.enter() —— 过场全部播完才算"可以攻击"。
-			machine.set_state(BossStateNames.SCREAM)
 			var bg_loop := boss.get_node_or_null("FightAudio/boss_bg_loop") as AudioStreamPlayer2D
 			if bg_loop != null and not bg_loop.playing:
 				bg_loop.play()

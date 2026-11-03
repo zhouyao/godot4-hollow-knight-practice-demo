@@ -189,8 +189,8 @@ position = Vector2(4400, 442)
 
 [node name="HollowKnight" parent="HollowKnightScene" index="5" unique_id=170488292 instance=ExtResource("17_8ihyp")]
 position = Vector2(3400, 85)
-max_health = 2
-initial_health = 1
+max_health = 3
+initial_health = 2
 patrol_enabled = false
 
 [node name="Player" parent="." index="9" unique_id=1112432844]

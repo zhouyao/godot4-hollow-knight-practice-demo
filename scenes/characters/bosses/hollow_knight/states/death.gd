@@ -28,8 +28,7 @@ func enter(_from: StringName) -> void:
 		boss.animated_sprite.stop()
 		boss.animated_sprite.animation = &"death"
 		boss.animated_sprite.frame = 0
-	if boss.action_animation_player != null and boss.action_animation_player.has_animation("death"):
-		boss.action_animation_player.play("death")
+	play_action(&"death")
 	# 死亡音效：Audio/death。
 	var sfx := boss.get_node_or_null("Audio/death") as AudioStreamPlayer2D
 	if sfx != null:

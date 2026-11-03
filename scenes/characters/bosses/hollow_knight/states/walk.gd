@@ -43,8 +43,7 @@ func enter(_from: StringName) -> void:
 	if boss == null:
 		return
 	boss.disable_melee_attack()
-	if boss.action_animation_player != null and boss.action_animation_player.has_animation("walk"):
-		boss.action_animation_player.play("walk")
+	play_action(&"walk")
 	_retreating = _should_retreat()
 	_stuck_timer = 0.0
 	_best_distance = INF
@@ -84,9 +83,9 @@ func update(delta: float) -> void:
 	# 接近：走到攻击距离内才交还 idle（触发 slash）；
 	# 后撤：拉到安全距离或玩家已停止攻击，才交还 idle 重新决策。
 	if not _retreating and distance <= APPROACH_STOP_RANGE:
-		machine.set_state(BossStateNames.IDLE)
+		go_idle()
 	elif _retreating and (distance >= RETREAT_SAFE_RANGE or not PlayerCombat.is_attacking):
-		machine.set_state(BossStateNames.IDLE)
+		go_idle()
 
 
 ## 玩家正在攻击且距离很近 → 后撤躲避；否则接近。

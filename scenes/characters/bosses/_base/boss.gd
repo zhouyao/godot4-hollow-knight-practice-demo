@@ -26,6 +26,12 @@ func player_distance() -> float:
 func is_player_attacking() -> bool:
 	return PlayerCombat.is_attacking
 
+# ---- 朝向翻转扩展 ----
+## 随朝向左右镜像的节点（探测器、挂点等）：位置 x 取绝对值后乘当前朝向。
+## 子类在 Inspector 里填即可，不必为了翻一个节点去重写 _flip_extra。
+## 注意：只影响节点的摆位（编辑器里的可视化），判定逻辑应自行按传入方向计算，不要依赖节点的实时朝向。
+@export var flip_nodes: Array[NodePath] = []
+
 # ---- 通用近战命中盒（节点名默认 MeleeHitBox，具体 Boss 场景自带该节点）----
 @export var melee_hitbox_path: NodePath = ^"MeleeHitBox"
 var _melee_hit_this_swing: bool = false
@@ -90,20 +96,21 @@ func _on_melee_hitbox_body_entered(body: Node) -> void:
 		p.take_damage(melee_damage, self)
 
 
-func _ready() -> void:
-	super._ready()
-
-## 每帧把命中盒镜像到当前朝向，确保 boss 转向时 MeleeHitBox 跟着转（根节点子节点不随精灵翻面）。
-func _physics_process(delta: float) -> void:
-	super._physics_process(delta)
-	_sync_melee_hitbox_facing()
-
-
-## 翻面扩展点（与 Enemy._flip_extra 构成多态链）：Boss 专有的、需要跟随朝向翻转的节点
-## 挂在这里。默认仅 super 回 Enemy，保留 muzzle（吐弹口）翻转；子类（如 BossHollowKnight）
-## 重写本方法时务必 super._flip_extra()，否则会断掉 muzzle 的翻转。
+## 翻面扩展点（与 Enemy._flip_extra 构成多态链）：Enemy 翻 muzzle（吐弹口），
+## Boss 再把 flip_nodes 里列出的节点跟着翻，并同步近战命中盒的镜像方向。
+## 子类要加"只有本 BOSS 才需要翻"的节点，优先填 flip_nodes，而不是重写本方法。
 func _flip_extra() -> void:
 	super._flip_extra()
+	# 命中盒是根节点子节点，不随精灵翻面，必须自己镜像（见 _sync_melee_hitbox_facing）。
+	# 挂在这里而不是每帧轮询：move_direction 只在 EnemyFacing._flip_direction() 里变，
+	# 而它每次都会回调本方法；出招开启命中盒时 enable_melee_attack() 还会再同步一次。
+	_sync_melee_hitbox_facing()
+	for path in flip_nodes:
+		var node := get_node_or_null(path) as Node2D
+		if node == null:
+			continue
+		node.position.x = absf(node.position.x) * float(move_direction)
+		node.reset_physics_interpolation()
 
 
 ## 驻留状态：BOSS 不巡逻，沉睡 / 待机即 dormant。
@@ -150,9 +157,228 @@ func _drop_loot() -> void:
 	pass
 
 
-## 击败演出收尾时由 death 状态调用：在 at 处（默认跟随 DropMarker）撒落奖励。
-func drop_loot(at: Vector2 = Vector2.ZERO) -> void:
+## 击败演出收尾时由 death 状态调用：在 at 处（不传则跟随 DropMarker）撒落奖励。
+## at 用 null 而不是 Vector2.ZERO 表示"没传"——否则掉落点正好在世界原点时会被误判成默认点。
+func drop_loot(at: Variant = null) -> void:
 	if drop_table == null:
 		return
-	var pos := at if at != Vector2.ZERO else (drop_marker.global_position if drop_marker != null else global_position)
+	var pos: Vector2 = drop_marker.global_position if drop_marker != null else global_position
+	if at is Vector2:
+		pos = at
 	DropSpawner.spawn_table(drop_table, pos, drop_scatter)
+
+
+#region 阶段推进
+# 机制在基类，策略在子类：基类只管"什么时候问一次"和"阶段的通用状态"，
+# 具体有几个阶段、跨哪条线、进什么演出，全部写在各 BOSS 自己的脚本里（_check_phase_policy）。
+# 不做成阈值表 / Resource 的原因：阶段只有 2~4 个，而每个阶段往往不只是"切个状态"
+# （换 BGM、刷小怪、改属性……），数据表表达不了，最后还是要回来改代码。
+
+
+## 当前血量比例（0~1）。阶段判断用它，比 int(max_health * ratio) 直白，也没有截断歧义。
+func health_ratio() -> float:
+	return float(health) / float(max_health) if max_health > 0 else 0.0
+
+
+## 检查是否该推进阶段。由 take_damage() 在"真掉血且没被打死"后自动调用；
+## BossState._check_phase() 也留了一份，方便任何招式在收招时手动问一次。
+func check_phase() -> void:
+	if dead or max_health <= 0:
+		return
+	_check_phase_policy()
+
+
+## 阶段策略：子类重写。想写几个阶段就写几个 if，想做什么都可以
+## （切状态、换 BGM、刷小怪、改 contact_damage……），基类不预设表达形式。
+## 约定：推进阶段时调 start_phase(i) —— 它会更新 phase_index 并广播 phase_changed。
+func _check_phase_policy() -> void:
+	pass
+
+
+## 扣血入口：先走基类结算（受击特效 / 掉血 / 硬直 / 死亡），
+## 再在"真的掉了血且没被打死"时推进阶段。
+## 被无敌帧 / 过场锁血挡下的攻击 health 不变，因此不会误推进阶段演出。
+func take_damage(amount: int, from: Node2D = null) -> void:
+	var before := health
+	super.take_damage(amount, from)
+	if health < before and not dead:
+		check_phase()
+
+
+#endregion
+
+
+#region 场地查询（竞技场 / 地面 / 落点 / 水平 AoE）
+# 这一组只依赖"碰撞胶囊 + 物理射线 + 玩家位置"，与具体 BOSS 的美术、招式无关，
+# 任何 BOSS（瞬移、跃击、地刺、范围预警）都要用，故沉淀在这里。
+
+@export_group("场地查询")
+## 竞技场节点名：先在本 BOSS 的子节点里找，找不到再到父节点（关卡场景）下找。
+## 留默认值即兼容"竞技场挂在 BOSS 下"与"竞技场与 BOSS 平级"两种布局。
+@export var arena_path: NodePath = ^"BossArena"
+## 地面 / 悬崖探测的射线来源节点：找落点与"脚下有没有地"共用它的 collision_mask。
+## 场景里没有该节点时退回固定 mask = 4（地形层）。
+@export var ground_probe_path: NodePath = ^"LedgeDetector"
+
+## 悬崖 / 地面探测器实例（场景里没有则为 null）。只在 _ready 解析一次，
+## 几何（水平偏移 + 向下长度）直接取场景里摆好的值，代码里不抄常量。
+@onready var ground_probe: RayCast2D = get_node_or_null(ground_probe_path) as RayCast2D
+
+var _arena_zone: AuZone = null
+
+
+## 竞技场实例（AuZone）。解析顺序：自身子节点 → 父节点下同名节点。
+## 结果缓存；实例被销毁后下次调用自动重新解析。
+func arena_zone() -> AuZone:
+	if _arena_zone != null and is_instance_valid(_arena_zone):
+		return _arena_zone
+	_arena_zone = get_node_or_null(arena_path) as AuZone
+	if _arena_zone == null and get_parent() != null:
+		_arena_zone = get_parent().get_node_or_null(arena_path) as AuZone
+	return _arena_zone
+
+
+## 竞技场的世界矩形；未绑定 / 无 global_rect() 时返回空 Rect2。
+## 调用方用 size.x > 0 判断"有没有竞技场"，不要把空矩形当成有效范围。
+func arena_rect() -> Rect2:
+	var zone := arena_zone()
+	if zone != null and zone.has_method("global_rect"):
+		return zone.global_rect()
+	return Rect2()
+
+
+## 地形检测用的碰撞 mask（取探测器的 mask，缺省 4 = 地形层）。
+func ground_mask() -> int:
+	return ground_probe.collision_mask if ground_probe != null else 4
+
+
+## move_x（±1）方向的前方有没有落脚点。返回 true = 有地，可以走 / 可以冲 / 可以退。
+## 重写 Enemy 的默认实现（基类恒 true，供飞行 / 水下怪沿用）：地面 BOSS 的冲刺、后撤、
+## 跃击都靠它避免冲出平台。
+##
+## 与"当前朝向"解耦 —— 只用传入的方向，探测器几何取 absf(position.x) 后按该方向镜像，
+## 因此不需要像以前那样先把 RayCast2D 掰到目标方向再查询（evade 的 _aim_ledge_detector 就此消失）。
+## 每次即时打射线而不是读 RayCast2D 的缓存：缓存是上一物理帧的结果，会在"翻面 / 换向"那一帧给错答案。
+func has_ground_ahead(move_x: float) -> bool:
+	if is_zero_approx(move_x) or not is_on_floor():
+		return true  # 空中不做悬崖限制
+	var offset := _probe_offset()
+	var from := global_position + Vector2(offset.x * signf(move_x), offset.y)
+	var to := from + Vector2(0.0, _probe_length())
+	var space := get_world_2d().direct_space_state
+	if space == null:
+		return true
+	var query := PhysicsRayQueryParameters2D.create(from, to)
+	query.collision_mask = ground_mask()
+	query.exclude = [get_rid()]
+	return not space.intersect_ray(query).is_empty()
+
+
+## 探测器的水平偏移（取绝对值，方向由调用方给）与向下长度，沿用场景里 LedgeDetector 的摆位。
+func _probe_offset() -> Vector2:
+	if ground_probe == null:
+		return Vector2(19.0, 3.0)
+	return Vector2(absf(ground_probe.position.x), ground_probe.position.y)
+
+
+func _probe_length() -> float:
+	if ground_probe == null:
+		return 15.0
+	var length := ground_probe.target_position.length()
+	return length if length > 0.0 else 15.0
+
+
+## x 处地面顶部的 y（向下打一条长射线）。
+## 没有地面时返回 fallback：默认 NAN，便于调用方用 is_nan() 区分"悬崖"与"合法落点"；
+## 只想兜底不区分时传自己的 y 即可。
+func ground_y_at(x: float, fallback: float = NAN) -> float:
+	var space := get_world_2d().direct_space_state
+	if space == null:
+		return fallback
+	var from := Vector2(x, global_position.y - 800.0)
+	var to := Vector2(x, global_position.y + 1200.0)
+	var query := PhysicsRayQueryParameters2D.create(from, to)
+	query.collision_mask = ground_mask()
+	query.exclude = [get_rid()]
+	var res := space.intersect_ray(query)
+	if res.is_empty():
+		return fallback
+	return float(res.position.y)
+
+
+## 以 center_x 为圆心、radius 为水平半径，对玩家结算一次伤害（垂直方向不判，2D 平台惯例）。
+## 命中返回 true。来源统一传 self，供玩家格挡 / 受击特效识别。
+func damage_in_radius(center_x: float, radius: float, damage: int) -> bool:
+	var p := get_player()
+	if p == null or not p.has_method("take_damage"):
+		return false
+	if absf(p.global_position.x - center_x) > radius:
+		return false
+	p.take_damage(damage, self)
+	return true
+
+
+## 在 target_x 两侧挑一个"脚下有地、身体不卡墙"的落点（瞬移 / 闪现 / 召回共用）。
+## 顺序：先在 near_dist 处试右左两侧，再退到 max_dist 处试左右；全部非法返回 Vector2.ZERO。
+## 返回的是"身体原点"坐标（已按碰撞胶囊高度把脚贴到地面）。
+func find_ground_position_near(target_x: float, near_dist: float, max_dist: float) -> Vector2:
+	var space := get_world_2d().direct_space_state
+	if space == null:
+		return Vector2.ZERO
+	var feet := feet_offset()
+	# 候选（横距, 左右）：从近到远、左右交替。
+	var candidates: Array[Vector2] = [
+		Vector2(near_dist, 1.0),
+		Vector2(near_dist, -1.0),
+		Vector2(max_dist, 1.0),
+		Vector2(max_dist, -1.0),
+	]
+	for cand_off in candidates:
+		var cand_x := target_x + cand_off.x * cand_off.y
+		var ground_y := ground_y_at(cand_x)
+		if is_nan(ground_y):
+			continue  # 悬崖：脚下没地，跳过
+		var cand := Vector2(cand_x, ground_y - feet)
+		if blocked_by_wall(cand):
+			continue  # 卡墙：跳过
+		return cand
+	return Vector2.ZERO
+
+
+## 候选落点身体中段高度左右各打一条短水平射线，命中地形即视为卡墙。
+## 取中段高度（避开脚下地面），避免"贴地"被误判成卡墙。
+func blocked_by_wall(cand: Vector2) -> bool:
+	var space := get_world_2d().direct_space_state
+	if space == null:
+		return false
+	var mask := ground_mask()
+	var probe_y := cand.y - feet_offset() * 0.5
+	for dir in [-1.0, 1.0]:
+		var from := Vector2(cand.x, probe_y)
+		var to := Vector2(cand.x + dir * (body_half_width() + 8.0), probe_y)
+		var query := PhysicsRayQueryParameters2D.create(from, to)
+		query.collision_mask = mask
+		query.exclude = [get_rid()]
+		if not space.intersect_ray(query).is_empty():
+			return true
+	return false
+
+
+## 碰撞胶囊底部相对身体原点的偏移（把脚贴到地面用）。非胶囊形状返回 0。
+func feet_offset() -> float:
+	var shape_node := collision_shape
+	if shape_node != null and shape_node.shape is CapsuleShape2D:
+		var cap := shape_node.shape as CapsuleShape2D
+		return cap.height * 0.5 + cap.radius + shape_node.position.y
+	return 0.0
+
+
+## 碰撞胶囊半径 = 身体半宽；非胶囊形状返回 100 兜底。
+func body_half_width() -> float:
+	var shape_node := collision_shape
+	if shape_node != null and shape_node.shape is CapsuleShape2D:
+		return (shape_node.shape as CapsuleShape2D).radius
+	return 100.0
+
+
+#endregion

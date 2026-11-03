@@ -3,7 +3,8 @@ extends Boss
 
 const BOSS_PLUME_SCENE := preload("res://scenes/characters/bosses/hollow_knight/effects/boss_plume.tscn")
 
-@onready var ledge_detector: RayCast2D = $LedgeDetector
+## 二阶段触发线：剩余血量比例低于该值即进二阶段（怒吼演出）。
+const PHASE_TWO_RATIO: float = 0.5
 
 ## 招架中：为 true 时，正面来袭伤害不结算、不进受击硬直，改发 blocked 让 counter 状态接手反击；
 ## 但若伤害来自背后（背刺），则正常结算并改发 guard_broken，让 counter 状态立刻解除。
@@ -14,8 +15,13 @@ signal blocked(from: Node2D)
 ## 招架中被背刺破招（伤害来自背后）时发出，参数为伤害来源；counter 据此立刻退出招架。
 signal guard_broken(from: Node2D)
 
-## 二阶段触发阈值（剩余血量 / 最大血量）。血量跨过该线即进入二阶段演出。
-const PHASE_TWO_THRESHOLD := 0.5
+
+## 继承链上的 _ready：Enemy 里会解析 tuning / 音频 / 朝向 / 领地并启动状态机，所以必须先 super。
+func _ready() -> void:
+	super._ready()
+	# 悬崖探测器跟着朝向换边：只影响编辑器 / 调试里的可视化。
+	# 判定由 Boss.has_ground_ahead() 按"传入方向 + absf(position.x)"即时计算，与节点当前朝向无关。
+	flip_nodes = [ground_probe_path]
 
 ## ---- 过场锁定：沉睡 / 苏醒坠落 / 苏醒吼叫期间不可被玩家攻击 ----
 ## 这三态都属于"过场"：玩家从开局进领地、到砍断四根锁链、再到吼叫结束，全程打不掉血。
@@ -39,7 +45,6 @@ func is_invulnerable() -> bool:
 
 func take_damage(amount: int, from: Node2D = null) -> void:
 	# 过场锁定 / 受击无敌帧 / 死亡：整体拒绝，连招架、背刺破招、阶段切换都不触发。
-	# 阶段切换必须挂在"真的掉血"之后 —— 否则被无敌挡下的攻击也会推进二阶段演出。
 	if is_invulnerable():
 		return
 	if blocking:
@@ -47,23 +52,21 @@ func take_damage(amount: int, from: Node2D = null) -> void:
 			blocked.emit(from)
 			return
 		# 背刺破招：正常结算伤害（受击特效 / 掉血 / 无敌帧），并通知 counter 立刻解除招架。
+		# 阶段推进由 Boss.take_damage() 在"真掉血且没死"后统一处理，本类不必再调。
 		super.take_damage(amount, from)
 		guard_broken.emit(from)
-		_try_enter_phase_two()
 		return
 	super.take_damage(amount, from)
-	_try_enter_phase_two()
 
-## 血量跨过二阶段阈值：切到 phase_index=1，强制演出 scream（音效由 scream.gd 按阶段选）。
-## 不做过场无敌——scream 会定身玩家，过场期间无法被攻击。
-func _try_enter_phase_two() -> void:
-	if dead or phase_index >= 1:
-		return
-	if health > int(max_health * PHASE_TWO_THRESHOLD):
-		return
-	start_phase(1)
-	if state_machine != null:
-		state_machine.set_state(BossStateNames.SCREAM)
+
+## 阶段策略：二阶段 = 血量跌破 PHASE_TWO_RATIO → 怒吼演出（一阶段不做任何事）。
+## 以后加三阶段就在下面继续写 elif；每个分支里可以顺手做任何事
+## （换 BGM、刷小怪、改 contact_damage、给自身挂无敌帧……），不受任何"阶段表"限制。
+func _check_phase_policy() -> void:
+	if phase_index == 0 and health_ratio() <= PHASE_TWO_RATIO:
+		start_phase(1)
+		if state_machine != null:
+			state_machine.set_state(BossStateNames.SCREAM)
 
 ## 伤害是否来自 boss 正面（朝向一侧）。来源在朝向侧即视为正面，与玩家 _is_blocking 同判据。
 func _is_front_damage(from: Node2D) -> bool:
@@ -71,13 +74,6 @@ func _is_front_damage(from: Node2D) -> bool:
 		return false
 	var side := signf(from.global_position.x - global_position.x)
 	return side == float(move_direction)
-
-func _flip_extra() -> void:
-	super._flip_extra()  # 翻转 muzzle（吐弹口），保留 Enemy 基类行为
-	if ledge_detector != null:
-		ledge_detector.position.x = absf(ledge_detector.position.x) * float(move_direction)
-		ledge_detector.reset_physics_interpolation()
-
 
 ## 在 BOSS 领地内施放一排 boss_plume。
 ## 领地模式（传了宽度 >0 的 territory）：根数 = 领地可用宽度 / spacing（动态，至少 1 根），

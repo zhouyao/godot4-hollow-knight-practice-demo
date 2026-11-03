@@ -46,8 +46,7 @@ func enter(_from: StringName) -> void:
 	_left_ground = false
 	_plumes = []
 
-	var ap := boss.action_animation_player
-	_out_length = _anim_length(ap, &"teleport_out", out_fallback_time)
+	_out_length = anim_length(&"teleport_out", out_fallback_time)
 
 	# 瞬移开始时即施放 boss_plume（同 down_smash 的实现）：横跨整个 BossArena 铺一排预警柱，
 	# 整组居中于领地、两端内缩不越界；boss 随后瞬移到玩家头顶砸下。
@@ -55,16 +54,15 @@ func enter(_from: StringName) -> void:
 	_landing_x = boss.global_position.x if p == null else p.global_position.x
 	if p != null:
 		boss.face_toward(p.global_position.x)
-	var territory := _arena_rect()
+	var territory := boss.arena_rect()
 	var ground_x := territory.get_center().x if territory.size.x > 0.0 else _landing_x
-	var ground_y := _ground_y_at(ground_x)
+	var ground_y := boss.ground_y_at(ground_x, boss.global_position.y)
 	# 每次攻击在 [min, max] 内随机间距，使落点排布每次都有差异。
 	_plume_spacing = randf_range(plume_spacing_min, plume_spacing_max)
 	_plumes = boss.spawn_plume_field(Vector2(ground_x, ground_y), plume_count, _plume_spacing, slam_damage, territory)
 
 	# 消失：原地播放 teleport_out + 消失音效。
-	if ap != null and ap.has_animation(&"teleport_out"):
-		ap.play(&"teleport_out")
+	play_action(&"teleport_out")
 	_play_audio(&"teleport")
 
 
@@ -87,8 +85,8 @@ func update(delta: float) -> void:
 			boss._apply_vertical_motion(delta)
 			boss._apply_movement()
 			_recover_timer += delta
-			if _recover_timer >= recover_time and machine != null:
-				machine.set_state(BossStateNames.IDLE)
+			if _recover_timer >= recover_time:
+				go_idle()
 
 
 ## 瞬移：把 BOSS 直接挪到玩家头顶 teleport_height 像素处，给向下初速，切到俯冲动画。
@@ -105,9 +103,7 @@ func _begin_fall() -> void:
 	boss.velocity = Vector2(0.0, fall_initial_speed)
 	if p != null:
 		boss.face_toward(p.global_position.x)
-	var ap := boss.action_animation_player
-	if ap != null and ap.has_animation(&"dstab_land"):
-		ap.play(&"dstab_land")
+	play_action(&"dstab_land")
 
 
 func _fall_update(delta: float) -> void:
@@ -130,15 +126,7 @@ func _land() -> void:
 		# 引爆所有 plume（plume_burst 对范围内玩家造成伤害）。
 		boss.burst_plumes(_plumes)
 	# 落点正下方（水平距内）的玩家追加下杀伤害。
-	_slam_check()
-
-
-func _slam_check() -> void:
-	var p := boss.get_player() if boss != null else null
-	if p == null:
-		return
-	if absf(p.global_position.x - _landing_x) <= slam_radius:
-		p.take_damage(slam_damage, boss)
+	boss.damage_in_radius(_landing_x, slam_radius, slam_damage)
 
 
 func exit(_to: StringName) -> void:
@@ -146,44 +134,3 @@ func exit(_to: StringName) -> void:
 		boss.velocity = Vector2.ZERO
 	# 与 down_smash 一致：已爆破的 plume 会自毁，这里只清空引用。
 	_plumes = []
-
-
-## 取 BOSS 领地（BossArena / AuZone）的世界矩形；找不到返回空 Rect2。
-## 复用 down_smash.gd 的查找方式：先查 boss 自身、再查其所在父节点（HollowKnightScene）。
-func _arena_rect() -> Rect2:
-	var zone := boss.get_node_or_null("BossArena") as AuZone
-	if zone == null:
-		var scene := boss.get_parent()
-		if scene != null:
-			zone = scene.get_node_or_null("BossArena") as AuZone
-	if zone != null and zone.has_method("global_rect"):
-		return zone.global_rect()
-	return Rect2()
-
-
-## 落点 x 处地面顶部的 y（往下打射线；没地返回 BOSS 当前 y 兜底）。
-func _ground_y_at(x: float) -> float:
-	if boss == null:
-		return 0.0
-	var mask := 4
-	if boss.ledge_detector != null:
-		mask = boss.ledge_detector.collision_mask
-	var space := boss.get_world_2d().direct_space_state
-	if space == null:
-		return boss.global_position.y
-	var from := Vector2(x, boss.global_position.y - 800.0)
-	var to := Vector2(x, boss.global_position.y + 1200.0)
-	var query := PhysicsRayQueryParameters2D.create(from, to)
-	query.collision_mask = mask
-	query.exclude = [boss.get_rid()]
-	var res := space.intersect_ray(query)
-	if res.is_empty():
-		return boss.global_position.y
-	return float(res.position.y)
-
-
-## 取动画时长，取不到用兜底值（保证相位推进不被缺动画卡死）。
-func _anim_length(ap: AnimationPlayer, anim_name: StringName, fallback: float) -> float:
-	if ap != null and ap.has_animation(anim_name):
-		return ap.get_animation(anim_name).length
-	return fallback

@@ -27,19 +27,49 @@ var boss: Boss:
 		return _boss
 
 
-## 进入下一阶段前先问一次：血量是否跨过了阈值。
-## 由 combat 在每次决策前调用；这里也放一份，方便任何招式状态在收招时顺手检查。
-func _check_phase() -> void:
-	if boss == null:
-		return
-	boss.check_phase()
+# ---- 状态切换收尾（所有招式状态共用）----
+## 播放动作动画（ActionAnimationPlayer）：boss 为空、动画不存在都静默跳过，不刷错误。
+## 实现只有 Enemy._play_action → EnemyFacing.play_action 一份；状态里不要再手写
+## `if ap != null and ap.has_animation(x): ap.play(x)` 这三行。
+func play_action(anim_name: StringName) -> void:
+	if boss != null:
+		boss._play_action(anim_name)
+
+## 仅当状态机此刻仍停留在本状态（按节点名比对）时才切到 target。
+## 用于"收招 / 演出结束"这类由计时器、动画信号触发的切换：期间若已被受击、
+## 阶段切换或别的招式打断，就不该再把人拽回原定状态。
+## 返回是否真的发起了切换（machine 为空 / 已被打断都返回 false）。
+func goto_if_current(target: StringName) -> bool:
+	if machine == null or machine.get_state_name() != name:
+		return false
+	machine.set_state(target)
+	return true
+
+## 收招出口：仍是本状态才切回 idle（各招式状态统一的"播完回去重新决策"）。
+func go_idle() -> bool:
+	return goto_if_current(BossStateNames.IDLE)
+
+## 取动画时长；没有该动画 / 没有 AnimationPlayer 时返回 fallback。
+## 相位推进普遍用"动画时长计时器"而不依赖 animation_finished 信号（信号链一旦断掉就卡死），
+## 所以动画缺失时也必须有一个确定的时长让相位能继续走 —— 兜底值是这个函数的必要部分。
+## 以前 dash / teleport / down_smash / teleport_smash 各抄了一份，现在只留这里一份。
+func anim_length(anim_name: StringName, fallback: float) -> float:
+	var ap := boss.action_animation_player if boss != null else null
+	if ap != null and ap.has_animation(anim_name):
+		return ap.get_animation(anim_name).length
+	return fallback
 
 
 # ---- 通用加权决策引擎 ----
-## 出招节奏：每隔 decision_interval 秒重新决策一次（也是贴身追击时 idle 的喘息/前摇时长，
-## 越小越跟手；设 0.2 即每次回到 idle 仅站 0.2s 就决策，避免跟放风筝玩家时一顿一顿）。
-## 在子类 idle.update 里调用，到点返回要切换的状态名，否则返回 &""。
-@export var decision_interval: float = 0.1
+## 出招节奏（秒）：统一取状态机上的全局配置 BossStateMachine.decision_interval。
+## 以前状态与状态机各导出一份，Inspector 上改的往往不是真正生效的那份，这里只保留一个来源。
+## 也是贴身追击时 idle 的喘息/前摇时长，越小越跟手（0.2 = 每次回 idle 只站 0.2s 就决策）。
+var decision_interval: float:
+	get:
+		if machine is BossStateMachine:
+			return (machine as BossStateMachine).decision_interval
+		return 0.1
+
 var _decision_timer: float = 0.0
 var _last_action: StringName = &""
 

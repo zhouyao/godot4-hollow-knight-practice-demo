@@ -18,8 +18,10 @@ extends EnemyStateMachine
 ##      击败演出由 BOSS 自己的状态接管。
 ##
 ## 状态分两层，但共用同一个状态机：
-##   流程层  dormant / intro / combat / phase_transition / defeat
-##   招式层  slashes / dash / ... 一律由 combat 选出，播完回到 combat。
+##   流程层  dormant → dormant_end → scream → idle（开战）
+##   招式层  slash / teleport / dash / counter / evade / walk / down_smash / teleport_smash
+##           一律由 idle 的加权决策选出，播完回 idle。
+##   结束    death
 ## 不拆成两个 StateMachine 节点的原因：招式需要"选完立刻切"，
 ## 单状态机的 set_state() 天然支持；拆两个还得额外处理 active 开关与两套抢占顺序。
 

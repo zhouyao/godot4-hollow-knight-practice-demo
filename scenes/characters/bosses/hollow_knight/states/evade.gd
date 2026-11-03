@@ -9,9 +9,9 @@ class_name HollowKnightEvadeState
 ## 与 dash 对称：dash 朝玩家冲、evade 背玩家撤；二者共用"累计位移 + 撞墙 + 悬崖"三套停止条件，只是方向相反。
 ##
 ## 演出与朝向：后撤时应"正面朝向玩家、向后撤"（像真正的防御性闪避），所以这里让 boss 用
-## face_toward 面朝玩家（精灵正脸朝威胁）。但悬崖判定用的 ledge_detector 默认跟着 move_direction
-## （此刻朝向玩家）走，会指错方向；因此 _aim_ledge_detector() 手动把探测器掰到撤退前方，
-## 这样悬崖探测才正确，不会后撤下坑。代价只是探测器的朝向被单独修正，精灵画面仍正对玩家。
+## face_toward 面朝玩家（精灵正脸朝威胁）。悬崖判定走 Boss.has_ground_ahead(_retreat_dir)：
+## 它按"传入方向"即时打射线，与 boss 当前朝向无关，所以"脸朝玩家、往后退"也不会探错方向，
+## 无需再把探测器掰来掰去。
 ##
 ## 位移直接写 velocity.x 交给 Enemy._apply_movement，不启用近战命中盒（disable_melee_attack），
 ## 符合 BossState 基类"招式不用 _step_toward/apply_step"的约定。
@@ -53,12 +53,8 @@ func enter(_from: StringName) -> void:
 	# 演出：面朝玩家（正脸朝向威胁，像真正的后撤闪避）。
 	if p != null:
 		boss.face_toward(p.global_position.x)
-	# 但探测器要指向撤退前方，悬崖判定才正确。
-	_aim_ledge_detector()
 
-	var ap := boss.action_animation_player
-	if ap != null and ap.has_animation(&"evade"):
-		ap.play(&"evade")
+	play_action(&"evade")
 
 
 func update(delta: float) -> void:
@@ -70,28 +66,13 @@ func update(delta: float) -> void:
 func exit(_to: StringName) -> void:
 	if boss != null:
 		boss.velocity.x = 0.0
-		# 复位悬崖探测器：撤离时曾把它掰向撤退方向，离开本状态要恢复成跟随 move_direction 的默认朝向，
-		# 否则move_direction没变（仍朝向玩家）时 idle 的 face_toward 不会触发 _flip_extra，探测器会一直指错。
-		if boss.ledge_detector != null:
-			boss.ledge_detector.position.x = absf(boss.ledge_detector.position.x) * boss.move_direction
-
-
-## 悬崖探测器默认跟着 move_direction（= 面朝玩家方向）走；
-## 后撤是朝相反方向走，所以这里手动把探测器掰到撤退前方，悬崖判定才正确。
-## 每帧重设一次以保证稳定（幂等：absf 后乘方向，重复调用结果不变）。
-func _aim_ledge_detector() -> void:
-	if boss == null or boss.ledge_detector == null:
-		return
-	boss.ledge_detector.position.x = absf(boss.ledge_detector.position.x) * _retreat_dir
 
 
 ## 后撤一帧：先预判悬崖（撤退前方无地就停，别退下坑），再给速度、位移、累计距离，
 ## 撞墙或退满本次目标距离则停。
 func _evade_update(delta: float) -> void:
-	# 撤退前方是悬崖：本帧就收，不迈出那一步。
-	_aim_ledge_detector()
-	boss.ledge_detector.force_raycast_update()
-	if !boss.ledge_detector.is_colliding():
+	# 撤退前方是悬崖：本帧就收，不迈出那一步（与 boss 当前朝向无关，按撤退方向探测）。
+	if not boss.has_ground_ahead(float(_retreat_dir)):
 		_finish()
 		return
 
@@ -111,5 +92,4 @@ func _evade_update(delta: float) -> void:
 func _finish() -> void:
 	if boss != null:
 		boss.velocity.x = 0.0
-	if machine != null:
-		machine.set_state(BossStateNames.IDLE)
+	go_idle()

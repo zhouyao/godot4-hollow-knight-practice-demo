@@ -43,16 +43,14 @@ func enter(_from: StringName) -> void:
 	_left_ground = false
 	_fall_anim_played = false
 	_plumes = []
-	var ap := boss.action_animation_player
-	_antic_length = _anim_length(ap, &"dstab_anticipation", antic_fallback_time)
+	_antic_length = anim_length(&"dstab_anticipation", antic_fallback_time)
 	boss.velocity = Vector2.ZERO
 	# 前摇期间看向玩家（落点会在起跳瞬间锁定）。
 	var p := boss.get_player()
 	if p != null:
 		boss.face_toward(p.global_position.x)
 	# 前摇动画（蹲伏 + 起跳预备）。
-	if ap != null and ap.has_animation(&"dstab_anticipation"):
-		ap.play(&"dstab_anticipation")
+	play_action(&"dstab_anticipation")
 
 
 func update(delta: float) -> void:
@@ -73,8 +71,8 @@ func update(delta: float) -> void:
 			boss._apply_vertical_motion(delta)
 			boss._apply_movement()
 			_recover_timer += delta
-			if _recover_timer >= recover_time and machine != null:
-				machine.set_state(BossStateNames.IDLE)
+			if _recover_timer >= recover_time:
+				go_idle()
 
 
 ## 起跳瞬间：锁定落点 = 玩家此刻 x；朝落点做抛物线初速；施放一排 plume；播起跳音效。
@@ -94,9 +92,9 @@ func _begin_air() -> void:
 	# 落点地面施放一排 plume（预警，等距留缝，不伤人）。
 	# 群体按 BOSS 领地（BossArena）宽度动态铺开、居中于领地，根数 = 领地宽 / 间距，
 	# 两端内缩半个 plume 宽，确保羽柱不越出领地。
-	var territory := _arena_rect()
+	var territory := boss.arena_rect()
 	var ground_x := territory.get_center().x if territory.size.x > 0.0 else _landing_x
-	var ground_y := _ground_y_at(ground_x)
+	var ground_y := boss.ground_y_at(ground_x, boss.global_position.y)
 	# 每次攻击在 [min, max] 内随机间距，使落点排布每次都有差异。
 	_plume_spacing = randf_range(plume_spacing_min, plume_spacing_max)
 	_plumes = boss.spawn_plume_field(Vector2(ground_x, ground_y), plume_count, _plume_spacing, slam_damage, territory)
@@ -113,9 +111,7 @@ func _air_update(delta: float) -> void:
 	# 下落段切换为 dstab_land（一次性播放）。
 	if boss.velocity.y >= 0.0 and not _fall_anim_played:
 		_fall_anim_played = true
-		var ap := boss.action_animation_player
-		if ap != null and ap.has_animation(&"dstab_land"):
-			ap.play(&"dstab_land")
+		play_action(&"dstab_land")
 	# 离地后重新踩到地面 = 落地。
 	if _left_ground and boss.is_on_floor():
 		_land()
@@ -130,59 +126,10 @@ func _land() -> void:
 		# 引爆所有 plume（plume_burst 对范围内玩家造成伤害）。
 		boss.burst_plumes(_plumes)
 	# 落点正下方（水平距内）的玩家追加下砸伤害。
-	_slam_check()
-
-
-func _slam_check() -> void:
-	var p := boss.get_player() if boss != null else null
-	if p == null:
-		return
-	if absf(p.global_position.x - _landing_x) <= slam_radius:
-		p.take_damage(slam_damage, boss)
+	boss.damage_in_radius(_landing_x, slam_radius, slam_damage)
 
 
 func exit(_to: StringName) -> void:
 	if boss != null:
 		boss.velocity = Vector2.ZERO
 	_plumes = []
-
-
-## 取 BOSS 领地（BossArena / AuZone）的世界矩形；找不到返回空 Rect2。
-## 复用 dormant.gd 的查找方式：先查 boss 自身、再查其所在父节点（HollowKnightScene）。
-func _arena_rect() -> Rect2:
-	var zone := boss.get_node_or_null("BossArena") as AuZone
-	if zone == null:
-		var scene := boss.get_parent()
-		if scene != null:
-			zone = scene.get_node_or_null("BossArena") as AuZone
-	if zone != null and zone.has_method("global_rect"):
-		return zone.global_rect()
-	return Rect2()
-
-
-## 落点 x 处地面顶部的 y（往下打射线；没地返回 BOSS 当前 y 兜底）。
-func _ground_y_at(x: float) -> float:
-	if boss == null:
-		return 0.0
-	var mask := 4
-	if boss.ledge_detector != null:
-		mask = boss.ledge_detector.collision_mask
-	var space := boss.get_world_2d().direct_space_state
-	if space == null:
-		return boss.global_position.y
-	var from := Vector2(x, boss.global_position.y - 800.0)
-	var to := Vector2(x, boss.global_position.y + 1200.0)
-	var query := PhysicsRayQueryParameters2D.create(from, to)
-	query.collision_mask = mask
-	query.exclude = [boss.get_rid()]
-	var res := space.intersect_ray(query)
-	if res.is_empty():
-		return boss.global_position.y
-	return float(res.position.y)
-
-
-## 取动画时长，取不到用兜底值（保证相位推进不被缺动画卡死）。
-func _anim_length(ap: AnimationPlayer, anim_name: StringName, fallback: float) -> float:
-	if ap != null and ap.has_animation(anim_name):
-		return ap.get_animation(anim_name).length
-	return fallback

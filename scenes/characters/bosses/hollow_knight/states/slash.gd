@@ -31,17 +31,15 @@ func enter(_from: StringName) -> void:
 
 	# 播放挥砍动画，结束后回 idle。
 	var ap := boss.action_animation_player
-	if ap != null and ap.has_animation("slash"):
-		if not ap.animation_finished.is_connected(_on_slash_finished):
-			ap.animation_finished.connect(_on_slash_finished)
-		ap.play("slash")
+	if ap != null and not ap.animation_finished.is_connected(_on_slash_finished):
+		ap.animation_finished.connect(_on_slash_finished)
+	play_action(BossStateNames.SLASH)
 
 
 func _on_slash_finished(anim_name: StringName) -> void:
 	if anim_name != BossStateNames.SLASH:
 		return
-	if machine != null and machine.get_state_name() == BossStateNames.SLASH:
-		machine.set_state(BossStateNames.IDLE)
+	go_idle()
 
 
 func exit(_to: StringName) -> void:

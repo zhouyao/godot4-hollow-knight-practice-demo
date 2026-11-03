@@ -35,10 +35,6 @@ var _down_smash_cd_until: float = 0.0
 @export var teleport_smash_cooldown: float = 6.0 ## teleport_smash 收招后多久内不再被选（二阶段专属）
 var _teleport_smash_cd_until: float = 0.0
 
-## 头顶实时显示决策权重（调试用）。需同时打开全局调试开关 Globals.debug_enabled。
-@export var show_decision_debug: bool = false
-var _decision_label: Label = null
-
 func enter(_from: StringName) -> void:
 	if boss == null:
 		return
@@ -67,7 +63,7 @@ func enter(_from: StringName) -> void:
 		_teleport_smash_cd_until = _now() + teleport_smash_cooldown
 	# 待机期间关闭挥砍命中盒，避免站定时误伤。
 	boss.disable_melee_attack()
-	boss.action_animation_player.play(BossStateNames.IDLE)
+	play_action(BossStateNames.IDLE)
 
 func update(delta: float) -> void:
 	# 待机：站定（清水平速度），不做接触伤害结算。
@@ -79,10 +75,6 @@ func update(delta: float) -> void:
 	var p := boss.get_player()
 	if p != null:
 		boss.face_toward(p.global_position.x)
-
-	# 调试：头顶实时显示当前决策权重（便于调参）。
-	if show_decision_debug:
-		_draw_decision_debug()
 
 	# 到时间就跑一轮加权决策。
 	var action := tick_decision(delta)
@@ -288,33 +280,3 @@ func _player_retreating() -> bool:
 		return false
 	var away := signf(p.global_position.x - boss.global_position.x)
 	return signf(vx) == away
-
-
-## 在 Boss 头顶用 Label 实时画出本帧的决策权重，方便调 dash / walk 的出现频率。
-## 仅当 show_decision_debug 且全局调试开关打开时生效；权重复刻 decide_next 的“不重复上次”惩罚。
-func _draw_decision_debug() -> void:
-	if boss == null:
-		return
-	if _decision_label == null:
-		_decision_label = Label.new()
-		_decision_label.z_index = 100
-		_decision_label.position = Vector2(-43.0, -470.0)
-		boss.add_child(_decision_label)
-	_decision_label.visible = show_decision_debug and Globals.debug_enabled
-	if not _decision_label.visible:
-		return
-	var distance := boss.player_distance()
-	var pool := _filter_actions(_available_actions(), distance)
-	var w := _weights(distance, boss.is_player_attacking())
-	# 复刻 decide_next 的“不重复上次”惩罚，展示真实可用权重。
-	if _last_action != &"" and w.has(_last_action):
-		w[_last_action] *= 0.2
-	var lines := PackedStringArray()
-	lines.append("dist=%.0f" % distance)
-	# 标记的是 boss“上一帧实际选中的招式”（_last_action），而非权重最高的招式：
-	# 真正的选中是 weighted_pick 的随机结果，权重最高≠一定被选中，若标理论最高权重，
-	# 会与随机落到的实际动作对不上，看起来“不准确”。如实标出上一招，配合上面的×0.2惩罚更直观。
-	for a in pool:
-		var mark := " " if a != _last_action else ">"
-		lines.append("%s %s %.2f" % [mark, a, float(w.get(a, 0.0))])
-	_decision_label.text = "\n".join(lines)
