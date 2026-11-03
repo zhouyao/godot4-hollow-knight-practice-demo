@@ -126,7 +126,7 @@ func _disturb() -> void:
 	if _is_dead:
 		return
 	_anim.speed_scale = 5.0                     # 摆动间隔变为原来的 0.2 倍
-	if _restore_timer != null:
+	if _restore_timer != null and _restore_timer.timeout.is_connected(_on_restore_timeout):
 		_restore_timer.timeout.disconnect(_on_restore_timeout)
 	_restore_timer = get_tree().create_timer(0.6)
 	_restore_timer.timeout.connect(_on_restore_timeout)

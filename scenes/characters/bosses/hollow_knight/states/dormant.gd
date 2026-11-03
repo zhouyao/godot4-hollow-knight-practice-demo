@@ -36,6 +36,9 @@ var _frame_count: int = 0
 
 
 func enter(_from: StringName) -> void:
+	# 沉睡阶段（挂锁链）不可被玩家攻击：只有 dormant_end 结束（进入 scream）后才解除。
+	if boss != null:
+		boss.invincible = true
 	_ensure_refs()
 	_start_dormant_sprite()
 	_track_head()
@@ -97,7 +100,12 @@ func _ensure_refs() -> void:
 	if _sprite == null:
 		_sprite = enemy.animated_sprite
 	if _arena == null:
+		# 竞技场已迁移到关卡场景（HollowKnightScene 下，与 boss 平级），不再挂在 boss 节点下。
 		_arena = enemy.get_node_or_null("BossArena") as AuZone
+		if _arena == null:
+			var scene := enemy.get_parent()
+			if scene != null:
+				_arena = scene.get_node_or_null("BossArena") as AuZone
 	if _sprite != null and _sprite.sprite_frames != null:
 		_frame_count = _sprite.sprite_frames.get_frame_count(&"dormant")
 
@@ -243,6 +251,8 @@ func _ensure_music() -> void:
 	if boss == null:
 		return
 	_fight_audio = boss.get_node_or_null("FightAudio") as Node2D
+	if _fight_audio == null:
+		return
 	_boss_bg_loop = _fight_audio.get_node_or_null("boss_bg_loop") as AudioStreamPlayer2D
 
 ## 切到指定战前悬疑轨（index 对应 PREFIGHT_CHAIN_NODES），直接播放 FightAudio/ChainX。

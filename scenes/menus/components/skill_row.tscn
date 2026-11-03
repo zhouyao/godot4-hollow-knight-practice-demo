@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cmf3dgpbenwvm" path="res://scenes/menus/components/skill_row.gd" id="1_row"]
 [ext_resource type="Texture2D" uid="uid://dm2jomnt31w15" path="res://assets/icons/skill/dash.png" id="2_jc0hd"]
 [ext_resource type="SpriteFrames" uid="uid://c0qkeffcyf62y" path="res://resources/skills/previews/dash_preview.tres" id="3_8lhbi"]
-[ext_resource type="Script" path="res://scenes/menus/components/skill_icon.gd" id="4_icon"]
+[ext_resource type="Script" uid="uid://p7hijnneuh0g" path="res://scenes/menus/components/skill_icon.gd" id="4_icon"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rowbg"]
 content_margin_left = 16.0
@@ -59,9 +59,9 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_8lhbi")
 [node name="Icon" type="TextureRect" parent="Row/IconContainer" unique_id=296521649]
 layout_mode = 2
 texture = ExtResource("2_jc0hd")
-script = ExtResource("4_icon")
 expand_mode = 1
 stretch_mode = 5
+script = ExtResource("4_icon")
 
 [node name="PreviewContainer" type="Control" parent="Row" unique_id=619282503]
 custom_minimum_size = Vector2(620, 170)
@@ -71,5 +71,6 @@ mouse_filter = 2
 
 [node name="Preview" type="AnimatedSprite2D" parent="Row/PreviewContainer" unique_id=747454184]
 sprite_frames = ExtResource("3_8lhbi")
+animation = &"dash"
 autoplay = "default"
 centered = false

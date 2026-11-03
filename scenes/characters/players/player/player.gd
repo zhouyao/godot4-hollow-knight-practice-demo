@@ -1,9 +1,18 @@
 extends CharacterBody2D
 class_name PlayerInitial
 
-
 ## 玩家死亡瞬间发出一次（血量归零或被 kill() 调用），状态机据此切到 death 状态。
 signal player_death
+
+## 技能进入冷却（start_skill_cooldown 写入冷却表时）发出一次，供技能条按需开始刷新对应槽位，
+## 避免技能条每帧无条件轮询所有槽位。
+signal skill_cooldown_started(skill_id: StringName)
+
+## 能量值变化（施放消耗 / 命中回复）发出，供技能条按需重算"付不起就变黑"的图标态。
+signal energy_changed(energy: int)
+
+## 生命值变化（受伤 / 回血）发出，供技能条重算"满血就变灰"的图标态（如 cure）。
+signal health_changed(health: int)
 
 var speed: float = 4 * Globals.UNIT_SIZE
 var min_jump_height: float = 0.2 * Globals.UNIT_SIZE
@@ -30,13 +39,19 @@ var slash_down_dive_speed: float = 5.0 * Globals.UNIT_SIZE
 
 var knockback: Vector2 = Vector2.ZERO
 
-## 冲刺被打断成挥砍时残留的水平冲量：逐帧衰减，让挥砍带着冲刺的位移滑出去。
+## 冲刺被打断成挥砍时残留的水平冲量：指数衰减（与物理帧率解耦），让挥砍带着冲刺的位移滑出去。
 var dash_carry: Vector2 = Vector2.ZERO
 
 ## 冲量初速 = 冲刺速度 × 该比例，0.6 表示保留六成冲刺速度。
 @export var dash_carry_ratio: float = 0.6
-## 冲量每物理帧的衰减系数：越小滑得越远（0.25 ≈ 滑 0.7 格）。
-@export var dash_carry_decay: float = 0.25
+## 冲量残留时间的指数衰减速率（每秒），与物理帧率解耦：
+## 实际每帧衰减 = lerp(..., 1 - exp(-rate * delta))。rate 越大滑得越近，越小滑得越远。
+## 默认 17.3 ≈ 60Hz 下"每帧衰减 0.25"（保留 0.75）。
+@export var dash_carry_decay: float = 17.3
+
+## 击退的指数衰减速率（每秒），与物理帧率解耦：实际每帧乘子 = exp(-rate * delta)。
+## 默认 30.65 ≈ 60Hz 下"每帧衰减 0.4"（保留 0.6）。
+@export var knockback_decay_rate: float = 30.65
 
 ## 技能冷却剩余时间表：skill_id -> 剩余秒数。每物理帧递减，归零自动移除条目。
 ## 放在玩家身上而不是状态里：受击 / 死亡 / 切状态都要继续走表，
@@ -79,6 +94,10 @@ var invincible: bool = false
 ## 既不会抹掉受击剩下的无敌帧，也不会被 hurt_invincibility_timer 的 timeout 顺手清掉。
 var dash_invincible: bool = false
 
+## 格挡无敌标记：只在 block 状态期间为 true，由 block 的 enter / exit 成对开关。
+## 独立于受击无敌帧 invincible 与冲刺无敌帧 dash_invincible，三者互不覆盖。
+var block_invincible: bool = false
+
 @onready var camera_marker: Marker2D = $CameraPosition
 
 @onready var collision_shape = $BodyCollisionShape2D
@@ -103,6 +122,9 @@ func _ready() -> void:
 	for child in $Audio.get_children():
 		audio_nodes[child.name] = child
 
+	# 防止换场景 / 重开战斗后残留 true。
+	PlayerCombat.is_attacking = false
+
 	gravity = 2.0 * max_jump_height / pow(jump_duration, 2)
 	max_jump_velocity = -sqrt(2.0 * gravity * max_jump_height)
 	min_jump_velocity = -sqrt(2.0 * gravity * min_jump_height)
@@ -119,6 +141,7 @@ func _ready() -> void:
 	debug.setup_energy(max_energy, energy)
 
 	if state_machine != null:
+		state_machine.state_changed.connect(_on_player_state_changed)
 		state_machine.start()
 
 
@@ -147,6 +170,7 @@ func start_skill_cooldown(skill_id: StringName) -> void:
 	if skill_id == &"" or duration <= 0.0:
 		return
 	_skill_cooldowns[skill_id] = duration
+	skill_cooldown_started.emit(skill_id)
 
 
 ## 剩余冷却秒数（未冷却返回 0）。
@@ -165,6 +189,14 @@ func can_afford_skill(skill_id: StringName) -> bool:
 	return energy >= Skills.energy_cost_of(skill_id)
 
 
+## 技能当前是否"可用"（图标不该变灰）：能量够 + 技能特定前提。
+## 通用技能只看能量；cure 还需非满血（满血回血无意义，按不出去也该变灰）。
+func can_use_skill(skill_id: StringName) -> bool:
+	if skill_id == &"cure":
+		return can_afford_skill(skill_id) and health < max_health
+	return can_afford_skill(skill_id)
+
+
 ## 扣掉该技能的起手消耗：能量不足时返回 false 且不动数值，调用方据此放弃施放。
 func spend_skill_energy(skill_id: StringName) -> bool:
 	var cost := Skills.energy_cost_of(skill_id)
@@ -172,6 +204,7 @@ func spend_skill_energy(skill_id: StringName) -> bool:
 		return false
 	energy = maxi(energy - cost, 0)
 	_refresh_energy_bar()
+	energy_changed.emit(energy)
 	return true
 
 
@@ -180,9 +213,10 @@ func _apply_gravity(delta):
 		velocity.y += gravity * delta
 
 func _apply_movement():
+	var dt := get_physics_process_delta_time()
 	move_and_slide()
-	knockback = lerp(knockback, Vector2.ZERO, 0.4)
-	dash_carry = lerp(dash_carry, Vector2.ZERO, dash_carry_decay)
+	knockback *= exp(-knockback_decay_rate * dt)
+	dash_carry = lerp(dash_carry, Vector2.ZERO, 1.0 - exp(-dash_carry_decay * dt))
 
 
 ## 注入一段沿朝向的水平冲量（冲刺被打断成挥砍时调用），已有余速会被覆盖。
@@ -216,6 +250,7 @@ func heal(amount: int) -> void:
 		return
 	health = mini(health + amount, max_health)
 	_refresh_health_bar()
+	health_changed.emit(health)
 
 func _dead():
 	if dead:
@@ -231,8 +266,13 @@ func kill():
 func take_damage(amount: int, from: Node2D = null) -> void:
 	if dead or is_damage_immune():
 		return
+	# 格挡：正面来袭的伤害被挡下，不掉血、不进受击硬直，仅给反馈。
+	if _is_blocking(from):
+		_on_blocked(from)
+		return
 	health -= amount
 	_refresh_health_bar()
+	health_changed.emit(health)
 	if is_instance_valid(player_animated_sprite):
 		player_animated_sprite.modulate = Color(4.0, 4.0, 4.0)
 		var flash_tween := player_animated_sprite.create_tween()
@@ -245,6 +285,23 @@ func take_damage(amount: int, from: Node2D = null) -> void:
 	_apply_damage_knockback(from)
 	if state_machine != null:
 		state_machine.set_state(PlayerStateNames.HURT, true)
+
+
+## 是否正在格挡且伤害来自正面：来源在玩家朝向一侧即视为正面。
+## 对投射物同样有效——body_entered 触发瞬间弹体中心仍在来袭侧，signf 符号正确。
+func _is_blocking(from: Node2D) -> bool:
+	if not block_invincible or from == null:
+		return false
+	var side := signf(from.global_position.x - global_position.x)
+	return side == float(move_direction)
+
+
+## 格挡成功反馈：再响一次格挡音（"铛"），并在身前生成格挡火花特效。
+func _on_blocked(_from: Node2D) -> void:
+	var s := audio_nodes.get(PlayerStateNames.BLOCK) as AudioStreamPlayer2D
+	if s != null:
+		s.play()
+	PlayerBlockEffect.spawn(self, get_parent())
 
 func _apply_damage_knockback(from: Node2D) -> void:
 	if from == null:
@@ -297,6 +354,27 @@ func start_dash_invincible() -> void:
 ## 只清冲刺这一位，受击无敌帧仍交给 hurt_invincibility_timer。
 func end_dash_invincible() -> void:
 	dash_invincible = false
+
+
+## 开启格挡无敌帧：block.enter() 调用。
+func start_block_invincible() -> void:
+	block_invincible = true
+
+
+## 结束格挡无敌帧：block.exit() 调用（自然结束 / 被打断 / 死亡都会走到）。
+## 只清格挡这一位，受击 / 冲刺无敌帧不受影响。
+func end_block_invincible() -> void:
+	block_invincible = false
+
+
+## 每当玩家自身状态机切换，就把"是否正在攻击"同步到全局标志。
+## 读取的是状态节点上的声明式标签 is_attack（进攻型状态置 true），
+## 因此 Boss 侧完全不依赖具体状态名 —— 将来玩家加多少攻击态都不用改这里。
+func _on_player_state_changed(new_state: StringName, _old_state: StringName) -> void:
+	PlayerCombat.is_attacking = false
+	var node = state_machine.states.get(new_state, null)
+	if is_instance_valid(node) and node.get("is_attack") == true:
+		PlayerCombat.is_attacking = true
 
 
 ## 本次挥砍已结算过的目标表（键 = 被砍节点，值忽略，当集合用；节点按实例 id 比较）。
@@ -352,6 +430,7 @@ func _hit_enemy(body: Node2D) -> bool:
 		if landed:
 			energy = mini(energy + 1, max_energy)
 			_refresh_energy_bar()
+			energy_changed.emit(energy)
 		if state_machine != null and state_machine.get_state_name() == PlayerStateNames.SLASH_DOWN:
 			return true
 		# 反冲只在本次挥砍的首个命中目标上施加：穿透多个敌人时逐个覆盖会让手感发飘。

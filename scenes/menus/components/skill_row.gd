@@ -43,6 +43,12 @@ func setup(def: SkillDefinition) -> void:
 			preview.play(anim)
 			if anim == &"dash":
 				_play_dash_motion(anim)
+			elif anim == &"block":
+				preview.position.x = preview_container.size.x /2 -  150
+			elif anim == &"cure":
+				preview.scale = Vector2(0.5, 0.5)
+				preview.position.y = -30
+				preview.position.x = 70
 
 
 ## dash：精灵 x 从 0 快速冲到 DASH_TRAVEL，随动画循环反复冲刺。

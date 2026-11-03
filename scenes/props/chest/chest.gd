@@ -108,9 +108,12 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 	take_damage(_slash_damage_of(attacker), attacker)
 
 
-## 攻击者没有 slash_damage 时退回 1 点（需求：每刀 1 点）。
+## 攻击者没有 melee/slash 伤害属性时退回 1 点（需求：每刀 1 点）。
+## 先查 melee_damage（Boss 基类），回退 slash_damage（玩家），两者兼容。
 func _slash_damage_of(attacker: Node) -> int:
-	var v: Variant = attacker.get("slash_damage")
+	var v: Variant = attacker.get("melee_damage")
+	if v == null:
+		v = attacker.get("slash_damage")
 	return int(v) if v is int else 1
 
 

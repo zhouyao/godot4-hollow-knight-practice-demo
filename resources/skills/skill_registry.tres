@@ -3,7 +3,9 @@
 [ext_resource type="Script" uid="uid://batvj8lv3diwa" path="res://resources/skills/skill_registry.gd" id="1_iicnw"]
 [ext_resource type="Script" uid="uid://cjow5dihr1ch0" path="res://resources/skills/skill_definition.gd" id="2_stt66"]
 [ext_resource type="Resource" uid="uid://bf5olifvxw0x4" path="res://resources/skills/dash.tres" id="4_a38nv"]
+[ext_resource type="Resource" path="res://resources/skills/block.tres" id="5_blk"]
+[ext_resource type="Resource" uid="uid://cx0h3a1sk1kk" path="res://resources/skills/cure.tres" id="6_cure"]
 
 [resource]
 script = ExtResource("1_iicnw")
-skills = Array[ExtResource("2_stt66")]([ExtResource("4_a38nv")])
+skills = Array[ExtResource("2_stt66")]([ExtResource("4_a38nv"), ExtResource("5_blk"), ExtResource("6_cure")])

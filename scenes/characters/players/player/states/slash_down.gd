@@ -1,6 +1,11 @@
 extends PlayerState
 
 
+## 进攻型状态：供 Boss 全局攻击标志识别（玩家正在攻击 = true）。
+## 父类 PlayerState 已声明 is_attack（默认 false），这里在 _init 里改默认值为 true。
+func _init() -> void:
+	is_attack = true
+
 ## 下劈动作的最短持续时间（秒）：期间不接受过渡，保证俯冲到落地这段不被打断。
 @export var hold_time: float = 0.3
 

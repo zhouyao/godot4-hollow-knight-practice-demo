@@ -94,6 +94,11 @@ var _grayed := false
 
 ## 上一帧剩余的冷却秒数：用来识别"刚从冷却中恢复"，触发就绪闪光。
 var _prev_cooldown_left: float = 0.0
+## 上一帧渲染的倒计时文本键：0.1s 量化（int(left*10)）。仅在键变化时重算字符串，
+## 把每帧的 String 分配从 ~60/s 降到 ~10/s，避免冷却期间的 GC 抖动。
+var _cd_text_key: int = -1
+## 上一帧写入的 CD 字体色：仅在随量化键变化时重写，避免每帧重建主题缓存。
+var _cd_color: Color = Color(0.0, 0.0, 0.0, 0.0)
 ## 就绪闪光动画：放闪光期间不能被 refresh_cooldown 当作"已经归零"清掉。
 var _flash_tween: Tween
 
@@ -166,6 +171,9 @@ func _on_slot_changed(slot: int) -> void:
 	if slot != slot_index:
 		return
 	_refresh()
+	# 换绑后该槽的冷却 / 能量态可能已变，交给技能条按需重刷（哪怕刚解绑也要清一次）。
+	if bar != null:
+		bar._mark_slot_active(self)
 
 
 ## 右上角删除叉可见性：仅本槽已绑定且技能面板打开时显示（避免游戏中误触）。
@@ -181,10 +189,12 @@ func request_remove() -> void:
 	Settings.skill_bar.set_skill(slot_index, &"")
 
 
-## 每帧由 SkillBar 调用：读玩家的冷却表刷新扇形遮罩、倒计时数字与配色，
-## 并按能量是否够用把图标变黑。拿不到玩家引用或空槽时一律恢复静息态。
+## 每帧由 SkillBar 调用（仅当本槽处于冷却 / 闪光 / 待刷新时）：读玩家冷却表刷新扇形遮罩、
+## 倒计时数字与配色，并按能量是否够用把图标变黑。拿不到玩家引用或空槽时恢复静息态。
+## 返回 true 表示还需要继续刷新（仍在冷却 / 闪光中），false 表示已静止可移出刷新集合。
 ## 数字的强化层次：黑描边（始终）+ 冷白→亮金插值（全程）+ 最后一秒呼吸 + 归零闪光。
-func refresh_cooldown() -> void:
+## 文本与字体色按 0.1s 量化：显示值不变时跳过字符串分配与主题缓存重建，冷却期间 GC 抖动最小。
+func refresh_cooldown() -> bool:
 	var player := bar.player if bar != null else null
 	var skill_id := get_skill_id()
 	if not is_instance_valid(player) or skill_id == &"":
@@ -193,28 +203,37 @@ func refresh_cooldown() -> void:
 		_stop_flash()
 		_prev_cooldown_left = 0.0
 		_clear_cd_label()
-		return
+		return false
 
 	var left := player.skill_cooldown_left(skill_id)
 	cooldown_mask.set_ratio(player.skill_cooldown_ratio(skill_id))
-	# 冷却与能量是两回事：冷却期间也能看出"还剩多久"，能量不够才是按不出去。
-	_set_grayed(not player.can_afford_skill(skill_id))
+	# 冷却与能量是两回事：冷却期间也能看出"还剩多久"，能量不够 / 满血（cure）才是按不出去。
+	_set_grayed(not player.can_use_skill(skill_id))
 
 	if left > 0.0:
 		_stop_flash()
 		_prev_cooldown_left = left
 		var ratio := player.skill_cooldown_ratio(skill_id)
 		cooldown_label.visible = true
-		cooldown_label.text = "%.1f" % left
-		cooldown_label.add_theme_color_override("font_color", CD_COLOR_COLD.lerp(CD_COLOR_HOT, 1.0 - ratio))
+		# 量化到 0.1s：相邻帧显示值相同则跳过字符串分配与主题色重写（冷却数字本就是 1 位小数）。
+		var key := int(left * 10.0 + 0.5)
+		if key != _cd_text_key:
+			_cd_text_key = key
+			cooldown_label.text = "%.1f" % left
+			var color := CD_COLOR_COLD.lerp(CD_COLOR_HOT, 1.0 - ratio)
+			_cd_color = color
+			cooldown_label.add_theme_color_override("font_color", color)
 		cooldown_label.scale = Vector2.ONE * (1.0 + CD_PULSE_SCALE * _pulse_amount(left))
-		return
+		return true
 
 	if _prev_cooldown_left > 0.0:
 		_prev_cooldown_left = 0.0
 		_flash_ready()
-	elif not _is_flashing():
-		_clear_cd_label()
+		return true
+	if _is_flashing():
+		return true
+	_clear_cd_label()
+	return false
 
 
 ## 剩余不足 CD_PULSE_LEFT 秒时按正弦呼吸（0..1），用剩余时间当相位，天然跟着倒数走。
@@ -231,6 +250,7 @@ func _flash_ready() -> void:
 	cooldown_label.visible = true
 	cooldown_label.scale = Vector2.ONE
 	cooldown_label.add_theme_color_override("font_color", CD_FLASH_COLOR)
+	_cd_text_key = -1
 	_flash_tween = create_tween()
 	_flash_tween.tween_property(cooldown_label, "scale", Vector2.ONE * CD_FLASH_SCALE, CD_FLASH_TIME * 0.3)
 	_flash_tween.tween_property(cooldown_label, "scale", Vector2.ONE, CD_FLASH_TIME * 0.7)
@@ -256,6 +276,7 @@ func _clear_cd_label() -> void:
 	cooldown_label.text = ""
 	cooldown_label.visible = false
 	cooldown_label.scale = Vector2.ONE
+	_cd_text_key = -1
 
 
 ## 能量不足时图标变黑 + 失去原色，与冷却遮罩互不干扰。
@@ -286,11 +307,16 @@ func _can_drop_data(_position: Vector2, data: Variant) -> bool:
 func _drop_data(_position: Vector2, data: Variant) -> void:
 	var skill_id: StringName = (data as Dictionary).get(DRAG_KEY_SKILL_ID, &"")
 	var source: int = (data as Dictionary).get(DRAG_KEY_SOURCE_SLOT, -1)
-	# 来自技能栏内其它槽：先清空来源槽，实现"移动"而非"复制"，
-	# 从源头上杜绝两个相同技能共存。
-	if source >= 0 and source != slot_index:
-		Settings.skill_bar.set_skill(source, &"")
-	Settings.skill_bar.set_skill(slot_index, skill_id)
+	var dest := slot_index
+	var dest_skill := Settings.skill_bar.get_skill(dest)
+	if source >= 0 and source != dest:
+		# 技能栏内槽间拖动：执行"互换"而非"移动"——把来源技能放到目标槽，
+		# 同时把目标槽原技能放回来源槽，避免覆盖目标处已有的技能导致丢失。
+		Settings.skill_bar.set_skill(dest, skill_id)
+		Settings.skill_bar.set_skill(source, dest_skill)
+	else:
+		# 来自技能面板（source == -1）或直接落到自身（source == dest）：直接覆盖目标槽。
+		Settings.skill_bar.set_skill(dest, skill_id)
 	if bar != null:
 		bar.on_slot_dropped()
 

@@ -1,6 +1,12 @@
 extends PlayerState
 
 
+## 进攻型状态：供 Boss 全局攻击标志识别（玩家正在攻击 = true）。
+## 父类 PlayerState 已声明 is_attack（默认 false），这里在 _init 里改默认值为 true，
+## 不要再用 var 重复声明，否则 GDScript 报 "member already exists in parent"。
+func _init() -> void:
+	is_attack = true
+
 ## 前刺动作的最短持续时间（秒）：期间不接受过渡，保证挥砍不被打断。
 @export var hold_time: float = 0.3
 

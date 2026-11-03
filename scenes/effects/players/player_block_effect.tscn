@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cpta7h26nsr4e"]
+
+[ext_resource type="Script" uid="uid://bac4f8wd1lufe" path="res://scenes/effects/players/player_block_effect.gd" id="1_0hojb"]
+[ext_resource type="Texture2D" uid="uid://duthmbyktj7cu" path="res://assets/animations/characters/players/player/_block_effect/0.png" id="2_khy3q"]
+[ext_resource type="Texture2D" uid="uid://u0lnve4ylgph" path="res://assets/animations/characters/players/player/_block_effect/1.png" id="3_af3fo"]
+[ext_resource type="Texture2D" uid="uid://bj7ryey8gmrdj" path="res://assets/animations/characters/players/player/_block_effect/2.png" id="4_b8lcg"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rywq7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_khy3q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_af3fo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_b8lcg")
+}],
+"loop": 0,
+"name": &"block",
+"speed": 5.0
+}]
+
+[node name="PlayerBlockEffect" type="Node2D" unique_id=1720982999]
+script = ExtResource("1_0hojb")
+
+[node name="Anchor" type="Node2D" parent="." unique_id=782058461]
+
+[node name="BlockDeffect" type="AnimatedSprite2D" parent="Anchor" unique_id=682499075]
+scale = Vector2(0.3, 0.3)
+sprite_frames = SubResource("SpriteFrames_rywq7")
+animation = &"block"
+frame = 2
+frame_progress = 1.0

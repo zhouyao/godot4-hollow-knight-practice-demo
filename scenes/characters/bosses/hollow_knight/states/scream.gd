@@ -23,8 +23,8 @@ func enter(_from: StringName) -> void:
 		scream_audio.play()
 	# 冻结 2 秒后转入 idle（中断兜底：若中途被切走则不强行跳转）。
 	await get_tree().create_timer(SCREAM_DURATION).timeout
-	if machine != null and machine.get_state_name() == &"scream":
-		machine.set_state(&"idle")
+	if machine != null and machine.get_state_name() == BossStateNames.SCREAM:
+		machine.set_state(BossStateNames.IDLE)
 
 func update(_delta: float) -> void:
 	# 演出期间 boss 完全静止，且不结算接触伤害（玩家已冻结）。

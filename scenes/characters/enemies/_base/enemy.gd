@@ -46,11 +46,24 @@ const HIDDEN_BUT_SAVED := PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_STORAGE
 ## 详见 resources/characters/enemies/_shared/enemy_tuning.gd。
 @export var tuning: EnemyTuning = null
 
+## 运行期不变的 tuning 解析结果，_ready 算一次：
+## 原先 chase / patrol 每帧经 EnemyState._tuning() 走字符串反射（StringName 比较 + Variant 拆装箱），
+## 这两个值（基础移动速度、朝向死区）每帧都被取，却在整个生命周期里从不变化，故在这里缓存。
+## 优先级与 EnemyState._tuning 完全一致：tuning > 本节点同名导出 > 默认值。
+## 状态侧改读 enemy.tuning_move_speed / enemy.tuning_face_deadzone 即可。
+var tuning_move_speed: float = 0.0
+var tuning_face_deadzone: float = 0.0
+
 @export_group("移动")
-## 基础移动速度（像素 / 秒）：巡逻 / 追击 / 返回的所有倍率都乘以它。
+## 基础移动速度（格 / 秒）：巡逻 / 追击 / 返回的所有倍率都乘以它。
+## 导出格数而不是像素：导出项的默认表达式取不到 autoload（见 player.gd:28-30 同款注释），
+## 写成像素会被烘焙成固定值、跟不上 UNIT_SIZE 调整。像素值在 _ready 里由
+## move_speed_units * Globals.UNIT_SIZE 换算到 move_speed，tuning 优先级高于它。
 ## 想整体调快调慢一只怪改这里（或改 tuning.move_speed），
 ## 想只调某一种行为改对应的倍率，不必再逐个状态节点改三处。
-@export var move_speed: float = 1.0 * Globals.UNIT_SIZE
+@export var move_speed_units: float = 1.0
+## 实际移动速度（像素 / 秒），_ready 里由 move_speed_units 换算，状态机只读这个。
+var move_speed: float
 ## 追击速度倍率（乘以 enemy.move_speed）：< 0 表示沿用 chase 状态自身的默认值。
 ## 地面怪与飞行怪共用同一套名字：逐只覆盖在世界场景里改这一项即可。
 @export var chase_speed_multiplier: float = -1.0
@@ -243,6 +256,9 @@ var combat_active: bool:
 var health: int
 var move_direction: int = 1
 var knockback: Vector2 = Vector2.ZERO
+## 击退的指数衰减速率（每秒），与物理帧率解耦：实际每帧乘子 = exp(-rate * delta)。
+## 默认 30.65 ≈ 60Hz 下"每帧衰减 0.4"（保留 0.6）。
+@export var knockback_decay_rate: float = 30.65
 var dead: bool = false
 var invincible: bool = false
 
@@ -267,6 +283,15 @@ var _contact_query := PhysicsShapeQueryParameters2D.new()
 #region 生命周期
 
 func _ready() -> void:
+	# 格数 -> 像素：导出的是格数（move_speed_units），这里按 UNIT_SIZE 换算成实际像素速度。
+	# 必须早于 state_machine.start()，否则首个状态 enter 时 move_speed 还是 0。
+	move_speed = move_speed_units * Globals.UNIT_SIZE
+
+	# tuning 覆盖里的两项"运行期不变"值，开战前先解析一次，省去每帧字符串反射。
+	# 必须在 state_machine.start()（会触发首个状态 enter / update）之前算好。
+	tuning_move_speed = _resolve_tuning_float(&"move_speed", move_speed)
+	tuning_face_deadzone = _resolve_tuning_float(&"face_deadzone", face_deadzone)
+
 	# 收集 Audio 子节点 + 统一套用 2D 衰减参数。
 	audio.setup(self)
 	# 读素材基准朝向 + 接转身动画回调。必须早于任何翻面（state_machine.start() 会触发 enter()）。
@@ -289,6 +314,17 @@ func _ready() -> void:
 
 	if state_machine != null:
 		state_machine.start()
+
+
+## 解析单项 tuning 覆盖（tuning > 本节点同名导出 > fallback），与 EnemyState._tuning 同规则。
+## 只用于 _ready 里"运行期不变"的两项，避免每帧走字符串反射（StringName 比较 + Variant 拆装箱）。
+func _resolve_tuning_float(property: StringName, fallback: float) -> float:
+	if tuning != null:
+		var t: Variant = tuning.get(property)
+		if t is float and t >= 0.0:
+			return t
+	var v: Variant = get(property)
+	return float(v) if v is float and v >= 0.0 else fallback
 
 
 ## 逐物理帧的顺序契约。
@@ -324,8 +360,9 @@ func _apply_vertical_motion(delta: float) -> void:
 
 
 func _apply_movement() -> void:
+	var dt := get_physics_process_delta_time()
 	velocity += knockback
-	knockback = lerp(knockback, Vector2.ZERO, 0.4)
+	knockback *= exp(-knockback_decay_rate * dt)
 	move_and_slide()
 
 

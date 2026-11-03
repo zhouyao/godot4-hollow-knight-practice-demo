@@ -22,6 +22,9 @@ var _falling: = false
 
 func enter(_from: StringName) -> void:
 	AuCameraDirector.shake_medium()
+	# 苏醒坠落演出期间仍不可被玩家攻击，直到本状态结束进入 scream。
+	if boss != null:
+		boss.invincible = true
 	_landed = false
 	_falling = false
 	_land_timer = 0.0
@@ -44,8 +47,14 @@ func update(delta: float) -> void:
 		# 落地后停留 2 秒（让落地音效 / 战斗 BGM 等收尾），再进入 scream。
 		_land_timer += delta
 		if _land_timer >= LAND_TO_SCREAM_DELAY \
-				and machine != null and machine.get_state_name() == &"dormant_end":
-			machine.set_state(&"scream")
+				and machine != null and machine.get_state_name() == BossStateNames.DORMANT_END:
+			# dormant_end 结束：解除无敌，玩家自此可攻击 boss。
+			if boss != null:
+				boss.invincible = false
+			machine.set_state(BossStateNames.SCREAM)
+			var bg_loop := boss.get_node_or_null("FightAudio/boss_bg_loop") as AudioStreamPlayer2D
+			if bg_loop != null and not bg_loop.playing:
+				bg_loop.play()
 		return
 	match _phase:
 		_Phase.RISING:

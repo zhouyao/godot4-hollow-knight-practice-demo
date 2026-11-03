@@ -13,6 +13,8 @@ const DORMANT: StringName = &"dormant"
 const DORMANT_END: StringName = &"dormant_end"
 ## 入场演出：挣脱锁链、苏醒、从天而降等一次性表演。
 const INTRO: StringName = &"intro"
+## 苏醒吼叫：HollowKnight 实际使用的入场演出节点名（与 INTRO 同义，历史命名）。
+const SCREAM: StringName = &"scream"
 ## 出招枢纽：唯一负责"选下一招"的状态，选完立刻切到对应招式状态。
 const COMBAT: StringName = &"combat"
 ## 阶段切换：血量跨阈值时插入的过场（吼叫、变身、换配色）。
@@ -20,10 +22,12 @@ const PHASE_TRANSITION: StringName = &"phase_transition"
 ## 击败：死亡演出，播完竞技场解锁。
 const DEFEAT: StringName = &"defeat"
 
+const IDLE: StringName = &"idle"
+
 # ---- 招式层 ----
 # 全部由 combat 选出，各自播完回到 combat（或先经 recover 再回）。
 ## 三连斩。
-const SLASHES: StringName = &"slashes"
+const SLASH: StringName = &"slash"
 ## 收招硬直：多数招式的共同出口，用来给玩家反击窗口。
 const RECOVER: StringName = &"recover"
 ## 瞬移。

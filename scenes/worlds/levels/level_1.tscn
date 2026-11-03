@@ -22,31 +22,8 @@
 [ext_resource type="PackedScene" uid="uid://c5xedyh6vkreu" path="res://scenes/props/chest/chest.tscn" id="14_chest"]
 [ext_resource type="PackedScene" uid="uid://c0pepo3g8tuu5" path="res://scenes/characters/bosses/hollow_knight/hollow_knight.tscn" id="17_8ihyp"]
 [ext_resource type="PackedScene" uid="uid://34xyraq1r58p" path="res://scenes/characters/bosses/hollow_knight/effects/boss_chain.tscn" id="18_8ihyp"]
-
-[sub_resource type="GDScript" id="GDScript_c5aoa"]
-script/source = "extends WorldTemplate
-
-@onready var light: DirectionalLight2D = $Lights/DirectionalLight2D
-
-func _on_zoom_camera_lock_body_entered(_body: Node2D) -> void:
-	var tween = create_tween()
-	tween.tween_property(light, \"energy\", 3, 2.0)
-	AuCameraDirector.shake_heavy()
-
-func _on_zoom_camera_lock_body_exited(_body: Node2D) -> void:
-	var tween = create_tween()
-	tween.tween_property(light, \"energy\", 2, 2.0)
-
-
-func _on_boss_camera_lock_body_entered(_body: Node2D) -> void:
-	var tween = create_tween()
-	tween.tween_property(light, \"energy\", 0, 2.0)
-
-
-func _on_boss_camera_lock_body_exited(_body: Node2D) -> void:
-	var tween = create_tween()
-	tween.tween_property(light, \"energy\", 2, 2.0)
-"
+[ext_resource type="Script" uid="uid://dk34x4net1iyr" path="res://scenes/characters/bosses/_base/behaviors/boss_arena_behavior.gd" id="20_beh"]
+[ext_resource type="Script" uid="uid://6o0ekifsw70h" path="res://scenes/worlds/levels/level_1.gd" id="21_lvl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rywq7"]
 size = Vector2(40, 40)
@@ -57,7 +34,7 @@ polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(-4328, -2858, -4288, 78, 4913, 17, 4954, -2847)])
 
 [node name="WorldTest" unique_id=560156841 instance=ExtResource("1_h76fn")]
-script = SubResource("GDScript_c5aoa")
+script = ExtResource("21_lvl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KillBox" parent_id_path=PackedInt32Array(1663494127) index="0" unique_id=1467752816]
 position = Vector2(0, 600)
@@ -187,25 +164,38 @@ scale = Vector2(2.2, 1)
 
 [node name="HollowKnightScene" type="Node2D" parent="." index="8" unique_id=1437758410]
 
-[node name="BossChain1" parent="HollowKnightScene" index="0" unique_id=18913694 instance=ExtResource("18_8ihyp")]
+[node name="BossArena" parent="HollowKnightScene" index="0" unique_id=-1294967295 instance=ExtResource("11_zone")]
+position = Vector2(3400, 85)
+size = Vector2(2800, 1080)
+
+[node name="BossArenaBehavior" type="Node" parent="HollowKnightScene/BossArena" index="1" unique_id=-1294967294]
+script = ExtResource("20_beh")
+auto_start_fight = false
+boss_node = NodePath("../../HollowKnight")
+
+[node name="BossChain1" parent="HollowKnightScene" index="1" unique_id=18913694 instance=ExtResource("18_8ihyp")]
 position = Vector2(2390, 442)
 scale = Vector2(-1, 1)
 
-[node name="BossChain2" parent="HollowKnightScene" index="1" unique_id=358558257 instance=ExtResource("18_8ihyp")]
+[node name="BossChain2" parent="HollowKnightScene" index="2" unique_id=358558257 instance=ExtResource("18_8ihyp")]
 position = Vector2(2830, 442)
 scale = Vector2(-1, 1)
 
-[node name="BossChain3" parent="HollowKnightScene" index="2" unique_id=1907671979 instance=ExtResource("18_8ihyp")]
+[node name="BossChain3" parent="HollowKnightScene" index="3" unique_id=1907671979 instance=ExtResource("18_8ihyp")]
 position = Vector2(3977, 442)
 
-[node name="BossChain4" parent="HollowKnightScene" index="3" unique_id=1593915752 instance=ExtResource("18_8ihyp")]
+[node name="BossChain4" parent="HollowKnightScene" index="4" unique_id=1593915752 instance=ExtResource("18_8ihyp")]
 position = Vector2(4400, 442)
 
-[node name="HollowKnight" parent="HollowKnightScene" index="4" unique_id=170488292 instance=ExtResource("17_8ihyp")]
+[node name="HollowKnight" parent="HollowKnightScene" index="5" unique_id=170488292 instance=ExtResource("17_8ihyp")]
 position = Vector2(3400, 85)
+max_health = 20
+initial_health = 11
 
 [node name="Player" parent="." index="9" unique_id=1112432844]
 position = Vector2(1700, 200)
+max_health = 100
+initial_health = 100
 
 [node name="Layer_0" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=1048978077]
 repeat_size = Vector2(6000, 0)

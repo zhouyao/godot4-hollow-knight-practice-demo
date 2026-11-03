@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SkillDefinition" format=3 uid="uid://cx0h3a1sk1kk"]
+
+[ext_resource type="Texture2D" uid="uid://co2b18cbxdsfo" path="res://assets/icons/skill/cure.png" id="1_cure"]
+[ext_resource type="SpriteFrames" uid="uid://b0u7ivag145go" path="res://resources/skills/previews/cure_preview.tres" id="2_prev"]
+[ext_resource type="Script" uid="uid://cjow5dihr1ch0" path="res://resources/skills/skill_definition.gd" id="11_def"]
+
+[resource]
+script = ExtResource("11_def")
+id = &"cure"
+display_name = &"回血（Cure）"
+icon = ExtResource("1_cure")
+preview_frames = ExtResource("2_prev")
+preview_animation = &"cure"
+description = "消耗1点能量回复1点生命（1能换1血），冷却1秒；无能量或满血时不可用"
+cooldown = 1.0
+energy_cost = 1

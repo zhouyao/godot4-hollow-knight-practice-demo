@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c0pepo3g8tuu5"]
 
 [ext_resource type="PackedScene" uid="uid://buf7ckj7d41uo" path="res://scenes/characters/bosses/_base/boss.tscn" id="1_1qa0c"]
+[ext_resource type="Script" uid="uid://bq4nvvx2v411a" path="res://scenes/characters/bosses/hollow_knight/hollow_knight.gd" id="2_4yi87"]
 [ext_resource type="Script" uid="uid://xfgehbda5ae2" path="res://scenes/characters/bosses/hollow_knight/states/dormant.gd" id="2_vvetm"]
 [ext_resource type="Texture2D" uid="uid://befmv1yx3lccy" path="res://assets/animations/characters/bosses/hollow_knight/dormant/0.png" id="3_4coxj"]
 [ext_resource type="Texture2D" uid="uid://dli06wh8hhq7s" path="res://assets/animations/characters/bosses/hollow_knight/_environment/chain/final_boss_chain.png" id="4_2x4qv"]
@@ -27,12 +28,15 @@
 [ext_resource type="Texture2D" uid="uid://b3o5nmdc28qg0" path="res://assets/animations/characters/bosses/hollow_knight/dash/Dash_002.png" id="12_l0fg7"]
 [ext_resource type="Texture2D" uid="uid://ch1om8gd3acmr" path="res://assets/animations/characters/bosses/hollow_knight/counter_antic/Counter Antic_002.png" id="12_mb3py"]
 [ext_resource type="Texture2D" uid="uid://cqtywa1dsrwqu" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_001.png" id="12_x67xo"]
+[ext_resource type="Script" uid="uid://t7bwpnmggs0s" path="res://scenes/characters/bosses/hollow_knight/states/dash.gd" id="13_63iaj"]
 [ext_resource type="Texture2D" uid="uid://b8g25fwbuvjy3" path="res://assets/animations/characters/bosses/hollow_knight/counter_block/Counter Block_000.png" id="13_ape4t"]
 [ext_resource type="Texture2D" uid="uid://cdsl26keawkyw" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_000.png" id="13_cooc3"]
 [ext_resource type="Texture2D" uid="uid://cbwldaiqm80jl" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_002.png" id="13_thuc6"]
 [ext_resource type="Texture2D" uid="uid://b0xs25lfmdxfs" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_003.png" id="14_6582o"]
 [ext_resource type="Texture2D" uid="uid://c6dxxd4jhi8th" path="res://assets/animations/characters/bosses/hollow_knight/counter_block/Counter Block_001.png" id="14_hjtgt"]
 [ext_resource type="Texture2D" uid="uid://c1vkpkpmf1mnl" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_001.png" id="14_l0jjy"]
+[ext_resource type="AudioStream" uid="uid://1ltgrnmwpcqy" path="res://assets/sounds/characters/bosses/hollow_knight/slash1.ogg" id="14_t7hej"]
+[ext_resource type="AudioStream" uid="uid://d3q81dbh8ouim" path="res://assets/sounds/characters/bosses/hollow_knight/slash_2.ogg" id="15_1helb"]
 [ext_resource type="Texture2D" uid="uid://c66w28kbvwvpr" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_004.png" id="15_nj7oh"]
 [ext_resource type="Texture2D" uid="uid://cqhoersqt18ad" path="res://assets/animations/characters/bosses/hollow_knight/counter_block/Counter Block_002.png" id="15_ou7jq"]
 [ext_resource type="Texture2D" uid="uid://dpmfxpwwmp40u" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_002.png" id="15_uveg1"]
@@ -43,13 +47,16 @@
 [ext_resource type="Texture2D" uid="uid://b77algn83tgo2" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_004.png" id="17_8lwpf"]
 [ext_resource type="Texture2D" uid="uid://d0ykkikbvbea8" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_006.png" id="17_qndfb"]
 [ext_resource type="Texture2D" uid="uid://ckkt2kitg00u5" path="res://assets/animations/characters/bosses/hollow_knight/counter_end/Counter End_000.png" id="18_82dlx"]
+[ext_resource type="AudioStream" uid="uid://cluabbcff5yjk" path="res://assets/sounds/characters/bosses/hollow_knight/dash.ogg" id="18_iouyg"]
 [ext_resource type="Texture2D" uid="uid://b08qo3f8lu7d" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_005.png" id="18_mb3py"]
 [ext_resource type="Texture2D" uid="uid://doa1ul2nog83y" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Break_007.png" id="18_nnfex"]
 [ext_resource type="Texture2D" uid="uid://chli40gj0civl" path="res://assets/animations/characters/bosses/hollow_knight/dash_anticipation/Dash Antic_006.png" id="19_0jbsx"]
 [ext_resource type="Texture2D" uid="uid://bussqonjthl6q" path="res://assets/animations/characters/bosses/hollow_knight/counter_end/Counter End_001.png" id="19_8pbsa"]
 [ext_resource type="Texture2D" uid="uid://xvxj0sqmeadt" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Fall_000.png" id="19_k5t7t"]
+[ext_resource type="AudioStream" uid="uid://b41um1vyuodhc" path="res://assets/sounds/characters/bosses/hollow_knight/dash_anticipation.ogg" id="19_lspea"]
 [ext_resource type="Texture2D" uid="uid://cwqje04j1mix0" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Fall_001.png" id="20_kiw46"]
 [ext_resource type="Texture2D" uid="uid://bro2fpg5xlvbg" path="res://assets/animations/characters/bosses/hollow_knight/counter_end/Counter End_002.png" id="20_nmmjx"]
+[ext_resource type="AudioStream" uid="uid://6vqxjqfdc3bu" path="res://assets/sounds/characters/bosses/hollow_knight/counter_block.ogg" id="20_p1g4q"]
 [ext_resource type="Texture2D" uid="uid://d0b4kxphg0vvd" path="res://assets/animations/characters/bosses/hollow_knight/dash_recover/Dash Recover_000.png" id="20_qsus0"]
 [ext_resource type="Texture2D" uid="uid://cbyv6cr1ks15o" path="res://assets/animations/characters/bosses/hollow_knight/dormant_end/Rest Land_000.png" id="21_kmsvc"]
 [ext_resource type="Texture2D" uid="uid://bhuwosygrhms5" path="res://assets/animations/characters/bosses/hollow_knight/counter_ready/Counter Ready_000.png" id="21_nmmjx"]
@@ -152,27 +159,27 @@ height = 531.92
 [sub_resource type="SpriteFrames" id="SpriteFrames_ggiq1"]
 animations = [{
 "frames": [{
-"duration": 1.0,
+"duration": 0.9,
 "texture": ExtResource("10_2mrca")
 }, {
-"duration": 1.0,
+"duration": 0.9,
 "texture": ExtResource("11_8lwpf")
 }, {
-"duration": 1.0,
+"duration": 0.9,
 "texture": ExtResource("12_mb3py")
 }],
 "loop": 0,
 "name": &"counter_anticipation",
-"speed": 5.0
+"speed": 3.0
 }, {
 "frames": [{
-"duration": 1.0,
+"duration": 0.5,
 "texture": ExtResource("13_ape4t")
 }, {
-"duration": 1.0,
+"duration": 0.5,
 "texture": ExtResource("14_hjtgt")
 }, {
-"duration": 1.0,
+"duration": 0.5,
 "texture": ExtResource("15_ou7jq")
 }, {
 "duration": 1.0,
@@ -186,18 +193,18 @@ animations = [{
 "speed": 5.0
 }, {
 "frames": [{
-"duration": 1.0,
+"duration": 0.5,
 "texture": ExtResource("18_82dlx")
 }, {
-"duration": 1.0,
+"duration": 0.5,
 "texture": ExtResource("19_8pbsa")
 }, {
-"duration": 1.0,
+"duration": 0.5,
 "texture": ExtResource("20_nmmjx")
 }],
 "loop": 0,
 "name": &"counter_end",
-"speed": 5.0
+"speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -211,7 +218,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"counter_ready",
-"speed": 5.0
+"speed": 4.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -251,11 +258,6 @@ animations = [{
 }],
 "loop": 0,
 "name": &"dash_anticipation",
-"speed": 5.0
-}, {
-"frames": [],
-"loop": 1,
-"name": &"dash_preparation",
 "speed": 5.0
 }, {
 "frames": [{
@@ -463,60 +465,60 @@ animations = [{
 "speed": 7.0
 }, {
 "frames": [{
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("45_cgssl")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("46_056bd")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("47_nvgv4")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("48_n8147")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("49_u0h7n")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("50_sb46r")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("51_y0dus")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("52_w0qus")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("53_0iyxu")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("54_5mhtq")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("55_cm24f")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("56_l0fg7")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("57_jriyd")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("58_uxsbn")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("59_x1n7y")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("60_fl107")
 }, {
-"duration": 1.0,
+"duration": 1.7,
 "texture": ExtResource("61_leb67")
 }],
 "loop": 0,
 "name": &"slash",
-"speed": 5.0
+"speed": 17.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -606,7 +608,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"walk",
-"speed": 5.0
+"speed": 13.0
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_1d5ey"]
@@ -714,6 +716,276 @@ tracks/6/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Audio/slash1:playing")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Audio/slash2:playing")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Audio/dash_antic:playing")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Audio/dash:playing")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_p1g4q"]
+resource_name = "counter_anticipation"
+length = 0.9
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"counter_anticipation"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.29999998, 0.59999996),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_vairf"]
+resource_name = "counter_block"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"counter_block"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4]
+}
+
+[sub_resource type="Animation" id="Animation_eatcv"]
+resource_name = "counter_end"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"counter_end"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.16666667, 0.33333334),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_orcic"]
+resource_name = "counter_ready"
+length = 0.75
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"counter_ready"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_63iaj"]
+resource_name = "dash"
+length = 0.6000000000000001
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"dash"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Audio/dash:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_4yi87"]
+resource_name = "dash_anticipation"
+length = 1.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"dash_anticipation"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Audio/dash_antic:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.19999999),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_iouyg"]
+resource_name = "dash_recover"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"dash_recover"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
 }
 
 [sub_resource type="Animation" id="Animation_7ta6u"]
@@ -899,18 +1171,133 @@ tracks/1/keys = {
 "values": [0, 1, 2, 3, 4, 5, 6]
 }
 
+[sub_resource type="Animation" id="Animation_0iid0"]
+resource_name = "slash"
+length = 1.7000000476837154
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"slash"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.70000005, 0.8, 0.90000004, 1, 1.1, 1.2, 1.3000001, 1.4000001, 1.5, 1.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Audio/slash1:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.5, 1.09),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Audio/slash2:playing")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.84),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.5, 0.76666665, 1, 1.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"values": [{
+"args": [],
+"method": &"enable_melee_attack"
+}, {
+"args": [],
+"method": &"disable_melee_attack"
+}, {
+"args": [],
+"method": &"enable_melee_attack"
+}, {
+"args": [],
+"method": &"disable_melee_attack"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_1helb"]
+resource_name = "walk"
+length = 0.9999999999999998
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"walk"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.07692308, 0.15384616, 0.23076923, 0.30769232, 0.3846154, 0.46153846, 0.53846157, 0.61538464, 0.6923077, 0.7692308, 0.84615386, 0.9230769),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_x67xo"]
 _data = {
 &"RESET": SubResource("Animation_x67xo"),
+&"counter_anticipation": SubResource("Animation_p1g4q"),
+&"counter_block": SubResource("Animation_vairf"),
+&"counter_end": SubResource("Animation_eatcv"),
+&"counter_ready": SubResource("Animation_orcic"),
+&"dash": SubResource("Animation_63iaj"),
+&"dash_anticipation": SubResource("Animation_4yi87"),
+&"dash_recover": SubResource("Animation_iouyg"),
 &"dormant_end": SubResource("Animation_7ta6u"),
 &"idle": SubResource("Animation_634ro"),
-&"scream": SubResource("Animation_ap1k7")
+&"scream": SubResource("Animation_ap1k7"),
+&"slash": SubResource("Animation_0iid0"),
+&"walk": SubResource("Animation_1helb")
 }
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_vchv1"]
-radius = 330.0
-
 [node name="HollowKnight" unique_id=170488292 instance=ExtResource("1_1qa0c")]
+script = ExtResource("2_4yi87")
+max_health = 100
+initial_health = 3
+patrol_enabled = true
+corpse_lifetime = 3.0
 
 [node name="StateMachine" parent="." index="1" unique_id=885825929]
 host_path = NodePath("")
@@ -929,6 +1316,7 @@ metadata/_custom_type_script = "uid://dqmtw6yfnqi47"
 
 [node name="idle" type="Node" parent="StateMachine" index="3" unique_id=2075357031]
 script = ExtResource("5_634ro")
+show_decision_debug = true
 metadata/_custom_type_script = "uid://cu6qksho5qatb"
 
 [node name="slash" type="Node" parent="StateMachine" index="4" unique_id=172351794]
@@ -959,8 +1347,27 @@ metadata/_custom_type_script = "uid://bfxc5pdgdu2y1"
 script = ExtResource("12_bs317")
 metadata/_custom_type_script = "uid://bgr6lr0iyf0i7"
 
+[node name="dash" type="Node" parent="StateMachine" index="11" unique_id=470407546]
+script = ExtResource("13_63iaj")
+metadata/_custom_type_script = "uid://t7bwpnmggs0s"
+
 [node name="scream" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="1" unique_id=1858904689]
 stream = ExtResource("4_k5t7t")
+
+[node name="slash1" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="2" unique_id=1425743806]
+stream = ExtResource("14_t7hej")
+
+[node name="slash2" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="3" unique_id=1538363997]
+stream = ExtResource("15_1helb")
+
+[node name="dash" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="4" unique_id=1395222677]
+stream = ExtResource("18_iouyg")
+
+[node name="dash_antic" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="5" unique_id=2045263877]
+stream = ExtResource("19_lspea")
+
+[node name="counter_block" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="6" unique_id=398587418]
+stream = ExtResource("20_p1g4q")
 
 [node name="BodyCollisionShape2D" parent="." index="4" unique_id=1005066086]
 shape = SubResource("CapsuleShape2D_4lc3a")
@@ -989,8 +1396,6 @@ texture = ExtResource("4_2x4qv")
 
 [node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="0" unique_id=1331468369]
 sprite_frames = SubResource("SpriteFrames_ggiq1")
-animation = &"dormant_end"
-frame = 14
 
 [node name="EffectAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="1" unique_id=2028615876]
 visible = false
@@ -1002,26 +1407,13 @@ frame_progress = 1.0
 [node name="ActionAnimationPlayer" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="2" unique_id=609070108]
 libraries/ = SubResource("AnimationLibrary_x67xo")
 
-[node name="CollisionShape2D" parent="AttackRange" parent_id_path=PackedInt32Array(2073026563) index="0" unique_id=1267751504]
-shape = SubResource("CircleShape2D_vchv1")
-
-[node name="CollisionShape2D" parent="SlashHitBox" parent_id_path=PackedInt32Array(1001674404) index="0" unique_id=1209468046]
+[node name="CollisionShape2D" parent="MeleeHitBox" parent_id_path=PackedInt32Array(1001674404) index="0" unique_id=1209468046]
 polygon = PackedVector2Array(-113, -1, 249, -206, 315, -102, 329, -7, 310, 112, 259, 211)
 
-[node name="BossArena" parent="." index="9" unique_id=1548594151]
-size = Vector2(2800, 1080)
-
-[node name="SlashesRange" parent="." index="10" unique_id=768479413]
-position = Vector2(3, 115)
-target_position = Vector2(600, 0)
-
-[node name="TeleportWallDetection" parent="." index="11" unique_id=2073672658]
-target_position = Vector2(800, 0)
-
-[node name="Debug" parent="." index="12" unique_id=1659399408]
+[node name="Debug" parent="." index="8" unique_id=1659399408]
 y_offset = -200.0
 
-[node name="FightAudio" type="Node2D" parent="." index="13" unique_id=770654751]
+[node name="FightAudio" type="Node2D" parent="." index="9" unique_id=770654751]
 
 [node name="Chain0" type="AudioStreamPlayer2D" parent="FightAudio" index="0" unique_id=1445487002]
 stream = ExtResource("26_x67xo")
@@ -1051,5 +1443,6 @@ bus = &"Music"
 stream = ExtResource("32_nnfex")
 bus = &"Music"
 
-[connection signal="area_entered" from="BossArena" to="." method="_on_boss_arena_area_entered"]
-[connection signal="area_exited" from="BossArena" to="." method="_on_boss_arena_area_exited"]
+[node name="LedgeDetector" type="RayCast2D" parent="." index="10" unique_id=539271046]
+position = Vector2(183, 225)
+collision_mask = 4

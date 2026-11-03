@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SkillDefinition" format=3 uid="uid://diqq4xs6u0la"]
+
+[ext_resource type="Texture2D" uid="uid://ciffn1qmdb41f" path="res://assets/icons/skill/block.png" id="1_blk"]
+[ext_resource type="SpriteFrames" uid="uid://84j3mqeftll" path="res://resources/skills/previews/block_preview.tres" id="2_pp6ud"]
+[ext_resource type="Script" uid="uid://cjow5dihr1ch0" path="res://resources/skills/skill_definition.gd" id="11_1"]
+
+[resource]
+script = ExtResource("11_1")
+id = &"block"
+display_name = &"格挡（Block）"
+icon = ExtResource("1_blk")
+preview_frames = ExtResource("2_pp6ud")
+preview_animation = &"block"
+description = "不消耗能量，冷却1.5秒，格挡前方攻击持续0.5秒"
+cooldown = 1.5
+energy_cost = 0

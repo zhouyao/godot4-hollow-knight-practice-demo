@@ -1,0 +1,66 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://b0u7ivag145go"]
+
+[ext_resource type="Texture2D" uid="uid://nd3o88at1q4q" path="res://assets/animations/characters/players/player/cure/0.png" id="1_cgwud"]
+[ext_resource type="Texture2D" uid="uid://q2pq8yjtqcvf" path="res://assets/animations/characters/players/player/cure/1.png" id="2_fw207"]
+[ext_resource type="Texture2D" uid="uid://b72vnu8qraqy5" path="res://assets/animations/characters/players/player/cure/2.png" id="3_l2ojk"]
+[ext_resource type="Texture2D" uid="uid://bvawc016if0yw" path="res://assets/animations/characters/players/player/cure/3.png" id="4_4j6jw"]
+[ext_resource type="Texture2D" uid="uid://d1nj7xeve0cgs" path="res://assets/animations/characters/players/player/cure/4.png" id="5_3dppg"]
+[ext_resource type="Texture2D" uid="uid://dluw01t6stsnb" path="res://assets/animations/characters/players/player/cure/5.png" id="6_mieih"]
+[ext_resource type="Texture2D" uid="uid://uxm0wtsp1s4m" path="res://assets/animations/characters/players/player/cure/6.png" id="7_vlr1k"]
+[ext_resource type="Texture2D" uid="uid://7duepjq1sxn6" path="res://assets/animations/characters/players/player/cure/7.png" id="8_gylw3"]
+[ext_resource type="Texture2D" uid="uid://cl75w4eksj2ip" path="res://assets/animations/characters/players/player/cure/8.png" id="9_a3qkb"]
+[ext_resource type="Texture2D" uid="uid://b5y4hyij63ajp" path="res://assets/animations/characters/players/player/cure/9.png" id="10_w10a6"]
+[ext_resource type="Texture2D" uid="uid://dlb148h6rlsqr" path="res://assets/animations/characters/players/player/cure/10.png" id="11_ke6vj"]
+[ext_resource type="Texture2D" uid="uid://hifqlhhvfiir" path="res://assets/animations/characters/players/player/cure/11.png" id="12_hhnyx"]
+[ext_resource type="Texture2D" uid="uid://3rnnjfiitjo7" path="res://assets/animations/characters/players/player/cure/12.png" id="13_sb2dp"]
+[ext_resource type="Texture2D" uid="uid://2cmg1xsfjqdu" path="res://assets/animations/characters/players/player/cure/13.png" id="14_4x120"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_cgwud")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_fw207")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_l2ojk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_4j6jw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_3dppg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_mieih")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_vlr1k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_gylw3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_a3qkb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_w10a6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_ke6vj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_hhnyx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_sb2dp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_4x120")
+}],
+"loop": 1,
+"name": &"cure",
+"speed": 5.0
+}]

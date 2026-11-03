@@ -2,7 +2,7 @@ extends StaticBody2D
 
 signal broke
 
-var health: int = 2
+var health: int = 1
 ## 是否已断：唯一的"再砍没反应"守卫。断后不再扣血、不再重播断裂动画。
 var _broken: bool = false
 
@@ -39,7 +39,9 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 
 
 func _slash_damage_of(attacker: Node) -> int:
-	var v: Variant = attacker.get("slash_damage")
+	var v: Variant = attacker.get("melee_damage")
+	if v == null:
+		v = attacker.get("slash_damage")
 	return int(v) if v is int else 1
 
 

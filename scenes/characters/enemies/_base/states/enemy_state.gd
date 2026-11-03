@@ -61,10 +61,12 @@ func _tuning(property: StringName, fallback: float) -> float:
 ## 基础移动速度（像素 / 秒）：tuning > 敌人根节点 move_speed。
 ## 各状态的 _patrol_speed / _chase_speed / _return_speed 一律乘它，
 ## 不要再直接读 enemy.move_speed —— 那会绕开 tuning，导致整类怪的预设失效。
+## 该值在 Enemy._ready 里就解析进 tuning_move_speed 并缓存（运行期不变），
+## 这里直接读缓存，避免 chase / patrol 每帧走 _tuning() 的字符串反射。
 func _move_speed() -> float:
 	if enemy == null:
 		return 0.0
-	return _tuning(&"move_speed", enemy.move_speed)
+	return enemy.tuning_move_speed
 
 ## 站定：统一委托给运动介质（贴地只清 x，全向整体归零），见 EnemyLocomotion.apply_stop。
 ## 没有配 locomotion 时退化为"只清水平分量"，与地面怪一致。
@@ -99,8 +101,9 @@ func _flash_white(duration: float = -1.0) -> void:
 ## 现在判据只有一份（EnemySteering.step_x，有单测覆盖），状态只负责提供"目标 x"。
 
 ## 朝向死区取值：tuning > 敌人根节点 face_deadzone。返回 -1 = 交给敌人根节点的默认值。
+## 同 _move_speed，显示在 Enemy._ready 里解析进 tuning_face_deadzone 并缓存，这里直接读。
 func _deadzone() -> float:
-	return _tuning(&"face_deadzone", -1.0)
+	return enemy.tuning_face_deadzone if enemy != null else -1.0
 
 ## 朝目标走一步：翻面 + 横移由 Enemy 统一裁决（朝向与位移同源，不可能倒着走）。
 ## 返回本帧实际步向（±1，0 = 站定：目标在死区内，或贴地怪前方踏空）。

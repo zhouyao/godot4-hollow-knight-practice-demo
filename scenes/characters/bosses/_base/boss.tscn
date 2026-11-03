@@ -2,9 +2,7 @@
 
 [ext_resource type="Script" uid="uid://btp2nfp0r0ivr" path="res://scenes/characters/bosses/_base/boss.gd" id="1_boss"]
 [ext_resource type="Script" uid="uid://cd0vy3j33a5pj" path="res://scenes/characters/bosses/_base/states/dormant.gd" id="2_ggiq1"]
-[ext_resource type="PackedScene" path="res://addons/zone_director/scenes/zone.tscn" id="3_ggiq1"]
 [ext_resource type="PackedScene" path="res://scenes/debug/character_debug.tscn" id="4_dbg"]
-[ext_resource type="Script" uid="uid://dk34x4net1iyr" path="res://scenes/characters/bosses/_base/behaviors/boss_arena_behavior.gd" id="5_beh"]
 [ext_resource type="Script" uid="uid://dbjq3hplhf027" path="res://scenes/characters/bosses/_base/BossStateMachine.gd" id="6_bsm"]
 [ext_resource type="Texture2D" uid="uid://j2o25agvlkow" path="res://assets/sprites/placeholders/Square/Square-0006.png" id="7_sq"]
 
@@ -75,31 +73,11 @@ animation = &"idle"
 [node name="ActionAnimationPlayer" type="AnimationPlayer" parent="Animation" unique_id=609070108]
 root_node = NodePath("../..")
 
-[node name="AttackRange" type="Area2D" parent="." unique_id=2073026563]
+[node name="MeleeHitBox" type="Area2D" parent="." unique_id=1001674404]
 collision_layer = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange" unique_id=1267751504]
-
-[node name="SlashHitBox" type="Area2D" parent="." unique_id=1001674404]
-collision_layer = 0
-
-[node name="CollisionShape2D" type="CollisionPolygon2D" parent="SlashHitBox" unique_id=1209468046]
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="MeleeHitBox" unique_id=1209468046]
 disabled = true
-
-[node name="BossArena" parent="." unique_id=1548594151 instance=ExtResource("3_ggiq1")]
-size = Vector2(1920, 1080)
-
-[node name="BossArenaBehavior" type="Node" parent="BossArena" unique_id=1782691415]
-script = ExtResource("5_beh")
-auto_start_fight = false
-
-[node name="SlashesRange" type="RayCast2D" parent="." unique_id=768479413]
-target_position = Vector2(200, 0)
-collision_mask = 4
-
-[node name="TeleportWallDetection" type="RayCast2D" parent="." unique_id=2073672658]
-target_position = Vector2(400, 0)
-collision_mask = 4
 
 [node name="Debug" parent="." unique_id=1659399408 instance=ExtResource("4_dbg")]
 

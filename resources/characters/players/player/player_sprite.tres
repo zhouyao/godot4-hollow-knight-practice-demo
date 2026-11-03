@@ -1,21 +1,38 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://c2tqjvedi1tch"]
 
 [ext_resource type="Texture2D" uid="uid://kj3ctwnmvc4k" path="res://assets/animations/characters/players/player/dash/0.png" id="1_4d0va"]
+[ext_resource type="Texture2D" uid="uid://btleaf4wqxrdt" path="res://assets/animations/characters/players/player/block/0.png" id="1_jqso1"]
 [ext_resource type="Texture2D" uid="uid://38fcoqbahhco" path="res://assets/animations/characters/players/player/dash/1.png" id="2_gmtp4"]
+[ext_resource type="Texture2D" uid="uid://c6cyl7fdcanwq" path="res://assets/animations/characters/players/player/block/1.png" id="2_yyxkb"]
+[ext_resource type="Texture2D" uid="uid://dfniy8l3gdkju" path="res://assets/animations/characters/players/player/block/2.png" id="3_cj03p"]
 [ext_resource type="Texture2D" uid="uid://bgomnhk0batwn" path="res://assets/animations/characters/players/player/dash/2.png" id="3_vym7x"]
+[ext_resource type="Texture2D" uid="uid://nd3o88at1q4q" path="res://assets/animations/characters/players/player/cure/0.png" id="4_42uya"]
 [ext_resource type="Texture2D" uid="uid://byusux2txyx2e" path="res://assets/animations/characters/players/player/dash/3.png" id="4_le1s4"]
 [ext_resource type="Texture2D" uid="uid://bllgj3t1i6hd2" path="res://assets/animations/characters/players/player/dash/4.png" id="5_ptauo"]
+[ext_resource type="Texture2D" uid="uid://q2pq8yjtqcvf" path="res://assets/animations/characters/players/player/cure/1.png" id="5_te4gy"]
+[ext_resource type="Texture2D" uid="uid://b72vnu8qraqy5" path="res://assets/animations/characters/players/player/cure/2.png" id="6_p112e"]
 [ext_resource type="Texture2D" uid="uid://b16dpexrjbsw" path="res://assets/animations/characters/players/player/dash/5.png" id="6_qnsyp"]
 [ext_resource type="Texture2D" uid="uid://cecmrhrxejm6b" path="res://assets/animations/characters/players/player/dash/6.png" id="7_ec4no"]
+[ext_resource type="Texture2D" uid="uid://bvawc016if0yw" path="res://assets/animations/characters/players/player/cure/3.png" id="7_ematv"]
+[ext_resource type="Texture2D" uid="uid://d1nj7xeve0cgs" path="res://assets/animations/characters/players/player/cure/4.png" id="8_7gfy8"]
 [ext_resource type="Texture2D" uid="uid://beua8k108tkdw" path="res://assets/animations/characters/players/player/dash/7.png" id="8_xsxlv"]
 [ext_resource type="Texture2D" uid="uid://68p4mn37ngtv" path="res://assets/animations/characters/players/player/dash/8.png" id="9_1223o"]
+[ext_resource type="Texture2D" uid="uid://dluw01t6stsnb" path="res://assets/animations/characters/players/player/cure/5.png" id="9_va88h"]
+[ext_resource type="Texture2D" uid="uid://uxm0wtsp1s4m" path="res://assets/animations/characters/players/player/cure/6.png" id="10_4eitn"]
 [ext_resource type="Texture2D" uid="uid://o5ge4jqlh730" path="res://assets/animations/characters/players/player/dash_air/0.png" id="10_kn3lv"]
 [ext_resource type="Texture2D" uid="uid://de6rkjo4ed6v6" path="res://assets/animations/characters/players/player/dash_air/1.png" id="11_8edda"]
+[ext_resource type="Texture2D" uid="uid://7duepjq1sxn6" path="res://assets/animations/characters/players/player/cure/7.png" id="11_tobci"]
 [ext_resource type="Texture2D" uid="uid://c0di21hlisrs7" path="res://assets/animations/characters/players/player/dash_air/2.png" id="12_6tnxl"]
+[ext_resource type="Texture2D" uid="uid://cl75w4eksj2ip" path="res://assets/animations/characters/players/player/cure/8.png" id="12_18o0x"]
 [ext_resource type="Texture2D" uid="uid://bpq373g32lihc" path="res://assets/animations/characters/players/player/dash_air/3.png" id="13_2fxw3"]
+[ext_resource type="Texture2D" uid="uid://b5y4hyij63ajp" path="res://assets/animations/characters/players/player/cure/9.png" id="13_q77yg"]
+[ext_resource type="Texture2D" uid="uid://dlb148h6rlsqr" path="res://assets/animations/characters/players/player/cure/10.png" id="14_nemwi"]
 [ext_resource type="Texture2D" uid="uid://xv1872t3l2pf" path="res://assets/animations/characters/players/player/dash_air/4.png" id="14_ru3ob"]
 [ext_resource type="Texture2D" uid="uid://c32qeptodiupa" path="res://assets/animations/characters/players/player/dash_air/5.png" id="15_mw37g"]
+[ext_resource type="Texture2D" uid="uid://hifqlhhvfiir" path="res://assets/animations/characters/players/player/cure/11.png" id="15_rbad0"]
 [ext_resource type="Texture2D" uid="uid://k23oi6opl4oq" path="res://assets/animations/characters/players/player/dash_air/6.png" id="16_auiew"]
+[ext_resource type="Texture2D" uid="uid://3rnnjfiitjo7" path="res://assets/animations/characters/players/player/cure/12.png" id="16_kdlv3"]
+[ext_resource type="Texture2D" uid="uid://2cmg1xsfjqdu" path="res://assets/animations/characters/players/player/cure/13.png" id="17_1mi74"]
 [ext_resource type="Texture2D" uid="uid://cc05d3lfcsevg" path="res://assets/animations/characters/players/player/dash_air/7.png" id="17_hp55s"]
 [ext_resource type="Texture2D" uid="uid://dbtcofvvdivxq" path="res://assets/animations/characters/players/player/death/0.png" id="18_ed3dm"]
 [ext_resource type="Texture2D" uid="uid://ck0tt8pb4e0u3" path="res://assets/animations/characters/players/player/death/1.png" id="19_elsql"]
@@ -73,6 +90,67 @@
 
 [resource]
 animations = [{
+"frames": [{
+"duration": 0.3,
+"texture": ExtResource("1_jqso1")
+}, {
+"duration": 0.3,
+"texture": ExtResource("2_yyxkb")
+}, {
+"duration": 0.3,
+"texture": ExtResource("3_cj03p")
+}],
+"loop": 0,
+"name": &"block",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_42uya")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_te4gy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_p112e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_ematv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_7gfy8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_va88h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_4eitn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_tobci")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_18o0x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_q77yg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_nemwi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_rbad0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_kdlv3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_1mi74")
+}],
+"loop": 0,
+"name": &"cure",
+"speed": 14.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("1_4d0va")

@@ -17,6 +17,11 @@ class_name BossArenaBehavior
 @export var auto_start_fight: bool = true
 
 
+## 绑定的 BOSS：玩家踏入竞技场时调用其 begin_fight()。
+## 留空则退回旧逻辑（取宿主 AuZone 的父节点作为 BOSS），兼容尚未迁移的场景。
+@export var boss_node: NodePath = NodePath()
+
+
 ## 目标进入宿主区域：触发 BOSS 开战。
 func on_entered(_body: Node2D) -> void:
 	if not auto_start_fight:
@@ -24,7 +29,16 @@ func on_entered(_body: Node2D) -> void:
 	var zone := get_zone()
 	if zone == null:
 		return
-	# AuZone 是 boss.tscn 中 Boss 节点的直接子节点，故取父节点即为宿主 BOSS。
-	var boss := zone.get_parent() as Boss
+	var boss := _resolve_boss()
 	if boss != null and boss.has_method("begin_fight"):
 		boss.begin_fight()
+
+
+## 解析绑定的 BOSS：优先用 boss_node；为空时兼容"竞技场挂在 BOSS 下"的旧布局。
+func _resolve_boss() -> Node:
+	if boss_node != null and not boss_node.is_empty():
+		return get_node_or_null(boss_node)
+	var zone := get_zone()
+	if zone != null:
+		return zone.get_parent()
+	return null

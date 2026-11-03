@@ -30,6 +30,7 @@ TransitionLayer="*uid://b7cjeemjxyyyp"
 AuCameraDirector="*uid://dwvbfunxlwt7s"
 AuZoneDirector="*res://addons/zone_director/AuZoneDirector.gd"
 Skills="*res://resources/skills/skills_autoload.gd"
+PlayerCombat="*res://globals/autoload/PlayerCombat.gd"
 
 [display]
 

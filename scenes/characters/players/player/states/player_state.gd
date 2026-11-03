@@ -4,8 +4,13 @@ class_name PlayerState
 
 const ATTACK_ACTION: StringName = &"attack"
 
+## 该状态是否处于"攻击动作中"：供 Boss AI 的全局攻击标志判断玩家是否在进攻。
+## 只有进攻型状态（挥砍 / 冲刺斩 / 法术…）需要重写为 true，其余保持默认 false。
+## 集中由 PlayerInitial 监听 state_changed 读取本属性，新增攻击招式无需改动 Boss 侧。
+var is_attack: bool = false
+
 ## 技能 id → 玩家状态名。新技能想被技能条施放，除了在 SkillRegistry 上架，还要在这张表里登记。
-const SKILL_STATES: Dictionary = {&"dash": PlayerStateNames.DASH}
+const SKILL_STATES: Dictionary = {&"dash": PlayerStateNames.DASH, &"block": PlayerStateNames.BLOCK, &"cure": PlayerStateNames.CURE}
 
 var _player: PlayerInitial
 
@@ -41,7 +46,7 @@ func _try_cast_skill(event: InputEvent) -> bool:
 		var skill_id: StringName = Settings.skill_bar.get_skill(slot)
 		var target: StringName = SKILL_STATES.get(skill_id, &"")
 		if target != &"" and machine != null \
-				and player.is_skill_ready(skill_id) and player.can_afford_skill(skill_id):
+				and player.is_skill_ready(skill_id) and player.can_use_skill(skill_id):
 			machine.set_state(target, true)
 		return true
 	return false

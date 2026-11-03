@@ -2,6 +2,12 @@ class_name BossStateMachine
 extends EnemyStateMachine
 
 
+## 出招节奏：每隔 decision_interval 秒重新决策一次（也是贴身追击时 idle 的喘息/前摇，
+## 越小越跟手；设 0.2 即每次回到 idle 仅站 0.2s 就决策，避免跟放风筝玩家时一顿一顿）。
+## 全局生效，不随具体状态重复配置（决策中枢 idle 通过 machine.decision_interval 读取）。
+@export var decision_interval: float = 0.1
+
+
 ## BOSS 状态机。
 ##
 ## 与 EnemyStateMachine 的两点差异：
