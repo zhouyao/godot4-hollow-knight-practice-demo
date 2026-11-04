@@ -14,6 +14,7 @@ const QUIT_MENU_SCENE := preload("res://scenes/menus/common/dialogs/quit_menu.ts
 @onready var main_panel: VBoxContainer = $Margin/Center/MainPanel
 @onready var audio_panel: VBoxContainer = $Margin/Center/AudioPanel
 @onready var continue_button: FocusButton = $Margin/Center/MainPanel/ButtonContainer/ContinueButton
+@onready var save_button: FocusMenuButton = $Margin/Center/MainPanel/ButtonContainer/SaveButton
 @onready var back_button: FocusButton = $Margin/Center/AudioPanel/BackButton
 @onready var preview_player: AudioStreamPlayer = $PreviewPlayer
 @onready var fleurs: Array[AnimatedSprite2D] = [
@@ -45,6 +46,18 @@ func _on_continue_pressed() -> void:
 func _on_audio_pressed() -> void:
 	show_audio()
 
+
+# 手动存档：写盘后按钮短暂显示结果，不改 tscn 里的原文，避免污染本地化 source。
+func _on_save_pressed() -> void:
+	var ok := SaveManager.save_game()
+	var original := TranslationServer.translate("保存游戏")
+	save_button.text = TranslationServer.translate("已保存") if ok else TranslationServer.translate("保存失败")
+	save_button.refresh_pointer_layout()
+	await get_tree().create_timer(1.2).timeout
+	if is_instance_valid(save_button):
+		save_button.text = original
+		save_button.refresh_pointer_layout()
+
 # 复刻 HK 的 quit_pause_menu：先隐藏主面板、弹出确认，确认后才真的离开本关。
 # 弹窗挂在本 CanvasLayer 上（而不是 MainPanel 里），避免跟着主面板一起被隐藏。
 func _on_main_menu_pressed() -> void:
@@ -53,13 +66,17 @@ func _on_main_menu_pressed() -> void:
 	main_panel.visible = false
 	_quit_menu = QUIT_MENU_SCENE.instantiate()
 	_quit_menu.title_text = "退回主菜单？"
-	_quit_menu.subtitle_text = "当前进度不会保留"
+	# 手动保存后这里仍会再存一次（暂停期间不会变化，但可能刚移动/掉血过），
+	# 所以提示写成“返回时会自动保存”，而不是“进度尚未保存”。
+	_quit_menu.subtitle_text = "返回主菜单会自动保存当前进度"
 	add_child(_quit_menu)
 	_quit_menu.confirmed.connect(_on_quit_confirmed)
 	_quit_menu.closed.connect(_on_quit_menu_closed)
 
 
 func _on_quit_confirmed() -> void:
+	# 退回主菜单前先落盘（自动存档点）。
+	SaveManager.save_game()
 	# 不在这里解除暂停：交给 TransitionLayer 在黑场结束后统一恢复，
 	# 否则淡出的 1 秒里世界继续跑，空中的角色会继续下落
 	Globals.go_to_main_menu()

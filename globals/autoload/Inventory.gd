@@ -29,3 +29,21 @@ func spend(item_id: StringName, amount: int) -> bool:
 ## 新开一局 / 回到主菜单时清空。
 func reset() -> void:
 	_items.clear()
+
+
+## 存档用：把物品表转成可 JSON 序列化的字典。
+func to_dict() -> Dictionary:
+	var out := {}
+	for item_id in _items:
+		out[String(item_id)] = int(_items[item_id])
+	return out
+
+
+## 读档用：整体覆盖物品表，并逐个发信号让 HUD 刷新。
+func load_from_dict(data: Dictionary) -> void:
+	_items.clear()
+	for key in data:
+		var item_id := StringName(String(key))
+		var total := int(data[key])
+		_items[item_id] = total
+		changed.emit(item_id, total)

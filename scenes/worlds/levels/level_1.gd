@@ -11,9 +11,13 @@ var _boss_defeated := false
 
 func _ready() -> void:
 	super._ready()
-	# 监听 BOSS 击败：击败即锁定领地灯光效果，玩家之后重入领地不再变暗。
+	# 读档时 BOSS 可能已被永久击败（Enemy._ready 会直接 queue_free）：
+	# 先把灯光状态对齐，避免空竞技场还触发压暗。
 	var boss := get_node_or_null("HollowKnightScene/HollowKnight")
-	if boss != null and boss.has_signal("boss_defeated") \
+	if boss != null and "persistent_id" in boss:
+		_boss_defeated = SaveManager.is_defeated(String(boss.persistent_id))
+	# 监听 BOSS 击败：击败即锁定领地灯光效果，玩家之后重入领地不再变暗。
+	if not _boss_defeated and boss != null and boss.has_signal("boss_defeated") \
 			and not boss.boss_defeated.is_connected(_on_boss_defeated):
 		boss.boss_defeated.connect(_on_boss_defeated)
 

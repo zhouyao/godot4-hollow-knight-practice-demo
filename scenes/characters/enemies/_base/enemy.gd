@@ -48,6 +48,12 @@ signal leave_combat
 ## 保证被隐藏的参数值依然写进 .tscn，不会因为切换配置而丢失。
 const HIDDEN_BUT_SAVED := PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_STORAGE
 
+@export_group("存档")
+## 唯一 ID：留空 = 普通杂兵，重新进关会刷新；
+## 非空 = 一次性敌人（BOSS / 精英），击败后写入存档，读档时不再生成。
+## 同一 ID 在全存档内只生效一次，BOSS 场景已各自填好。
+@export var persistent_id: String = ""
+
 @export_group("生命")
 ## 最大血量，同时也是血条上限。enemy.tscn 根节点已显式覆盖为 5（脚本默认 100）。
 @export var max_health: int = 100
@@ -323,6 +329,11 @@ var _contact_query := PhysicsShapeQueryParameters2D.new()
 #region 生命周期
 
 func _ready() -> void:
+	# 一次性敌人（BOSS / 精英）已击败：读档时直接不生成，也不启动状态机。
+	if not persistent_id.is_empty() and SaveManager.is_defeated(persistent_id):
+		queue_free()
+		return
+
 	# 格数 -> 像素：导出的是格数（move_speed_units），这里按 UNIT_SIZE 换算成实际像素速度。
 	# 必须早于 state_machine.start()，否则首个状态 enter 时 move_speed 还是 0。
 	move_speed = move_speed_units * Globals.UNIT_SIZE
@@ -538,6 +549,9 @@ func _dead() -> void:
 	if dead:
 		return
 	dead = true
+	# 一次性敌人永久记录；普通杂兵 persistent_id 为空，不走这里，重进关卡照常刷新。
+	if not persistent_id.is_empty():
+		SaveManager.mark_defeated(persistent_id)
 	_drop_loot()
 	enemy_death.emit()
 	_start_corpse_fade()

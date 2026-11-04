@@ -57,8 +57,24 @@ var debug_enabled: bool:
 	get:
 		return _debug_enabled
 
+## 死亡结算结束后回主菜单时，让主菜单跳过标题页、直接展开存档选择页。
+var _open_save_menu_on_main_menu := false
+
 func go_to_main_menu() -> void:
 	TransitionLayer.change_scene(MAIN_MENU_SCENE_PATH)
+
+
+## 死亡结算收尾：回主菜单并直接停在存档选择页（由 default_menu 消费一次）。
+func return_to_save_select() -> void:
+	_open_save_menu_on_main_menu = true
+	go_to_main_menu()
+
+
+## 主菜单读取并清空"直接展开存档选择页"的请求。
+func consume_open_save_menu_request() -> bool:
+	var requested := _open_save_menu_on_main_menu
+	_open_save_menu_on_main_menu = false
+	return requested
 
 func go_to_game() -> void:
 	TransitionLayer.change_scene(GAME_SCENE_PATH)
@@ -67,5 +83,7 @@ func go_to_system_settings() -> void:
 	TransitionLayer.change_scene(SYSTEM_SETTINGS_SCENE_PATH)
 
 func quit_game() -> void:
+	# 退出前先落盘（有激活存档且当前在关卡里时才会真正写）。
+	SaveManager.save_game()
 	Settings.flush()
 	get_tree().quit()

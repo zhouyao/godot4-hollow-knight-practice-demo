@@ -26,7 +26,7 @@
 [ext_resource type="PackedScene" uid="uid://dcw0gneskq823" path="res://scenes/characters/bosses/soul_master/soul_master.tscn" id="22_n30dk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rywq7"]
-size = Vector2(40, 40)
+size = Vector2(163.2125, 65)
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_yq11q"]
 vertices = PackedVector2Array(4943.8516, -2837.0078, 4903.1406, 7.0625, -4278.133, 67.92969, -4317.8594, -2847.9766)
@@ -35,9 +35,10 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(-4328, -2858, -4288, 78
 
 [node name="WorldTest" unique_id=560156841 instance=ExtResource("1_h76fn")]
 script = ExtResource("21_lvl")
+zone_name = "遗忘荒径"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KillBox" parent_id_path=PackedInt32Array(1663494127) index="0" unique_id=1467752816]
-position = Vector2(0, 600)
+position = Vector2(1983.4998, 612.5)
 scale = Vector2(80, 1)
 shape = SubResource("RectangleShape2D_rywq7")
 
@@ -218,8 +219,7 @@ position = Vector2(5983, -88)
 
 [node name="Player" parent="." index="10" unique_id=1112432844]
 position = Vector2(4700, 200)
-max_health = 100
-initial_health = 100
+max_health = 8
 
 [node name="Layer_1" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=80876967]
 

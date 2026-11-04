@@ -83,3 +83,13 @@ RB 键,Button RB,RB 键,RB 鍵
 调试模式,Debug Mode,调试模式,除錯模式
 开启,On,开启,開啟
 关闭,Off,关闭,關閉
+选择存档,Select Profile,选择存档,選擇存檔
+新游戏,New Game,新游戏,新遊戲
+清除存档,Clear Save,清除存档,清除存檔
+清除存档？,Clear Save?,清除存档？,清除存檔？
+未知区域,Unknown Area,未知区域,未知區域
+保存游戏,Save Game,保存游戏,儲存遊戲
+已保存,Saved,已保存,已儲存
+保存失败,Save Failed,保存失败,儲存失敗
+返回主菜单会自动保存当前进度,Progress auto-saves when returning,返回主菜单会自动保存当前进度,返回主選單前會自動儲存目前進度
+死亡 · 即将返回存档选择,Death · Returning to Profile Selection,死亡 · 即将返回存档选择,死亡 · 即將返回存檔選擇

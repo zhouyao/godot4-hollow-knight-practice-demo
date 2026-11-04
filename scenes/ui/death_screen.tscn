@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/death_screen.gd" id="1_ds"]
+[ext_resource type="FontFile" uid="uid://ccx10lgvffe73" path="res://assets/font/TrajanPro.ttf" id="2_font"]
+
+[node name="DeathScreen" type="CanvasLayer"]
+process_mode = 3
+layer = 120
+script = ExtResource("1_ds")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="CountLabel" type="Label" parent="Center/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.9, 0.83, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 140
+text = "3"
+horizontal_alignment = 1
+
+[node name="HintLabel" type="Label" parent="Center/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.7, 0.66, 1)
+theme_override_font_sizes/font_size = 32
+text = "死亡 · 即将返回存档选择"
+horizontal_alignment = 1

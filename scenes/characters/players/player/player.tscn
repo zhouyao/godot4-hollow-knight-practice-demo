@@ -1,29 +1,5 @@
 [gd_scene format=3 uid="uid://434vdpo3jiq"]
 
-; ============================================================================
-; 玩家场景 · 对外配置速查
-; 分号注释只便于读源码，编辑器里保存一次场景会重写本文件并清掉它们；
-; 需要长期保留的说明写在节点的 editor_description 里（Inspector 顶部可见）。
-;
-; [Player 根节点] 可调参数全部来自 player.gd 的 @export，Inspector 按六组排列：
-;     跳跃 Jump（子组：帝王之翼 / 起跳手感）→ 挥砍 Slash → 冲刺 Dash
-;     → 受击与击退 Damage → 生命 Health → 能量 Energy
-;   帝王之翼（二段跳）两项在本场景显式列出，改这里即可，不必改脚本：
-;     max_air_jumps            = 1    → 空中可再跳次数；0 = 关闭二段跳
-;     double_jump_height_units = 2.4  → 振翅高度（格），_ready 里 × Globals.UNIT_SIZE
-;   是否解锁由 Globals.has_monarch_wings 控制（默认已解锁，不是本场景的属性）。
-;   另两处是历史覆盖值，与脚本默认值不同，覆盖值优先：
-;     slash_down_bounce_height_units = 10.0（脚本默认 1.6）
-;     damage_knockback_y            = 600.0（脚本默认 1200.0）
-;   改脚本默认值不会同步改本场景；要恢复默认请删掉对应行或点属性右侧的复位箭头。
-;
-; [StateMachine 及其子节点] 子节点名 = 状态名（见 PlayerStateNames）；每个状态节点的
-;   可配项在 states/*.gd 的「行为 Behavior / 状态过渡 Transitions」分组里。
-; [Audio / Animation / Debug] 音效节点名就是 machine.play_sfx() 的 key；
-;   Debug 实例覆盖 has_energy = true（显示能量条），配色与偏移见 character_debug.gd。
-; ============================================================================
-
-; ---- 外部资源：状态脚本 → 音频 → 精灵帧 / 动画库 / 调试场景 ----
 [ext_resource type="Script" uid="uid://chts5gy80svpx" path="res://scenes/characters/players/player/player.gd" id="1_ylc4c"]
 [ext_resource type="Script" uid="uid://bs8i07lacixpl" path="res://scenes/characters/players/player/PlayerStateMachine.gd" id="2_ylc4c"]
 [ext_resource type="Script" uid="uid://b3xmjmmcxljdn" path="res://scenes/characters/players/player/states/idle.gd" id="3_trs4l"]
@@ -39,6 +15,7 @@
 [ext_resource type="Script" uid="uid://n5m4aggv4pj4" path="res://scenes/characters/players/player/states/slash_up.gd" id="13_vvfi6"]
 [ext_resource type="AudioStream" uid="uid://bvqp3ngqdnona" path="res://assets/sounds/characters/players/player/player_walk.ogg" id="14_3lsh5"]
 [ext_resource type="Script" uid="uid://d0perfsqddujp" path="res://scenes/characters/players/player/states/hurt.gd" id="14_dmgst"]
+[ext_resource type="Script" uid="uid://drqeaw71drqys" path="res://scenes/characters/players/player/states/death.gd" id="39_death"]
 [ext_resource type="AudioStream" uid="uid://cdltsupvpwh3v" path="res://assets/sounds/characters/players/player/player_death.ogg" id="15_oi6ae"]
 [ext_resource type="AudioStream" uid="uid://4il6pdwiaagt" path="res://assets/sounds/characters/players/player/player_jump.ogg" id="16_nm7y7"]
 [ext_resource type="AudioStream" uid="uid://dmgh73l7uuwrb" path="res://assets/sounds/characters/players/player/player_land.ogg" id="17_eix85"]
@@ -57,9 +34,8 @@
 [ext_resource type="AnimationLibrary" uid="uid://chcmuoef0l46l" path="res://resources/characters/players/player/player_action_player.tres" id="30_muvqv"]
 [ext_resource type="PackedScene" path="res://scenes/debug/character_debug.tscn" id="35_aldr5"]
 [ext_resource type="Script" path="res://scenes/characters/players/player/states/freeze.gd" id="37_freez"]
-[ext_resource type="Script" path="res://scenes/characters/players/player/states/double_jump.gd" id="38_dbljmp"]
+[ext_resource type="Script" uid="uid://b3gokwimu2mdx" path="res://scenes/characters/players/player/states/double_jump.gd" id="38_dbljmp"]
 
-; ---- 本地子资源：角色碰撞体 / 精灵材质 ----
 [sub_resource type="CapsuleShape2D" id="2_capsule"]
 radius = 40.0
 height = 150.0
@@ -67,16 +43,10 @@ height = 150.0
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_2n40l"]
 light_mode = 1
 
-; ---- 根节点：对外配置入口（分组见文件头总览）----
-; 下面四行：前两项 = 跳跃 Jump → 帝王之翼 Double Jump，显式列出便于在场景里直接调，
-; 取值与 player.gd 默认值一致；后两项 = 历史覆盖值，和脚本默认值不同。
-; 解锁开关 Globals.has_monarch_wings 不在这里，默认已解锁。
 [node name="Player" type="CharacterBody2D" unique_id=19015186 groups=["player"]]
+editor_description = "玩家根节点。可调参数见 player.gd 的 Inspector 分组：跳跃 / 挥砍 / 冲刺 / 受击与击退 / 生命 / 能量。帝王之翼（二段跳）在本节点显式配置 max_air_jumps=1、double_jump_height_units=2.4 格，是否解锁由 Globals.has_monarch_wings 控制；另覆盖 slash_down_bounce_height_units=10.0、damage_knockback_y=600.0，均优先于脚本默认值。"
 collision_mask = 29
 script = ExtResource("1_ylc4c")
-editor_description = "玩家根节点。可调参数见 player.gd 的 Inspector 分组：跳跃 / 挥砍 / 冲刺 / 受击与击退 / 生命 / 能量。帝王之翼（二段跳）在本节点显式配置 max_air_jumps=1、double_jump_height_units=2.4 格，是否解锁由 Globals.has_monarch_wings 控制；另覆盖 slash_down_bounce_height_units=10.0、damage_knockback_y=600.0，均优先于脚本默认值。"
-max_air_jumps = 1
-double_jump_height_units = 2.4
 slash_down_bounce_height_units = 10.0
 damage_knockback_y = 600.0
 
@@ -85,10 +55,9 @@ damage_knockback_y = 600.0
 [node name="hurt_invincibility_timer" type="Timer" parent="Timer" unique_id=1399737945]
 one_shot = true
 
-; ---- 状态机：下面每个子节点 = 一个状态，节点名要与 PlayerStateNames 常量一致 ----
 [node name="StateMachine" type="Node" parent="." unique_id=1168596325]
-script = ExtResource("2_ylc4c")
 editor_description = "状态机：子节点名即状态名（见 PlayerStateNames）。选中任一状态子节点，可在其脚本的「行为 Behavior / 状态过渡 Transitions」分组里调时长与目标状态。"
+script = ExtResource("2_ylc4c")
 host_path = NodePath("..")
 initial_state = &"idle"
 metadata/_custom_type_script = "uid://ub71f6ps06hf"
@@ -110,7 +79,7 @@ script = ExtResource("6_hu24a")
 script = ExtResource("7_tuh0m")
 
 [node name="death" type="Node" parent="StateMachine" unique_id=1209192914]
-script = ExtResource("8_inudu")
+script = ExtResource("39_death")
 
 [node name="look_up" type="Node" parent="StateMachine" unique_id=2010000001]
 script = ExtResource("9_l2q18")
@@ -147,7 +116,6 @@ script = ExtResource("8_inudu")
 [node name="double_jump" type="Node" parent="StateMachine" unique_id=2010000008]
 script = ExtResource("38_dbljmp")
 
-; ---- 音效：节点名就是 machine.play_sfx(key) 里的 key ----
 [node name="Audio" type="Node2D" parent="." unique_id=290561661]
 
 [node name="walk" type="AudioStreamPlayer2D" parent="Audio" unique_id=450526490]
@@ -239,13 +207,12 @@ scale = Vector2(0.658, 0.59)
 polygon = PackedVector2Array(30, 83, 183.89058, 101.694916, 261.39816, 100, 272.03647, 25.423729, 244.68085, -11.864407, 205.16716, -54.23729, 161.09422, -91.52543, 98.784195, -118.64407, 25.835865, -130.50848, 26, 83)
 disabled = true
 
-; ---- 表现层：精灵帧 + 主/辅 AnimationPlayer；紧随其后的 Debug 实例覆盖 has_energy = true ----
 [node name="Animation" type="Node2D" parent="." unique_id=935029620]
 
 [node name="PlayerAnimatedSprite" type="AnimatedSprite2D" parent="Animation" unique_id=458371313]
 material = SubResource("CanvasItemMaterial_2n40l")
 sprite_frames = ExtResource("26_qkgkx")
-animation = &"cure"
+animation = &"death"
 
 [node name="ActionAnimationPlayer" type="AnimationPlayer" parent="Animation" unique_id=1051654828]
 root_node = NodePath("../..")
@@ -257,7 +224,6 @@ root_node = NodePath("../..")
 [node name="Debug" parent="." unique_id=708961437 instance=ExtResource("35_aldr5")]
 has_energy = true
 
-; ---- 信号连线：改名节点 / 方法时要同步这几行 ----
 [connection signal="timeout" from="Timer/hurt_invincibility_timer" to="." method="_on_hurt_invincibility_timer_timeout"]
 [connection signal="area_entered" from="DownAttackArea" to="." method="_on_attack_area_area_entered"]
 [connection signal="body_entered" from="DownAttackArea" to="." method="_on_down_attack_area_body_entered"]

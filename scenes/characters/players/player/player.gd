@@ -369,6 +369,45 @@ func _dead():
 	dead = true
 	player_death.emit()
 
+
+## 存档用：玩家侧需要持久化的运行时状态。
+func to_save_dict() -> Dictionary:
+	return {
+		"x": global_position.x,
+		"y": global_position.y,
+		"facing": move_direction,
+		"health": health,
+		"max_health": max_health,
+		"energy": energy,
+		"max_energy": max_energy,
+	}
+
+
+## 读档用：在关卡 _ready 阶段回填位置 / 血量 / 能量，并同步 HUD。
+func apply_save_dict(data: Dictionary) -> void:
+	if data.is_empty():
+		return
+
+	var facing := int(data.get("facing", move_direction))
+	if facing != move_direction:
+		_flip_direction()
+		move_direction = facing
+
+	max_health = maxi(int(data.get("max_health", max_health)), 1)
+	health = clampi(int(data.get("health", health)), 0, max_health)
+	max_energy = maxi(int(data.get("max_energy", max_energy)), 0)
+	energy = clampi(int(data.get("energy", energy)), 0, max_energy)
+
+	global_position = Vector2(
+		float(data.get("x", global_position.x)),
+		float(data.get("y", global_position.y))
+	)
+
+	debug.setup_health(max_health, health)
+	debug.setup_energy(max_energy, energy)
+	health_changed.emit(health)
+	energy_changed.emit(energy)
+
 func kill():
 	if(!dead):
 		_dead()

@@ -106,6 +106,10 @@ theme_override_constants/separation = 25
 layout_mode = 2
 text = "继续"
 
+[node name="SaveButton" parent="Margin/Center/MainPanel/ButtonContainer" unique_id=800000019 instance=ExtResource("1_btn")]
+layout_mode = 2
+text = "保存游戏"
+
 [node name="AudioButton" parent="Margin/Center/MainPanel/ButtonContainer" unique_id=800000009 instance=ExtResource("1_btn")]
 layout_mode = 2
 text = "音频"
@@ -143,6 +147,7 @@ layout_mode = 2
 text = "返回"
 
 [connection signal="pressed" from="Margin/Center/MainPanel/ButtonContainer/ContinueButton" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="Margin/Center/MainPanel/ButtonContainer/SaveButton" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="Margin/Center/MainPanel/ButtonContainer/AudioButton" to="." method="_on_audio_pressed"]
 [connection signal="pressed" from="Margin/Center/MainPanel/ButtonContainer/MainMenuButton" to="." method="_on_main_menu_pressed"]
 [connection signal="pressed" from="Margin/Center/AudioPanel/BackButton" to="." method="_on_back_pressed"]

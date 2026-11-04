@@ -8,8 +8,16 @@ class_name PlayerDashEffect
 ## 想让它全程贴着玩家走，可在检查器把 follow_player 勾上。dash 结束先淡出再自动 queue_free。
 
 
-## 自身场景，spawn 时实例化（放函数内 preload，避开脚本<->场景的循环依赖，同 nail_hit_spark 范式）。
-const SCENE := preload("res://scenes/effects/players/player_dash_effect.tscn")
+## 自身场景，spawn 时实例化。
+## 必须用运行期 load 而非 const preload：preload 是编译期常量（写在函数体里也一样），
+## 会让本脚本预载"引用了本脚本的 .tscn"，形成脚本<->场景的编译期循环依赖，
+## 编辑器按脚本顺序编译时会报 [ext_resource] referenced non-existent resource。
+static var _scene: PackedScene
+
+static func _get_scene() -> PackedScene:
+	if _scene == null:
+		_scene = load("res://scenes/effects/players/player_dash_effect.tscn") as PackedScene
+	return _scene
 
 @onready var _anchor: Node2D = $Anchor
 @onready var _sprite: AnimatedSprite2D = $Anchor/DashEffect
@@ -42,7 +50,7 @@ var _is_air := false
 static func spawn(player: PlayerInitial, parent: Node) -> PlayerDashEffect:
 	if player == null or parent == null or not parent.is_inside_tree():
 		return null
-	var eff := SCENE.instantiate()
+	var eff := _get_scene().instantiate() as PlayerDashEffect
 	parent.add_child(eff)
 	eff._setup(player)
 	return eff

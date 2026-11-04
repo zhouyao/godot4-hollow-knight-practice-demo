@@ -5,11 +5,14 @@ extends Control
 # 因此按下即可跳转，不需要等音效放完。
 
 const QUIT_MENU_SCENE := preload("res://scenes/menus/common/dialogs/quit_menu.tscn")
+const SAVE_MENU_SCENE := preload("res://scenes/menus/save_menu/save_menu.tscn")
 
 @onready var _buttons: VBoxContainer = $VBoxContainer/VBoxContainer
+@onready var _start_button: FocusMenuButton = $VBoxContainer/VBoxContainer/StartButton
 @onready var _quit_button: FocusMenuButton = $VBoxContainer/VBoxContainer/QuitButton
 
 var _quit_menu: QuitMenu
+var _save_menu: Control
 
 
 func _ready() -> void:
@@ -21,6 +24,9 @@ func _ready() -> void:
 	var start := _buttons.get_node("StartButton")
 	if start is FocusButton:
 		start.quiet_focus()
+	# 死亡结算回来时跳过标题页，直接展开存档选择页。
+	if Globals.consume_open_save_menu_request():
+		_on_start_pressed.call_deferred()
 
 
 func _exit_tree() -> void:
@@ -37,8 +43,20 @@ func _on_locale_changed(_locale: String) -> void:
 			button.refresh_pointer_layout()
 
 
+# 复刻 HK：开始游戏先进入存档选择页，选空槽新建 / 选已有槽读档后才进关卡。
 func _on_start_pressed() -> void:
-	Globals.go_to_game()
+	if is_instance_valid(_save_menu):
+		return
+	hide()
+	_save_menu = SAVE_MENU_SCENE.instantiate()
+	get_parent().add_child(_save_menu)
+	_save_menu.back.connect(_on_save_menu_back)
+
+
+func _on_save_menu_back() -> void:
+	_save_menu = null
+	show()
+	_start_button.quiet_focus()
 
 
 func _on_system_button_pressed() -> void:

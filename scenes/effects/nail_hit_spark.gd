@@ -16,13 +16,22 @@ func _ready() -> void:
 	play("nailhit")                       # 每帧约 0.05s，3 帧≈0.15s
 	animation_finished.connect(queue_free) # 播完自毁
 
+## 自身场景缓存：必须用运行期 load，不能用 const preload。
+## preload 是编译期常量（写在函数体里也一样），会让本脚本预载"引用了本脚本的 .tscn"，
+## 形成脚本<->场景的编译期循环依赖；编辑器按脚本顺序编译时会报
+## [ext_resource] referenced non-existent resource at: res://scenes/effects/nail_hit_spark.gd
+static var _scene: PackedScene
+
+static func _get_scene() -> PackedScene:
+	if _scene == null:
+		_scene = load("res://scenes/effects/nail_hit_spark.tscn") as PackedScene
+	return _scene
+
 ## 在 at 位置、以 parent 为父节点生成一个刀光，返回实例。
-## （preload 放在函数内，避免 hit_spark.gd 与 hit_spark.tscn 互相预载的循环依赖）
 ## 注意：必须先 add_child 再赋 global_position，否则 at 会被当成父节点局部坐标，
 ## 若 parent 自身有位移/缩放，刀光就会偏离受击点。
 static func spawn(at: Vector2, parent: Node) -> nail_hit_spark:
-	var scene := preload("res://scenes/effects/nail_hit_spark.tscn")
-	var spark := scene.instantiate()
+	var spark := _get_scene().instantiate() as nail_hit_spark
 	parent.add_child(spark)
 	spark.global_position = at
 	return spark

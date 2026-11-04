@@ -4,7 +4,16 @@ class_name PlayerBlockEffect
 ## 玩家格挡火花：格挡成功时在身前生成一次短促火花，播完自动销毁。
 ## 由 PlayerInitial._on_blocked 在玩家身前 spawn，靠复制玩家全局坐标跟随，不依赖父子变换。
 
-const SCENE := preload("res://scenes/effects/players/player_block_effect.tscn")
+## 自身场景，spawn 时实例化。
+## 必须用运行期 load 而非 const preload：preload 是编译期常量，会让本脚本预载
+## "引用了本脚本的 .tscn"，形成脚本<->场景的编译期循环依赖，
+## 编辑器按脚本顺序编译时会报 [ext_resource] referenced non-existent resource。
+static var _scene: PackedScene
+
+static func _get_scene() -> PackedScene:
+	if _scene == null:
+		_scene = load("res://scenes/effects/players/player_block_effect.tscn") as PackedScene
+	return _scene
 
 @onready var _anchor: Node2D = $Anchor
 @onready var _sprite: AnimatedSprite2D = $Anchor/BlockDeffect
@@ -19,7 +28,7 @@ var _player: PlayerInitial
 static func spawn(player: PlayerInitial, parent: Node) -> PlayerBlockEffect:
 	if player == null or parent == null or not parent.is_inside_tree():
 		return null
-	var eff := SCENE.instantiate()
+	var eff := _get_scene().instantiate() as PlayerBlockEffect
 	parent.add_child(eff)
 	eff._setup(player)
 	return eff

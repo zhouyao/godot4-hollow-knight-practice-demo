@@ -1,0 +1,75 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scenes/menus/save_menu/player_details.gd" id="1_scr"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/health/idle/Health Idle_000.png" id="2_health"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/hud/soul_orb_full_v020000.png" id="3_soul"]
+[ext_resource type="Texture2D" path="res://assets/animations/objects/geo/small_idle/Small Idle_000.png" id="4_geo"]
+
+[node name="PlayerDetails" type="HBoxContainer"]
+offset_right = 320.0
+offset_bottom = 28.0
+theme_override_constants/separation = 26
+script = ExtResource("1_scr")
+
+[node name="Health" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 6
+
+[node name="Icon" type="TextureRect" parent="Health"]
+custom_minimum_size = Vector2(18, 24)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("2_health")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Health"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_font_sizes/font_size = 24
+text = "0/0"
+vertical_alignment = 1
+
+[node name="Energy" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 6
+
+[node name="Icon" type="TextureRect" parent="Energy"]
+custom_minimum_size = Vector2(22, 22)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("3_soul")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Energy"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_font_sizes/font_size = 24
+text = "0/0"
+vertical_alignment = 1
+
+[node name="Coin" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 6
+
+[node name="Icon" type="TextureRect" parent="Coin"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_geo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Coin"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_font_sizes/font_size = 24
+text = "0"
+vertical_alignment = 1

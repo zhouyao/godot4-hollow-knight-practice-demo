@@ -1,0 +1,62 @@
+[gd_resource type="SpriteFrames" load_steps=14 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0000.png" id="1_f0"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0001.png" id="2_f1"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0002.png" id="3_f2"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0003.png" id="4_f3"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0004.png" id="5_f4"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0005.png" id="6_f5"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0006.png" id="7_f6"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0007.png" id="8_f7"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0008.png" id="9_f8"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0009.png" id="10_f9"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0010.png" id="11_f10"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0011.png" id="12_f11"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/profile_fleur/profile_fleur0012.png" id="13_f12"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_f0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_f1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_f2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_f3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_f4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_f5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_f6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_f7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_f8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_f9")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_f10")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_f11")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_f12")
+}],
+"loop": false,
+"name": &"default",
+"speed": 15.0
+}]
