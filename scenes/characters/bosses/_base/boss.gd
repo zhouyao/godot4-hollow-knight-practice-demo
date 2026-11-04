@@ -12,6 +12,46 @@ signal phase_changed(phase_index: int)
 ## 当前阶段索引，0 起。
 var phase_index: int = 0
 
+
+#region 过场锁定与生命周期（BOSS 通用）
+## 处于这些状态名时免疫玩家伤害（沉睡 / 入场 / 苏醒演出等）。
+## 子类在 _ready() 里、super._ready() 之前填（Enemy._ready() 会启动状态机并立刻进 dormant）。
+## 状态机未启动 / 状态名未知时按"锁定"处理：宁可多无敌，不可误伤。
+@export_group("过场锁定")
+@export var cutscene_states: Array[StringName] = []
+
+
+## 覆盖 Enemy 的空钩子：玩家侧 player.gd 的挥砍命中直接调用本方法，
+## 过场期间把攻击整体穿透（不结算伤害 / 能量 / recoil），实现只需一份。
+func is_cutscene_invulnerable() -> bool:
+	if cutscene_states.is_empty():
+		return false
+	if state_machine == null or state_machine.current_state_name == &"":
+		return true
+	return state_machine.current_state_name in cutscene_states
+
+
+## 与 is_cutscene_invulnerable() 保持同一判据：take_damage() 的首行守卫也走这里。
+func is_invulnerable() -> bool:
+	return super.is_invulnerable() or is_cutscene_invulnerable()
+
+
+## 接触伤害的"设计值"：候场 / 入场 / 招式会临时关掉它，退出时按此还原。
+## 直接还原"进入状态时的值"只会得到 dormant 关掉的 false，BOSS 就永远不蹭人了。
+var base_contact_damage: bool = true
+
+
+func _ready() -> void:
+	# 必须早于 super._ready()：Enemy._ready() 里的 state_machine.start() 会进 dormant 并关掉它。
+	base_contact_damage = contact_damage_enabled
+	super._ready()
+
+
+func restore_contact_damage() -> void:
+	contact_damage_enabled = base_contact_damage
+#endregion
+
+
 ## 近战攻击（slash / 突进斩等）对玩家造成的伤害。通用，子类可覆盖。
 @export var melee_damage: int = 1
 
@@ -373,12 +413,122 @@ func feet_offset() -> float:
 	return 0.0
 
 
-## 碰撞胶囊半径 = 身体半宽；非胶囊形状返回 100 兜底。
+## 碰撞形状底部相对身体原点的偏移（脚底距离）。落点 / 贴地 / 悬崖判定都按它算。
+## 支持圆 / 胶囊 / 矩形三种，其它形状退回碰撞形状自身的 y 偏移。
+## 与 feet_offset() 的分工：那个是"把胶囊贴到地面"的旧接口（非胶囊返回 0），
+## 本函数对所有形状都给真实脚底距离，新代码一律用它。
+func body_bottom() -> float:
+	var shape_node := collision_shape
+	if shape_node == null or shape_node.shape == null:
+		return 0.0
+	var shape := shape_node.shape
+	if shape is CircleShape2D:
+		return (shape as CircleShape2D).radius + shape_node.position.y
+	if shape is CapsuleShape2D:
+		var cap := shape as CapsuleShape2D
+		return cap.height * 0.5 + cap.radius + shape_node.position.y
+	if shape is RectangleShape2D:
+		return (shape as RectangleShape2D).size.y * 0.5 + shape_node.position.y
+	return shape_node.position.y
+
+
+## 碰撞形状的水平半宽：圆 / 胶囊取半径，矩形取半宽；其它形状返回 100 兜底。
+## 只有准确知道身体有多宽，墙 / 悬崖的预判射线才能从身体前缘外扩
+## （SoulMaster 是半径 142 的圆，退回 100 会让悬崖判晚 42px）。
 func body_half_width() -> float:
 	var shape_node := collision_shape
-	if shape_node != null and shape_node.shape is CapsuleShape2D:
-		return (shape_node.shape as CapsuleShape2D).radius
+	if shape_node == null or shape_node.shape == null:
+		return 100.0
+	var shape := shape_node.shape
+	if shape is CircleShape2D:
+		return (shape as CircleShape2D).radius
+	if shape is CapsuleShape2D:
+		return (shape as CapsuleShape2D).radius
+	if shape is RectangleShape2D:
+		return (shape as RectangleShape2D).size.x * 0.5
 	return 100.0
 
 
+#endregion
+
+
+#region 通用工具（位置瞬变 / 落点 / 特效）
+# 与上面的场地查询同属"只依赖碰撞体 + 物理射线 + 玩家位置"的无状态操作，
+# 任何 BOSS 的瞬移、跃击、下砸、召唤特效都用得上，故沉淀在基类。
+
+
+## 位置瞬变：归零速度 + 重置自身及所有 Node2D 子节点的物理插值。
+## 项目 physics_interpolation=true，父节点 reset 不会递归到子节点，
+## 精灵 / 碰撞形状 / 命中盒 / 音效播放器都要各自重置，否则首帧会从旧位置滑过来。
+## face_player=true 时顺带看向玩家（瞬移后接施法 / 劈砍的常用收尾）。
+func teleport_to(pos: Vector2, face_player: bool = false) -> void:
+	global_position = pos
+	velocity = Vector2.ZERO
+	reset_physics_interpolation()
+	for node in find_children("*", "", true, false):
+		if node is Node2D:
+			(node as Node2D).reset_physics_interpolation()
+	if face_player:
+		var p := get_player()
+		if p != null:
+			face_toward(p.global_position.x)
+
+
+## 该 x 处"身体原点贴地"的 y：地面顶部往上让出整个身体高度。
+## 无地面时退回竞技场底边，连领地都没有则返回 NAN，交给调用方的兜底时长。
+func ground_position_at(x: float) -> float:
+	var ground := ground_y_at(x, NAN)
+	if not is_nan(ground):
+		return ground - body_bottom()
+	var arena := arena_rect()
+	if arena.size.y > 0.0:
+		return arena.end.y - body_bottom()
+	return NAN
+
+
+## dir(±1) 方向、身体前缘外扩 margin 处是否撞到地形墙。
+## 只探地形层（与落点查询同一个 mask），玩家不在其中，不会把玩家算成墙。
+## 不叫 wall_ahead()：Enemy 已有同名无参虚方法（按当前朝向查 WallDetector），
+## GDScript 不允许同名不同签名覆盖，故本方法按"传入方向"另起一名。
+func wall_in_direction(dir: float, margin: float = 0.0) -> bool:
+	var space := get_world_2d().direct_space_state
+	if space == null:
+		return false
+	var from := global_position
+	var to := from + Vector2(dir * (body_half_width() + margin), 0.0)
+	var query := PhysicsRayQueryParameters2D.create(from, to)
+	query.collision_mask = ground_mask()
+	query.exclude = [get_rid()]
+	return not space.intersect_ray(query).is_empty()
+
+
+## dir 方向、身体前缘外扩 margin 处是否踏空 / 落差超过 drop_tolerance。
+## 脚下本来就没地面（无地形场景）时不做悬崖判定，交给墙 / 距离 / 兜底时长收招。
+func ledge_ahead(dir: float, margin: float = 0.0, drop_tolerance: float = 80.0) -> bool:
+	var here := ground_y_at(global_position.x, NAN)
+	if is_nan(here):
+		return false
+	var probe_x := global_position.x + dir * (body_half_width() + margin)
+	var ahead := ground_y_at(probe_x, NAN)
+	if is_nan(ahead):
+		return true
+	return ahead - here > drop_tolerance
+
+
+## 生成一个挂在 BOSS 父节点上的特效：同层 z 偏移、摆位、重置插值。
+## 挂父节点而不是 BOSS 身上：BOSS 会瞬移 / 翻面 / 淡出，特效不该跟着被搬走或继承 modulate。
+## 返回实例，调用方在 add_child 之后再做配置与启动（如 wave.launch() / orb.summon()）。
+func spawn_attached_fx(scene: PackedScene, pos: Vector2, z_offset: int = 1) -> Node2D:
+	var parent := get_parent()
+	if parent == null or scene == null:
+		return null
+	var fx := scene.instantiate() as Node2D
+	if fx == null:
+		return null
+	fx.z_as_relative = z_as_relative
+	fx.z_index = z_index + z_offset
+	parent.add_child(fx)
+	fx.global_position = pos
+	fx.reset_physics_interpolation()
+	return fx
 #endregion

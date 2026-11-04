@@ -1,8 +1,8 @@
 extends Control
 
 # 场景专属薄逻辑：左侧 tab 切换右侧内容 + 音量预览音，无复用需求。
-# 四个内容面板已拆成独立场景（OperationsContent / AudioContent / LanguageContent /
-# DisplayContent），语言选项的下拉框逻辑随 LanguageContent 一起移到了它的脚本里。
+# 五个内容面板已拆成独立场景（OperationsContent / AudioContent / LanguageContent /
+# DisplayContent / DevelopmentContent），各页的下拉框逻辑随各自的面板脚本走。
 
 const PREVIEW_STREAM := preload("res://assets/sounds/menus/confirm.ogg")
 
@@ -10,11 +10,13 @@ const PREVIEW_STREAM := preload("res://assets/sounds/menus/confirm.ogg")
 @onready var tab_audio: FocusButton = $Margin/Columns/TabList/TabAudio
 @onready var tab_language: FocusButton = $Margin/Columns/TabList/TabLanguage
 @onready var tab_display: FocusButton = $Margin/Columns/TabList/TabDisplay
+@onready var tab_development: FocusButton = $Margin/Columns/TabList/TabDevelopment
 
 @onready var operations_content: Control = $Margin/Columns/ContentPanel/OperationsContent
 @onready var audio_content: Control = $Margin/Columns/ContentPanel/AudioContent
 @onready var language_content: Control = $Margin/Columns/ContentPanel/LanguageContent
 @onready var display_content: Control = $Margin/Columns/ContentPanel/DisplayContent
+@onready var development_content: Control = $Margin/Columns/ContentPanel/DevelopmentContent
 
 @onready var preview_player: AudioStreamPlayer = $PreviewPlayer
 
@@ -23,6 +25,7 @@ func _ready() -> void:
 	tab_audio.pressed.connect(_on_tab_pressed.bind("audio"))
 	tab_language.pressed.connect(_on_tab_pressed.bind("language"))
 	tab_display.pressed.connect(_on_tab_pressed.bind("display"))
+	tab_development.pressed.connect(_on_tab_pressed.bind("development"))
 
 	Settings.volume.volume_committed.connect(_on_volume_preview)
 	Settings.localization.locale_changed.connect(_on_locale_changed)
@@ -56,6 +59,7 @@ func _select_tab(tab: String) -> void:
 	audio_content.visible = tab == "audio"
 	language_content.visible = tab == "language"
 	display_content.visible = tab == "display"
+	development_content.visible = tab == "development"
 
 # 切语言后不重载场景：菜单是短命的，把新语言重新套一遍即可。
 # 语言下拉框的选中项同步由 LanguageContent 自行处理。

@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://bkrfvirqhiugc"]
+
+[ext_resource type="Script" uid="uid://cl41y0icjm5hu" path="res://scenes/characters/bosses/soul_master/effects/quake_effect.gd" id="1_d64wa"]
+[ext_resource type="Texture2D" uid="uid://cusuo3n1vc7px" path="res://assets/animations/characters/bosses/soul_master/quake_wave/1.png" id="2_7h7t8"]
+[ext_resource type="Texture2D" uid="uid://bygdubpeupc5v" path="res://assets/animations/characters/bosses/soul_master/quake_wave/2.png" id="3_uojuw"]
+[ext_resource type="Texture2D" uid="uid://bbrq53tm6hl8k" path="res://assets/animations/characters/bosses/soul_master/quake_wave/3.png" id="4_jbeeb"]
+[ext_resource type="Texture2D" uid="uid://7884l4skgly8" path="res://assets/animations/characters/bosses/soul_master/quake_wave/4.png" id="5_iddak"]
+[ext_resource type="Texture2D" uid="uid://b88vlmcwdd3xt" path="res://assets/animations/characters/bosses/soul_master/quake_wave/5.png" id="6_evydb"]
+[ext_resource type="Texture2D" uid="uid://d2dihgysttala" path="res://assets/animations/characters/bosses/soul_master/quake_wave/6.png" id="7_5cfm7"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yy7m8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_7h7t8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_uojuw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_jbeeb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_iddak")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_evydb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_5cfm7")
+}],
+"loop": 1,
+"name": &"quake_wave",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d64wa"]
+size = Vector2(53, 68)
+
+[node name="QuakeEffect" type="Area2D" unique_id=483155743]
+collision_layer = 8
+script = ExtResource("1_d64wa")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1089916984]
+sprite_frames = SubResource("SpriteFrames_yy7m8")
+animation = &"quake_wave"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=972058409]
+shape = SubResource("RectangleShape2D_d64wa")

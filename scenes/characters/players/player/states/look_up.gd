@@ -1,6 +1,7 @@
 extends PlayerState
 
 
+@export_group("行为 Behavior")
 ## 进入抬头状态后延迟多久才推动镜头（秒）：避免轻点一下方向键画面就晃。
 @export var camera_look_delay: float = 1.0
 

@@ -31,6 +31,19 @@ var level_preparing: bool:
 
 var UNIT_SIZE: float = 96.0
 
+## 帝王之翼（二段跳）解锁标记：放在 autoload 上，换场景后仍然保留。
+## 默认 true 便于直接体验；接入拾取物 / 存档流程时改为 false，拾到后调 unlock_monarch_wings()。
+var has_monarch_wings: bool = true
+
+func unlock_monarch_wings() -> void:
+	has_monarch_wings = true
+
+
+## 供调试 / 存档回滚使用：关闭后空中按跳不再振翅。
+func lock_monarch_wings() -> void:
+	has_monarch_wings = false
+
+
 ## 调试信息显示开关变化时发出（角色血条、状态名、回巢倒计时等据此显隐）。
 signal debug_enabled_changed(enabled: bool)
 

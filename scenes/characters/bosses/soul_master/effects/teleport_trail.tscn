@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://bmrp7v23l4dnd"]
+
+[ext_resource type="Script" uid="uid://bj3pxooce2dqc" path="res://scenes/characters/bosses/soul_master/effects/teleport_trail.gd" id="1_trail"]
+[ext_resource type="Texture2D" uid="uid://br5lrn81ys0jg" path="res://assets/animations/characters/bosses/soul_master/_environment/spatter_white.png" id="2_spatter"]
+
+[sub_resource type="Gradient" id="Gradient_trail"]
+offsets = PackedFloat32Array(0, 0.4, 1)
+colors = PackedColorArray(1, 1, 1, 0.95, 1, 1, 1, 0.7, 1, 1, 1, 0)
+
+[node name="SoulMasterTeleportTrail" type="Node2D" unique_id=2002233319]
+script = ExtResource("1_trail")
+trail_spacing = 20.0
+trail_scale_min = 0.3
+trail_scale_max = 0.7
+
+[node name="Trail" type="CPUParticles2D" parent="." unique_id=1213906291]
+emitting = false
+amount = 24
+texture = ExtResource("2_spatter")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 70.0
+scale_amount_min = 0.35
+scale_amount_max = 0.85
+color_ramp = SubResource("Gradient_trail")
+
+[node name="OriginBurst" type="CPUParticles2D" parent="." unique_id=1671808864]
+emitting = false
+amount = 14
+texture = ExtResource("2_spatter")
+lifetime = 0.45
+one_shot = true
+explosiveness = 1.0
+emission_shape = 6
+emission_ring_inner_radius = 0.0
+emission_ring_radius = 18.0
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 90.0
+initial_velocity_max = 240.0
+scale_amount_min = 0.4
+color_ramp = SubResource("Gradient_trail")
+
+[node name="ArrivalBurst" type="CPUParticles2D" parent="." unique_id=436497952]
+emitting = false
+amount = 14
+texture = ExtResource("2_spatter")
+lifetime = 0.45
+one_shot = true
+explosiveness = 1.0
+emission_shape = 6
+emission_ring_inner_radius = 0.0
+emission_ring_radius = 18.0
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 90.0
+initial_velocity_max = 240.0
+scale_amount_min = 0.4
+color_ramp = SubResource("Gradient_trail")

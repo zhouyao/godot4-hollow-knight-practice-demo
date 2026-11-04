@@ -10,6 +10,7 @@ var bindings: InputBindings
 var localization: Localization
 var skill_bar: SkillBarSection
 var display: DisplaySection
+var development: DevelopmentSection
 
 var _sections: Array[SettingsSection] = []
 
@@ -23,7 +24,8 @@ func _ready() -> void:
 	localization = Localization.new(_store, request_save_cb)
 	skill_bar = SkillBarSection.new(_store, request_save_cb)
 	display = DisplaySection.new(_store, request_save_cb)
-	_sections = [volume, bindings, localization, skill_bar, display]
+	development = DevelopmentSection.new(_store, request_save_cb)
+	_sections = [volume, bindings, localization, skill_bar, display, development]
 
 	if _store.load_config() != OK:
 		volume.reset()

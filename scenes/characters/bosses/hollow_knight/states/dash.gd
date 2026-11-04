@@ -70,9 +70,7 @@ func update(delta: float) -> void:
 		return
 	match _phase:
 		_Phase.ANTIC:
-			boss.velocity.x = 0.0
-			boss._apply_vertical_motion(delta)
-			boss._apply_movement()
+			stand_still(delta, false)
 			# 前摇按动画时长计时；放完即进冲刺，不依赖 animation_finished 信号。
 			_antic_timer += delta
 			if _antic_timer >= _antic_length:
@@ -80,9 +78,7 @@ func update(delta: float) -> void:
 		_Phase.DASH:
 			_dash_update(delta)
 		_Phase.RECOVER:
-			boss.velocity.x = 0.0
-			boss._apply_vertical_motion(delta)
-			boss._apply_movement()
+			stand_still(delta, false)
 			# 后摇按动画时长计时；时间到回 idle。
 			_recover_timer += delta
 			if _recover_timer >= _recover_length:

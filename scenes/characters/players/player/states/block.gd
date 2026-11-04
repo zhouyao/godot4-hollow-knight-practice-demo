@@ -9,7 +9,12 @@ class_name PlayerBlockState
 
 const SKILL_ID: StringName = &"block"
 
+@export_group("行为 Behavior")
+## 举盾持续时间（秒）：期间只挡正面来袭的伤害，并忽略一切玩家输入。
 @export var block_duration: float = 0.5
+
+@export_group("状态过渡 Transitions")
+## 格挡结束且已落地时切往的状态（一般是 idle）；仍在空中则直接切 fall。
 @export var target_grounded: StringName = PlayerStateNames.IDLE
 
 func enter(_from: StringName) -> void:

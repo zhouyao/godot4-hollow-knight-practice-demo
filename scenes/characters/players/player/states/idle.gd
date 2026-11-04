@@ -3,11 +3,13 @@ extends PlayerState
 
 const MOVE_EPS := 1.0
 
-## 检测到横向移动后切往的目标状态（一般是 walk）。
-@export var target_move: StringName = PlayerStateNames.WALK
-
+@export_group("行为 Behavior")
 ## 抬头 / 低头需要按住的时长（秒）：避免轻点一下方向键就切到 look 状态。设为 0 表示立即切换。
 @export var look_hold_time: float = 0.0
+
+@export_group("状态过渡 Transitions")
+## 检测到横向移动后切往的目标状态（一般是 walk）。
+@export var target_move: StringName = PlayerStateNames.WALK
 
 var _look_hold: float = 0.0
 

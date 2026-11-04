@@ -5,6 +5,7 @@ class_name PlayerFreezeState
 ## 水平速度清零、忽略一切玩家输入（移动/跳跃/攻击/冲刺/技能），但仍受重力（空中则下坠落地），
 ## 演出结束后自动回到 idle / 空中状态。冻结期间照常可被击中（受击会打断进入 hurt）。
 
+@export_group("行为 Behavior")
 ## 冻结时长（秒），与 boss 吼叫演出对齐。
 @export var freeze_duration: float = 2.0
 

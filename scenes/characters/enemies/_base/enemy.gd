@@ -19,180 +19,220 @@ signal leave_combat
 
 #region 配置（检查器）
 
+# ============================================================================
+# 对外配置：在 enemy.tscn 中选中 Enemy 根节点时，Inspector 里能改的就是这一段。
+# 逐项的 ## 文档注释会变成 Inspector 的悬浮提示，因此只写"作用 / 单位 / 取值约定"。
+# 约定：
+#   1. 只调默认值与文档注释，不要改属性名 —— 各敌人场景及 level_1.tscn 按名字显式存了
+#      覆盖值（max_health、patrol_enabled、enemy_zone、corpse_* 等），改名会让值失联。
+#      逐只调数值优先在 .tscn 里改；整类怪一起调才动脚本默认值或 tuning 预设。
+#   2. 分组顺序 = Inspector 显示顺序：生命 → 运动介质 → 调参预设 → 移动 → 受击 →
+#      接触伤害 → 巡逻 → 感知与仇恨 → 攻击 → 掉落 → 死亡 → 转身 → 音效 → 高级。
+#      @export_group 一直作用到下一个 group，新增导出项要放进对应组，别插在组外。
+#   3. 单位：距离 / 射程 / 半径一律像素，时间一律秒，衰减速率一律"每秒"；
+#      只有 move_speed_units 是格，_ready 里乘 Globals.UNIT_SIZE 换成像素 / 秒
+#      （同 player.gd 的对外配置约定：导出项默认值取不到 autoload）。
+#   4. 三层取值（仅用于标了"< 0 沿用状态默认值"的行为数值，见 EnemyState._tuning()）：
+#        tuning 预设（整类怪） > 本节点同名导出（逐只微调） > 状态节点 / 脚本默认值
+#      负值 = 不覆盖、往下层要值；0 是合法覆盖值。tuning 里没有根节点同名导出的字段
+#      （如 patrol_radius）会跳过中间层，直接落到状态默认值。生命、受击、感知、掉落、
+#      死亡、转身、音效等导出项不参与这条链，改多少生效多少。
+#   5. 用不上的项由 _validate_property() 自动从检查器收起（近战 / 远程、接触伤害、
+#      掉落、屏幕外音效、领地宽限）。隐藏只影响显示，值仍会写进 .tscn。
+#   6. 不在这段的配置：运动介质细节在 locomotion 资源；巡逻 / 追击 / 攻击 / 返回的
+#      逐类默认数值在 StateMachine 的各状态节点上；音效与动作 clip 由 Audio 子节点、
+#      ActionAnimationPlayer 的动画名决定。
+# ============================================================================
+
 ## _validate_property() 用的"隐藏但仍序列化"标记：等价于 @export_storage，
 ## 保证被隐藏的参数值依然写进 .tscn，不会因为切换配置而丢失。
 const HIDDEN_BUT_SAVED := PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_STORAGE
 
-# 检查器分组：导出项按主题折叠，配合 _validate_property() 只显示当前这只怪用得上的参数。
 @export_group("生命")
-## 最大血量，同时也是血条上限。子类在检查器里覆盖即可。
+## 最大血量，同时也是血条上限。enemy.tscn 根节点已显式覆盖为 5（脚本默认 100）。
 @export var max_health: int = 100
 ## 初始血量：出生时取 min(initial_health, max_health)，可用于让敌人残血出场。
 @export var initial_health: int = 3
 
 @export_group("运动介质")
-## 运动模式：决定垂直方向怎么动、导航是否只取水平分量、死后尸体怎么处理。
+## 运动模式：决定垂直方向怎么动、导航是否只取水平分量、死后尸体怎么处理（落地 / 下沉）。
 ## 换这一个资源就能把地面怪变成飞行怪 / 水下怪，无需改动任何状态代码。
-##   地面 res://resources/characters/enemies/_shared/locomotion/ground.tres（默认）
-##   飞行 res://resources/characters/enemies/_shared/locomotion/flying.tres
-##   水下 res://resources/characters/enemies/_shared/locomotion/swimming.tres
-## 详见 resources/characters/enemies/_shared/locomotion/enemy_locomotion.gd。
+## 三选一，均在 res://resources/characters/enemies/_shared/locomotion/：
+##   ground.tres（默认）/ flying.tres / swimming.tres
+## 资源在多只怪之间共享，只放整类参数，不要存逐敌人状态；见 enemy_locomotion.gd。
 @export var locomotion: EnemyLocomotion = preload("res://resources/characters/enemies/_shared/locomotion/ground.tres")
 
 @export_group("调参预设")
-## 整类怪的数值预设：巡逻 / 追击 / 攻击 / 返回的所有数值都可以写进这一个资源，
-## 一份 .tres 在多只怪之间复用。留空则完全沿用下面各导出项与各状态自身的默认值。
-## 取值优先级：tuning > 本节点同名导出（逐只微调） > 状态脚本默认值。
-## 详见 resources/characters/enemies/_shared/enemy_tuning.gd。
+## 整类怪的行为数值预设：把巡逻 / 追击 / 攻击 / 返回共 18 个数值集中到一个 .tres，
+## 一份资源给多只怪复用。留空（默认）= 完全沿用本节点导出与各状态节点的默认值。
+## 只覆盖行为数值：生命、受击、感知、掉落、死亡、转身、音效等导出项不受影响。
+## 18 个字段中只有 5 个（chase_speed_multiplier / melee_attack_range / shoot_range /
+## attack_interval / shoot_keep_distance）在本节点有同名导出可逐只微调，
+## 其余字段只能用 tuning 或状态节点覆盖。字段 -1 = 不覆盖，>= 0 才生效；
+## 字段清单见 enemy_tuning.gd。注：当前还没有 EnemyTuning 的 .tres 实例，入口是预留的。
 @export var tuning: EnemyTuning = null
 
-## 运行期不变的 tuning 解析结果，_ready 算一次：
-## 原先 chase / patrol 每帧经 EnemyState._tuning() 走字符串反射（StringName 比较 + Variant 拆装箱），
-## 这两个值（基础移动速度、朝向死区）每帧都被取，却在整个生命周期里从不变化，故在这里缓存。
-## 优先级与 EnemyState._tuning 完全一致：tuning > 本节点同名导出 > 默认值。
-## 状态侧改读 enemy.tuning_move_speed / enemy.tuning_face_deadzone 即可。
+## 运行期不变的两项解析结果，_ready 里算一次后缓存，状态侧只读这两个值：
+## 基础移动速度、朝向死区每帧都被 chase / patrol 取用，走 _tuning() 的字符串反射太浪费。
+## tuning_move_speed 覆盖的是换算后的像素 / 秒（不是 move_speed_units 的格数）。
+## 注意 face_deadzone 目前不在 EnemyTuning 的字段表里，这一项的 tuning 层实际不生效，
+## 生效的只有本节点 face_deadzone；保留同规则解析是为了日后加字段时不用改这里。
 var tuning_move_speed: float = 0.0
 var tuning_face_deadzone: float = 0.0
 
 @export_group("移动")
 ## 基础移动速度（格 / 秒）：巡逻 / 追击 / 返回的所有倍率都乘以它。
-## 导出格数而不是像素：导出项的默认表达式取不到 autoload（见 player.gd:28-30 同款注释），
-## 写成像素会被烘焙成固定值、跟不上 UNIT_SIZE 调整。像素值在 _ready 里由
-## move_speed_units * Globals.UNIT_SIZE 换算到 move_speed，tuning 优先级高于它。
-## 想整体调快调慢一只怪改这里（或改 tuning.move_speed），
-## 想只调某一种行为改对应的倍率，不必再逐个状态节点改三处。
+## 导出格数而不是像素：导出项默认值取不到 autoload，写成像素就跟不上 UNIT_SIZE 调整。
+## _ready 里换算成 move_speed（像素 / 秒）；tuning.move_speed >= 0 时覆盖换算后的值。
+## 想整体调快调慢改这里（或 tuning.move_speed），只调某一种行为改对应状态的倍率。
 @export var move_speed_units: float = 1.0
-## 实际移动速度（像素 / 秒），_ready 里由 move_speed_units 换算，状态机只读这个。
+## 实际移动速度（像素 / 秒）：_ready 里由 move_speed_units 换算，非导出；状态机只读这个。
 var move_speed: float
-## 追击速度倍率（乘以 enemy.move_speed）：< 0 表示沿用 chase 状态自身的默认值。
-## 地面怪与飞行怪共用同一套名字：逐只覆盖在世界场景里改这一项即可。
+## 追击速度倍率（乘以 enemy.move_speed）：< 0 沿用 chase 状态节点的默认值（脚本里 1.0）。
+## 走"tuning > 本项 > 状态默认值"链；逐只覆盖在世界场景里改这一项即可。
 @export var chase_speed_multiplier: float = -1.0
 
 @export_group("受击")
-## 受击后的无敌帧时长（秒），由 hurt_invincibility_timer 计时，期间不再结算伤害。
+## 受击后的无敌帧时长（秒）：由 hurt_invincibility_timer 计时，期间不再结算伤害；
+## 同时决定受击白闪时长，以及 hurt 状态没配 hold_time 时的硬直时长。
 @export var invincible_time: float = 0.3
-## 受击特效表：键为来源 get_damage_kind() 返回的 StringName，值为场景。
-## 约定键 &"slash" 为默认受击表现（玩家挥砍）；查不到来源种类时回落到 &"slash"；
-## 仍无匹配则回落 _NAIL（通用刀光）。例：{&"slash": puff, &"fire": fire_spark}
+## 受击特效表：键为来源 get_damage_kind() 返回的 StringName，值为 PackedScene。
+## 查表优先级：来源种类 > 约定键 &"slash"（玩家挥砍的默认表现）> _NAIL 通用刀光。
+## 例：{&"slash": puff, &"fire": fire_spark}；解析见 hit_effect.gd。
 @export var hit_effect_by_source: Dictionary = {
 	&"slash": preload("res://scenes/effects/enemies/puff_hit_effect.tscn")
 }
-## 命中特效数量随机范围（闭区间）：每次受击按此范围摇一个数量。
+## 单次受击生成的特效数量下限（闭区间随机；min > max 时由 HitEffect.spawn 自动交换）。
 @export_range(0, 24, 1, "or_greater") var hit_effect_count_min: int = 2
+## 单次受击生成的特效数量上限，与下限一起决定每命中一次摇出的特效数量。
 @export_range(0, 24, 1, "or_greater") var hit_effect_count_max: int = 4
 ## 多份特效在命中点周围的散布半径（像素），0 = 全部叠在同一点。
 @export var hit_effect_scatter: float = 100.0
 
 @export_group("接触伤害")
-## 接触伤害总开关：false 时贴身不掉血（纯远程怪 / 中立怪 / 装饰物）。
-## 只作用于"接触"这一条路径，投射物伤害与自身受击死亡不受影响。
+## 接触伤害总开关：false 时贴身不掉血、也不因贴身开战（纯远程怪 / 中立怪 / 装饰物）。
+## 只作用于"接触"这一条路径：投射物伤害、受击开战与自身死亡不受影响。
+## 关闭时 contact_damage / contact_cooldown 自动从检查器隐藏。
 @export var contact_damage_enabled: bool = true
-## 贴身接触或近战命中玩家时造成的伤害值。
+## 身体碰撞形状碰到玩家时造成的伤害值（见 try_hit_player）。
 @export var contact_damage: int = 1
-## 两次伤害玩家之间的冷却（秒），避免贴身时逐帧掉血；由 contact_damage_cooldown 计时。
+## 两次伤害玩家之间的冷却（秒）：由 contact_damage_cooldown 计时，避免贴身逐帧掉血。
+## 玩家处于无敌帧时既不结算、也不刷新冷却，免得无敌刚结束就被咬一口。
 @export var contact_cooldown: float = 0.8
 
 
 @export_group("巡逻")
 ## 巡逻总开关：true（默认）= 出生后绕出生点 / 领地来回巡逻；false = 原地待机（站岗 / 悬停）。
-## 关闭后仍可被受击 / 领地触发进入战斗，战斗结束后回到巡逻状态继续待机。
-## 地面怪与飞行怪共用本开关：两边"怎么巡逻"不同（沿地往返 / 全 2D 飘移），但那是
-## 各自 patrol 状态里 _patrol_move() 的差异，开关本身没有任何分支，没必要各存一份。
+## 关闭后仍可由领地 / 受击 / 接触进入战斗，战斗结束后经 resting_state() 回到 idle。
+## 地面与飞行"怎么巡逻"的差异在各场景的 patrol 节点上，本开关无类型分支。
 @export var patrol_enabled: bool = true
 
+# ---- 以下是由配置派生的只读行为，不是配置项 ----
 ## 出生 / 战斗结束后的"驻留"状态：关巡逻＝idle，否则＝patrol。
 ## return / hurt 回流时统一走这里，避免把"关巡逻的怪"错误送回巡逻逻辑。
 func resting_state() -> StringName:
 	return EnemyStateNames.IDLE if not patrol_enabled else EnemyStateNames.PATROL
 
 @export_group("感知与仇恨")
-## 牵引（leash）半径：目标离开出生点此距离即视为"追丢"，触发 return。
+## 牵引（leash）半径（像素）：战斗中目标离出生点超过此距离即计入"丢失"计时，
+## 累计满 combat_lose_time 才收兵回巢；玩家仍在绑定领地内时不参与此判定。
 @export var leash_range: float = 700.0
-## 丢失目标后多久放弃战斗（秒），用于距离/视线丢失的宽限时间。
+## 丢失目标后多久放弃战斗（秒）：目标缺失 / 超出 leash / 失去视线任一成立即累计，
+## 条件恢复则清零；领地追击宽限期内不累计（见 zone_exit_chase_time）。
 @export var combat_lose_time: float = 10.0
-## 视线丢失判定开关：true 时超出 leash 且无视线会累计丢失时间。
+## 视线丢失判定开关：true 时目标被地形挡住也计入"丢失"计时（与 leash 是"或"关系）；
+## false 时只按目标是否存在 / 是否在 leash 内判定。
+## 射线掩码由 locomotion.sight_mask 指定，为 0 时回落本节点的 collision_mask。
 @export var use_line_of_sight: bool = true
-## 绑定的领地（AuZone / EnemyZone）：玩家在领地内时本敌人开战，离开领地后还会再追一段。
-## 留空则不通过领地触发（仍可由受击开战）。在检查器里从世界的 EnemyZones 选择对应领地。
+## 绑定的领地（AuZone；旧名 EnemyZone 按同名信号兼容）：玩家进入领地时本敌人开战，
+## 离开领地后再追 zone_exit_chase_time 秒。留空则不通过领地触发（仍可由受击开战）。
+## 在世界场景里从 EnemyZones 下选对应领地节点；未绑领地时宽限项自动隐藏。
 @export var enemy_zone: NodePath = NodePath()
-## 玩家离开领地后继续追击的时长（秒）：宽限期结束才收兵回巢，期间不再看领地条件。
-## 0 = 立刻罢手（旧行为）。宽限期内同样不判 leash / 视线丢失 ——
-## 领地常常比 leash 宽（level_1 的 EnemyZone3 有 1400px，Mosscreep 的 leash 只有 700），
-## 若仍按 leash 判，玩家刚踏出领地就可能已经"追丢"，这段追击一秒都用不上。
-## 优先级：领地宽限 > leash_range / combat_lose_time / 视线丢失（宽限期内全部短路）。
-## 因此这是"时间预算"而不是"距离预算"：怪最多再追 zone_exit_chase_time × 追击速度 那么远。
+## 玩家离开领地后继续追击的时长（秒）：0 = 立刻罢手。
+## 宽限期内不判 leash / 视线丢失 —— 领地常比 leash 宽（level_1 的领地宽 1000 / 1200px，
+## 而 leash 默认 700px），玩家刚踏出领地时往往已在 leash 之外。
+## 优先级：领地宽限 > leash / 视线 / combat_lose_time；这是"时间预算"而非"距离预算"，
+## 怪最多再追 zone_exit_chase_time × 追击速度 那么远。
 @export var zone_exit_chase_time: float = 5.0
 
 @export_group("攻击")
 ## 吐出的投射物场景：留空 = 纯近战怪，launch_projectile() 直接返回，不会报错。
-## 飞行怪与陆地怪共用：配上即拥有吐弹能力，attack 状态自动切到远程分支。
-## 本项始终可见，且决定下面攻击相关项的显隐（见 _validate_property）。
-## 值必须是 Ammo 子类的场景，换场景即换弹幕，用于做怪物个性化弹药：
-##   res://scenes/projectiles/projectile.tscn        单发直射弹（默认）
-##   res://scenes/projectiles/projectile_spread.tscn 散射弹：一发吐出 N 颗扇形散开
-##   res://scenes/projectiles/projectile_split.tscn  延迟分裂弹：母弹先飞，到点炸成 N 颗
-## 弹药可自行声明只允许某些阵营装配（见 Ammo.usable_by），越权时本函数会拒绝发射。
+## 配上即拥有吐弹能力，attack / chase 自动走远程分支。根节点必须是 Ammo 子类，
+## 且允许 ENEMY 阵营使用（见 ammo.gd 的 usable_by），否则发射时会被拒绝。
+## 可选场景（scenes/projectiles/）：projectile.tscn 单发 / projectile_spread.tscn 散射 /
+## projectile_split.tscn 延迟分裂。本项始终可见，并决定下面攻击数值项的显隐。
 @export var projectile_scene: PackedScene = null
-## 近战触发距离（像素）：与目标距离小于该值即切到 attack 状态。< 0 表示沿用 chase 状态自身的默认值。
-## 纯近战怪（未配 projectile_scene）用它；配了 projectile_scene 改用下面的 shoot_range，本项自动隐藏。
-## 地面怪与飞行怪共用：地面默认 64（贴身）、飞行默认 140（扑击），默认值各自写在 chase 状态里。
+## 近战触发距离（像素）：与目标距离小于该值即切到 attack。< 0 沿用 chase 节点默认值（64）。
+## 仅纯近战怪使用；配了 projectile_scene 时本项自动隐藏。
 @export var melee_attack_range: float = -1.0
-## 投射物携带的伤害值（setup() 时传给投射物，与 contact_damage 相互独立）。
+## 投射物携带的伤害值（发射时传给弹药），与 contact_damage 相互独立；可为 0。
+## 配了 projectile_scene 时才显示。
 @export var projectile_damage: int = 1
-## 远程射程（像素）：与目标直线距离小于该值才切到 attack 吐弹。< 0 表示沿用 chase 状态自身的默认值。
-## 地面怪与飞行怪共用：地面默认 400、飞行默认 500，默认值各自写在 chase 状态里。
+## 远程射程（像素）：与目标直线距离小于该值才切到 attack 吐弹。
+## < 0 沿用 chase 节点默认值（脚本 400；飞行场景覆盖为 500）。
 @export var shoot_range: float = -1.0
-## 两次远程攻击之间的冷却（秒）：< 0 表示沿用 chase 状态自身的默认值。
+## 两次攻击之间的冷却（秒）：远程吐弹与近战扑击共用。< 0 沿用 chase 节点默认值 1.5。
+## 近战取值建议 >= contact_cooldown，否则会出现"扑击有声、实际没打到"的空洞反馈。
 @export var attack_interval: float = -1.0
-## 远程追击时与目标保持的水平距离（像素）：< 0 表示沿用 chase 状态自身的默认值；0 = 贴脸。
-## 地面怪与飞行怪共用：地面默认 140、飞行默认 120，默认值各自写在 chase 状态里。
+## 远程追击时与目标保持的水平距离（像素）：追到该距离内就停下吐弹。
+## < 0 沿用 chase 节点默认值（脚本 140；飞行场景覆盖为 120）；0 = 贴脸，是合法覆盖值。
 @export var shoot_keep_distance: float = -1.0
 
 @export_group("掉落")
-## 死亡时掷的掉落表：留空则不掉落。建议做成 .tres 在多只怪之间复用。
+## 死亡时掷的掉落表：留空则不掉落，drop_scatter 自动隐藏。
+## 建议做成 .tres 在多只怪之间复用（见 resources/drops/enemy_basic.tres）。
 @export var drop_table: DropTable = null
 ## 掉落物相对 DropMarker 的散布半径（像素）：多个掉落物时铺开一点。
+## DropMarker 随朝向翻转；默认 28 与 DropSpawner.spawn_table 的默认值一致。
 @export var drop_scatter: float = 28.0
 
 @export_group("死亡")
-## 尸体保留时长（秒）：死亡后停留这么久才开始淡出。<= 0 表示尸体不消失，永久留在场上。
+## 尸体保留时长（秒）：死亡后停留这么久才开始淡出。<= 0 = 尸体不消失、永久留场
+## （crawlid / mosscreep / vengefly 均设为 -1）。
 @export var corpse_lifetime: float = 3.0
-## 尸体淡出时长（秒）：从完全不透明渐变到透明的耗时。<= 0 表示到点直接消失，不做渐变。
+## 尸体淡出时长（秒）：从完全不透明渐变到透明的耗时。<= 0 = 到点直接消失，不做渐变。
+## 淡出改的是根节点 modulate，所有子节点一起变化；碰撞形状在 death 状态里会更早禁用。
 @export var corpse_fade_time: float = 1.0
-## 尸体纵向偏移（像素）：死亡落地后把尸体精灵沿 y 轴挪动这么多，
-## 用于微调躺尸的纵向位置，让不同素材的尸体贴合地面（正 = 向下，负 = 向上）。0 = 不偏移。
+## 尸体纵向偏移（像素）：尸体落地 / 沉底后把精灵沿 y 轴挪动这么多，让不同素材贴合地面
+## （正 = 向下，负 = 向上）。0 = 不偏移；由 death 状态只应用一次。
 @export var corpse_y_offset: float = 0.0
 
 @export_group("转身")
-## 朝向死区（像素）：目标与自身的横向距离小于该值时**既不横移、也不翻面**。
-## 必须与横移共用这一个阈值 —— 以前"朝向按死区不动、位移按导航方向照走"，
-## 两者在玩家位于正上 / 正下方时给出相反答案，就是"walk 动画朝向反了"的根因。
-## 判据统一由 EnemySteering.step_x() 裁决，各状态不要再自己算一遍。
+## 朝向死区（像素）：目标与自身的横向距离小于该值时既不横移、也不翻面。
+## 必须与横移共用这一个阈值（判据统一由 EnemySteering.step_x() 裁决），
+## 否则目标在正上 / 正下方时朝向与位移会给出相反答案，表现为 walk 动画朝向反了。
+## decide_step_x / is_within_face_deadzone / face_toward 三处都从这一项取默认值。
 @export var face_deadzone: float = 8.0
-## 转身动作名：ActionAnimationPlayer 里的同名 clip。留空 = 关闭转身动画。
-## 每次翻面（patrol 撞墙/悬崖/端点、chase 面朝目标、return 回巢）都会自动播一次，
-## 播完自动回到当前状态声明的循环动作（move / idle）。敌人没配这个 clip 时行为与现在完全一致（瞬时翻面）。
+## 转身动作名：ActionAnimationPlayer 里的同名 clip。留空 / clip 不存在 = 关闭转身动画，
+## 翻面瞬时完成。翻面时会尝试播一次，但要过三关：clip 存在、当前在播循环动作
+## （move / idle）、距上次转身已满 turn_min_interval；播完自动回到循环动作。
+## 见 enemy_facing.gd。
 @export var turn_animation: StringName = &"turn"
-## 两次转身动画之间的最小间隔（秒）：目标在朝向死区边缘抖动时，防止把动画反复重放到卡顿。
+## 两次转身动画之间的最小间隔（秒）：目标在死区边缘抖动时，防止把动画反复重放到卡顿。
 @export var turn_min_interval: float = 0.2
 
 @export_group("音效")
-## 只在镜头内发声：true 时本敌人的所有音效（attack / hurt / death / walk …）都要求
-## 自己位于当前镜头可视矩形内才播放。屏幕外很远就开打、远远吐弹的敌人不该把声音送进耳朵。
-## 置 false 可退回"无条件播放"（此时仍受 sfx_max_distance 衰减限制）。
+## 只在镜头内发声：true 时本敌人 Audio 下的所有音效（attack / hurt / death / walk …）
+## 都要求自身位于当前镜头可视矩形内才播放；屏幕外很远就开打、吐弹的敌人不该出声。
+## 置 false = 无条件播放（仍受 sfx_max_distance 距离衰减限制，且 sfx_screen_margin 自动隐藏）。
 @export var sfx_only_on_screen: bool = true
 ## 可视矩形外扩（像素）：刚走出画面的敌人仍允许发声，避免声音在画面边缘被硬切。
 ## sfx_only_on_screen = false 时本项自动隐藏。
 @export var sfx_screen_margin: float = 240.0
 ## 音效衰减到静音的距离（像素）：_ready 时写入本敌人所有 AudioStreamPlayer2D.max_distance。
-## AudioStreamPlayer2D 默认 2000 太远（本作 1 单位 = 96 像素），隔着大半张地图的攻击声都听得见。
-## 默认取略大于一屏对角线（1920×1080 的对角线半径约 1100），保证画面内的声音不会提前闷掉。
+## 引擎默认 2000 太远（本作 1 格 = 96 像素），隔着大半张地图的攻击声都听得见；
+## 默认取略大于一屏半对角线（1920×1080 约 1100），保证画面内的声音不会提前闷掉。
 @export var sfx_max_distance: float = 1400.0
 ## 衰减曲线指数：越大越"近处响、远处迅速变轻"，1 = 引擎默认。
 @export_range(0.1, 6.0) var sfx_attenuation: float = 1.0
 
-## 抵达导航目标的判定距离（像素）：小于该值视为已到达并停止移动。
-## 导航内部参数，默认值已够用，故不在检查器显示；确需调整时直接改 .tscn 即可。
+@export_group("高级")
+## 击退的指数衰减速率（每秒），与物理帧率解耦：每帧乘子 = exp(-rate * delta)。
+## 默认 30.65 ≈ 60Hz 下"每帧衰减 0.4"（保留 0.6）。
+@export var knockback_decay_rate: float = 30.65
+## 抵达导航目标的判定距离（像素）：小于该值视为已到达并停止移动，
+## 同时用于 patrol 状态的端点判定。默认值已够用，故不在检查器显示（@export_storage）；
+## 确需调整时直接改 .tscn 里的 nav_arrive_distance。
 @export_storage var nav_arrive_distance: float = 4.0
 
 #endregion
@@ -230,6 +270,9 @@ func resting_state() -> StringName:
 
 #region 运行时状态
 
+# 这一段全部不导出：由配置区的导出项在 _ready 换算，或由状态机逐帧维护。
+# Inspector 里看不到；调手感请改配置区，别在这里直接改数值（同 player.gd 的"运行时量"约定）。
+
 ## 出生点：用于 return 状态归位与 leash 范围判定，_ready 时记录。
 var spawn_position: Vector2 = Vector2.ZERO
 
@@ -256,9 +299,6 @@ var combat_active: bool:
 var health: int
 var move_direction: int = 1
 var knockback: Vector2 = Vector2.ZERO
-## 击退的指数衰减速率（每秒），与物理帧率解耦：实际每帧乘子 = exp(-rate * delta)。
-## 默认 30.65 ≈ 60Hz 下"每帧衰减 0.4"（保留 0.6）。
-@export var knockback_decay_rate: float = 30.65
 var dead: bool = false
 var invincible: bool = false
 
@@ -462,6 +502,13 @@ func is_invulnerable() -> bool:
 	return dead or invincible
 
 
+## 是否处于"剧情/过场锁定"（BOSS 沉睡、入场演出等）。基类默认 false，
+## Boss 在基类按 cutscene_states 状态名统一实现（见 _base/boss.gd）。
+## 玩家侧据此把攻击整体穿透 —— 连受击特效、能量、recoil 都不触发。
+func is_cutscene_invulnerable() -> bool:
+	return false
+
+
 func take_damage(amount: int, from: Node2D = null) -> void:
 	if is_invulnerable():
 		return
@@ -497,7 +544,8 @@ func _dead() -> void:
 
 ## 死亡后尸体的淡出清理：先停留 corpse_lifetime 秒，再用 corpse_fade_time 秒淡出并移除节点。
 ## 淡出改的是根节点 modulate，会沿画布层级传递给所有子节点（精灵、血条等）一起消失。
-## 物理体保留到最后一刻，因此尸体在淡出期间仍可被踩踏/遮挡；如需立即不挡路，把 corpse_lifetime 调小。
+## 注意碰撞形状由 death 状态在尸体落地时就已禁用，淡出期间尸体不再挡路；
+## 想让尸体更早消失把 corpse_lifetime 调小，<= 0 则永不消失。
 func _start_corpse_fade() -> void:
 	if corpse_lifetime <= 0.0:
 		return
@@ -508,7 +556,8 @@ func _start_corpse_fade() -> void:
 	tween.tween_callback(queue_free)
 
 ## 死亡掉落：位置取 DropMarker（已随朝向翻转），交给 DropSpawner 统一生成。
-## 生成放在 _dead() 而非 take_damage()，因此死亡动画播完（0.5s 方法轨道）才爆物品。
+## 挂在 _dead() 上，血量归零或被 kill() 时立即结算；death 动画 0.5s 方法轨道里的
+## 第二次 _dead() 会被 dead 守卫挡掉，不会重复掉落。
 func _drop_loot() -> void:
 	if drop_table == null:
 		return
@@ -686,8 +735,12 @@ func has_projectile() -> bool:
 #region 检查器显隐
 
 ## 检查器减负：按当前配置隐藏用不上的导出项，只影响编辑器显示，不改变数值与序列化。
-## 例：近战怪未配 projectile_scene → 隐藏全部远程项。
-## 子类（EnemyGround 等）若要追加规则，重写后先调用 super._validate_property(property)。
+## 当前规则（即配置区总述第 5 条）：
+##   projectile_scene 决定显 melee_attack_range 还是显四个远程数值项；
+##   contact_damage_enabled 管 contact_damage / contact_cooldown；
+##   drop_table 管 drop_scatter；sfx_only_on_screen 管 sfx_screen_margin；
+##   enemy_zone 管 zone_exit_chase_time。
+## 子类若要追加规则，重写后先调用 super._validate_property(property)（目前无子类重写）。
 ## 注意：新增一种运动介质通常**不需要**改这里 —— 介质专属参数应挂在对应的
 ## EnemyLocomotion 资源上（如 SwimmingLocomotion），而不是往基类继续堆导出项。
 func _validate_property(property: Dictionary) -> void:

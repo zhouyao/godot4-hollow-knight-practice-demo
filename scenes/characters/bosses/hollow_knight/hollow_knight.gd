@@ -18,30 +18,23 @@ signal guard_broken(from: Node2D)
 
 ## 继承链上的 _ready：Enemy 里会解析 tuning / 音频 / 朝向 / 领地并启动状态机，所以必须先 super。
 func _ready() -> void:
+	# 过场锁定集由 Boss 基类统一判定；必须在 super._ready() 之前填 ——
+	# Enemy._ready() 会启动状态机并立刻进 dormant，晚一帧就有可乘之机。
+	cutscene_states = [
+		BossStateNames.DORMANT,
+		BossStateNames.DORMANT_END,
+		BossStateNames.SCREAM,
+	]
 	super._ready()
 	# 悬崖探测器跟着朝向换边：只影响编辑器 / 调试里的可视化。
 	# 判定由 Boss.has_ground_ahead() 按"传入方向 + absf(position.x)"即时计算，与节点当前朝向无关。
 	flip_nodes = [ground_probe_path]
 
 ## ---- 过场锁定：沉睡 / 苏醒坠落 / 苏醒吼叫期间不可被玩家攻击 ----
-## 这三态都属于"过场"：玩家从开局进领地、到砍断四根锁链、再到吼叫结束，全程打不掉血。
+## 状态名列表在 _ready() 里填给 Boss.cutscene_states；判定（is_cutscene_invulnerable /
+## is_invulnerable）由 Boss 基类统一实现，玩家侧 player.gd 与本类 take_damage 共用一份判据。
 ## 用"当前状态名"判定而不是再靠一个布尔：状态一离开锁定集（进入 idle）就自动解锁，
 ## 不需要任何状态记得去关 —— 也不会被受击无敌计时器超时误清。
-const CUTSCENE_STATES: Array[StringName] = [
-	BossStateNames.DORMANT,
-	BossStateNames.DORMANT_END,
-	BossStateNames.SCREAM,
-]
-
-## 是否处于过场锁定。状态机未启动 / 状态名未知时按"锁定"处理：宁可多无敌，不可误伤。
-func is_cutscene_invulnerable() -> bool:
-	if state_machine == null or state_machine.current_state_name == &"":
-		return true
-	return state_machine.current_state_name in CUTSCENE_STATES
-
-## 覆盖基类：受击无敌帧 / 死亡之外，再叠一层过场锁定。
-func is_invulnerable() -> bool:
-	return super.is_invulnerable() or is_cutscene_invulnerable()
 
 func take_damage(amount: int, from: Node2D = null) -> void:
 	# 过场锁定 / 受击无敌帧 / 死亡：整体拒绝，连招架、背刺破招、阶段切换都不触发。

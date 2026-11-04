@@ -35,6 +35,28 @@ func play_action(anim_name: StringName) -> void:
 	if boss != null:
 		boss._play_action(anim_name)
 
+## 站定一帧：清水平速度 → 垂直运动 → 位移 → 可选接触伤害。
+## 重写了 update() 的状态必须自己调它 —— 走不到 EnemyState.update() 里的 _tick_contact()，
+## 否则 contact_damage_enabled 形同虚设。tick_contact=false 用于过场 / 不蹭人的待机
+## （由 BossDecisionState.contact_damage_in_idle 决定），招式里临时关接触伤害的相位也传 false。
+func stand_still(delta: float, tick_contact: bool = true) -> void:
+	if boss == null:
+		return
+	boss.velocity.x = 0.0
+	boss._apply_vertical_motion(delta)
+	boss._apply_movement()
+	if tick_contact:
+		_tick_contact()
+
+## 从头重播动作：同名的 play() 不保证重头开始，先 stop 再 play。
+## 动画不存在 / AnimationPlayer 缺失时静默跳过（与 play_action 同规格）。
+func restart_action(anim_name: StringName) -> void:
+	var ap := boss.action_animation_player if boss != null else null
+	if ap == null or not ap.has_animation(anim_name):
+		return
+	ap.stop()
+	ap.play(anim_name)
+
 ## 仅当状态机此刻仍停留在本状态（按节点名比对）时才切到 target。
 ## 用于"收招 / 演出结束"这类由计时器、动画信号触发的切换：期间若已被受击、
 ## 阶段切换或别的招式打断，就不该再把人拽回原定状态。

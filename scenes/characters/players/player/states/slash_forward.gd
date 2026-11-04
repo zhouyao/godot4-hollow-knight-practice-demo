@@ -7,9 +7,11 @@ extends PlayerState
 func _init() -> void:
 	is_attack = true
 
+@export_group("行为 Behavior")
 ## 前刺动作的最短持续时间（秒）：期间不接受过渡，保证挥砍不被打断。
 @export var hold_time: float = 0.3
 
+@export_group("状态过渡 Transitions")
 ## 动作结束且已落地时切往的状态（一般是 idle）；还在空中则交给 airborne_transition()。
 @export var target_next: StringName = PlayerStateNames.IDLE
 

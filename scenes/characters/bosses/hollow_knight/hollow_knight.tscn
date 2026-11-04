@@ -1519,6 +1519,15 @@ metadata/_custom_type_script = "uid://dqmtw6yfnqi47"
 
 [node name="idle" type="Node" parent="StateMachine" index="2" unique_id=2075357031]
 script = ExtResource("5_634ro")
+contact_damage_in_idle = false
+cooldowns = {
+&"counter": 2.0,
+&"dash": 5.0,
+&"down_smash": 6.0,
+&"evade": 2.0,
+&"teleport": 5.0,
+&"teleport_smash": 6.0
+}
 metadata/_custom_type_script = "uid://cu6qksho5qatb"
 
 [node name="slash" type="Node" parent="StateMachine" index="3" unique_id=172351794]

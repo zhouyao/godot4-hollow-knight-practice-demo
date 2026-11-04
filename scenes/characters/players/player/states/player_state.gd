@@ -26,9 +26,17 @@ func update(delta: float) -> void:
 	player._apply_movement()
 
 func handle_input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"jump") and player.is_on_floor():
-		player.velocity.y = player.max_jump_velocity
-	if event.is_action_released(&"jump") and player.velocity.y < player.min_jump_velocity:
+	# 地面跳 / 土狼跳 / 空中振翅统一交给玩家裁决，这里只负责把结果切进对应状态。
+	if event.is_action_pressed(&"jump"):
+		var jump_state := player.try_jump()
+		if jump_state != &"":
+			if machine != null:
+				machine.set_state(jump_state, true)
+			return
+		# 条件不满足（振翅用完 / 还没落地）：记一笔缓冲，落地瞬间自动补跳。
+		player.buffer_jump()
+	elif event.is_action_released(&"jump") and player.velocity.y < player.min_jump_velocity:
+		# 松键截断对地面跳与振翅一视同仁：按住越久跳得越高。
 		player.velocity.y = player.min_jump_velocity
 	if _try_cast_skill(event):
 		return

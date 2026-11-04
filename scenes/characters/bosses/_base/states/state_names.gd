@@ -29,6 +29,10 @@ const IDLE: StringName = &"idle"
 const SLASH: StringName = &"slash"
 ## 瞬移（出现在玩家身边后接 slash）。
 const TELEPORT: StringName = &"teleport"
+## 召唤：四魂球环绕齐射（summon_start 起手生成 → summon 循环漂移）。
+const SUMMON: StringName = &"summon"
+## 下砸冲击波：瞬移到玩家头顶悬停 → 高速下坠 → 落地 AoE + 左右各一道贴地冲击波。
+const QUAKE: StringName = &"quake"
 ## 冲刺本体（相位推进在状态内部，不额外拆节点）。
 const DASH: StringName = &"dash"
 ## 招架反击（起手 / 窗口 / 反击 / 收尾都在状态内部的相位里）。

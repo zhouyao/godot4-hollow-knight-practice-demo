@@ -42,9 +42,7 @@ func update(delta: float) -> void:
 	if boss == null:
 		return
 	# 瞬移期间完全站定（含重力落定），不漂移、不结算接触伤害。
-	boss.velocity.x = 0.0
-	boss._apply_vertical_motion(delta)
-	boss._apply_movement()
+	stand_still(delta, false)
 
 	match _phase:
 		_Phase.OUT:

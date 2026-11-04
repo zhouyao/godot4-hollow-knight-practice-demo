@@ -18,21 +18,29 @@
 [ext_resource type="AudioStream" uid="uid://dhx6s41cw58ty" path="res://assets/sounds/characters/bosses/soul_master/roar.ogg" id="6_77din"]
 [ext_resource type="Texture2D" uid="uid://dsl5gwo6ssxf2" path="res://assets/animations/characters/bosses/soul_master/death/3.png" id="6_kjrk5"]
 [ext_resource type="Texture2D" uid="uid://u6t32ulekcwb" path="res://assets/animations/characters/bosses/soul_master/dash_start/0.png" id="6_l4wxk"]
+[ext_resource type="Script" uid="uid://dwwxe4ubt4uj" path="res://scenes/characters/bosses/soul_master/states/dormant.gd" id="7_dorm"]
 [ext_resource type="Texture2D" uid="uid://dvcct073omyd4" path="res://assets/animations/characters/bosses/soul_master/idle/4.png" id="7_j3xts"]
 [ext_resource type="Texture2D" uid="uid://ca7cf3g0xrkg0" path="res://assets/animations/characters/bosses/soul_master/dash_start/1.png" id="7_qbcd7"]
 [ext_resource type="Texture2D" uid="uid://dju5mxcsu177d" path="res://assets/animations/characters/bosses/soul_master/death/4.png" id="7_y1e1l"]
 [ext_resource type="Texture2D" uid="uid://omw1wlf6bu6l" path="res://assets/animations/characters/bosses/soul_master/death/5.png" id="8_6wrtd"]
 [ext_resource type="Texture2D" uid="uid://d2d346btah8cj" path="res://assets/animations/characters/bosses/soul_master/idle/5.png" id="8_0557o"]
+[ext_resource type="Resource" path="res://resources/characters/enemies/_shared/locomotion/flying.tres" id="8_loco"]
 [ext_resource type="Texture2D" uid="uid://btbp5lu1twxb5" path="res://assets/animations/characters/bosses/soul_master/dash_start/2.png" id="8_qyo0a"]
 [ext_resource type="Texture2D" uid="uid://cy08833fas1qg" path="res://assets/animations/characters/bosses/soul_master/dash_start/3.png" id="9_2r6mc"]
 [ext_resource type="Texture2D" uid="uid://bkwxcl0e8ilyo" path="res://assets/animations/characters/bosses/soul_master/death/6.png" id="9_60w7i"]
+[ext_resource type="Script" uid="uid://brxh1hgf2j0r" path="res://scenes/characters/bosses/soul_master/states/death.gd" id="9_dth"]
+[ext_resource type="AudioStream" uid="uid://b6ks6b061v6je" path="res://assets/sounds/characters/bosses/soul_master/teleport.ogg" id="10_7j204"]
+[ext_resource type="Script" uid="uid://bx0ynw1ygcsak" path="res://scenes/characters/bosses/soul_master/states/summon.gd" id="10_8hpsq"]
 [ext_resource type="Texture2D" uid="uid://cjww8mici26vy" path="res://assets/animations/characters/bosses/soul_master/dash_start/4.png" id="10_evxlf"]
 [ext_resource type="Texture2D" uid="uid://jqby1rusbjl" path="res://assets/animations/characters/bosses/soul_master/dash_start/5.png" id="11_ntc8i"]
+[ext_resource type="Script" uid="uid://s0nm0400y2fr" path="res://scenes/characters/bosses/soul_master/states/dash.gd" id="12_wxo8e"]
+[ext_resource type="AudioStream" uid="uid://baipsfgb7iq3x" path="res://assets/sounds/characters/bosses/soul_master/ground.ogg" id="24_iob8l"]
 [ext_resource type="Texture2D" uid="uid://rkrqniglhrga" path="res://assets/animations/characters/bosses/soul_master/teleport/0.png" id="25_gdyqg"]
 [ext_resource type="Texture2D" uid="uid://dlg64r2acsgda" path="res://assets/animations/characters/bosses/soul_master/quake_down/Quake.png" id="25_gvvkx"]
 [ext_resource type="Texture2D" uid="uid://bfdx7agh8s7ms" path="res://assets/animations/characters/bosses/soul_master/quake_air/StartQuake.png" id="25_smtyn"]
 [ext_resource type="Texture2D" uid="uid://c8msgx8sw7rgl" path="res://assets/animations/characters/bosses/soul_master/teleport/1.png" id="26_67kj0"]
 [ext_resource type="Texture2D" uid="uid://b2rrgca10xp3l" path="res://assets/animations/characters/bosses/soul_master/teleport/2.png" id="27_4fwk6"]
+[ext_resource type="Texture2D" uid="uid://bfoo2dyie03x3" path="res://assets/animations/characters/bosses/soul_master/quake_down_tail/0.png" id="27_o7t6m"]
 [ext_resource type="Texture2D" uid="uid://cwaqvpbwn5s0b" path="res://assets/animations/characters/bosses/soul_master/summon/0.png" id="27_wetfh"]
 [ext_resource type="Texture2D" uid="uid://dso8wtcruegpu" path="res://assets/animations/characters/bosses/soul_master/teleport/3.png" id="28_b6iid"]
 [ext_resource type="Texture2D" uid="uid://bls32ikwqfrh3" path="res://assets/animations/characters/bosses/soul_master/summon/1.png" id="28_nrbbf"]
@@ -48,14 +56,78 @@
 [ext_resource type="Texture2D" uid="uid://yy1eoo5yixsf" path="res://assets/animations/characters/bosses/soul_master/summon_start/2.png" id="33_p2y33"]
 [ext_resource type="Texture2D" uid="uid://bycd7bmvfsnrr" path="res://assets/animations/characters/bosses/soul_master/teleport_effect/2.png" id="34_smtyn"]
 [ext_resource type="Texture2D" uid="uid://bifova32ybqly" path="res://assets/animations/characters/bosses/soul_master/teleport_effect/3.png" id="35_kngdi"]
-[ext_resource type="Texture2D" uid="uid://e4d1qkow2ksx" path="res://assets/animations/characters/bosses/soul_master/_environment/roar_effect.png" id="44_3ujpu"]
 [ext_resource type="AudioStream" uid="uid://06diy6eonaet" path="res://assets/sounds/characters/bosses/soul_master/bgm.ogg" id="50_tlrax"]
-[ext_resource type="Script" path="res://scenes/characters/bosses/soul_master/states/dormant.gd" id="7_dorm"]
-[ext_resource type="Resource" path="res://resources/characters/enemies/_shared/locomotion/flying.tres" id="8_loco"]
-[ext_resource type="Script" path="res://scenes/characters/bosses/soul_master/states/death.gd" id="9_dth"]
+[ext_resource type="AudioStream" uid="uid://cje4kn1gthm4u" path="res://assets/sounds/characters/bosses/soul_master/cast_0.ogg" id="60_cst0"]
+[ext_resource type="AudioStream" uid="uid://ckkr5hlvjcy16" path="res://assets/sounds/characters/bosses/soul_master/cast_1.ogg" id="61_cst1"]
+[ext_resource type="AudioStream" uid="uid://cxg0053255svo" path="res://assets/sounds/characters/bosses/soul_master/cast_2.ogg" id="62_cst2"]
+[ext_resource type="AudioStream" uid="uid://3l5g1s3ey03c" path="res://assets/sounds/characters/bosses/soul_master/cast_3.ogg" id="63_cst3"]
+[ext_resource type="Texture2D" uid="uid://dk5qnj5riqdq1" path="res://assets/animations/characters/bosses/soul_master/quake_effect/0.png" id="63_da52v"]
+[ext_resource type="Texture2D" uid="uid://diljfl8yv2vtb" path="res://assets/animations/characters/bosses/soul_master/quake_effect/1.png" id="64_q4ujc"]
+[ext_resource type="Script" uid="uid://be225sdkistng" path="res://scenes/characters/bosses/soul_master/states/teleport.gd" id="64_tlp"]
+[ext_resource type="AudioStream" uid="uid://b75a2486f4o4a" path="res://assets/sounds/characters/bosses/soul_master/angry_0.ogg" id="65_ang0"]
+[ext_resource type="Texture2D" uid="uid://c8pb017bgts1e" path="res://assets/animations/characters/bosses/soul_master/quake_effect/2.png" id="65_wxo8e"]
+[ext_resource type="AudioStream" uid="uid://ngwu0ufnh187" path="res://assets/sounds/characters/bosses/soul_master/angry_1.ogg" id="66_ang1"]
+[ext_resource type="Texture2D" uid="uid://p84715bbvq5q" path="res://assets/animations/characters/bosses/soul_master/quake_effect/3.png" id="66_o7t6m"]
+[ext_resource type="AudioStream" uid="uid://7errgmyp6476" path="res://assets/sounds/characters/bosses/soul_master/angry_2.ogg" id="67_ang2"]
+[ext_resource type="Texture2D" uid="uid://d113x3xs6mw7j" path="res://assets/animations/characters/bosses/soul_master/quake_effect/4.png" id="67_ofjkc"]
+[ext_resource type="AudioStream" uid="uid://dr8dj5bbfmit" path="res://assets/sounds/characters/bosses/soul_master/angry_3.ogg" id="68_ang3"]
+[ext_resource type="AudioStream" uid="uid://10d6rgnvn6n6" path="res://assets/sounds/characters/bosses/soul_master/angry_4.ogg" id="69_ang4"]
+[ext_resource type="AudioStream" uid="uid://bs2k3ossmfciy" path="res://assets/sounds/characters/bosses/soul_master/angry_5.ogg" id="70_ang5"]
+[ext_resource type="AudioStream" uid="uid://bu3yhb8baslig" path="res://assets/sounds/characters/bosses/soul_master/angry_6.ogg" id="71_ang6"]
+[ext_resource type="Script" uid="uid://b0n0pv6kvgyxe" path="res://scenes/characters/bosses/soul_master/states/quake.gd" id="72_qk"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_magkm"]
 radius = 142.08
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ofjkc"]
+atlas = ExtResource("27_o7t6m")
+region = Rect2(0, 0, 103, 413)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_de66q"]
+atlas = ExtResource("27_o7t6m")
+region = Rect2(103, 0, 103, 413)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tajth"]
+atlas = ExtResource("27_o7t6m")
+region = Rect2(206, 0, 103, 413)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x8hi1"]
+atlas = ExtResource("27_o7t6m")
+region = Rect2(309, 0, 103, 413)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2pqcj"]
+atlas = ExtResource("27_o7t6m")
+region = Rect2(412, 0, 103, 413)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xyj04"]
+atlas = ExtResource("27_o7t6m")
+region = Rect2(515, 0, 103, 413)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wxo8e"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ofjkc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_de66q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tajth")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x8hi1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2pqcj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xyj04")
+}],
+"loop": 0,
+"name": &"quake_down_tail",
+"speed": 5.0
+}]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y3tf2"]
 atlas = ExtResource("25_smtyn")
@@ -261,12 +333,24 @@ animations = [{
 [sub_resource type="SpriteFrames" id="SpriteFrames_gdyqg"]
 animations = [{
 "frames": [{
-"duration": 1.0,
-"texture": ExtResource("44_3ujpu")
+"duration": 0.8,
+"texture": ExtResource("63_da52v")
+}, {
+"duration": 0.8,
+"texture": ExtResource("64_q4ujc")
+}, {
+"duration": 0.8,
+"texture": ExtResource("65_wxo8e")
+}, {
+"duration": 0.8,
+"texture": ExtResource("66_o7t6m")
+}, {
+"duration": 0.8,
+"texture": ExtResource("67_ofjkc")
 }],
 "loop": 0,
-"name": &"roar_effect",
-"speed": 1.0
+"name": &"quake_effect",
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -311,6 +395,102 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [&"teleport_effect"]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Animation/EffectAnimatedSprite:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Audio/teleport:playing")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Audio/ground:playing")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"quake_down"]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Animation/AnimatedSprite2D:animation")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"quake_down_tail"]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Animation/AnimatedSprite2D:visible")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Animation/AnimatedSprite2D:frame")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [5]
 }
 
 [sub_resource type="Animation" id="Animation_7kjjp"]
@@ -366,6 +546,20 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3, 4, 5]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.76666665),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"play_random_angry_sound"
+}]
 }
 
 [sub_resource type="Animation" id="Animation_smtyn"]
@@ -426,6 +620,231 @@ tracks/1/keys = {
 "values": [0, 1, 2, 3, 4, 5]
 }
 
+[sub_resource type="Animation" id="Animation_iob8l"]
+resource_name = "quake_air"
+length = 1.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"quake_air"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(1),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"play_random_cast_sound"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_lmita"]
+resource_name = "quake_down"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.53333336),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"quake_down", &"summon_start"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Animation/EffectAnimatedSprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.13333334, 0.26666668, 0.4, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Animation/EffectAnimatedSprite:animation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"quake_effect"]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Animation/EffectAnimatedSprite:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.76666665),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Audio/ground:playing")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.06666668),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Animation/AnimatedSprite2D:frame")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0.1, 0.23333332, 0.36666667, 0.5, 0.6333333, 0.73333335),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1.035265, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Animation/AnimatedSprite2D:visible")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.76666665),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Animation/AnimatedSprite2D:animation")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"quake_down_tail"]
+}
+
+[sub_resource type="Animation" id="Animation_m117r"]
+resource_name = "summon"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"summon"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_8hpsq"]
+resource_name = "summon_start"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Animation/EnemyAnimatedSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"summon_start"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Animation/EnemyAnimatedSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.16666667, 0.33333334),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.4666667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"play_random_angry_sound"
+}]
+}
+
 [sub_resource type="Animation" id="Animation_y3tf2"]
 resource_name = "teleport"
 length = 1.4
@@ -477,6 +896,44 @@ tracks/3/keys = {
 "update": 1,
 "values": [&"teleport_effect"]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Animation/EffectAnimatedSprite:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 1.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Audio/teleport:playing")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.16666667),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/6/type = "method"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(1),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"play_random_cast_sound"
+}]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_utio7"]
 _data = {
@@ -485,16 +942,21 @@ _data = {
 &"dash_start": SubResource("Animation_gvvkx"),
 &"death": SubResource("Animation_smtyn"),
 &"idle": SubResource("Animation_kngdi"),
+&"quake_air": SubResource("Animation_iob8l"),
+&"quake_down": SubResource("Animation_lmita"),
+&"summon": SubResource("Animation_m117r"),
+&"summon_start": SubResource("Animation_8hpsq"),
 &"teleport": SubResource("Animation_y3tf2")
 }
 
-[node name="Boss" unique_id=170488292 instance=ExtResource("1_e4ahp")]
+[node name="SoulMaster" unique_id=170488292 instance=ExtResource("1_e4ahp")]
 script = ExtResource("2_6ncju")
+teleport_area = Rect2(0, 0, 0, 0)
 max_health = 100
 initial_health = 3
+locomotion = ExtResource("8_loco")
 drop_table = ExtResource("3_ct8p8")
 corpse_lifetime = 3.0
-locomotion = ExtResource("8_loco")
 
 [node name="entrance" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="0" unique_id=1741521293]
 script = ExtResource("4_p2y33")
@@ -502,6 +964,12 @@ metadata/_custom_type_script = "uid://bbn7qrag258t1"
 
 [node name="idle" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="1" unique_id=1708482697]
 script = ExtResource("5_nv7c8")
+cooldowns = {
+&"dash": 4.0,
+&"quake": 9.0,
+&"summon": 6.0,
+&"teleport": 2.0
+}
 metadata/_custom_type_script = "uid://bxo8s1o3rcvgh"
 
 [node name="dormant" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="2" unique_id=1289209417]
@@ -510,27 +978,123 @@ script = ExtResource("7_dorm")
 [node name="death" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="3" unique_id=1720945311]
 script = ExtResource("9_dth")
 
+[node name="teleport" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="4" unique_id=1800000001]
+script = ExtResource("64_tlp")
+area_scale = Vector2(0.8, 0.8)
+area_anchor = Vector2(0.5, 0.6)
+fallback_length = 1.0
+metadata/_custom_type_script = "uid://be225sdkistng"
+
+[node name="summon" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="5" unique_id=1080881081]
+script = ExtResource("10_8hpsq")
+drift_duration = 2.5
+orb_offsets = Array[Vector2]([Vector2(0, -250), Vector2(0, 250), Vector2(-250, 0), Vector2(250, 0)])
+orb_diameter = 80.0
+orb_speed = 400.0
+orb_detach_time = 3.0
+orb_lifetime = 7.0
+metadata/_custom_type_script = "uid://bx0ynw1ygcsak"
+
+[node name="quake" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="6" unique_id=1800000002]
+script = ExtResource("72_qk")
+air_height = 600.0
+wave_speed = 600.0
+wave_lifetime = 7.0
+waves_per_side = 3
+wave_speed_falloff = 0.7
+metadata/_custom_type_script = "uid://b0n0pv6kvgyxe"
+
+[node name="dash" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="7" unique_id=1431676176]
+script = ExtResource("12_wxo8e")
+drop_speed = 2000.0
+dash_speed = 1000.0
+metadata/_custom_type_script = "uid://s0nm0400y2fr"
+
 [node name="entrance" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="1" unique_id=1841063679]
 stream = ExtResource("6_77din")
+bus = &"Sound"
+
+[node name="teleport" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="2" unique_id=445825190]
+stream = ExtResource("10_7j204")
+bus = &"Sound"
+
+[node name="cast0" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="3" unique_id=1957669819]
+stream = ExtResource("60_cst0")
+bus = &"Sound"
+
+[node name="cast1" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="4" unique_id=989380288]
+stream = ExtResource("61_cst1")
+bus = &"Sound"
+
+[node name="cast2" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="5" unique_id=2085854885]
+stream = ExtResource("62_cst2")
+bus = &"Sound"
+
+[node name="cast3" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="6" unique_id=1702993146]
+stream = ExtResource("63_cst3")
+bus = &"Sound"
+
+[node name="angry0" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="7" unique_id=1700000011]
+stream = ExtResource("65_ang0")
+bus = &"Sound"
+
+[node name="angry1" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="8" unique_id=1700000012]
+stream = ExtResource("66_ang1")
+bus = &"Sound"
+
+[node name="angry2" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="9" unique_id=1700000013]
+stream = ExtResource("67_ang2")
+bus = &"Sound"
+
+[node name="angry3" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="10" unique_id=1700000014]
+stream = ExtResource("68_ang3")
+bus = &"Sound"
+
+[node name="angry4" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="11" unique_id=1700000015]
+stream = ExtResource("69_ang4")
+bus = &"Sound"
+
+[node name="angry5" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="12" unique_id=1700000016]
+stream = ExtResource("70_ang5")
+bus = &"Sound"
+
+[node name="angry6" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="13" unique_id=1700000017]
+stream = ExtResource("71_ang6")
+bus = &"Sound"
+
+[node name="ground" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="14" unique_id=211555882]
+stream = ExtResource("24_iob8l")
 bus = &"Sound"
 
 [node name="BodyCollisionShape2D" parent="." index="4" unique_id=1005066086]
 shape = SubResource("CircleShape2D_magkm")
 
-[node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="0" unique_id=1331468369]
-sprite_frames = SubResource("SpriteFrames_e4ahp")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="0" unique_id=397079005]
+position = Vector2(0, -300)
+sprite_frames = SubResource("SpriteFrames_wxo8e")
+animation = &"quake_down_tail"
+frame = 5
 
-[node name="EffectAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="1" unique_id=2028615876]
+[node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="1" unique_id=1331468369]
+sprite_frames = SubResource("SpriteFrames_e4ahp")
+animation = &"quake_down"
+
+[node name="EffectAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="2" unique_id=2028615876]
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_gdyqg")
 animation = &"teleport_effect"
-frame = 3
 
-[node name="ActionAnimationPlayer" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="2" unique_id=609070108]
+[node name="ActionAnimationPlayer" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="3" unique_id=609070108]
 libraries/ = SubResource("AnimationLibrary_utio7")
+
+[node name="CollisionShape2D" parent="MeleeHitBox" parent_id_path=PackedInt32Array(1001674404) index="0" unique_id=1209468046]
+polygon = PackedVector2Array(0, -138, 100, -102, 141, -6, 114, 91, 1, 144, -109, 96, -142, 2, -113, -83)
+
+[node name="Debug" parent="." index="7" unique_id=1659399408]
+y_offset = -60.0
 
 [node name="BGM" type="AudioStreamPlayer2D" parent="." index="8" unique_id=1848578009]
 stream = ExtResource("50_tlrax")
-bus = &"Music"
 volume_db = -4.0
 attenuation = 0.0
+bus = &"Music"

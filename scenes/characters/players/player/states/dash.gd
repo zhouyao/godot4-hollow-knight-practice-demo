@@ -1,13 +1,16 @@
 extends PlayerState
 
 ## 冲刺：沿朝向前冲 dash_distance，期间不受重力、不吃移动输入，且全程免疫伤害（无敌帧）。
-## 可被跳跃（需站在地面）与任意挥砍打断；结束后按是否落地回到 idle 或 fall。
+## 可被跳跃（地面跳 / 空中振翅）与任意挥砍打断；结束后按是否落地回到 idle 或 fall。
 ## 施放入口在 PlayerState._try_cast_skill：技能条槽位里装了 id 为 dash 的技能才会进这个状态。
 ## 能量在这里挂钩子是不够的——准入检查在施放入口做（能量不够根本不进这个状态），
 ## enter() 只负责按 SkillDefinition.energy_cost 记账，与冷却一样"起手即扣、打断不退"。
 
 
+@export_group("状态过渡 Transitions")
+## 冲刺结束且已落地时切往的状态（一般是 idle）。
 @export var target_grounded: StringName = PlayerStateNames.IDLE
+## 冲刺结束仍在空中时切往的状态（一般是 fall）。
 @export var target_airborne: StringName = PlayerStateNames.FALL
 
 ## 动画速度倍率上限，防止 dash_duration 调得过短导致动画快到看不清。
@@ -59,13 +62,16 @@ func update(_delta: float) -> void:
 	player._apply_movement()
 
 
-## 冲刺中途可被 jump（需站在地面）与任意挥砍打断，不必等 dash_duration 走完。
+## 冲刺中途可被跳跃（地面跳 / 空中振翅）与任意挥砍打断，不必等 dash_duration 走完。
+## 跳跃沿用 PlayerInitial.try_jump 的裁决，避免冲刺中绕开振翅次数统计。
 ## 挥砍统一交给 on_attack_pressed() 分流（上挑 / 下劈 / 前刺），只屏蔽 _try_cast_skill 的二次冲刺。
 func handle_input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"jump") and player.is_on_floor():
-		player.velocity.y = player.max_jump_velocity
-		machine.set_state(PlayerStateNames.JUMP, true)
-		return
+	if event.is_action_pressed(&"jump"):
+		var jump_state := player.try_jump()
+		if jump_state != &"":
+			machine.set_state(jump_state, true)
+			return
+		player.buffer_jump()
 	if event.is_action_pressed(ATTACK_ACTION):
 		on_attack_pressed()
 

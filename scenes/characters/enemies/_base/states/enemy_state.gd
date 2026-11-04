@@ -100,8 +100,9 @@ func _flash_white(duration: float = -1.0) -> void:
 ## 目标在正上 / 正下方时给出相反答案 → "walk 动画朝向反了"。
 ## 现在判据只有一份（EnemySteering.step_x，有单测覆盖），状态只负责提供"目标 x"。
 
-## 朝向死区取值：tuning > 敌人根节点 face_deadzone。返回 -1 = 交给敌人根节点的默认值。
-## 同 _move_speed，显示在 Enemy._ready 里解析进 tuning_face_deadzone 并缓存，这里直接读。
+## 朝向死区取值：Enemy._ready 里解析进 tuning_face_deadzone 并缓存，这里直接读缓存。
+## 与 _move_speed 同规则，但 EnemyTuning 目前没有 face_deadzone 字段，实际生效的是
+## 敌人根节点的 face_deadzone（见 enemy.gd 配置区的说明）。
 func _deadzone() -> float:
 	return enemy.tuning_face_deadzone if enemy != null else -1.0
 

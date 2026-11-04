@@ -59,9 +59,7 @@ func update(delta: float) -> void:
 		return
 	# 招架全程站定（清水平速度），位移交给 _apply_movement。
 	# 注意：通用行为放 match 之外，避免和下方相位专属分支重叠（match 只执行首个命中的分支）。
-	boss.velocity.x = 0.0
-	boss._apply_vertical_motion(delta)
-	boss._apply_movement()
+	stand_still(delta, false)
 	match _phase:
 		_Phase.ANTIC:
 			# 前摇期间持续面向玩家（瞄准），便于起手对准。

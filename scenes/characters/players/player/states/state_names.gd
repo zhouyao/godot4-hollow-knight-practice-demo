@@ -6,6 +6,8 @@ const LOOK_UP: StringName = &"look_up"
 const LOOK_DOWN: StringName = &"look_down"
 const WALK: StringName = &"walk"
 const JUMP: StringName = &"jump"
+## 帝王之翼：空中振翅（二段跳），上升段专用状态。
+const DOUBLE_JUMP: StringName = &"double_jump"
 const FALL: StringName = &"fall"
 const LAND: StringName = &"land"
 const SLASH_FORWARD: StringName = &"slash_forward"

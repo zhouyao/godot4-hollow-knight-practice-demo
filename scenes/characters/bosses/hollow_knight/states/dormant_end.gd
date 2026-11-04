@@ -46,7 +46,7 @@ func update(delta: float) -> void:
 		# 落地后停留 2 秒（让落地音效 / 战斗 BGM 等收尾），再进入 scream。
 		_land_timer += delta
 		if _land_timer >= LAND_TO_SCREAM_DELAY and goto_if_current(BossStateNames.SCREAM):
-			# 这里不解锁：scream 仍属于过场（见 HollowKnight.is_cutscene_invulnerable），
+			# 这里不解锁：scream 仍属于过场（见 Boss.is_cutscene_invulnerable），
 			# 真正的解锁收口在 idle.enter() —— 过场全部播完才算"可以攻击"。
 			var bg_loop := boss.get_node_or_null("FightAudio/boss_bg_loop") as AudioStreamPlayer2D
 			if bg_loop != null and not bg_loop.playing:

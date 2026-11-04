@@ -72,7 +72,7 @@ func has_line_of_sight() -> bool:
 ## 目标是否仍在牵引范围内（出生点 leash_range 内）。未开战时视为在范围内。
 ## 三种情况不参与判定：
 ##   1. 玩家还在领地内 —— 领地即防区，一律算"没追丢"。这一条是必须的：领地宽度常常
-##      远大于 leash_range（level_1 的 EnemyZone3 有 1400px，Mosscreep 的 leash 只有 700），
+##      远大于 leash_range（level_1 的 EnemyZone / EnemyZone2 宽 1000 / 1200px，leash 默认 700），
 ##      只按出生点算半径会把"站在自己领地里的玩家"判成追丢，怪当场收兵，
 ##      看起来就是"玩家进了领地，怪根本不攻击"。
 ##   2. 玩家刚出领地、仍在 zone_exit_chase_time 宽限内 —— 见 tick_combat() 的短路分支，

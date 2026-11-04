@@ -6,9 +6,11 @@ extends PlayerState
 func _init() -> void:
 	is_attack = true
 
+@export_group("行为 Behavior")
 ## 下劈动作的最短持续时间（秒）：期间不接受过渡，保证俯冲到落地这段不被打断。
 @export var hold_time: float = 0.3
 
+@export_group("状态过渡 Transitions")
 ## 下劈落地后切往的状态（一般是 land）。
 @export var target_grounded: StringName = PlayerStateNames.LAND
 

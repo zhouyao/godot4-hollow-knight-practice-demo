@@ -1,9 +1,11 @@
 extends PlayerState
 
 
+@export_group("行为 Behavior")
 ## 受击硬直时长（秒）。为 0 时自动取玩家的 invincible_time，让硬直与无敌帧等长。
 @export var hold_time: float = 0.0
 
+@export_group("状态过渡 Transitions")
 ## 硬直结束且已落地时切往的状态（一般是 idle）；还在空中则交给 airborne_transition()。
 @export var target_grounded: StringName = PlayerStateNames.IDLE
 

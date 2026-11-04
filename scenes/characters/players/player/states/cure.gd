@@ -10,6 +10,7 @@ class_name PlayerCureState
 
 const SKILL_ID: StringName = &"cure"
 
+@export_group("行为 Behavior")
 ## 单次施放回血量，与 SkillDefinition.energy_cost 1:1（"1 能换 1 血"）。
 @export var heal_amount: int = 1
 ## 施放持续时长（秒）：与 ActionAnimationPlayer 的 cure 动画长度（≈1.0s）对齐。

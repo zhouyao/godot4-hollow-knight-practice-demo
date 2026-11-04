@@ -3,12 +3,14 @@ extends PlayerState
 
 const STOP_EPS := 1.0
 
-## 横向速度衰减到阈值以下时切往的目标状态（一般是 idle）。
-@export var target_stop: StringName = PlayerStateNames.IDLE
-
+@export_group("行为 Behavior")
 ## 脚步声间隔（秒）：跟随走路动画，每个循环左右脚各响一次。
 ## 设为 0（默认）则自动取走路动画时长的一半作为步点，无需手动配。
 @export var step_interval: float = 0.0
+
+@export_group("状态过渡 Transitions")
+## 横向速度衰减到阈值以下时切往的目标状态（一般是 idle）。
+@export var target_stop: StringName = PlayerStateNames.IDLE
 
 var _step_timer: float = 0.0
 

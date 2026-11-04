@@ -1,6 +1,7 @@
 extends PlayerState
 
 
+@export_group("状态过渡 Transitions")
 ## 落回地面时切往的状态（一般是 land）。改成 idle 可以直接跳过落地硬直。
 @export var target_grounded: StringName = PlayerStateNames.LAND
 

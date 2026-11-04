@@ -58,18 +58,14 @@ func update(delta: float) -> void:
 		return
 	match _phase:
 		_Phase.ANTIC:
-			boss.velocity.x = 0.0
-			boss._apply_vertical_motion(delta)
-			boss._apply_movement()
+			stand_still(delta, false)
 			_timer += delta
 			if _timer >= _antic_length:
 				_begin_air()
 		_Phase.AIR:
 			_air_update(delta)
 		_Phase.RECOVER:
-			boss.velocity.x = 0.0
-			boss._apply_vertical_motion(delta)
-			boss._apply_movement()
+			stand_still(delta, false)
 			_recover_timer += delta
 			if _recover_timer >= recover_time:
 				go_idle()

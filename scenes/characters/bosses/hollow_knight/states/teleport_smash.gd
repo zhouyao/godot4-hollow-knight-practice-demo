@@ -72,18 +72,14 @@ func update(delta: float) -> void:
 	match _phase:
 		_Phase.OUT:
 			# 消失期间原地站定（含重力落定），不漂移、不结算接触伤害。
-			boss.velocity.x = 0.0
-			boss._apply_vertical_motion(delta)
-			boss._apply_movement()
+			stand_still(delta, false)
 			_timer += delta
 			if _timer >= _out_length:
 				_begin_fall()
 		_Phase.FALL:
 			_fall_update(delta)
 		_Phase.RECOVER:
-			boss.velocity.x = 0.0
-			boss._apply_vertical_motion(delta)
-			boss._apply_movement()
+			stand_still(delta, false)
 			_recover_timer += delta
 			if _recover_timer >= recover_time:
 				go_idle()

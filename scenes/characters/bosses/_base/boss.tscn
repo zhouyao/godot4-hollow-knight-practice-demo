@@ -1,10 +1,48 @@
 [gd_scene format=3 uid="uid://buf7ckj7d41uo"]
 
+; ============================================================================
+; BOSS 基类场景 · 对外配置速查
+; 这里只给骨架（节点 + 默认值）；真正的 BOSS 一律继承本场景，关卡里再摆一层实例：
+;   hollow_knight/hollow_knight.tscn · soul_master/soul_master.tscn → worlds/levels/level_1.tscn
+; 分号注释只便于读源码，编辑器里保存一次场景会重写本文件并清掉它们；
+; 需要长期保留的说明写在根节点 / StateMachine 的 editor_description 里（Inspector 顶部可见）。
+;
+; [Boss 根节点] 可调参数全部来自 enemy.gd + boss.gd 的 @export，Inspector 分组顺序：
+;   生命 → 运动介质 → 调参预设 → 移动 → 受击 → 接触伤害 → 巡逻 → 感知与仇恨
+;   → 攻击 → 掉落 → 死亡 → 转身 → 音效（enemy.gd 共 13 组）→ 场地查询（boss.gd）。
+;   每个字段的含义、负值 / 留空 / 单位约定见脚本的 ## 文档注释（即 Inspector 悬浮提示）。
+;   本场景只显式覆盖四项，目的都是盖掉 Enemy 的小怪默认值：
+;     max_health      = 200    (基类 100)  血量兼血条上限
+;     initial_health  = 200    (基类 3)    满血出场，别按小怪的 3 血出生
+;     patrol_enabled  = false  (基类 true) BOSS 不巡逻；驻留状态由 Boss.resting_state() 定为 dormant
+;     corpse_lifetime = 0.0    (基类 3.0)  尸体不自动淡出：Boss._start_corpse_fade() 已重写为空，
+;                             清理由击败演出 death 状态接管；掉落同样延后到 drop_loot()
+;   注意覆盖链：两个继承场景把这四项回退成基类默认值（HollowKnight 连 patrol 一起回退），
+;     level_1.tscn 的关卡实例又再改一次（HollowKnight = 3 / 2 / false）。生效值永远看最末一级实例；
+;     改脚本默认值不会同步已保存的场景值，要恢复默认请删掉对应行或点属性右侧的复位箭头。
+;
+; [Boss 专有 @export（boss.gd），本场景全部沿用脚本默认值]
+;   melee_damage       = 1            近战命中盒对玩家的伤害，子类可覆盖
+;   melee_hitbox_path  = MeleeHitBox  命中盒节点路径
+;   flip_nodes         = []           随朝向镜像摆位的节点路径（HollowKnight 在 _ready 里填 LedgeDetector）
+;   场地查询：arena_path        = BossArena       先找自身子节点，再找父节点下同名 AuZone
+;             ground_probe_path = LedgeDetector   悬崖 / 落点射线来源；节点缺失时 mask 退回 4（地形层）
+;   这两个按节点名解析：给竞技场 / 探测器改名或换层级时，参数要同步改。
+;
+; [StateMachine 节点] 唯一要调的是 decision_interval = 0.1 秒（出招决策节奏，越小越跟手）；
+;   状态脚本里的同名属性只是代理 getter，别去状态节点上找。host_path = .. 指向根节点；
+;   initial_state 不写在场景里，由 BossStateMachine._init() 定为 dormant，enemy_death 再转 death。
+;   状态子节点名 = 状态名（见 BossStateNames）；招式参数导出在各 BOSS 自己的 states/*.gd 上，
+;   要到 hollow_knight.tscn / soul_master.tscn 里改（如 SoulMaster 的 teleport / summon / quake / dash）。
+; ============================================================================
+
+; ---- 外部资源：根脚本 / 调试场景实例 / 状态机脚本 / 占位精灵图 ----
 [ext_resource type="Script" uid="uid://btp2nfp0r0ivr" path="res://scenes/characters/bosses/_base/boss.gd" id="1_boss"]
 [ext_resource type="PackedScene" path="res://scenes/debug/character_debug.tscn" id="4_dbg"]
 [ext_resource type="Script" uid="uid://dbjq3hplhf027" path="res://scenes/characters/bosses/_base/BossStateMachine.gd" id="6_bsm"]
 [ext_resource type="Texture2D" uid="uid://j2o25agvlkow" path="res://assets/sprites/placeholders/Square/Square-0006.png" id="7_sq"]
 
+; ---- 本地子资源：碰撞矩形（子类通常换成胶囊 / 圆）/ 精灵材质 / 占位 SpriteFrames ----
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 resource_local_to_scene = true
 size = Vector2(96, 192)
@@ -23,15 +61,20 @@ animations = [{
 "speed": 5.0
 }]
 
+; ---- 根节点：对外配置入口（分组与覆盖值见文件头）----
+; 下面四行是覆盖值，优先级高于 enemy.gd 脚本默认值；继承场景 / 关卡实例还会再覆盖一次。
+; collision_layer = 2 / collision_mask = 4、groups = ["enemy"] 是基类摆位，子类通常沿用。
 [node name="Boss" type="CharacterBody2D" unique_id=170488292 groups=["enemy"]]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_boss")
+editor_description = "BOSS 基类根节点。可调参数 = enemy.gd 的 13 组 @export（生命 / 运动介质 / 调参预设 / 移动 / 受击 / 接触伤害 / 巡逻 / 感知与仇恨 / 攻击 / 掉落 / 死亡 / 转身 / 音效）+ boss.gd 的 BOSS 专有项与「场地查询」组，字段说明见脚本的 ## 文档注释。本场景显式覆盖 max_health=200、initial_health=200、patrol_enabled=false、corpse_lifetime=0.0：满血出场、不巡逻、尸体淡出与掉落都交由 death 击败演出接管。注意继承场景（hollow_knight.tscn / soul_master.tscn）与关卡实例会再覆盖这四项，最终生效值看最末一级实例；改脚本默认值不会同步已保存的场景值。"
 max_health = 200
 initial_health = 200
 patrol_enabled = false
 corpse_lifetime = 0.0
 
+; ---- 计时器：受击无敌帧 / 接触伤害冷却，均为 one_shot，由 enemy.gd 按节点名取用 ----
 [node name="Timer" type="Node" parent="." unique_id=72660490]
 
 [node name="hurt_invincibility_timer" type="Timer" parent="Timer" unique_id=2146049795]
@@ -40,20 +83,26 @@ one_shot = true
 [node name="contact_damage_cooldown" type="Timer" parent="Timer" unique_id=1428991090]
 one_shot = true
 
+; ---- 状态机：decision_interval 在此节点上调；状态子节点由各 BOSS 场景自行添加 ----
 [node name="StateMachine" type="Node" parent="." unique_id=885825929]
 script = ExtResource("6_bsm")
+editor_description = "BOSS 状态机。唯一可配的节奏参数是 decision_interval=0.1 秒（出招决策间隔），状态脚本里的同名属性只是代理 getter，不要去状态节点上改。host_path=.. 指向根节点；initial_state 由 BossStateMachine._init() 定为 dormant，不在场景里配，死亡由 enemy_death 转 death。状态子节点名 = 状态名（见 BossStateNames），各招式参数在对应 BOSS 场景的 states/*.gd 上导出，需到那个场景里改。"
 host_path = NodePath("..")
 
+; ---- 音效：Audio 子节点名即 play_sfx(key) 的 key；基类只带 death，子类补足其余 ----
 [node name="Audio" type="Node2D" parent="." unique_id=196072747]
 
 [node name="death" type="AudioStreamPlayer2D" parent="Audio" unique_id=1598064983]
 bus = &"Sound"
 
+; ---- 掉落挂点：Boss 延后到 death 状态调 drop_loot() 时，以它为默认撒落点 ----
 [node name="DropMarker" type="Marker2D" parent="." unique_id=1197587479]
 
+; ---- 身体碰撞：96×192 矩形占位；脚底 / 半宽由 boss.gd 按实际形状推算 ----
 [node name="BodyCollisionShape2D" type="CollisionShape2D" parent="." unique_id=1005066086]
 shape = SubResource("RectangleShape2D_body")
 
+; ---- 表现层：主精灵 / 特效精灵 / 动作动画播放器；SpriteFrames 与动画库由子类替换 ----
 [node name="Animation" type="Node2D" parent="." unique_id=55078650]
 
 [node name="EnemyAnimatedSprite" type="AnimatedSprite2D" parent="Animation" unique_id=1331468369]
@@ -68,12 +117,15 @@ animation = &"idle"
 [node name="ActionAnimationPlayer" type="AnimationPlayer" parent="Animation" unique_id=609070108]
 root_node = NodePath("../..")
 
+; ---- 近战命中盒：形状默认 disabled，出招时由 enable_melee_attack() 打开并按朝向镜像 ----
 [node name="MeleeHitBox" type="Area2D" parent="." unique_id=1001674404]
 collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionPolygon2D" parent="MeleeHitBox" unique_id=1209468046]
 disabled = true
 
+; ---- 调试叠层：character_debug.tscn 实例，本场景不覆盖任何属性 ----
 [node name="Debug" parent="." unique_id=1659399408 instance=ExtResource("4_dbg")]
 
+; ---- 信号连线：改名节点或回调方法时同步这一行（其余连线在代码里建立）----
 [connection signal="timeout" from="Timer/hurt_invincibility_timer" to="." method="_on_hurt_invincibility_timer_timeout"]

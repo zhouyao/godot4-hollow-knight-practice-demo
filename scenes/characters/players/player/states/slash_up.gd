@@ -6,9 +6,11 @@ extends PlayerState
 func _init() -> void:
 	is_attack = true
 
+@export_group("行为 Behavior")
 ## 上挑动作的最短持续时间（秒）：期间不接受过渡，保证挥砍不被打断。
 @export var hold_time: float = 0.3
 
+@export_group("状态过渡 Transitions")
 ## 动作结束时已松开上键，切往的状态（一般是 idle）。
 @export var target_next: StringName = PlayerStateNames.IDLE
 

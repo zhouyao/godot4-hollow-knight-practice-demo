@@ -204,8 +204,8 @@ patrol_enabled = false
 [node name="SoulMasterScene" type="Node2D" parent="." index="9" unique_id=932599692]
 
 [node name="BossArena" parent="SoulMasterScene" index="0" unique_id=469432595 instance=ExtResource("11_zone")]
-position = Vector2(5000, -200)
-size = Vector2(1920, 700)
+position = Vector2(5000, -400)
+size = Vector2(1920, 900)
 centered = false
 
 [node name="BossArenaBehavior" type="Node" parent="SoulMasterScene/BossArena" index="1" unique_id=122894332]
