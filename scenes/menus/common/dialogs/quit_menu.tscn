@@ -1,0 +1,118 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scenes/menus/common/dialogs/quit_menu.gd" id="1_qm"]
+[ext_resource type="Theme" uid="uid://dmt8kq3vncw2x" path="res://assets/themes/misted_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://scenes/menus/common/buttons/menu_button.tscn" id="3_btn"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/warning_fleur/Warning_Fleur0000.png" id="4_f0"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/warning_fleur/Warning_Fleur0001.png" id="5_f1"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/warning_fleur/Warning_Fleur0002.png" id="6_f2"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/warning_fleur/Warning_Fleur0003.png" id="7_f3"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/warning_fleur/Warning_Fleur0004.png" id="8_f4"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/warning_fleur/Warning_Fleur0005.png" id="9_f5"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/warning_fleur/Warning_Fleur0006.png" id="10_f6"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/warning_fleur/Warning_Fleur0007.png" id="11_f7"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/warning_fleur/Warning_Fleur0008.png" id="12_f8"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_warning"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_f0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_f1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_f2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_f3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_f4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_f5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_f6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_f7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_f8")
+}],
+"loop": false,
+"name": &"default",
+"speed": 15.0
+}]
+
+[node name="QuitMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_qm")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -287.5
+offset_top = -260.0
+offset_right = 287.5
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 60
+alignment = 1
+
+[node name="Fleur" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(575, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+
+[node name="Sprite" type="AnimatedSprite2D" parent="VBoxContainer/Fleur"]
+position = Vector2(287.5, 24)
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_warning")
+animation = &"default"
+
+[node name="Texts" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/Texts"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "退出游戏？"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="VBoxContainer/Texts"]
+visible = false
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+horizontal_alignment = 1
+
+[node name="ConfirmButton" parent="VBoxContainer" instance=ExtResource("3_btn")]
+custom_minimum_size = Vector2(257, 64)
+layout_mode = 2
+text = "是"
+
+[node name="DenyButton" parent="VBoxContainer" instance=ExtResource("3_btn")]
+custom_minimum_size = Vector2(257, 64)
+layout_mode = 2
+text = "否"
+
+[connection signal="pressed" from="VBoxContainer/ConfirmButton" to="." method="_on_confirm_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/DenyButton" to="." method="_on_deny_button_pressed"]

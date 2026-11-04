@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://cjjibti2ww3bl"]
+
+[ext_resource type="Script" uid="uid://cqs45by3ivv07" path="res://scenes/menus/main_menu/default_menu.gd" id="1_dm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menus/BoboGameTitle.png" id="2_title"]
+[ext_resource type="PackedScene" path="res://scenes/menus/common/buttons/menu_button.tscn" id="3_btn"]
+[ext_resource type="Theme" uid="uid://dmt8kq3vncw2x" path="res://assets/themes/misted_theme.tres" id="4_theme"]
+
+[node name="DefaultMenu" type="Control" unique_id=813206640]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_theme")
+script = ExtResource("1_dm")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1265391544]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -595.0
+offset_top = -440.0
+offset_right = 595.0
+offset_bottom = 503.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+theme_override_constants/separation = 64
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer" unique_id=1649519887]
+layout_mode = 2
+texture = ExtResource("2_title")
+stretch_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=607240657]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 30
+
+[node name="StartButton" parent="VBoxContainer/VBoxContainer" unique_id=1081368556 instance=ExtResource("3_btn")]
+layout_mode = 2
+text = "开始游戏"
+
+[node name="SystemButton" parent="VBoxContainer/VBoxContainer" unique_id=128494874 instance=ExtResource("3_btn")]
+layout_mode = 2
+text = "游戏设置"
+
+[node name="QuitButton" parent="VBoxContainer/VBoxContainer" unique_id=1895004752 instance=ExtResource("3_btn")]
+layout_mode = 2
+text = "离开游戏"
+
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/StartButton" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/SystemButton" to="." method="_on_system_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

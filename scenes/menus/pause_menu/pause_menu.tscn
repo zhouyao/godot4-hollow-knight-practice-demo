@@ -1,0 +1,148 @@
+[gd_scene load_steps=15 format=3 uid="uid://dqnr8ep32vdju"]
+
+[ext_resource type="PackedScene" path="res://scenes/menus/common/buttons/menu_button.tscn" id="1_btn"]
+[ext_resource type="Theme" uid="uid://dmt8kq3vncw2x" path="res://assets/themes/misted_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://scenes/menus/settings_menu/sections/audio_content.tscn" id="3_audio"]
+[ext_resource type="Script" uid="uid://n3s2js96br339" path="res://scenes/menus/pause_menu/pause_menu.gd" id="4_pm"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/fleur/Fleur_000.png" id="5_f0"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/fleur/Fleur_001.png" id="6_f1"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/fleur/Fleur_002.png" id="7_f2"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/fleur/Fleur_003.png" id="8_f3"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/fleur/Fleur_004.png" id="9_f4"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/fleur/Fleur_005.png" id="10_f5"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/fleur/Fleur_006.png" id="11_f6"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/fleur/Fleur_007.png" id="12_f7"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/fleur/Fleur_008.png" id="13_f8"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fleur"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_f0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_f1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_f2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_f3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_f4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_f5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_f6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_f7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_f8")
+}],
+"loop": false,
+"name": &"default",
+"speed": 15.0
+}]
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=800000001]
+layer = 100
+script = ExtResource("4_pm")
+
+[node name="Background" type="ColorRect" parent="." unique_id=800000002]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0.039215688, 0.050980393, 0.078431375, 0.8509804)
+
+[node name="PreviewPlayer" type="AudioStreamPlayer" parent="." unique_id=800000014]
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=800000003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Center" type="CenterContainer" parent="Margin" unique_id=800000004]
+layout_mode = 2
+
+[node name="MainPanel" type="VBoxContainer" parent="Margin/Center" unique_id=800000005]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 75
+alignment = 1
+
+[node name="TopFleur" type="Control" parent="Margin/Center/MainPanel" unique_id=800000015]
+custom_minimum_size = Vector2(575, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+
+[node name="Fleur" type="AnimatedSprite2D" parent="Margin/Center/MainPanel/TopFleur" unique_id=800000016]
+position = Vector2(287.5, 24)
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_fleur")
+animation = &"default"
+autoplay = "default"
+
+[node name="ButtonContainer" type="VBoxContainer" parent="Margin/Center/MainPanel" unique_id=800000007]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="ContinueButton" parent="Margin/Center/MainPanel/ButtonContainer" unique_id=800000008 instance=ExtResource("1_btn")]
+layout_mode = 2
+text = "继续"
+
+[node name="AudioButton" parent="Margin/Center/MainPanel/ButtonContainer" unique_id=800000009 instance=ExtResource("1_btn")]
+layout_mode = 2
+text = "音频"
+
+[node name="MainMenuButton" parent="Margin/Center/MainPanel/ButtonContainer" unique_id=800000010 instance=ExtResource("1_btn")]
+layout_mode = 2
+text = "退回主菜单"
+
+[node name="BottomFleur" type="Control" parent="Margin/Center/MainPanel" unique_id=800000017]
+custom_minimum_size = Vector2(575, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+
+[node name="Fleur" type="AnimatedSprite2D" parent="Margin/Center/MainPanel/BottomFleur" unique_id=800000018]
+position = Vector2(287.5, 24)
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_fleur")
+animation = &"default"
+autoplay = "default"
+flip_v = true
+
+[node name="AudioPanel" type="VBoxContainer" parent="Margin/Center" unique_id=800000011]
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 35
+alignment = 1
+
+[node name="AudioContent" parent="Margin/Center/AudioPanel" unique_id=800000012 instance=ExtResource("3_audio")]
+
+[node name="BackButton" parent="Margin/Center/AudioPanel" unique_id=800000013 instance=ExtResource("1_btn")]
+custom_minimum_size = Vector2(400, 64)
+layout_mode = 2
+text = "返回"
+
+[connection signal="pressed" from="Margin/Center/MainPanel/ButtonContainer/ContinueButton" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="Margin/Center/MainPanel/ButtonContainer/AudioButton" to="." method="_on_audio_pressed"]
+[connection signal="pressed" from="Margin/Center/MainPanel/ButtonContainer/MainMenuButton" to="." method="_on_main_menu_pressed"]
+[connection signal="pressed" from="Margin/Center/AudioPanel/BackButton" to="." method="_on_back_pressed"]

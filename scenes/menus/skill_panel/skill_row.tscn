@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://b5w8jim8tccll"]
+
+[ext_resource type="Script" uid="uid://cmf3dgpbenwvm" path="res://scenes/menus/skill_panel/skill_row.gd" id="1_row"]
+[ext_resource type="Texture2D" uid="uid://dm2jomnt31w15" path="res://assets/icons/skill/dash.png" id="2_jc0hd"]
+[ext_resource type="SpriteFrames" uid="uid://c0qkeffcyf62y" path="res://resources/skills/previews/dash_preview.tres" id="3_8lhbi"]
+[ext_resource type="Script" uid="uid://p7hijnneuh0g" path="res://scenes/menus/skill_panel/skill_icon.gd" id="4_icon"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rowbg"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0.35)
+border_blend = true
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lhbi"]
+draw_center = false
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 5
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[node name="SkillRow" type="PanelContainer" unique_id=112440307]
+offset_right = 836.0
+offset_bottom = 300.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_rowbg")
+script = ExtResource("1_row")
+
+[node name="Row" type="HBoxContainer" parent="." unique_id=1279753408]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+theme_override_constants/separation = 25
+alignment = 1
+
+[node name="IconContainer" type="PanelContainer" parent="Row" unique_id=1726713370]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_8lhbi")
+
+[node name="Icon" type="TextureRect" parent="Row/IconContainer" unique_id=296521649]
+layout_mode = 2
+texture = ExtResource("2_jc0hd")
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("4_icon")
+
+[node name="PreviewContainer" type="Control" parent="Row" unique_id=619282503]
+custom_minimum_size = Vector2(620, 170)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Preview" type="AnimatedSprite2D" parent="Row/PreviewContainer" unique_id=747454184]
+sprite_frames = ExtResource("3_8lhbi")
+animation = &"dash"
+autoplay = "default"
+centered = false

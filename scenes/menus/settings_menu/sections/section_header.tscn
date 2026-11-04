@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/menus/settings_menu/sections/section_header.gd" id="1_sh"]
+[ext_resource type="SpriteFrames" path="res://assets/animations/ui/menus/fleur/fleur_frames.tres" id="2_frames"]
+
+[node name="SectionHeader" type="VBoxContainer"]
+theme_override_constants/separation = 16
+script = ExtResource("1_sh")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+horizontal_alignment = 1
+
+; 花纹贴图自带上下留白，holder 只需留出可见花纹的高度（40+），余下的空白由 separation 控制
+[node name="FleurHolder" type="Control" parent="."]
+custom_minimum_size = Vector2(959, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+
+[node name="Fleur" type="AnimatedSprite2D" parent="FleurHolder"]
+position = Vector2(0, -6)
+sprite_frames = ExtResource("2_frames")
+animation = &"default"
+centered = false

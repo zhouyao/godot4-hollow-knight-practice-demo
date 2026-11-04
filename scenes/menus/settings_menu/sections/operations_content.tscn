@@ -1,0 +1,159 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/menus/settings_menu/rows/key_binding_row.tscn" id="1_kbr"]
+[ext_resource type="PackedScene" path="res://scenes/menus/settings_menu/sections/section_header.tscn" id="2_sh"]
+
+; 整页铺满右侧内容区（不再居中成一条窄表），两列按键跟着变宽，左右不再留大片死白
+[node name="OperationsContent" type="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 22
+
+[node name="OpsTitle" parent="." instance=ExtResource("2_sh")]
+layout_mode = 2
+theme_override_constants/separation = 12
+title_text = "按键设置"
+
+; 表头列宽 / 列距与 key_binding_row.tscn 一一对应（名称 200、按键 300、重置 40、
+; 单元格内距 8、列距 28，两列还都带 expand），否则“键盘 / 手柄”会跟下面的输入框错位。
+[node name="BindHeader" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 28
+
+[node name="NameSpacer" type="Control" parent="BindHeader"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="KeyboardCell" type="HBoxContainer" parent="BindHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="KeyboardLabel" type="Label" parent="BindHeader/KeyboardCell"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 26
+text = "键盘"
+horizontal_alignment = 1
+
+[node name="KeyboardSpacer" type="Control" parent="BindHeader/KeyboardCell"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="GamepadCell" type="HBoxContainer" parent="BindHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="GamepadLabel" type="Label" parent="BindHeader/GamepadCell"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 26
+text = "手柄"
+horizontal_alignment = 1
+
+[node name="GamepadSpacer" type="Control" parent="BindHeader/GamepadCell"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+mouse_filter = 2
+
+; 行末 HintLabel 也占一格（列距 + 最小宽），表头补同样的尾巴，表头才和行等宽；
+; 否则行比表头宽，ScrollContainer 会冒出横向滚动条。
+[node name="HintSpacer" type="Control" parent="BindHeader"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+mouse_filter = 2
+
+; 标题 + 花纹 + 表头约占 232px，1080 下还剩约 776px 给 13 行按键；行高 44 + 行距 14 时
+; 内容约 756px，因此不出滚动条、底部还留一点余量；再加行则由 ScrollContainer 接管。
+[node name="Rows" type="ScrollContainer" parent="."]
+custom_minimum_size = Vector2(0, 660)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RowsList" type="VBoxContainer" parent="Rows"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="UpRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"up"
+display_name = "向上"
+
+[node name="DownRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"down"
+display_name = "向下"
+
+[node name="LeftRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"left"
+display_name = "向左"
+
+[node name="RightRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"right"
+display_name = "向右"
+
+[node name="AttackRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"attack"
+display_name = "攻击"
+
+[node name="JumpRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"jump"
+display_name = "跳跃"
+
+[node name="SkillRow" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"skill"
+display_name = "技能"
+
+; 分组之间多留一点空，让“技能槽”读起来是新的一段，而不是又一行普通按键
+[node name="SlotsGap" type="Control" parent="Rows/RowsList"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="SlotsTitle" type="Label" parent="Rows/RowsList"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"MutedLabel"
+theme_override_font_sizes/font_size = 26
+text = "技能槽"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="SlotRow1" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"skill_slot_1"
+display_name = "技能槽 1"
+
+[node name="SlotRow2" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"skill_slot_2"
+display_name = "技能槽 2"
+
+[node name="SlotRow3" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"skill_slot_3"
+display_name = "技能槽 3"
+
+[node name="SlotRow4" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"skill_slot_4"
+display_name = "技能槽 4"
+
+[node name="SlotRow5" parent="Rows/RowsList" instance=ExtResource("1_kbr")]
+layout_mode = 2
+action_name = &"skill_slot_5"
+display_name = "技能槽 5"

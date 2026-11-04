@@ -2,10 +2,10 @@ extends Node2D
 class_name WorldTemplate
 
 
-const PAUSE_MENU_SCENE := preload("res://scenes/menus/pause_menu.tscn")
+const PAUSE_MENU_SCENE := preload("res://scenes/menus/pause_menu/pause_menu.tscn")
 var pause_menu: CanvasLayer = null
 
-const SKILL_PANEL_SCENE := preload("res://scenes/menus/skill_panel.tscn")
+const SKILL_PANEL_SCENE := preload("res://scenes/menus/skill_panel/skill_panel.tscn")
 var skill_panel: CanvasLayer = null
 
 ## 常驻技能条（技能面板打开时保持可见以便拖放，暂停菜单打开时隐藏）。

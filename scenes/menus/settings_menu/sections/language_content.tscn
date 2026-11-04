@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dsxlm1xyrhqxx"]
+
+[ext_resource type="Script" uid="uid://cgr8uk3yx2lqt" path="res://scenes/menus/settings_menu/sections/language_content.gd" id="1_lc"]
+[ext_resource type="PackedScene" path="res://scenes/menus/settings_menu/sections/section_header.tscn" id="2_sh"]
+
+[node name="LanguageContent" type="VBoxContainer" unique_id=968358033]
+theme_override_constants/separation = 36
+script = ExtResource("1_lc")
+
+[node name="LanguageTitle" parent="." unique_id=1647992552 instance=ExtResource("2_sh")]
+layout_mode = 2
+title_text = "语言设置"
+
+[node name="OptionRow" type="HBoxContainer" parent="." unique_id=1508962896]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="NameLabel" type="Label" parent="OptionRow" unique_id=2043121112]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = "语言"
+horizontal_alignment = 2
+
+[node name="LanguageOption" type="OptionButton" parent="OptionRow" unique_id=845835341]
+custom_minimum_size = Vector2(320, 52)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"RowButton"
+alignment = 1
+
+[connection signal="item_selected" from="OptionRow/LanguageOption" to="." method="_on_language_option_item_selected"]

@@ -3,6 +3,15 @@ keys,en,zh_CN,zh_TW
 开始,Start,开始,開始
 设置,Settings,设置,設定
 离开,Quit,离开,離開
+开始游戏,Start Game,开始游戏,開始遊戲
+游戏设置,Settings,游戏设置,遊戲設定
+离开游戏,Quit Game,离开游戏,離開遊戲
+退出游戏？,Quit Game?,退出游戏？,退出遊戲？
+退回主菜单,Quit to Main Menu,退回主菜单,退回主選單
+退回主菜单？,Quit to Main Menu?,退回主菜单？,退回主選單？
+当前进度不会保留,Current progress will not be kept,当前进度不会保留,目前進度不會保留
+是,Yes,是,是
+否,No,否,否
 按键,Keys,按键,按鍵
 音频,Audio,音频,音訊
 语言,Language,语言,語言
@@ -71,6 +80,6 @@ RB 键,Button RB,RB 键,RB 鍵
 全屏,Fullscreen,全屏,全螢幕
 开发,Developer,开发,開發
 开发设置,Developer Settings,开发设置,開發設定
-是否开启调试模式,Debug Mode,是否开启调试模式,是否開啟除錯模式
+调试模式,Debug Mode,调试模式,除錯模式
 开启,On,开启,開啟
 关闭,Off,关闭,關閉

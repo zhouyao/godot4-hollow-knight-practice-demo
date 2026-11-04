@@ -1,9 +1,0 @@
-[gd_scene format=3]
-
-[ext_resource type="Script" path="res://scenes/menus/components/buttons/ResetButton.gd" id="1_rb"]
-
-[node name="ResetButton" type="Button"]
-size_flags_vertical = 4
-script = ExtResource("1_rb")
-disabled = true
-modulate = Color(1, 1, 1, 0)

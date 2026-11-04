@@ -1,0 +1,107 @@
+[gd_resource type="SpriteFrames" load_steps=24 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_up/Pointer Up_000.png" id="1_u0"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_up/Pointer Up_001.png" id="2_u1"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_up/Pointer Up_002.png" id="3_u2"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_up/Pointer Up_003.png" id="4_u3"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_up/Pointer Up_004.png" id="5_u4"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_up/Pointer Up_005.png" id="6_u5"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_up/Pointer Up_006.png" id="7_u6"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_up/Pointer Up_007.png" id="8_u7"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_up/Pointer Up_008.png" id="9_u8"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_up/Pointer Up_009.png" id="10_u9"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_up/Pointer Up_010.png" id="11_u10"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_down/Pointer Down_000.png" id="12_d0"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_down/Pointer Down_001.png" id="13_d1"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_down/Pointer Down_002.png" id="14_d2"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_down/Pointer Down_003.png" id="15_d3"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_down/Pointer Down_004.png" id="16_d4"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_down/Pointer Down_005.png" id="17_d5"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_down/Pointer Down_006.png" id="18_d6"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_down/Pointer Down_007.png" id="19_d7"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_down/Pointer Down_008.png" id="20_d8"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_down/Pointer Down_009.png" id="21_d9"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_down/Pointer Down_010.png" id="22_d10"]
+[ext_resource type="Texture2D" path="res://assets/animations/ui/menus/pointer_down/Pointer Down_011.png" id="23_d11"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_u0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_u1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_u2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_u3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_u4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_u5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_u6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_u7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_u8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_u9")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_u10")
+}],
+"loop": false,
+"name": &"pointer up",
+"speed": 60.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("12_d0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_d1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_d2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_d3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_d4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_d5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_d6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_d7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_d8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_d9")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_d10")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_d11")
+}],
+"loop": false,
+"name": &"pointer down",
+"speed": 60.0
+}]

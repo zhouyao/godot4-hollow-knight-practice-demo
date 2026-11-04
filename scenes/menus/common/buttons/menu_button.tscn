@@ -1,0 +1,53 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/menus/common/buttons/FocusMenuButton.gd" id="1_scr"]
+[ext_resource type="SpriteFrames" path="res://assets/animations/ui/menus/pointer_frames.tres" id="2_frames"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_normal"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hover"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pressed"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_disabled"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
+
+[node name="MenuButton" type="Button"]
+custom_minimum_size = Vector2(400, 64)
+offset_right = 400.0
+offset_bottom = 64.0
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxEmpty_normal")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_hover")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_disabled")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+text = "Button Text"
+script = ExtResource("1_scr")
+
+[node name="FocusIconLeft" type="AnimatedSprite2D" parent="."]
+position = Vector2(30, 25)
+scale = Vector2(0.5, 0.5)
+visible = false
+sprite_frames = ExtResource("2_frames")
+animation = &"pointer down"
+
+[node name="FocusIconRight" type="AnimatedSprite2D" parent="."]
+position = Vector2(320, 25)
+scale = Vector2(0.5, 0.5)
+visible = false
+sprite_frames = ExtResource("2_frames")
+animation = &"pointer down"
+flip_h = true
+
+[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
+[connection signal="focus_exited" from="." to="." method="_on_focus_exited"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="." to="." method="_on_pressed"]

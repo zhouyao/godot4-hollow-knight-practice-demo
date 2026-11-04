@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://d0lilgw86vqql"]
+
+[ext_resource type="Script" uid="uid://b7873115igwgr" path="res://scenes/menus/settings_menu/rows/KeyBindingRow.gd" id="1_kbr"]
+[ext_resource type="PackedScene" path="res://scenes/menus/common/buttons/focus_button.tscn" id="2_fb"]
+[ext_resource type="PackedScene" path="res://scenes/menus/common/buttons/reset_button.tscn" id="3_rb"]
+
+; 键盘 / 手柄各包一层 HBox：重置按钮紧跟在本列按键后面（间距 8），
+; 列与列之间才是 28，这样那个小图标不会漂在两列正中间、看不出属于谁。
+; 两列都带 expand：整行铺满内容区宽度，按键下划线随窗口变宽，不再挤成中间一条窄表。
+; 行末 HintLabel 只占固定宽度（文字本身会溢出绘制），把余量全留给两列。
+[node name="KeyBindingRow" type="HBoxContainer"]
+size_flags_vertical = 4
+theme_override_constants/separation = 28
+script = ExtResource("1_kbr")
+display_name = "动作"
+
+[node name="NameLabel" type="Label" parent="." unique_id=412185056]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "动作"
+horizontal_alignment = 2
+
+[node name="KeyboardCell" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="KeyboardButton" parent="KeyboardCell" unique_id=2107236749 instance=ExtResource("2_fb")]
+custom_minimum_size = Vector2(300, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"RowButton"
+theme_override_font_sizes/font_size = 28
+text = "未绑定"
+
+[node name="KeyboardReset" parent="KeyboardCell" unique_id=2104312646 instance=ExtResource("3_rb")]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="GamepadCell" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="GamepadButton" parent="GamepadCell" unique_id=1766366145 instance=ExtResource("2_fb")]
+custom_minimum_size = Vector2(300, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"RowButton"
+theme_override_font_sizes/font_size = 28
+text = "未绑定"
+
+[node name="GamepadReset" parent="GamepadCell" unique_id=596711707 instance=ExtResource("3_rb")]
+layout_mode = 2
+size_flags_horizontal = 0
+
+; 提示贴在页面右缘，读起来像一条状态提示，也不会把两列硬挤到中间
+[node name="HintLabel" type="Label" parent="." unique_id=900900900]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+theme_type_variation = &"HintLabel"
+horizontal_alignment = 2
