@@ -70,16 +70,47 @@ func _bootstrap_standalone() -> void:
 	if player_scene == null:
 		return
 
-	var rig := preload("res://addons/camera_director/AuCameraRig.gd").new()
+	var rig := preload("res://addons/camera_director/AuCameraRig.gd").new() as AuCameraRig
 	rig.name = "AuCameraRig"
 	add_child(rig)
+	# F6 时 GameSession.bind_root 不会跑，zoom_changed 没人接：自己接一条刷新边界。
+	if not rig.zoom_changed.is_connected(_on_standalone_zoom_changed):
+		rig.zoom_changed.connect(_on_standalone_zoom_changed)
 
 	var p := player_scene.instantiate()
 	p.name = "Player"
 	add_child(p)
 
-	var marker := get_entry(&"default")
+	var entry_id := GameSession.current_entry_id
+	if entry_id == &"":
+		entry_id = &"default"
+	var marker := get_entry(entry_id)
+	if marker == null:
+		marker = get_entry(&"default")
 	p.global_position = marker.global_position if marker != null else Vector2.ZERO
 	p.reset_physics_interpolation()
 
 	GameSession.player = p
+
+	# 正常流程由 GameSession._swap_area() 应用区域 zoom；F6 直接跑单关时在这里补上。
+	var bounds := get_node_or_null(^"CameraBounds")
+	if bounds != null and bounds.has_method(&"apply_zoom_config"):
+		bounds.call(&"apply_zoom_config", rig.zoom)
+
+
+func _on_standalone_zoom_changed(_new_zoom: Vector2) -> void:
+	_apply_camera_bounds_for_standalone()
+
+
+## F6 单关调试：按当前 zoom 重算四条 limit。子类（moss_hole 等）可覆盖同名方法。
+func _apply_camera_bounds_for_standalone() -> void:
+	var rig := get_node_or_null(^"AuCameraRig") as AuCameraRig
+	var bounds := get_node_or_null(^"CameraBounds")
+	if rig == null or bounds == null or not bounds.has_method(&"get_camera_limits"):
+		return
+	var limits: Rect2 = bounds.call(&"get_camera_limits", rig.zoom, get_viewport().get_visible_rect().size)
+	if limits.size.x > 0.0 and limits.size.y > 0.0:
+		rig.set_limits(
+			int(limits.position.x), int(limits.position.y),
+			int(limits.end.x), int(limits.end.y)
+		)

@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://87pfsqa7yg7v"]
+
+[ext_resource type="PackedScene" uid="uid://bqr11wgnlhh6f" path="res://scenes/worlds/_base/world_template.tscn" id="1_base"]
+[ext_resource type="PackedScene" uid="uid://dbjleohr8a1u2" path="res://scenes/props/floor.tscn" id="2_floor"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/_base/entry_point.tscn" id="3_entry"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/_base/level_gate.tscn" id="4_gate"]
+[ext_resource type="PackedScene" uid="uid://c5xedyh6vkreu" path="res://scenes/props/chest/chest.tscn" id="5_chest"]
+[ext_resource type="PackedScene" path="res://scenes/props/bench/bench.tscn" id="6_bench"]
+[ext_resource type="PackedScene" path="res://addons/zone_director/scenes/zone.tscn" id="7_zone"]
+[ext_resource type="PackedScene" uid="uid://cc7bpmgddem53" path="res://scenes/characters/enemies/enemy_ground/enemy_ground.tscn" id="8_enemy"]
+[ext_resource type="PackedScene" uid="uid://cwtmrqxf83kjo" path="res://scenes/characters/enemies/enemy_ground_crawlid/crawlid.tscn" id="9_crawlid"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kill"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y67rj"]
+resource_local_to_scene = true
+size = Vector2(2880, 710)
+
+[node name="WorldLevel2" unique_id=1943215682 instance=ExtResource("1_base")]
+zone_name = "试炼回廊"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KillBox" parent_id_path=PackedInt32Array(1663494127) index="0" unique_id=696752096]
+position = Vector2(2080, 700)
+scale = Vector2(150, 1)
+shape = SubResource("RectangleShape2D_kill")
+
+[node name="Darkness" type="Parallax2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="0" unique_id=1375613363]
+repeat_size = Vector2(1920, 1080)
+
+[node name="ColorRect" type="ColorRect" parent="Background/Darkness" index="0" unique_id=1540414161]
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0.08627451, 0.09411765, 0.11764706, 1)
+
+[node name="Floor1A" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="0" unique_id=1382951930 instance=ExtResource("2_floor")]
+position = Vector2(-320, 500)
+scale = Vector2(38, 0.5)
+
+[node name="Floor1B" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="1" unique_id=415366258 instance=ExtResource("2_floor")]
+position = Vector2(1456, 500)
+scale = Vector2(82, 0.5)
+
+[node name="Ledge1" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="2" unique_id=144979016 instance=ExtResource("2_floor")]
+position = Vector2(260, 300)
+scale = Vector2(12, 0.25)
+
+[node name="Ledge2" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="3" unique_id=430180848 instance=ExtResource("2_floor")]
+position = Vector2(1500, 220)
+scale = Vector2(14, 0.25)
+
+[node name="Ledge3" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="4" unique_id=81228082 instance=ExtResource("2_floor")]
+position = Vector2(2500, 300)
+scale = Vector2(12, 0.25)
+
+[node name="Ledge4" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="5" unique_id=178341322 instance=ExtResource("2_floor")]
+position = Vector2(3400, 220)
+scale = Vector2(16, 0.25)
+
+[node name="Chest1" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="6" unique_id=1348941623 instance=ExtResource("5_chest")]
+position = Vector2(60, 500)
+persistent_id = "chest:level_2/01"
+
+[node name="Chest2" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="7" unique_id=1740097346 instance=ExtResource("5_chest")]
+position = Vector2(3300, 500)
+persistent_id = "chest:level_2/02"
+
+[node name="EnemyGround" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=786504763 groups=["view_cull"] instance=ExtResource("8_enemy")]
+position = Vector2(1800, 423)
+enemy_zone = NodePath("../../EnemyZones/EnemyZone")
+
+[node name="Crawlid" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="1" unique_id=17612678 groups=["view_cull"] instance=ExtResource("9_crawlid")]
+position = Vector2(3600, 423)
+
+[node name="default" parent="LevelTransitions/Entries" index="0" unique_id=336191150 instance=ExtResource("3_entry")]
+position = Vector2(-200, 425)
+
+[node name="from_level_1" parent="LevelTransitions/Entries" index="1" unique_id=1704829993 instance=ExtResource("3_entry")]
+position = Vector2(-100, 425)
+facing = 1
+
+[node name="bench_02" parent="LevelTransitions/Entries" index="2" unique_id=1743556426 instance=ExtResource("6_bench")]
+position = Vector2(300, 425)
+
+[node name="bench_03" parent="LevelTransitions/Entries" index="3" unique_id=430745604 instance=ExtResource("6_bench")]
+position = Vector2(2600, 425)
+
+[node name="ToLevel1" parent="LevelTransitions/Gates" index="0" unique_id=1289408667 instance=ExtResource("4_gate")]
+position = Vector2(150, 425)
+target_area = "res://scenes/worlds/levels/_dev/level_1.tscn"
+target_entry = &"from_level_2"
+gate_id = &"from_level_1"
+
+[node name="EnemyZone" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="0" unique_id=83842781 instance=ExtResource("7_zone")]
+position = Vector2(2200, 200)
+size = Vector2(1400, 700)
+
+[node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0"]
+position = Vector2(2080, 105)
+shape = SubResource("RectangleShape2D_y67rj")

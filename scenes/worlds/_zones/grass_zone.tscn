@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://vdyxgv1k5xqp" path="res://assets/sounds/plants/grasswalk_2.ogg" id="5_bimm7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_grass"]
+resource_local_to_scene = true
 size = Vector2(64, 32)
 
 [node name="GrassZone" type="Area2D" unique_id=1328526509]
@@ -18,8 +19,8 @@ zone_priority = 1
 size = Vector2(64, 32)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=870556469]
-debug_color = Color(0.35, 0.85, 0.55, 0)
 shape = SubResource("RectangleShape2D_grass")
+debug_color = Color(0.35, 0.85, 0.55, 0)
 
 [node name="FootstepBehavior" type="Node" parent="." unique_id=1969310622]
 script = ExtResource("2_7unqr")

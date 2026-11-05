@@ -44,16 +44,33 @@ main.tscn ──change_scene──▶ game_root.tscn（常驻，永不卸载）
 ```
 scenes/worlds/
   game_root.tscn / game_root.gd        常驻根场景
-  _base/
+  _base/                               关卡底座与通用组件（所有关卡共用）
 	world_template.tscn / .gd          区域底座（WorldArea）
 	entry_point.tscn / .gd             入口标记（EntryPoint）
 	level_gate.tscn / .gd              转场门（LevelGate）
 	boss_fog_gate.tscn / .gd           BOSS 雾门（BossFogGate）
 	view_culler.gd                     全局视野剔除（ViewCuller，常驻在 game_root）
-	camera_bounds_rect.gd              可拖拽的相机边界矩形（CameraBoundsRect）
-  levels/
-	level_1.tscn / level_1.gd          区域：遗忘荒径
-	level_2.tscn                       区域：试炼回廊
+	camera_bounds_rect.gd              可拖拽的相机边界矩形 + 区域镜头缩放配置（CameraBoundsRect）
+	camera_zoom_zone.gd                挂在 CameraBounds 下的镜头放大/缩小子区域（CameraZoomZone）
+	parallax_bg.gd                     以世界坐标为锚点的背景视差（ParallaxBg）
+  _zones/                              可复用的区域挂件
+	rain_zone.tscn / .gd               雨区（RainZone）
+	grass_zone.tscn                    草地区域（AuZone 实例）
+	moss_floor.gd                      苔藓地面踩踏反馈（MossFloor）
+	wet_splash_behavior.gd             踩水溅水花（WetSplashBehavior）
+  levels/                              关卡实例：一关一目录，场景与专用脚本同放
+	moss_hole/
+	  moss_hole.tscn / .gd             区域：苔藓洞穴
+	moss_hole_0/
+	  moss_hole_0.tscn / .gd           区域：苔藓洞穴深处
+	  moss_hole_bone.gd                骨头堆踩踏反馈（MossHoleBone，仅本关使用）
+	tear_city/
+	  tear_city.tscn / .gd             区域：泪城
+	ruin_house/
+	  ruin_house.tscn / .gd            区域：废墟小屋（室内存档点）
+	_dev/                              开发与示例关，不参与正式流程
+	  level_1.tscn / level_1.gd        区域：遗忘荒径
+	  level_2.tscn                     区域：试炼回廊
 scenes/props/
   bench/bench.tscn / bench.gd          长椅存档点（Bench : EntryPoint）
   chest/chest.tscn / chest.gd          木箱（含 persistent_id）
@@ -73,7 +90,9 @@ autoload 顺序（`project.godot`）中 `GameSession` 放在最后，因为它�
 
 ### A. 新建一块区域
 
-- [ ] 复制 `scenes/worlds/levels/level_2.tscn` 作为模板
+- [ ] 在 `scenes/worlds/levels/` 下新建关卡目录（一关一目录，如 `levels/fungal_waste/`），
+      再复制 `levels/_dev/level_2.tscn` 到该目录并改名为 `<关卡名>.tscn` 作为模板
+- [ ] 关卡专用脚本与场景同放：`levels/fungal_waste/fungal_waste.gd`
 - [ ] 改根节点名（如 `WorldLevel3`）
 - [ ] 设 `zone_name`（存档页显示的名字）
 - [ ] 在 2D 编辑器里拖 `CameraBounds/CollisionShape2D` 的 handles，把绿框调到"镜头中心能走的范围"（见 G 节）
@@ -181,12 +200,12 @@ autoload 顺序（`project.godot`）中 `GameSession` 放在最后，因为它�
 - [ ] **两个框内部默认完全透明**（`fill_alpha = 0`），只留描边，不遮挡关卡内容；内部子节点 `CollisionShape2D` 的调试背景色也由 `fill_alpha` 控制，`world_template.tscn` 里直接存了 `debug_color = Color(0, 0.6, 0.7, 0)` 做双保险
 - [ ] 绿框四角有实心圆：`corner_color` 配色、`corner_size` 调半径，视图缩小时自动放大
 - [ ] `debug_draw`（默认开）控制整组提示；运行时 `_process` 关闭、`_draw` 直接返回，零开销
-- [ ] 编辑器拿不到运行时的 `rig.zoom`，红框按 `preview_zoom`（默认 `Vector2.ONE`）画；**若关卡默认 zoom 不是 1，把它填成同值**
+- [ ] 编辑器拿不到运行时的 `rig.zoom`，红框按 `preview_zoom`（默认 `Vector2.ONE`）画；**若开发「区域镜头 Zoom」总开关，红框自动改用 `area_zoom`**；开关关闭时若关卡默认 zoom 不是 1，才需要手动把 `preview_zoom` 填成同值
 
 **换算**（组件内部做，`GameSession._apply_camera_bounds()` 只取结果）：
 
 ```
-half = 视口尺寸 / (2 * zoom)          # 本项目 zoom=1 → (960, 540)
+half = 视口尺寸 / (2 * zoom)          # 默认 zoom=1 → (960, 540)；配了区域 zoom 则按 area_zoom
 
 limit_left   = rect.position.x − half.x
 limit_right  = rect.end.x      + half.x
@@ -210,11 +229,41 @@ limit_bottom = rect.end.y      + half.y
 - **`resource_local_to_scene = true` 必须保留**：`RectangleShape2D` 是子资源，默认在继承场景间共享，否则改 level_1 的框会把 level_2 的一起改掉。脚本 `_ready()` 里还有一次 `duplicate()` 兜底。实测 `shapes independent = true` ✓
 - **用 shape handles 改大小，不要缩放节点**：组件按 `shape.size × global_scale` 计算，缩放节点虽然也能用，但编辑器里不直观
 - **地图加内容后要手动拖一下**：这是本方案的取舍（换掉了自动扫描那套复杂度）
-- **zoom 变化会自动重算**：`AuCameraRig.zoom_changed` 信号（含 tween 逐帧）→ `GameSession.refresh_camera_limits()` → 四条 limit 同步更新。也可手动调 `GameSession.refresh_camera_limits()`
+- **zoom 变化会自动重算**：`AuCameraRig.zoom_changed` 信号（含 tween 逐帧）→ `GameSession.refresh_camera_limits()` → 四条 limit 同步更新。也可手动调 `GameSession.refresh_camera_limits()`；区域 zoom / 缩放子区域都走这条链路，不需要额外接线
 - **`resource_local_to_scene = true` 与 `_own_shape()`**：前者保证继承场景间不共享 shape；后者只在运行时 `duplicate()` 兜底，编辑器里跳过，否则保存关卡时会把拖好的尺寸改写成一条 shape override
 - 形状无效（删了 CollisionShape2D 或换成非矩形）时回落 `±1000 万`，等于不限制
 
 **验证方法**：运行时打印 `get_viewport().get_camera_2d().get_screen_center_position()`，让玩家走到四个角，检查中心是否被钳在 `rect` 内。
+
+### G2. 区域镜头放大 / 缩小
+
+每关的 `CameraBounds` 节点同时承载镜头缩放配置。默认 `zoom_enabled = false`，老关卡行为完全不变（zoom 恒为 `AuCameraRig.zoom` = `Vector2.ONE`）。
+
+**整关一个固定 zoom**：选中 `CameraBounds` → Inspector「区域镜头 Zoom」
+
+| 参数 | 默认 | 说明 |
+| --- | --- | --- |
+| `zoom_enabled` | `false` | 总开关；关 = 完全不碰相机 zoom |
+| `area_zoom` | `Vector2.ONE` | 本关基础 zoom：`> 1` 放大（拉近）、`< 1` 缩小（拉远）；离开缩放子区域后回落到它 |
+| `zoom_duration` | `0.0` | 换关时从上一关 zoom 渐变过来的秒数；`0` = 黑场里瞬间生效（推荐） |
+| `zoom_blend` | `0.4` | 玩家进出缩放子区域的渐变秒数 |
+| `zone_margin` | `32.0` | 子区域边缘迟滞（世界单位），防止贴边来回走导致镜头反复缩放 |
+
+打开总开关后编辑器红色外框自动按 `area_zoom` 画（`preview_zoom` 不再参与）；`zoom` 变化经 `zoom_changed → GameSession.refresh_camera_limits()` 逐帧重算四条 limit，放大后依然是「框住相机中心」。
+
+**局部区域放大 / 缩小**：在 `CameraBounds` 下加子节点（Node2D）并挂 `res://scenes/worlds/_base/camera_zoom_zone.gd`
+
+- [ ] 拖节点 = 平移区域；Inspector 填 `size`（默认 960×540）、`zone_zoom`、`priority`
+- [ ] `centered` 默认 `true` = 节点位置是矩形中心；`enabled = false` 可临时停用
+- [ ] 2D 编辑器里画蓝框 + `zoom x1.25` 标签，`show_in_editor` / `fill_alpha` / `zone_color` 可配
+- [ ] 玩家（`"player"` 组）走进去 → 按 `zoom_blend` 秒渐变到 `zone_zoom`；走出来 → 回落到 `area_zoom`
+- [ ] 重叠时 `priority` 大者生效，相同取靠前的子节点；已激活区域要走出 `zone_margin` 之外才算离开
+
+运行时由 `CameraBoundsRect` 每帧按玩家位置算目标 zoom，只在变化时调一次 `AuCameraDirector.tween_zoom()`；分镜 / BOSS 演出 `push_override()` 期间自动让位，结束后回落到当前区域本该有的 zoom。没配子区域时运行时 `_process` 关闭，零开销。
+
+**链路**：`GameSession._swap_area()` → `CameraBounds.apply_zoom_config()`（换关时设基础 zoom，并同步 `AuCameraDirector._base_zoom`）→ `_apply_camera_bounds()`。F6 单关自举由 `WorldArea._bootstrap_standalone()` 补同一调用，并自己接 `zoom_changed` 刷新 limit。
+
+> 没配置（`zoom_enabled = false` 或没有 `CameraBounds`）的区域会回落到**项目默认 zoom**（`game_root` 里 `AuCameraRig.zoom`，当前是 `Vector2.ONE`，由 `bind_root()` 记录并经 `apply_zoom_config(default_zoom)` 传入），既不会把上一关的放大 / 缩小带过来，也不会覆盖全局初始 zoom。`AuCameraRig.apply_zoom()` 会先杀掉上一条 zoom tween，快速进出区域时不会有多条缓动同时写 `zoom`。
 
 ### H. 加一个一次性物件
 
@@ -287,9 +336,27 @@ toast.show_text("已保存")
 | `@export fill_alpha` | `0.0`，绿框填充**与** `CollisionShape2D.debug_color.a` 的不透明度；默认全透明，调大才铺色块 |
 | `@export corner_color` | `Color(0.30,1.0,0.45,0.95)`，绿框四角实心圆的颜色 |
 | `@export corner_size` | `20.0`，四角实心圆半径（世界单位），缩小时自动放大 |
-| `@export preview_zoom` | `Vector2.ONE`，编辑器画红框时假定的 zoom（运行时不读，用 `rig.zoom`） |
+| `@export preview_zoom` | `Vector2.ONE`，编辑器画红框时假定的 zoom（运行时不读；`zoom_enabled` 开着时红框自动改用 `area_zoom`） |
+| `@export zoom_enabled` | `false`，区域镜头缩放总开关；关 = 不动相机 zoom |
+| `@export area_zoom` | `Vector2.ONE`，本关基础 zoom（`> 1` 放大 / `< 1` 缩小），也是缩放子区域的回落值 |
+| `@export zoom_duration` | `0.0`，换关时渐变到基础 zoom 的秒数 |
+| `@export zoom_blend` | `0.4`，进出缩放子区域的渐变秒数 |
+| `@export zone_margin` | `32.0`，缩放子区域边缘迟滞（世界单位） |
 | `get_center_rect() -> Rect2` | 相机中心允许活动的世界矩形（来自 `CollisionShape2D` 的 shape） |
 | `get_camera_limits(zoom, viewport_size) -> Rect2` | 换算成 Camera2D 四条 limit，由 `GameSession` 换关时调用 |
+| `get_area_zoom() -> Vector2` | 生效的基础 zoom；总开关关闭时返回项目默认 zoom（由 `apply_zoom_config` 传入） |
+| `get_zoom_zones() -> Array[CameraZoomZone]` | 节点下挂的全部缩放子区域 |
+| `get_zoom_at(pos) -> Vector2` | 玩家在 `pos` 时应该生效的 zoom（含区域优先级与迟滞） |
+| `apply_zoom_config(default_zoom := Vector2.ONE)` | 换关 / F6 自举时应用基础 zoom 并按需开启运行时检测；参数是项目默认 zoom |
+
+### CameraZoomZone（CameraBounds 的子节点）
+
+| 成员 | 说明 |
+| --- | --- |
+| `@export enabled` / `size` / `centered` | `true` / `960×540` / `true`：区域开关、大小、位置是否为中心 |
+| `@export zone_zoom` / `priority` | `Vector2(1.25,1.25)` / `0`：进入时的 zoom、重叠时的优先级 |
+| `@export show_in_editor` / `fill_alpha` / `zone_color` | 编辑器蓝框 + zoom 标签的显隐 / 填充 / 颜色 |
+| `get_world_rect()` / `contains_point(pos, margin)` | 世界矩形与命中判定（供 `CameraBoundsRect` 调用） |
 
 ### EntryPoint / LevelGate / Bench / BossFogGate / ViewCuller / Chest
 
@@ -318,7 +385,7 @@ toast.show_text("已保存")
 ```json
 {
   "version": 2,
-  "area_path": "res://scenes/worlds/levels/level_2.tscn",
+  "area_path": "res://scenes/worlds/levels/_dev/level_2.tscn",
   "scene_path": "…（旧字段，兼容保留）",
   "entry_id": "bench_03",
   "zone": "试炼回廊",
@@ -440,7 +507,7 @@ toast.show_text("已保存")
 | `AuZoneDirector` | autoload | 通道仲裁中心：同一通道多层区域时决定谁生效 | `surface()` / `has_tag()` / `top_of(channel)` | 全局常驻 |
 | `AuZoneBehavior` | `addons/zone_director/AuZoneBehavior.gd` | 区域行为基类，挂在 AuZone 子节点 | `on_entered` / `on_exited` / `on_gained` / `on_lost` | — |
 | `AuFootstepBehavior` | `addons/zone_director/behaviors/` | 按地面材质播脚步声 | `footstep_streams` / `step_interval` | `GrassZone/FootstepBehavior`、`RainZone/Zone/FootstepBehavior2` |
-| `WetSplashBehavior` | `scenes/worlds/_zones/behaviors/` | 踩水溅水花 | `effect_sheet` / `splash_z_index` | `RainZone/Zone/WetSplashBehavior` |
+| `WetSplashBehavior` | `scenes/worlds/_zones/wet_splash_behavior.gd` | 踩水溅水花 | `effect_sheet` / `splash_z_index` | `RainZone/Zone/WetSplashBehavior` |
 | `BossArenaBehavior` | `scenes/characters/bosses/_base/behaviors/` | 玩家踏入竞技场即开战 | `auto_start_fight` / `boss_node` | `HollowKnightScene/BossArena/BossArenaBehavior`、`SoulMasterScene/BossArena/BossArenaBehavior` |
 
 > `AuZone` 只负责“谁在里面”，**开战是 `BossArenaBehavior` 做的**。
@@ -467,10 +534,11 @@ toast.show_text("已保存")
 | `AuShotBehavior` | `behaviors/shot_behavior.gd` | 镜头接管（分镜 / BOSS 演出） | 目标 / zoom | `AuCameraDirector.push_override()` |
 | `AuCameraLockArea` | `addons/camera_director/AuCameraLockArea.gd` | 局部相机锁定区；编辑器里矩形内部透明、四角画可配色的实心方框 | Inspector 四组：① 区域 `area_size` / `centered` / `detect_layer` ② 锁定（子组 参考点 / 活动范围）`*_lock_marker` / `*_range` ③ 镜头行为 `can_look_up` / `can_look_down` ④ 编辑器预览 `show_corners_in_editor` / `fill_alpha` / `corner_color` / `corner_size` | level_1 `CameraLock/Areas/RightCameraLock`、`LeftCameraLock`、`ZoomCameraLock`、`HollowKnightCameraLock`、`SoulMasterCameraLock` |
 | 锁定参考点 | level_1 `CameraLock/Markers/*` | 锁定用的 Marker2D | — | `vertical_lock` / `horizontal_lock` / `hollow_knight_lock` / `soul_master_lock` |
-| `CameraBoundsRect` | `_base/camera_bounds_rect.gd`（`@tool` Area2D） | 编辑器里可拖拽的**相机中心活动范围**，自身换算成四条 limit；预览框与内部 `CollisionShape2D` 背景都透明、四角实心圆可配色 | `debug_draw` / `preview_zoom` / `fill_alpha` / `corner_color` / `corner_size` / `CollisionShape2D.shape` | `WorldTemplate/CameraBounds`，每个 Area 继承一份 |
+| `CameraBoundsRect` | `_base/camera_bounds_rect.gd`（`@tool` Area2D） | 编辑器里可拖拽的**相机中心活动范围**，自身换算成四条 limit；同时承载**本关镜头缩放配置**（基础 zoom + 子区域进出切换）；预览框与内部 `CollisionShape2D` 背景都透明、四角实心圆可配色 | Inspector 两组：① 区域镜头 `zoom_enabled` / `area_zoom` / `zoom_duration` / `zoom_blend` / `zone_margin` ② 编辑器预览 `debug_draw` / `preview_zoom` / `fill_alpha` / `corner_color` / `corner_size`；外加 `CollisionShape2D.shape` | `WorldTemplate/CameraBounds`，每个 Area 继承一份 |
+| `CameraZoomZone` | `_base/camera_zoom_zone.gd`（`@tool` Node2D） | 挂在 `CameraBounds` 下的**镜头放大 / 缩小子区域**；编辑器画蓝框 + zoom 标签 | `enabled` / `size` / `centered` / `zone_zoom` / `priority` / `show_in_editor` / `fill_alpha` / `zone_color` | 按需在各关卡添加（模板里不预置） |
 | `CollisionShape2D` | `CameraBounds` 子节点 | 拖 handles 改矩形大小（原生编辑器交互） | `RectangleShape2D.size` / `position` | level_1 `9888×1425 @ (1944,-247.5)`；level_2 `2880×710 @ (2080,105)` |
 
-> `AuCameraLockArea` 是**局部行为**（在某区域内改变跟随目标 / 范围），`CameraBoundsRect` 是**全局硬边界**（限制镜头中心能走到哪），两者叠加生效。
+> `AuCameraLockArea` 是**局部行为**（在某区域内改变跟随目标 / 范围），`CameraBoundsRect` 是**全局硬边界 + 区域 zoom 配置**（限制镜头中心能走到哪、镜头放多大），两者叠加生效。
 
 ### 9.4 关卡流转
 
@@ -584,7 +652,8 @@ toast.show_text("已保存")
 | 组件 | 作用 |
 | --- | --- |
 | `scenes/debug/character_debug.tscn` | 角色调试面板（由 `Globals.debug_enabled` 控制显隐） |
-| `CameraBoundsRect.debug_draw` | 编辑器 2D 视图画绿框（中心范围）+ 红色外框（实际可见范围），可拖 handles 调大小；`fill_alpha` 默认 0 = 内部全透明（含 `CollisionShape2D` 调试背景），四角实心圆由 `corner_color` / `corner_size` 配置 |
+| `CameraBoundsRect.debug_draw` | 编辑器 2D 视图画绿框（中心范围）+ 红色外框（实际可见范围，跟着 `area_zoom` / `preview_zoom` 变），可拖 handles 调大小；`fill_alpha` 默认 0 = 内部全透明（含 `CollisionShape2D` 调试背景），四角实心圆由 `corner_color` / `corner_size` 配置 |
+| `CameraZoomZone` 蓝框 | 编辑器 2D 视图画缩放子区域轮廓 + `zoom x1.25` 标签；`show_in_editor` / `fill_alpha` / `zone_color` 可配 |
 | `AuCameraLockArea` 四角方框 | 编辑器 2D 视图在锁定区四角画实心方框 + 矩形轮廓；`corner_color` / `corner_size` / `show_corners_in_editor` 可配。`fill_alpha` 默认 `0` = 矩形内部完全透明（同步到 `CollisionShape2D.debug_color`） |
 | `AuZone` 四角三角形 | 编辑器 2D 视图在区域四角画实心直角三角形；`corner_color` / `corner_size` / `show_corners_in_editor` 可配。`fill_alpha` 默认 `0` = 矩形内部与 `CollisionShape2D` 调试背景都全透明，只留描边 |
 | `addons/gdUnit4` | 单元测试框架 |
@@ -596,7 +665,7 @@ toast.show_text("已保存")
 | 易混 | 区别 |
 | --- | --- |
 | `AuZone` vs `ViewCuller` | 前者查询“谁在里面”并广播事件；后者按屏幕距离开关节点，不广播任何东西 |
-| `AuCameraLockArea` vs `CameraBoundsRect` | 前者是局部行为（改跟随 / 范围 / 缩放）；后者是全局硬边界（限制相机中心活动范围） |
+| `AuCameraLockArea` vs `CameraBoundsRect` | 前者是局部行为（改跟随目标 / 活动范围，**不改 zoom**）；后者是全局硬边界 + 区域 zoom 配置（限制相机中心活动范围、控制镜头放大缩小） |
 | `EnemyZone` vs `leash_range` | 领地决定何时开战；leash 决定追多远，两者用 `zone_exit_chase_time` 衔接 |
 | `BossArena`（AuZone）vs `BossFogGate` | 前者是开战触发器；后者是战斗中的物理封锁 |
 | `EntryPoint` vs `Bench` | Bench 是“带存档行为的 EntryPoint”，因此能被 `get_entry()` 直接当作复活点 |

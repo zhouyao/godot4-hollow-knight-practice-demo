@@ -1,0 +1,1341 @@
+{
+  "level": "TearCity",
+  "objects": [
+    {
+      "source_line": 23,
+      "type": "LevelTransformer",
+      "pos": [
+        -1050.0,
+        875.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "target_level": "RuinHouse",
+      "target_pos": [
+        550.0,
+        900.0
+      ],
+      "target_camera": [
+        -100.0,
+        250.0,
+        100.0,
+        750.0
+      ]
+    },
+    {
+      "source_line": 24,
+      "type": "LevelTransformer",
+      "pos": [
+        1850.0,
+        875.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "target_level": "BossHouse",
+      "target_pos": [
+        -1200.0,
+        900.0
+      ],
+      "target_camera": [
+        -675.0,
+        -250.0,
+        475.0,
+        675.0
+      ]
+    },
+    {
+      "source_line": 26,
+      "type": "Bg",
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_0",
+      "layer": -30,
+      "move_layer": -30
+    },
+    {
+      "source_line": 27,
+      "type": "Bg",
+      "pos": [
+        2500.0,
+        350.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_1",
+      "layer": -20,
+      "move_layer": -20
+    },
+    {
+      "source_line": 28,
+      "type": "Bg",
+      "pos": [
+        -1200.0,
+        300.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_2",
+      "layer": -15,
+      "move_layer": -15
+    },
+    {
+      "source_line": 29,
+      "type": "Bg",
+      "pos": [
+        500.0,
+        1000.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_3",
+      "layer": -10,
+      "move_layer": -10
+    },
+    {
+      "source_line": 32,
+      "type": "Bg",
+      "pos": [
+        0.0,
+        600.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_0",
+      "layer": -3,
+      "move_layer": -3,
+      "blur": true
+    },
+    {
+      "source_line": 34,
+      "type": "Animated",
+      "pos": [
+        -60.0,
+        760.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_fountain",
+      "delay": 0.05,
+      "layer": 0,
+      "alpha_255": 255,
+      "attach_to": "ev0"
+    },
+    {
+      "source_line": 35,
+      "type": "Animated",
+      "pos": [
+        50.0,
+        760.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_fountain",
+      "delay": 0.04,
+      "layer": -1,
+      "alpha_255": 255,
+      "attach_to": "ev0"
+    },
+    {
+      "source_line": 36,
+      "type": "Animated",
+      "pos": [
+        -200.0,
+        760.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_fountain",
+      "delay": 0.08,
+      "layer": -4,
+      "alpha_255": 255,
+      "attach_to": "ev0"
+    },
+    {
+      "source_line": 37,
+      "type": "Animated",
+      "pos": [
+        -150.0,
+        760.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_fountain",
+      "delay": 0.06,
+      "layer": -7,
+      "alpha_255": 255,
+      "attach_to": "ev0"
+    },
+    {
+      "source_line": 38,
+      "type": "Animated",
+      "pos": [
+        150.0,
+        760.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_fountain",
+      "delay": 0.08,
+      "layer": -6,
+      "alpha_255": 255,
+      "attach_to": "ev0"
+    },
+    {
+      "source_line": 40,
+      "type": "Bg",
+      "pos": [
+        0.0,
+        975.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_1",
+      "layer": -2,
+      "move_layer": -2
+    },
+    {
+      "source_line": 47,
+      "type": "Bg",
+      "pos": [
+        -1000.0,
+        800.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_2",
+      "layer": -3,
+      "move_layer": -3
+    },
+    {
+      "source_line": 48,
+      "type": "Bg",
+      "pos": [
+        -700.0,
+        450.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_3",
+      "layer": 2,
+      "move_layer": 2
+    },
+    {
+      "source_line": 50,
+      "type": "Bg",
+      "pos": [
+        500.0,
+        1080.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_water",
+      "layer": 4,
+      "move_layer": 4
+    },
+    {
+      "source_line": 63,
+      "type": "Interactive",
+      "pos": [
+        -850.0,
+        800.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_19",
+      "layer": -2,
+      "broken_sprite": "tearcity_environment_4",
+      "collision_size": [
+        30.0,
+        250.0
+      ],
+      "flag": true
+    },
+    {
+      "source_line": 65,
+      "type": "Interactive",
+      "pos": [
+        -400.0,
+        850.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_16",
+      "layer": -2,
+      "broken_sprite": "tearcity_environment_5",
+      "collision_size": [
+        20.0,
+        210.0
+      ],
+      "flag": false
+    },
+    {
+      "source_line": 67,
+      "type": "Bg",
+      "pos": [
+        1200.0,
+        875.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_6",
+      "layer": 5
+    },
+    {
+      "source_line": 68,
+      "type": "Bg",
+      "pos": [
+        800.0,
+        680.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_7",
+      "layer": 0
+    },
+    {
+      "source_line": 69,
+      "type": "Bg",
+      "pos": [
+        900.0,
+        980.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_8",
+      "layer": 5,
+      "move_layer": 5
+    },
+    {
+      "source_line": 70,
+      "type": "Bg",
+      "pos": [
+        750.0,
+        1075.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_9",
+      "layer": -2,
+      "move_layer": -2
+    },
+    {
+      "source_line": 71,
+      "type": "Interactive",
+      "pos": [
+        1100.0,
+        850.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_10",
+      "layer": -2,
+      "broken_sprite": "tearcity_environment_14",
+      "collision_size": [
+        20.0,
+        200.0
+      ],
+      "flag": false
+    },
+    {
+      "source_line": 73,
+      "type": "Bg",
+      "pos": [
+        1580.0,
+        975.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_11",
+      "layer": 4,
+      "move_layer": 4
+    },
+    {
+      "source_line": 74,
+      "type": "Bg",
+      "pos": [
+        1500.0,
+        830.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_12",
+      "layer": -1,
+      "move_layer": -1
+    },
+    {
+      "source_line": 75,
+      "type": "Bg",
+      "pos": [
+        -600.0,
+        1050.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_13",
+      "layer": -2,
+      "move_layer": -2
+    },
+    {
+      "source_line": 76,
+      "type": "Interactive",
+      "pos": [
+        450.0,
+        845.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_10",
+      "layer": 5,
+      "broken_sprite": "tearcity_environment_14",
+      "collision_size": [
+        20.0,
+        200.0
+      ],
+      "flag": false
+    },
+    {
+      "source_line": 78,
+      "type": "Bg",
+      "pos": [
+        -785.0,
+        950.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_15",
+      "layer": 5,
+      "move_layer": 5
+    },
+    {
+      "source_line": 79,
+      "type": "Interactive",
+      "pos": [
+        300.0,
+        500.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_environment_17",
+      "layer": -1,
+      "broken_sprite": "tearcity_environment_18",
+      "collision_size": [
+        20.0,
+        200.0
+      ],
+      "flag": true
+    },
+    {
+      "source_line": 82,
+      "type": "PlatForm",
+      "pos": [
+        650.0,
+        400.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_plat_0",
+      "collision_size": [
+        130.0,
+        60.0
+      ],
+      "collision_offset": [
+        0.0,
+        -25.0
+      ]
+    },
+    {
+      "source_line": 83,
+      "type": "PlatForm",
+      "pos": [
+        300.0,
+        700.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_plat_2",
+      "collision_size": [
+        80.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "source_line": 84,
+      "type": "PlatForm",
+      "pos": [
+        800.0,
+        750.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_plat_1",
+      "collision_size": [
+        80.0,
+        70.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 85,
+      "type": "PlatForm",
+      "pos": [
+        50.0,
+        200.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_plat_4",
+      "collision_size": [
+        350.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        -30.0
+      ]
+    },
+    {
+      "source_line": 87,
+      "type": "PlatForm",
+      "pos": [
+        0.0,
+        1075.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_floor",
+      "collision_size": [
+        1125.0,
+        210.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 95,
+      "type": "PlatForm",
+      "pos": [
+        -1300.0,
+        1075.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_floor",
+      "collision_size": [
+        1125.0,
+        210.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 96,
+      "type": "PlatForm",
+      "pos": [
+        1500.0,
+        1075.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "tearcity_floor",
+      "collision_size": [
+        925.0,
+        210.0
+      ],
+      "collision_offset": [
+        -100.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 98,
+      "type": "PlatForm",
+      "pos": [
+        -1000.0,
+        250.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        100.0,
+        1100.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 99,
+      "type": "PlatForm",
+      "pos": [
+        1850.0,
+        250.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        100.0,
+        1100.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 101,
+      "type": "PlatForm",
+      "pos": [
+        -650.0,
+        1175.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        200.0,
+        100.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 102,
+      "type": "PlatForm",
+      "pos": [
+        775.0,
+        1175.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        450.0,
+        100.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 105,
+      "type": "Chest",
+      "pos": [
+        0.0,
+        68.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 107,
+      "type": "Bug",
+      "pos": [
+        1100.0,
+        890.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 108,
+      "type": "Bug",
+      "pos": [
+        650.0,
+        300.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 109,
+      "type": "Bug",
+      "pos": [
+        -500.0,
+        890.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 111,
+      "type": "Fly",
+      "pos": [
+        0.0,
+        800.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 112,
+      "type": "Fly",
+      "pos": [
+        450.0,
+        500.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 114,
+      "type": "RainProducer",
+      "pos": [
+        500.0,
+        -500.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 42,
+      "type": "Animated",
+      "pos": [
+        -225.0,
+        925.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": -2,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 42,
+      "type": "Animated",
+      "pos": [
+        -125.0,
+        925.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": -2,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 42,
+      "type": "Animated",
+      "pos": [
+        -25.0,
+        925.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": -2,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 42,
+      "type": "Animated",
+      "pos": [
+        75.0,
+        925.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": -2,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 42,
+      "type": "Animated",
+      "pos": [
+        175.0,
+        925.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": -2,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 53,
+      "type": "Animated",
+      "pos": [
+        -1000.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_top",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 53,
+      "type": "Animated",
+      "pos": [
+        -700.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_top",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 53,
+      "type": "Animated",
+      "pos": [
+        -400.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_top",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 53,
+      "type": "Animated",
+      "pos": [
+        -100.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_top",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 53,
+      "type": "Animated",
+      "pos": [
+        200.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_top",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 53,
+      "type": "Animated",
+      "pos": [
+        500.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_top",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 53,
+      "type": "Animated",
+      "pos": [
+        800.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_top",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 53,
+      "type": "Animated",
+      "pos": [
+        1100.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_top",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 53,
+      "type": "Animated",
+      "pos": [
+        1400.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_top",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 53,
+      "type": "Animated",
+      "pos": [
+        1700.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "water_top",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 57,
+      "type": "Animated",
+      "pos": [
+        -1000.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 57,
+      "type": "Animated",
+      "pos": [
+        -700.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 57,
+      "type": "Animated",
+      "pos": [
+        -400.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 57,
+      "type": "Animated",
+      "pos": [
+        -100.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 57,
+      "type": "Animated",
+      "pos": [
+        200.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 57,
+      "type": "Animated",
+      "pos": [
+        500.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 57,
+      "type": "Animated",
+      "pos": [
+        800.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 57,
+      "type": "Animated",
+      "pos": [
+        1100.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 57,
+      "type": "Animated",
+      "pos": [
+        1400.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 57,
+      "type": "Animated",
+      "pos": [
+        1700.0,
+        1005.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 89,
+      "type": "Animated",
+      "pos": [
+        -500.0,
+        975.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 89,
+      "type": "Animated",
+      "pos": [
+        -300.0,
+        975.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 89,
+      "type": "Animated",
+      "pos": [
+        -100.0,
+        975.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 89,
+      "type": "Animated",
+      "pos": [
+        100.0,
+        975.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    },
+    {
+      "source_line": 89,
+      "type": "Animated",
+      "pos": [
+        300.0,
+        975.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "rain_land",
+      "delay": 0.08,
+      "layer": 4,
+      "alpha_255": 255
+    }
+  ]
+}

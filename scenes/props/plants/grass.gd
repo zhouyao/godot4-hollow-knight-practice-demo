@@ -180,11 +180,17 @@ func _die(_from: Node2D = null) -> void:
 
 	# 3. 叶片粒子迸发
 	var host := get_parent()
-	var burst := LEAF_BURST.instantiate()
+	var burst := LEAF_BURST.instantiate() as Node2D
 	host.add_child(burst)
 	# 必须先 add_child 再赋 global_position：节点未入树时 global_position 会被当成局部坐标，
 	# 而本体的父节点（关卡里的 G0/G1 等分组节点）自身带位移，会导致特效被二次偏移。
 	burst.global_position = global_position
+	# 叶片与草同层并盖在草前面：MossHole 等关卡给草单独配了 z_index（-2/-1/4），
+	# 而粒子默认 z=0，会被前景苔藓层（z=2~13）整片盖住，看起来像"特效丢失"。
+	burst.z_index = z_index + 1
+	# 本项目开了 2D 物理插值：位置改变后必须重置，否则起爆首帧会从世界原点飞过来
+	# （与 chest.gd 对 chest_burst 的处理一致）。
+	burst.reset_physics_interpolation()
 
 	# 4. 受击刀光：由本节点 hit_effect_by_source 决定（默认 &"slash" → nail 刀光），可按来源细分。
 	HitEffect.spawn(self, global_position, host,

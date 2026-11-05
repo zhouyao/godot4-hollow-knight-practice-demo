@@ -19,8 +19,19 @@ const SLOT_COUNT := 4
 const SAVE_DIR := "user://saves"
 ## v2：scene_path 拆成 area_path + entry_id + flags（一次性物件持久化）。
 const SAVE_VERSION := 2
-const DEFAULT_SCENE_PATH := "res://scenes/worlds/levels/level_1.tscn"
+const DEFAULT_SCENE_PATH := "res://scenes/worlds/levels/moss_hole/moss_hole.tscn"
 const DEFAULT_ENTRY_ID := "default"
+
+## 关卡目录整理（levels/ 一关一目录）之前的旧路径 → 新路径。
+## 存档里落的是完整 res:// 路径，老档必须迁移，否则读档时找不到场景会回落到默认关。
+const LEGACY_AREA_PATHS := {
+	"res://scenes/worlds/levels/MossHole.tscn": "res://scenes/worlds/levels/moss_hole/moss_hole.tscn",
+	"res://scenes/worlds/levels/MossHole_0.tscn": "res://scenes/worlds/levels/moss_hole_0/moss_hole_0.tscn",
+	"res://scenes/worlds/levels/TearCity.tscn": "res://scenes/worlds/levels/tear_city/tear_city.tscn",
+	"res://scenes/worlds/levels/RuinHouse.tscn": "res://scenes/worlds/levels/ruin_house/ruin_house.tscn",
+	"res://scenes/worlds/levels/level_1.tscn": "res://scenes/worlds/levels/_dev/level_1.tscn",
+	"res://scenes/worlds/levels/level_2.tscn": "res://scenes/worlds/levels/_dev/level_2.tscn",
+}
 
 ## 当前选中的槽位（1 起）；-1 表示还没有进入任何存档。
 var current_slot: int = -1
@@ -92,7 +103,7 @@ func get_summary(slot: int) -> Dictionary:
 		"max_energy": int(player.get("max_energy", 0)),
 		"coin": int(inventory.get("coin", 0)),
 		"food": int(inventory.get("food", 0)),
-		"scene_path": String(data.get("area_path", data.get("scene_path", DEFAULT_SCENE_PATH))),
+		"scene_path": migrate_area_path(String(data.get("area_path", data.get("scene_path", DEFAULT_SCENE_PATH)))),
 		"entry_id": String(data.get("entry_id", DEFAULT_ENTRY_ID)),
 		"saved_at": String(data.get("saved_at", "")),
 	}
@@ -100,10 +111,15 @@ func get_summary(slot: int) -> Dictionary:
 
 ## 读档 / 新建后要进入的区域场景。
 func current_scene_path() -> String:
-	var path := String(_data.get("area_path", _data.get("scene_path", "")))
+	var path := migrate_area_path(String(_data.get("area_path", _data.get("scene_path", ""))))
 	if path.is_empty() or not ResourceLoader.exists(path):
 		return DEFAULT_SCENE_PATH
 	return path
+
+
+## 把目录整理前的旧关卡路径换成新位置；未知路径原样返回。
+func migrate_area_path(path: String) -> String:
+	return String(LEGACY_AREA_PATHS.get(path, path))
 
 
 ## 读档后玩家应出生的入口 ID（找不到该入口时 GameSession 会回落到 default）。
@@ -223,6 +239,9 @@ func load_game(slot: int) -> bool:
 		_data["flags"] = []
 	if String(_data.get("area_path", "")).is_empty():
 		_data["area_path"] = String(_data.get("scene_path", DEFAULT_SCENE_PATH))
+	# 目录整理前的旧档：把 area_path / scene_path 一起改写到新位置。
+	_data["area_path"] = migrate_area_path(String(_data["area_path"]))
+	_data["scene_path"] = migrate_area_path(String(_data.get("scene_path", _data["area_path"])))
 	if String(_data.get("entry_id", "")).is_empty():
 		_data["entry_id"] = DEFAULT_ENTRY_ID
 	return true

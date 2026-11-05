@@ -23,9 +23,39 @@ class_name CameraBoundsRect
 ## 实际可见范围。两个框内部默认完全透明，不遮挡关卡内容；绿框四角画实心圆，
 ## 颜色与半径可在「编辑器预览 Editor Preview」组里配。
 ## 内部子节点 `CollisionShape2D` 的调试背景色同样由 `fill_alpha` 控制，默认全透明。
-## 运行时 _process 立即关闭、_draw 直接返回，零开销。
+## 运行时 _draw 直接返回；没配缩放子区域时 _process 也关闭，零开销。
+##
+## 「区域镜头 Zoom」是运行时的镜头放大 / 缩小配置：本区域可设一个基础 zoom，
+## 也可以在节点下挂若干 `CameraZoomZone` 子区域，玩家走进去自动放大 / 缩小，
+## 走出来平滑回落到基础 zoom。换关时由 GameSession 调 `apply_zoom_config()` 生效。
 
 const REDRAW_INTERVAL := 0.5
+
+@export_group("区域镜头 Zoom")
+## 总开关：关 = 完全不动相机 zoom（沿用 game_root 里 `AuCameraRig.zoom`，老关卡行为不变）。
+## 开 = 换关时把相机设成 `area_zoom`；挂了 `CameraZoomZone` 子节点时还会按区域自动缩放。
+@export var zoom_enabled: bool = false:
+	set(value):
+		zoom_enabled = value
+		queue_redraw()
+
+## 本区域的基础 zoom：> 1 放大（拉近）、< 1 缩小（拉远）。
+## 也是离开缩放子区域后的回落值；0 / 负数运行时会被钳到 0.05。
+@export var area_zoom: Vector2 = Vector2.ONE:
+	set(value):
+		area_zoom = value
+		queue_redraw()
+
+## 换关进入本区域时，从上一关的 zoom 渐变到 `area_zoom` 的秒数。
+## 0 = 立即生效（推荐：换关在黑场里完成，不会露出半截缓动）。
+@export_range(0.0, 2.0, 0.05) var zoom_duration: float = 0.0
+
+## 玩家进出缩放子区域时的渐变秒数。
+@export_range(0.0, 2.0, 0.05) var zoom_blend: float = 0.4
+
+## 缩放子区域边界的迟滞（世界单位）：已激活的区域要走出 margin 之外才算离开，
+## 避免玩家贴着边缘来回走时镜头反复放大 / 缩小。
+@export_range(0.0, 512.0, 8.0) var zone_margin: float = 32.0
 
 @export_group("编辑器预览 Editor Preview")
 ## 编辑器 2D 视图里画出两层框（运行时无效）。
@@ -35,8 +65,8 @@ const REDRAW_INTERVAL := 0.5
 		queue_redraw()
 
 ## 编辑器里画红色外框时假定的 zoom（编辑器拿不到运行时的 AuCameraRig）。
-## 若关卡默认 zoom 不是 1，把它填成同一个值，预览的红框才与实际一致。
-## 运行时不读它 —— 真正的换算用 GameSession 传入的 rig.zoom。
+## `zoom_enabled = true` 时红框自动改用 `area_zoom`；本项只在总开关关闭时生效，
+## 供老关卡手动对齐预览。运行时不读它 —— 真正的换算用 GameSession 传入的 rig.zoom。
 @export var preview_zoom: Vector2 = Vector2.ONE:
 	set(value):
 		preview_zoom = value
@@ -66,6 +96,10 @@ const REDRAW_INTERVAL := 0.5
 		queue_redraw()
 
 var _redraw_accum := 0.0
+## 运行时状态：当前生效的缩放子区域与相机 zoom（换关时由 apply_zoom_config 重置）。
+var _active_zone: CameraZoomZone = null
+var _current_zoom := Vector2.ONE
+var _default_zoom := Vector2.ONE
 
 
 func _ready() -> void:
@@ -85,13 +119,14 @@ func _notification(what: int) -> void:
 
 
 func _process(delta: float) -> void:
-	if not Engine.is_editor_hint():
-		set_process(false)
+	if Engine.is_editor_hint():
+		_redraw_accum += delta
+		if _redraw_accum >= REDRAW_INTERVAL:
+			_redraw_accum = 0.0
+			queue_redraw()
 		return
-	_redraw_accum += delta
-	if _redraw_accum >= REDRAW_INTERVAL:
-		_redraw_accum = 0.0
-		queue_redraw()
+	# 运行时只有配了缩放子区域才会被 apply_zoom_config() 打开
+	_update_zoom_zones()
 
 
 func _own_shape() -> void:
@@ -153,14 +188,105 @@ func get_camera_limits(zoom: Vector2, viewport_size: Vector2) -> Rect2:
 	return Rect2(r.position - half, r.size + half * 2.0)
 
 
+# ---------------------------------------------------------------- 区域镜头缩放
+
+## 未开启总开关时回落到项目默认 zoom（game_root 里 rig.zoom，由 apply_zoom_config 传入），
+## 保证「没配的区域」把上一关的缩放复位，又不会覆盖全局设定的初始 zoom。
+func get_area_zoom() -> Vector2:
+	return _safe_zoom(area_zoom) if zoom_enabled else _default_zoom
+
+
+static func _safe_zoom(v: Vector2) -> Vector2:
+	return Vector2(clampf(v.x, 0.05, 16.0), clampf(v.y, 0.05, 16.0))
+
+
+## 本区域下挂的全部缩放子区域（按子节点顺序）。
+func get_zoom_zones() -> Array[CameraZoomZone]:
+	var zones: Array[CameraZoomZone] = []
+	for child in get_children():
+		if child is CameraZoomZone:
+			zones.append(child as CameraZoomZone)
+	return zones
+
+
+## pos（一般是玩家世界坐标）处应该生效的 zoom；没有子区域命中则回落到 area_zoom。
+## 命中判定带迟滞，连续调用会偏向当前已激活的区域，避免边缘反复横跳。
+func get_zoom_at(pos: Vector2) -> Vector2:
+	var zone := _pick_zone(pos)
+	if zone == null:
+		return get_area_zoom()
+	return _safe_zoom(zone.zone_zoom)
+
+
+func _pick_zone(pos: Vector2) -> CameraZoomZone:
+	var best: CameraZoomZone = null
+	for zone in get_zoom_zones():
+		if not zone.enabled:
+			continue
+		var margin := zone_margin if zone == _active_zone else 0.0
+		if zone.contains_point(pos, margin) and (best == null or zone.priority > best.priority):
+			best = zone
+	_active_zone = best
+	return best
+
+
+## 换关时由 GameSession._swap_area() 调用（F6 单关自举也会调）：
+## `default_zoom` = 项目初始 zoom（game_root 里 rig.zoom），未配置本关时回落到它。
+## 把基础 zoom 写进相机，并按有没有缩放子区域决定要不要开运行时 _process。
+func apply_zoom_config(default_zoom := Vector2.ONE) -> void:
+	if Engine.is_editor_hint():
+		return
+	var director := _director()
+	if director == null:
+		return
+	_default_zoom = default_zoom
+	_active_zone = null
+	_current_zoom = get_area_zoom()
+	# tween_zoom 会同步 AuCameraDirector._base_zoom，过场接管结束后才能回到本区域的 zoom
+	director.call(&"tween_zoom", _current_zoom, zoom_duration)
+	set_process(zoom_enabled and not get_zoom_zones().is_empty())
+
+
+## 每帧按玩家位置算目标 zoom，只在发生变化时启动一次缓动。
+func _update_zoom_zones() -> void:
+	var director := _director()
+	if director == null or director.call(&"is_overridden"):
+		return  # 分镜 / BOSS 演出接管期间不抢 zoom
+	var player := get_tree().get_first_node_in_group(&"player") as Node2D
+	if player == null:
+		return
+	var desired := get_zoom_at(player.global_position)
+	if desired == _current_zoom:
+		return
+	_current_zoom = desired
+	director.call(&"tween_zoom", desired, zoom_blend)
+
+
+## 用相对 root 的查找而不是 /root 绝对路径：节点尚未进树时绝对路径会报错。
+## 不直接写 autoload 标识符，@tool 脚本在编辑器里也不会去碰单例。
+func _director() -> Node:
+	if not is_inside_tree():
+		return null
+	var tree := get_tree()
+	if tree == null or tree.root == null:
+		return null
+	return tree.root.get_node_or_null(^"AuCameraDirector")
+
+
 # ---------------------------------------------------------------- 编辑器绘制
+
+## zoom_enabled 开着时，编辑器红框按运行时真正会用的 area_zoom 画。
+func _effective_preview_zoom() -> Vector2:
+	return get_area_zoom() if zoom_enabled else preview_zoom
+
 
 func _preview_half() -> Vector2:
 	var vp := Vector2(
 		float(ProjectSettings.get_setting("display/window/size/viewport_width", 1920)),
 		float(ProjectSettings.get_setting("display/window/size/viewport_height", 1080))
 	)
-	var z := Vector2(maxf(absf(preview_zoom.x), 0.001), maxf(absf(preview_zoom.y), 0.001))
+	var pz := _effective_preview_zoom()
+	var z := Vector2(maxf(absf(pz.x), 0.001), maxf(absf(pz.y), 0.001))
 	return vp / (z * 2.0)
 
 

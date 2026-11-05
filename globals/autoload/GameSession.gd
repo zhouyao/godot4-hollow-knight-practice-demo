@@ -35,6 +35,8 @@ var current_entry_id: StringName = DEFAULT_ENTRY
 var _traveling := false
 ## 路径 -> PackedScene：切过的关常驻内存，来回走不重复读盘
 var _cache: Dictionary = {}
+## 项目初始 zoom（game_root 里 AuCameraRig.zoom）；没配区域 zoom 的关卡回落到它。
+var _default_zoom := Vector2.ONE
 
 
 # ---------------------------------------------------------------- 装配
@@ -47,8 +49,10 @@ func bind_root(root: Node) -> void:
 	# zoom 变化（含 tween 逐帧）会改变 half_w / half_h，四条 limit 必须跟着重算。
 	# 插件只发信号，项目侧决定是否响应。
 	var rig := root.get_node_or_null(^"AuCameraRig") as AuCameraRig
-	if rig != null and not rig.zoom_changed.is_connected(_on_camera_zoom_changed):
-		rig.zoom_changed.connect(_on_camera_zoom_changed)
+	if rig != null:
+		_default_zoom = rig.zoom
+		if not rig.zoom_changed.is_connected(_on_camera_zoom_changed):
+			rig.zoom_changed.connect(_on_camera_zoom_changed)
 
 
 func _on_camera_zoom_changed(_new_zoom: Vector2) -> void:
@@ -186,6 +190,7 @@ func _swap_area(area_path: String) -> void:
 
 	current_area = packed.instantiate()
 	_area_host().add_child(current_area)
+	_apply_area_zoom()
 	_apply_camera_bounds()
 
 	# 4) 把玩家插回"关卡内 Player"原来的绘制位置：模板里是 Drops 之前。
@@ -197,6 +202,19 @@ func _swap_area(area_path: String) -> void:
 
 	# 等一帧让新 Area 的 _ready（相机锁区注册、BOSS 读档判定等）跑完
 	await get_tree().process_frame
+
+
+## 换关时应用本区域的镜头缩放配置（`CameraBounds` 的「区域镜头 Zoom」）。
+## 区域没配 / 没有 CameraBounds 时复位成 Vector2.ONE，避免上一关的放大缩小残留。
+## zoom 变化（含 tween 逐帧）由 zoom_changed → refresh_camera_limits 同步四条 limit。
+func _apply_area_zoom() -> void:
+	var bounds: Node = null
+	if current_area != null:
+		bounds = current_area.get_node_or_null(^"CameraBounds")
+	if bounds != null and bounds.has_method(&"apply_zoom_config"):
+		bounds.call(&"apply_zoom_config", _default_zoom)
+		return
+	AuCameraDirector.tween_zoom(_default_zoom, 0.0)
 
 
 ## 套用当前区域的相机硬边界；区域没配（Rect2 为空）时恢复默认的大范围。
@@ -268,19 +286,25 @@ func _place_player(entry_id: StringName) -> void:
 	await snap_camera()
 
 
-## 把相机瞬移到玩家当前位置（切关 / 读档 / 传送后调用，避免镜头从旧位置滑过来）。
+## 把相机瞬移到玩家当前的位置（切关 / 读档 / 传送后调用，避免镜头从旧位置滑过来）。
+## 顺序是"先硬切、再等物理帧"：切之前先等一帧的话，那一帧相机还在用旧坐标配新 limit 跑
+## get_camera_transform()，既没用，又会让平滑状态再推进一次。
 func snap_camera() -> void:
 	if not is_instance_valid(player):
 		return
-	await get_tree().physics_frame
 	var root := get_tree().current_scene
 	if root == null:
 		return
 	var rig := root.get_node_or_null(^"AuCameraRig") as AuCameraRig
 	if rig == null:
 		return
-	rig.set_target_pos(player.global_position)
-	rig.snap_to_target()
+	# 对准跟随锚点而不是角色原点：CameraPosition 带 ±100 的水平偏移（还会随朝向翻转），
+	# 用原点硬切，淡入后相机会再挪 100~200px。
+	var camera_marker := player.get_node_or_null(^"CameraPosition") as Node2D
+	rig.teleport_to(camera_marker.global_position if camera_marker != null else player.global_position)
+	# 等相机在新位置跑完两个物理帧（limit 钳制 / 插值历史 / 平滑恢复都落定）再允许淡入。
+	await get_tree().physics_frame
+	await get_tree().physics_frame
 
 
 func _load_async(path: String) -> PackedScene:

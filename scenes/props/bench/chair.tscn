@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://djrm6t28r8ysk"]
+
+[ext_resource type="Script" uid="uid://y7va7k2hlsyh" path="res://scenes/props/bench/bench.gd" id="1_bench"]
+[ext_resource type="Texture2D" uid="uid://lc0rixlq25ku" path="res://assets/sprites/props/bench/chair.png" id="2_chair"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_chair"]
+size = Vector2(160, 93)
+
+[node name="Bench" type="Marker2D" unique_id=1115687485]
+script = ExtResource("1_bench")
+
+[node name="DetectArea" type="Area2D" parent="." unique_id=746942038]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectArea" unique_id=1969328733]
+position = Vector2(0, 6.5)
+shape = SubResource("RectangleShape2D_chair")
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1673887667]
+texture = ExtResource("2_chair")

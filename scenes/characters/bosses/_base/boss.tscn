@@ -3,7 +3,7 @@
 ; ============================================================================
 ; BOSS 基类场景 · 对外配置速查
 ; 这里只给骨架（节点 + 默认值）；真正的 BOSS 一律继承本场景，关卡里再摆一层实例：
-;   hollow_knight/hollow_knight.tscn · soul_master/soul_master.tscn → worlds/levels/level_1.tscn
+;   hollow_knight/hollow_knight.tscn · soul_master/soul_master.tscn → scenes/worlds/levels/_dev/level_1.tscn
 ; 分号注释只便于读源码，编辑器里保存一次场景会重写本文件并清掉它们；
 ; 需要长期保留的说明写在根节点 / StateMachine 的 editor_description 里（Inspector 顶部可见）。
 ;

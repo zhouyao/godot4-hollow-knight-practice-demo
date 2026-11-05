@@ -1,0 +1,680 @@
+[gd_scene format=3 uid="uid://oqvqpu8ug6un"]
+
+[ext_resource type="PackedScene" uid="uid://bqr11wgnlhh6f" path="res://scenes/worlds/_base/world_template.tscn" id="1_packedscene"]
+[ext_resource type="Script" uid="uid://ceh1tndodo6xm" path="res://scenes/worlds/levels/tear_city/tear_city.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/_base/entry_point.tscn" id="3_packedscene"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/_base/level_gate.tscn" id="4_packedscene"]
+[ext_resource type="PackedScene" uid="uid://c5xedyh6vkreu" path="res://scenes/props/chest/chest.tscn" id="5_packedscene"]
+[ext_resource type="PackedScene" uid="uid://ctqrjufww6mnn" path="res://scenes/worlds/_zones/rain_zone.tscn" id="6_packedscene"]
+[ext_resource type="AudioStream" uid="uid://bc8pd4awn8tha" path="res://assets/sounds/ambience/tearcity_i.ogg" id="7_audiostream"]
+[ext_resource type="AudioStream" uid="uid://rj5sy2sjpm7t" path="res://assets/sounds/ambience/tearcity_o.ogg" id="8_audiostream"]
+[ext_resource type="Script" uid="uid://1033cnat8g0l" path="res://scenes/worlds/_base/parallax_bg.gd" id="9_script"]
+[ext_resource type="Shader" uid="uid://ct1671r54y83k" path="res://shaders/background_blur.gdshader" id="10_shader"]
+[ext_resource type="SpriteFrames" path="res://resources/effects/water_fountain_20.tres" id="11_spriteframes"]
+[ext_resource type="SpriteFrames" path="res://resources/effects/water_fountain_25.tres" id="12_spriteframes"]
+[ext_resource type="SpriteFrames" path="res://resources/effects/water_fountain_12_5.tres" id="13_spriteframes"]
+[ext_resource type="SpriteFrames" path="res://resources/effects/water_fountain_16_7.tres" id="14_spriteframes"]
+[ext_resource type="SpriteFrames" path="res://resources/effects/water_top_12_5.tres" id="15_spriteframes"]
+[ext_resource type="SpriteFrames" path="res://resources/effects/rain_land_12_5.tres" id="16_spriteframes"]
+[ext_resource type="Texture2D" uid="uid://pnuqea280sri" path="res://assets/textures/lights/circle.png" id="17_texture2d"]
+[ext_resource type="Texture2D" uid="uid://bqrx62858ul0i" path="res://assets/sprites/backgrounds/tear_city/0.png" id="18_texture2d"]
+[ext_resource type="Texture2D" uid="uid://cij7v5b1qpm3r" path="res://assets/sprites/backgrounds/tear_city/ruins_bg_building_mid.png" id="19_texture2d"]
+[ext_resource type="Texture2D" uid="uid://cmm1ol1ph0vti" path="res://assets/sprites/backgrounds/tear_city/ruins_mid_buildings.png" id="20_texture2d"]
+[ext_resource type="Texture2D" uid="uid://b1wcpem8wxd7j" path="res://assets/sprites/backgrounds/tear_city/ruins_bg_bridge_near_a.png" id="21_texture2d"]
+[ext_resource type="Texture2D" uid="uid://ciu31uf0l5mae" path="res://assets/sprites/environment/tear_city/0.png" id="22_texture2d"]
+[ext_resource type="Texture2D" uid="uid://bixhvic7htiqs" path="res://assets/sprites/environment/tear_city/1.png" id="23_texture2d"]
+[ext_resource type="Texture2D" uid="uid://svi6jf7wynjy" path="res://assets/sprites/environment/tear_city/4.png" id="24_texture2d"]
+[ext_resource type="Texture2D" uid="uid://bdhcvy7bjopvf" path="res://assets/sprites/environment/tear_city/5.png" id="25_texture2d"]
+[ext_resource type="Texture2D" uid="uid://byd7mmldkd10k" path="res://assets/sprites/environment/tear_city/Lake_water.png" id="26_texture2d"]
+[ext_resource type="Texture2D" uid="uid://duqjjbnhkp6qf" path="res://assets/sprites/environment/tear_city/corpse_set_01_0008_nail1-copy_large.png" id="27_texture2d"]
+[ext_resource type="Texture2D" uid="uid://cyu8grut3bt1p" path="res://assets/sprites/environment/tear_city/corpse_set_01_0006_nail2.png" id="28_texture2d"]
+[ext_resource type="Texture2D" uid="uid://2v0ue42fo7qq" path="res://assets/sprites/environment/tear_city/_0032_city_break.png" id="29_texture2d"]
+[ext_resource type="Texture2D" uid="uid://bjiwvv5ws5lnu" path="res://assets/sprites/environment/tear_city/ruin_lamp_01.png" id="30_texture2d"]
+[ext_resource type="Texture2D" uid="uid://ba3hhr5pbkbew" path="res://assets/sprites/environment/tear_city/_0022_city_break.png" id="31_texture2d"]
+[ext_resource type="Texture2D" uid="uid://denh37eu5h7dq" path="res://assets/sprites/environment/tear_city/ruin_small_corner_piece.png" id="32_texture2d"]
+[ext_resource type="Texture2D" uid="uid://g0m7iwb55b16" path="res://assets/sprites/environment/tear_city/ruin_sign_01.png" id="33_texture2d"]
+[ext_resource type="Texture2D" uid="uid://dfmejw1y4fptt" path="res://assets/sprites/environment/tear_city/corpse_set_01_0005_nail4-copy.png" id="34_texture2d"]
+[ext_resource type="Texture2D" uid="uid://ufvcaqm53b1m" path="res://assets/sprites/props/tear_city/ruin_plat_float_01.png" id="35_texture2d"]
+[ext_resource type="Texture2D" uid="uid://cytwadkmsxjdd" path="res://assets/sprites/props/tear_city/ruin_plat_float_03.png" id="36_texture2d"]
+[ext_resource type="Texture2D" uid="uid://d4gmcec3yjcfr" path="res://assets/sprites/props/tear_city/ruin_plat_float_02.png" id="37_texture2d"]
+[ext_resource type="Texture2D" uid="uid://bky7kpwhlr7qf" path="res://assets/sprites/props/tear_city/ruin_plat_float_05_wide.png" id="38_texture2d"]
+[ext_resource type="Texture2D" uid="uid://cpspk15nwsix0" path="res://assets/sprites/props/tear_city/Floor_1.png" id="39_texture2d"]
+[ext_resource type="Texture2D" uid="uid://c1s6tx011oq45" path="res://assets/sprites/environment/tear_city/_0021_city_break.png" id="40_texture2d"]
+[ext_resource type="Texture2D" uid="uid://barmfj2p16su7" path="res://assets/sprites/environment/tear_city/_0016_city_break.png" id="41_texture2d"]
+[ext_resource type="Texture2D" uid="uid://dunyne17dpijj" path="res://assets/sprites/environment/tear_city/_0017_city_break.png" id="42_texture2d"]
+[ext_resource type="Texture2D" uid="uid://cgektiolw73tv" path="res://assets/sprites/environment/tear_city/_0019_city_break.png" id="43_texture2d"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1"]
+shader = ExtResource("10_shader")
+shader_parameter/blur_radius = 4.0
+shader_parameter/sigma_scale = 0.3333
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2"]
+size = Vector2(130, 60)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3"]
+size = Vector2(80, 70)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4"]
+size = Vector2(350, 70)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5"]
+size = Vector2(1125, 210)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6"]
+size = Vector2(925, 210)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7"]
+size = Vector2(100, 1100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8"]
+size = Vector2(200, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_9"]
+size = Vector2(450, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_moatg"]
+resource_local_to_scene = true
+size = Vector2(2900, 620)
+
+[node name="WorldTemplate" unique_id=560156841 instance=ExtResource("1_packedscene")]
+script = ExtResource("2_script")
+zone_name = "泪城"
+
+[node name="Darkness" type="ColorRect" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="0" unique_id=1160421674]
+z_index = -200
+offset_left = -5000.0
+offset_top = -4000.0
+offset_right = 5000.0
+offset_bottom = 4000.0
+mouse_filter = 2
+color = Color(0.02, 0.025, 0.035, 1)
+
+[node name="Bg_001" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="1" unique_id=458637631]
+z_index = -30
+script = ExtResource("9_script")
+move_layer = -30
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_001" index="0" unique_id=1771841076]
+light_mask = 0
+texture = ExtResource("18_texture2d")
+
+[node name="Bg_002" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="2" unique_id=1560493266]
+z_index = -20
+position = Vector2(2500, 350)
+script = ExtResource("9_script")
+move_layer = -20
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_002" index="0" unique_id=478544229]
+light_mask = 0
+texture = ExtResource("19_texture2d")
+
+[node name="Bg_003" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="3" unique_id=2018788297]
+z_index = -15
+position = Vector2(-1200, 300)
+script = ExtResource("9_script")
+move_layer = -15
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_003" index="0" unique_id=558781056]
+light_mask = 0
+texture = ExtResource("20_texture2d")
+
+[node name="Bg_004" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="4" unique_id=1234694050]
+z_index = -10
+position = Vector2(500, 1000)
+script = ExtResource("9_script")
+move_layer = -10
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_004" index="0" unique_id=1219097550]
+light_mask = 0
+texture = ExtResource("21_texture2d")
+
+[node name="Bg_005" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="5" unique_id=122545877]
+z_index = -3
+position = Vector2(0, 600)
+script = ExtResource("9_script")
+move_layer = -3
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_005" index="0" unique_id=485373407]
+material = SubResource("ShaderMaterial_1")
+texture = ExtResource("22_texture2d")
+
+[node name="Bg_006" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="6" unique_id=1995621605]
+z_index = -2
+position = Vector2(0, 975)
+script = ExtResource("9_script")
+move_layer = -2
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_006" index="0" unique_id=1094027749]
+texture = ExtResource("23_texture2d")
+
+[node name="Bg_007" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="7" unique_id=1571031123]
+z_index = -3
+position = Vector2(-1000, 800)
+script = ExtResource("9_script")
+move_layer = -3
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_007" index="0" unique_id=1795849396]
+texture = ExtResource("24_texture2d")
+
+[node name="Bg_008" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="8" unique_id=543820112]
+z_index = 2
+position = Vector2(-700, 450)
+script = ExtResource("9_script")
+move_layer = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_008" index="0" unique_id=212266464]
+texture = ExtResource("25_texture2d")
+
+[node name="Bg_009" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="9" unique_id=4650641]
+z_index = 4
+position = Vector2(500, 1080)
+script = ExtResource("9_script")
+move_layer = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_009" index="0" unique_id=713854358]
+texture = ExtResource("26_texture2d")
+
+[node name="Bg_010" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="10" unique_id=995340417]
+z_index = 5
+position = Vector2(900, 980)
+script = ExtResource("9_script")
+move_layer = 5
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_010" index="0" unique_id=1846143762]
+texture = ExtResource("27_texture2d")
+
+[node name="Bg_011" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="11" unique_id=684809427]
+z_index = -2
+position = Vector2(750, 1075)
+script = ExtResource("9_script")
+move_layer = -2
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_011" index="0" unique_id=762001739]
+texture = ExtResource("28_texture2d")
+
+[node name="Bg_012" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="12" unique_id=1573248961]
+z_index = 4
+position = Vector2(1580, 975)
+script = ExtResource("9_script")
+move_layer = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_012" index="0" unique_id=1425184507]
+texture = ExtResource("29_texture2d")
+
+[node name="Bg_013" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="13" unique_id=2093669803]
+z_index = -1
+position = Vector2(1500, 830)
+script = ExtResource("9_script")
+move_layer = -1
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_013" index="0" unique_id=1694801376]
+texture = ExtResource("30_texture2d")
+
+[node name="Bg_014" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="14" unique_id=1015807364]
+z_index = -2
+position = Vector2(-600, 1050)
+script = ExtResource("9_script")
+move_layer = -2
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_014" index="0" unique_id=2115555235]
+texture = ExtResource("31_texture2d")
+
+[node name="Bg_015" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="15" unique_id=3995260]
+z_index = 5
+position = Vector2(-785, 950)
+script = ExtResource("9_script")
+move_layer = 5
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_015" index="0" unique_id=1236497581]
+texture = ExtResource("32_texture2d")
+
+[node name="Anim_02" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="0" unique_id=556426392]
+z_index = -1
+position = Vector2(50, 760)
+scale = Vector2(0.95, 0.95)
+sprite_frames = ExtResource("12_spriteframes")
+autoplay = "default"
+
+[node name="Anim_03" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="1" unique_id=1027006781]
+z_index = -4
+position = Vector2(-200, 760)
+scale = Vector2(0.8, 0.8)
+sprite_frames = ExtResource("13_spriteframes")
+autoplay = "default"
+
+[node name="Anim_04" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="2" unique_id=1115741549]
+z_index = -7
+position = Vector2(-150, 760)
+scale = Vector2(0.65, 0.65)
+sprite_frames = ExtResource("14_spriteframes")
+autoplay = "default"
+
+[node name="Anim_05" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="3" unique_id=544017505]
+z_index = -6
+position = Vector2(150, 760)
+scale = Vector2(0.7, 0.7)
+sprite_frames = ExtResource("13_spriteframes")
+autoplay = "default"
+
+[node name="Anim_06" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="4" unique_id=1143866843]
+z_index = -2
+position = Vector2(-225, 925)
+scale = Vector2(0.9, 0.9)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_07" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="5" unique_id=1259607117]
+z_index = -2
+position = Vector2(-125, 925)
+scale = Vector2(0.9, 0.9)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_08" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="6" unique_id=1381464501]
+z_index = -2
+position = Vector2(-25, 925)
+scale = Vector2(0.9, 0.9)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_09" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="7" unique_id=998165210]
+z_index = -2
+position = Vector2(75, 925)
+scale = Vector2(0.9, 0.9)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_10" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="8" unique_id=198476647]
+z_index = -2
+position = Vector2(175, 925)
+scale = Vector2(0.9, 0.9)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Interactive_01" type="Sprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="9" unique_id=1976939035]
+z_index = -2
+position = Vector2(-850, 800)
+texture = ExtResource("40_texture2d")
+
+[node name="Interactive_02" type="Sprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="10" unique_id=1136804330]
+z_index = -2
+position = Vector2(-400, 850)
+texture = ExtResource("41_texture2d")
+
+[node name="Interactive_03" type="Sprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="11" unique_id=342361042]
+z_index = -2
+position = Vector2(1100, 850)
+texture = ExtResource("42_texture2d")
+
+[node name="Interactive_05" type="Sprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="12" unique_id=2006811236]
+z_index = -1
+position = Vector2(300, 500)
+texture = ExtResource("43_texture2d")
+
+[node name="Platform_01" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="0" unique_id=2023016106]
+position = Vector2(650, 400)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_01" index="0" unique_id=1221375864]
+position = Vector2(0, -25)
+shape = SubResource("RectangleShape2D_2")
+
+[node name="Sprite2D" type="Sprite2D" parent="Obstacles/Platform_01" index="1" unique_id=361608846]
+texture = ExtResource("35_texture2d")
+
+[node name="Platform_02" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="1" unique_id=1263871726]
+position = Vector2(300, 700)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_02" index="0" unique_id=1249991194]
+position = Vector2(0, -10)
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Sprite2D" type="Sprite2D" parent="Obstacles/Platform_02" index="1" unique_id=1432506937]
+texture = ExtResource("36_texture2d")
+
+[node name="Platform_03" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="2" unique_id=916368025]
+position = Vector2(800, 750)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_03" index="0" unique_id=726796452]
+shape = SubResource("RectangleShape2D_3")
+
+[node name="Sprite2D" type="Sprite2D" parent="Obstacles/Platform_03" index="1" unique_id=2027105674]
+texture = ExtResource("37_texture2d")
+
+[node name="Platform_04" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="3" unique_id=2131919180]
+position = Vector2(50, 200)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_04" index="0" unique_id=512179673]
+position = Vector2(0, -30)
+shape = SubResource("RectangleShape2D_4")
+
+[node name="Sprite2D" type="Sprite2D" parent="Obstacles/Platform_04" index="1" unique_id=323181324]
+texture = ExtResource("38_texture2d")
+
+[node name="Platform_05" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="4" unique_id=586135584]
+position = Vector2(0, 1075)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_05" index="0" unique_id=1490487685]
+shape = SubResource("RectangleShape2D_5")
+
+[node name="Sprite2D" type="Sprite2D" parent="Obstacles/Platform_05" index="1" unique_id=1894609441]
+texture = ExtResource("39_texture2d")
+
+[node name="Platform_06" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="5" unique_id=1172391387]
+position = Vector2(-1300, 1075)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_06" index="0" unique_id=586282726]
+shape = SubResource("RectangleShape2D_5")
+
+[node name="Sprite2D" type="Sprite2D" parent="Obstacles/Platform_06" index="1" unique_id=634431445]
+texture = ExtResource("39_texture2d")
+
+[node name="Platform_07" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="6" unique_id=1218192390]
+position = Vector2(1500, 1075)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_07" index="0" unique_id=451857351]
+position = Vector2(-100, 0)
+shape = SubResource("RectangleShape2D_6")
+
+[node name="Sprite2D" type="Sprite2D" parent="Obstacles/Platform_07" index="1" unique_id=196377847]
+texture = ExtResource("39_texture2d")
+
+[node name="Platform_08" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="7" unique_id=1492481566]
+position = Vector2(-1000, 250)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_08" index="0" unique_id=396788302]
+shape = SubResource("RectangleShape2D_7")
+
+[node name="Platform_09" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="8" unique_id=133034752]
+position = Vector2(1850, 250)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_09" index="0" unique_id=938323175]
+shape = SubResource("RectangleShape2D_7")
+
+[node name="Platform_10" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="9" unique_id=2002688007]
+position = Vector2(-650, 1175)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_10" index="0" unique_id=1361784275]
+shape = SubResource("RectangleShape2D_8")
+
+[node name="Platform_11" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="10" unique_id=2044462511]
+position = Vector2(775, 1175)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_11" index="0" unique_id=1144956232]
+shape = SubResource("RectangleShape2D_9")
+
+[node name="Chest" parent="Items" parent_id_path=PackedInt32Array(397992784) index="0" unique_id=1084298904 instance=ExtResource("5_packedscene")]
+position = Vector2(0, 68)
+
+[node name="Bg_001" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=1704424894]
+z_index = 5
+position = Vector2(1200, 875)
+texture = ExtResource("33_texture2d")
+
+[node name="Bg_002" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="1" unique_id=1010880233]
+position = Vector2(800, 680)
+texture = ExtResource("34_texture2d")
+
+[node name="Anim_01" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="2" unique_id=637502019]
+position = Vector2(-60, 760)
+sprite_frames = ExtResource("11_spriteframes")
+autoplay = "default"
+
+[node name="Anim_11" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="3" unique_id=118577272]
+z_index = 4
+position = Vector2(-1000, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("15_spriteframes")
+autoplay = "default"
+
+[node name="Anim_12" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="4" unique_id=1189560661]
+z_index = 4
+position = Vector2(-700, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("15_spriteframes")
+autoplay = "default"
+
+[node name="Anim_13" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="5" unique_id=109476055]
+z_index = 4
+position = Vector2(-400, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("15_spriteframes")
+autoplay = "default"
+
+[node name="Anim_14" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="6" unique_id=51512611]
+z_index = 4
+position = Vector2(-100, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("15_spriteframes")
+autoplay = "default"
+
+[node name="Anim_15" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="7" unique_id=452780736]
+z_index = 4
+position = Vector2(200, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("15_spriteframes")
+autoplay = "default"
+
+[node name="Anim_16" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="8" unique_id=2105147560]
+z_index = 4
+position = Vector2(500, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("15_spriteframes")
+autoplay = "default"
+
+[node name="Anim_17" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="9" unique_id=552530796]
+z_index = 4
+position = Vector2(800, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("15_spriteframes")
+autoplay = "default"
+
+[node name="Anim_18" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="10" unique_id=1547788313]
+z_index = 4
+position = Vector2(1100, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("15_spriteframes")
+autoplay = "default"
+
+[node name="Anim_19" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="11" unique_id=394014498]
+z_index = 4
+position = Vector2(1400, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("15_spriteframes")
+autoplay = "default"
+
+[node name="Anim_20" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="12" unique_id=668222103]
+z_index = 4
+position = Vector2(1700, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("15_spriteframes")
+autoplay = "default"
+
+[node name="Anim_21" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="13" unique_id=1747698987]
+z_index = 4
+position = Vector2(-1000, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_22" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="14" unique_id=2064182769]
+z_index = 4
+position = Vector2(-700, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_23" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="15" unique_id=1975062402]
+z_index = 4
+position = Vector2(-400, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_24" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="16" unique_id=1856285109]
+z_index = 4
+position = Vector2(-100, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_25" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="17" unique_id=1056495358]
+z_index = 4
+position = Vector2(200, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_26" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="18" unique_id=2147073209]
+z_index = 4
+position = Vector2(500, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_27" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="19" unique_id=546062051]
+z_index = 4
+position = Vector2(800, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_28" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="20" unique_id=257386219]
+z_index = 4
+position = Vector2(1100, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_29" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="21" unique_id=241439014]
+z_index = 4
+position = Vector2(1400, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_30" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="22" unique_id=675198631]
+z_index = 4
+position = Vector2(1700, 1005)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_31" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="23" unique_id=524557485]
+z_index = 4
+position = Vector2(-500, 975)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_32" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="24" unique_id=460597125]
+z_index = 4
+position = Vector2(-300, 975)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_33" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="25" unique_id=111106455]
+z_index = 4
+position = Vector2(-100, 975)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_34" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="26" unique_id=126913457]
+z_index = 4
+position = Vector2(100, 975)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Anim_35" type="AnimatedSprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="27" unique_id=730978461]
+z_index = 4
+position = Vector2(300, 975)
+scale = Vector2(1.2, 1.2)
+sprite_frames = ExtResource("16_spriteframes")
+autoplay = "default"
+
+[node name="Interactive_04" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="28" unique_id=405738020]
+z_index = 5
+position = Vector2(450, 845)
+texture = ExtResource("42_texture2d")
+
+[node name="RainZone" parent="Effects" parent_id_path=PackedInt32Array(996629329) index="0" unique_id=2070045052 instance=ExtResource("6_packedscene")]
+position = Vector2(500, 600)
+zone_size = Vector2(4000, 1800)
+
+[node name="DirectionalLight2D" parent="Lights" parent_id_path=PackedInt32Array(1627484379) index="0" unique_id=617027591]
+energy = 0.0
+
+[node name="WaterLight_01" type="PointLight2D" parent="Lights" parent_id_path=PackedInt32Array(1627484379) index="1" unique_id=875927737]
+position = Vector2(-300, 1050)
+color = Color(0.5, 0.7, 1, 1)
+energy = 0.55
+texture = ExtResource("17_texture2d")
+texture_scale = 4.0
+
+[node name="WaterLight_02" type="PointLight2D" parent="Lights" parent_id_path=PackedInt32Array(1627484379) index="2" unique_id=1069994210]
+position = Vector2(900, 1050)
+color = Color(0.5, 0.7, 1, 1)
+energy = 0.55
+texture = ExtResource("17_texture2d")
+texture_scale = 4.0
+
+[node name="default" parent="LevelTransitions/Entries" index="0" unique_id=764797862 instance=ExtResource("3_packedscene")]
+position = Vector2(550, 895)
+facing = 1
+
+[node name="from_ruin_house" parent="LevelTransitions/Entries" index="1" unique_id=1565365007 instance=ExtResource("3_packedscene")]
+position = Vector2(-900, 895)
+facing = 1
+
+[node name="ToRuinHouse" parent="LevelTransitions/Gates" index="0" unique_id=1056586213 instance=ExtResource("4_packedscene")]
+position = Vector2(-1050, 875)
+target_area = "res://scenes/worlds/levels/ruin_house/ruin_house.tscn"
+gate_id = &"toruinhouse"
+
+[node name="ToBossHouse" parent="LevelTransitions/Gates" index="1" unique_id=566374627 instance=ExtResource("4_packedscene")]
+position = Vector2(1850, 875)
+gate_id = &"tobosshouse"
+
+[node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0"]
+position = Vector2(400, 560)
+shape = SubResource("RectangleShape2D_moatg")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." index="18" unique_id=350747079]
+color = Color(1.05, 1.07, 1.1, 1)
+
+[node name="Ambience" type="Node" parent="." index="19" unique_id=2063363761]
+
+[node name="TeaCityInner" type="AudioStreamPlayer" parent="Ambience" index="0" unique_id=387916751]
+stream = ExtResource("7_audiostream")
+volume_db = -8.0
+bus = &"Music"
+
+[node name="TeaCityOuter" type="AudioStreamPlayer" parent="Ambience" index="1" unique_id=1469109229]
+stream = ExtResource("8_audiostream")
+volume_db = -10.0
+bus = &"Music"

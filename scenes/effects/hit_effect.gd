@@ -44,6 +44,16 @@ static func spawn(target: Node, at: Vector2, parent: Node,
 			eff.global_position += Vector2(
 				randf_range(-scatter, scatter),
 				randf_range(-scatter, scatter))
+		# 位置定下来之后再统一处理层级与插值：
+		# 1) 部分关卡（如 MossHole）给被击目标单独配了 z_index，特效默认 z=0 会被
+		#    前景苔藓层穿插遮挡、只露出零碎一角，看起来像"刀光位置不对"。
+		# 2) 本项目开启 2D 物理插值，瞬移后不重置会让首帧从旧位置（世界原点）插值过来，
+		#    而刀光只有 0.15s，这一帧几乎占掉整个寿命（与 chest.gd / wet_splash 同规范）。
+		if eff is Node2D:
+			var fx := eff as Node2D
+			if target is Node2D:
+				fx.z_index = (target as Node2D).z_index + 1
+			fx.reset_physics_interpolation()
 
 ## 解析该用的特效场景：来源具体种类 -> &"slash" 默认 -> 通用刀光。
 static func _resolve_scene(target: Node, source: Node) -> PackedScene:

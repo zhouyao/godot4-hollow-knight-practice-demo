@@ -1,0 +1,3511 @@
+{
+  "level": "MossHole_0",
+  "objects": [
+    {
+      "source_line": 22,
+      "type": "LevelTransformer",
+      "pos": [
+        2550.0,
+        900.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "target_level": "MossHole",
+      "target_pos": [
+        -1775.0,
+        550.0
+      ],
+      "target_camera": [
+        -1200.0,
+        500.0,
+        200.0,
+        550.0
+      ]
+    },
+    {
+      "source_line": 24,
+      "type": "Bg",
+      "pos": [
+        -1600.0,
+        660.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_0",
+      "layer": -20,
+      "move_layer": -12
+    },
+    {
+      "source_line": 25,
+      "type": "Bg",
+      "pos": [
+        950.0,
+        750.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_3",
+      "layer": -21,
+      "move_layer": -15
+    },
+    {
+      "source_line": 26,
+      "type": "Bg",
+      "pos": [
+        2485.0,
+        875.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_cave_light",
+      "layer": -2
+    },
+    {
+      "source_line": 27,
+      "type": "Bg",
+      "pos": [
+        2380.0,
+        885.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_environment_4",
+      "layer": -3,
+      "move_layer": -3,
+      "blur": true
+    },
+    {
+      "source_line": 28,
+      "type": "Bg",
+      "pos": [
+        1950.0,
+        950.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_environment_2",
+      "layer": -4,
+      "move_layer": -4,
+      "blur": true
+    },
+    {
+      "source_line": 29,
+      "type": "Bg",
+      "pos": [
+        1400.0,
+        1175.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_environment_2",
+      "layer": -4,
+      "move_layer": -4,
+      "blur": true
+    },
+    {
+      "source_line": 30,
+      "type": "Bg",
+      "pos": [
+        900.0,
+        1225.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_environment_3",
+      "layer": -4,
+      "move_layer": -4,
+      "blur": true
+    },
+    {
+      "source_line": 31,
+      "type": "Bg",
+      "pos": [
+        400.0,
+        1215.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_environment_1",
+      "layer": -4,
+      "move_layer": -4,
+      "blur": true
+    },
+    {
+      "source_line": 32,
+      "type": "Bg",
+      "pos": [
+        2000.0,
+        1000.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": -2,
+      "move_layer": -1,
+      "blur": true
+    },
+    {
+      "source_line": 33,
+      "type": "Bg",
+      "pos": [
+        2100.0,
+        985.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_0",
+      "layer": -2,
+      "move_layer": -1,
+      "blur": true
+    },
+    {
+      "source_line": 34,
+      "type": "Bg",
+      "pos": [
+        1300.0,
+        1200.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_0",
+      "layer": -2,
+      "move_layer": -1,
+      "blur": true
+    },
+    {
+      "source_line": 35,
+      "type": "Bg",
+      "pos": [
+        300.0,
+        1260.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": -2,
+      "move_layer": -1,
+      "blur": true
+    },
+    {
+      "source_line": 36,
+      "type": "Bg",
+      "pos": [
+        -2500.0,
+        840.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_environment_1",
+      "layer": -3,
+      "move_layer": -3,
+      "blur": true
+    },
+    {
+      "source_line": 37,
+      "type": "Bg",
+      "pos": [
+        -2450.0,
+        550.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_environment_0",
+      "layer": -4,
+      "move_layer": -4,
+      "blur": true
+    },
+    {
+      "source_line": 38,
+      "type": "Bg",
+      "pos": [
+        -2420.0,
+        350.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_environment_2",
+      "layer": -5,
+      "move_layer": -4,
+      "blur": true
+    },
+    {
+      "source_line": 39,
+      "type": "Bg",
+      "pos": [
+        -1830.0,
+        175.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_roof_1",
+      "layer": -3,
+      "move_layer": -3,
+      "blur": true
+    },
+    {
+      "source_line": 40,
+      "type": "Bg",
+      "pos": [
+        -1000.0,
+        225.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_roof_1",
+      "layer": -3,
+      "move_layer": -3,
+      "blur": true
+    },
+    {
+      "source_line": 41,
+      "type": "Bg",
+      "pos": [
+        -360.0,
+        680.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_environment_5",
+      "layer": -5,
+      "move_layer": -5
+    },
+    {
+      "source_line": 45,
+      "type": "PlatForm",
+      "pos": [
+        2000.0,
+        1200.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        1000.0,
+        400.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 46,
+      "type": "PlatForm",
+      "pos": [
+        1150.0,
+        1325.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        700.0,
+        200.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 47,
+      "type": "PlatForm",
+      "pos": [
+        625.0,
+        1250.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        350.0,
+        300.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 48,
+      "type": "PlatForm",
+      "pos": [
+        350.0,
+        1375.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        300.0,
+        200.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 49,
+      "type": "PlatForm",
+      "pos": [
+        0.0,
+        1200.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        500.0,
+        400.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 50,
+      "type": "PlatForm",
+      "pos": [
+        -450.0,
+        900.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        400.0,
+        400.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 51,
+      "type": "PlatForm",
+      "pos": [
+        -900.0,
+        1075.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        500.0,
+        200.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 52,
+      "type": "PlatForm",
+      "pos": [
+        -2200.0,
+        850.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        770.0,
+        50.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 53,
+      "type": "PlatForm",
+      "pos": [
+        -1900.0,
+        1185.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        1500.0,
+        200.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 54,
+      "type": "PlatForm",
+      "pos": [
+        -2630.0,
+        600.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        200.0,
+        1000.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 55,
+      "type": "PlatForm",
+      "pos": [
+        -2405.0,
+        200.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        250.0,
+        400.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 56,
+      "type": "PlatForm",
+      "pos": [
+        -800.0,
+        75.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        500.0,
+        200.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 57,
+      "type": "PlatForm",
+      "pos": [
+        -175.0,
+        250.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        1030.0,
+        200.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 58,
+      "type": "PlatForm",
+      "pos": [
+        850.0,
+        310.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        1030.0,
+        200.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 59,
+      "type": "PlatForm",
+      "pos": [
+        1750.0,
+        325.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        1030.0,
+        200.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 60,
+      "type": "PlatForm",
+      "pos": [
+        2500.0,
+        500.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "",
+      "collision_size": [
+        750.0,
+        200.0
+      ],
+      "collision_offset": null
+    },
+    {
+      "source_line": 67,
+      "type": "MossFloor",
+      "pos": [
+        1635.0,
+        1025.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_0",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 68,
+      "type": "MossFloor",
+      "pos": [
+        1850.0,
+        1025.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_2",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        275.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 69,
+      "type": "MossFloor",
+      "pos": [
+        2050.0,
+        1022.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_0",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 70,
+      "type": "MossFloor",
+      "pos": [
+        2300.0,
+        1022.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_0",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 71,
+      "type": "MossFloor",
+      "pos": [
+        2500.0,
+        1023.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_1",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 74,
+      "type": "Bg",
+      "pos": [
+        1535.0,
+        1150.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_wall_0",
+      "layer": 2
+    },
+    {
+      "source_line": 75,
+      "type": "Bg",
+      "pos": [
+        1800.0,
+        1038.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_ground_0",
+      "layer": 5
+    },
+    {
+      "source_line": 78,
+      "type": "Bg",
+      "pos": [
+        2035.0,
+        1046.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 6,
+      "move_layer": 1
+    },
+    {
+      "source_line": 79,
+      "type": "Bg",
+      "pos": [
+        2125.0,
+        1050.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_0",
+      "layer": 6,
+      "move_layer": 1
+    },
+    {
+      "source_line": 80,
+      "type": "Bg",
+      "pos": [
+        2225.0,
+        1043.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 5,
+      "move_layer": 1
+    },
+    {
+      "source_line": 81,
+      "type": "Bg",
+      "pos": [
+        1860.0,
+        1038.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_ground_6",
+      "layer": 5,
+      "move_layer": 1
+    },
+    {
+      "source_line": 82,
+      "type": "Bg",
+      "pos": [
+        1750.0,
+        1043.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 6,
+      "move_layer": 1
+    },
+    {
+      "source_line": 83,
+      "type": "Bg",
+      "pos": [
+        1660.0,
+        1060.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_0",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 84,
+      "type": "Bg",
+      "pos": [
+        1585.0,
+        1075.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 85,
+      "type": "Bg",
+      "pos": [
+        1570.0,
+        1165.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_0",
+      "layer": 8,
+      "move_layer": 1
+    },
+    {
+      "source_line": 86,
+      "type": "Bg",
+      "pos": [
+        1475.0,
+        1235.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_0",
+      "layer": 9,
+      "move_layer": 1
+    },
+    {
+      "source_line": 87,
+      "type": "Bg",
+      "pos": [
+        1675.0,
+        1140.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.1,
+        1.1
+      ],
+      "sprite": "mosshole_moss_2",
+      "layer": 9,
+      "move_layer": 2
+    },
+    {
+      "source_line": 88,
+      "type": "Bg",
+      "pos": [
+        1600.0,
+        1200.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_3",
+      "layer": 10,
+      "move_layer": 2
+    },
+    {
+      "source_line": 89,
+      "type": "Bg",
+      "pos": [
+        1525.0,
+        1230.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 90,
+      "type": "Bg",
+      "pos": [
+        2350.0,
+        1080.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 91,
+      "type": "Bg",
+      "pos": [
+        1900.0,
+        1080.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_3",
+      "layer": 7,
+      "move_layer": 2
+    },
+    {
+      "source_line": 92,
+      "type": "Bg",
+      "pos": [
+        1800.0,
+        1095.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_3",
+      "layer": 7,
+      "move_layer": 2
+    },
+    {
+      "source_line": 93,
+      "type": "Bg",
+      "pos": [
+        2330.0,
+        1040.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_2",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 94,
+      "type": "Bg",
+      "pos": [
+        2430.0,
+        1060.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_3",
+      "layer": 6,
+      "move_layer": 1
+    },
+    {
+      "source_line": 95,
+      "type": "Bg",
+      "pos": [
+        2250.0,
+        1090.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_3",
+      "layer": 8,
+      "move_layer": 2
+    },
+    {
+      "source_line": 96,
+      "type": "Bg",
+      "pos": [
+        2150.0,
+        1075.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_2",
+      "layer": 7,
+      "move_layer": 2
+    },
+    {
+      "source_line": 97,
+      "type": "Bg",
+      "pos": [
+        2000.0,
+        1095.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_2",
+      "layer": 8,
+      "move_layer": 2
+    },
+    {
+      "source_line": 98,
+      "type": "Bg",
+      "pos": [
+        2075.0,
+        1130.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 9,
+      "move_layer": 3
+    },
+    {
+      "source_line": 99,
+      "type": "Bg",
+      "pos": [
+        1800.0,
+        1270.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_shadow_4",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 101,
+      "type": "Plant",
+      "pos": [
+        1650.0,
+        935.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "grass_3",
+      "delay": 0.06,
+      "layer": -1,
+      "move_layer": 0,
+      "death_sprite": "grass_3_death",
+      "collision_size": [
+        75.0,
+        100.0
+      ]
+    },
+    {
+      "source_line": 102,
+      "type": "Plant",
+      "pos": [
+        1725.0,
+        920.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "grass_0",
+      "delay": 0.06,
+      "layer": -1,
+      "move_layer": 0,
+      "death_sprite": "grass_0_death",
+      "collision_size": [
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "source_line": 106,
+      "type": "MossFloor",
+      "pos": [
+        1380.0,
+        1245.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_1",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 107,
+      "type": "MossFloor",
+      "pos": [
+        1150.0,
+        1240.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_0",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 108,
+      "type": "MossFloor",
+      "pos": [
+        880.0,
+        1240.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_1",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 109,
+      "type": "Bg",
+      "pos": [
+        850.0,
+        1250.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_2",
+      "layer": 5,
+      "move_layer": 1
+    },
+    {
+      "source_line": 110,
+      "type": "Bg",
+      "pos": [
+        1000.0,
+        1275.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_3",
+      "layer": 5,
+      "move_layer": 1
+    },
+    {
+      "source_line": 111,
+      "type": "Bg",
+      "pos": [
+        1125.0,
+        1275.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.2,
+        1.0
+      ],
+      "sprite": "mosshole_moss_3",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 112,
+      "type": "Bg",
+      "pos": [
+        1250.0,
+        1287.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_2",
+      "layer": 5,
+      "move_layer": 1
+    },
+    {
+      "source_line": 113,
+      "type": "Bg",
+      "pos": [
+        1350.0,
+        1275.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_2",
+      "layer": 10,
+      "move_layer": 1
+    },
+    {
+      "source_line": 114,
+      "type": "PlatForm",
+      "pos": [
+        1150.0,
+        975.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_plat_6",
+      "collision_size": [
+        350.0,
+        75.0
+      ],
+      "collision_offset": [
+        -5.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 115,
+      "type": "Plant",
+      "pos": [
+        1250.0,
+        1160.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "grass_1",
+      "delay": 0.06,
+      "layer": -1,
+      "move_layer": 0,
+      "death_sprite": "grass_1_death",
+      "collision_size": [
+        150.0,
+        100.0
+      ]
+    },
+    {
+      "source_line": 116,
+      "type": "Plant",
+      "pos": [
+        1000.0,
+        1150.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "grass_3",
+      "delay": 0.06,
+      "layer": -1,
+      "move_layer": 0,
+      "death_sprite": "grass_3_death",
+      "collision_size": [
+        75.0,
+        100.0
+      ]
+    },
+    {
+      "source_line": 117,
+      "type": "Bug",
+      "pos": [
+        1100.0,
+        1100.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 120,
+      "type": "Bg",
+      "pos": [
+        770.0,
+        1185.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_wall_1",
+      "layer": 3
+    },
+    {
+      "source_line": 121,
+      "type": "Bg",
+      "pos": [
+        485.0,
+        1190.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_wall_1",
+      "layer": 3
+    },
+    {
+      "source_line": 122,
+      "type": "MossFloor",
+      "pos": [
+        570.0,
+        1105.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        0.9,
+        0.9
+      ],
+      "sprite": "mosshole_floor_0",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 123,
+      "type": "MossFloor",
+      "pos": [
+        680.0,
+        1110.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -0.9,
+        0.9
+      ],
+      "sprite": "mosshole_floor_0",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 124,
+      "type": "Bg",
+      "pos": [
+        525.0,
+        1160.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_0",
+      "layer": 6,
+      "move_layer": 1
+    },
+    {
+      "source_line": 125,
+      "type": "Bg",
+      "pos": [
+        625.0,
+        1130.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 5,
+      "move_layer": 1
+    },
+    {
+      "source_line": 126,
+      "type": "Bg",
+      "pos": [
+        735.0,
+        1165.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_0",
+      "layer": 6,
+      "move_layer": 1
+    },
+    {
+      "source_line": 127,
+      "type": "Bg",
+      "pos": [
+        600.0,
+        1190.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_2",
+      "layer": 8,
+      "move_layer": 2
+    },
+    {
+      "source_line": 128,
+      "type": "Bg",
+      "pos": [
+        550.0,
+        1350.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_shadow_4",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 129,
+      "type": "Bg",
+      "pos": [
+        750.0,
+        1210.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 9,
+      "move_layer": 3
+    },
+    {
+      "source_line": 130,
+      "type": "Plant",
+      "pos": [
+        775.0,
+        1020.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "grass_3",
+      "delay": 0.06,
+      "layer": -1,
+      "move_layer": 0,
+      "death_sprite": "grass_3_death",
+      "collision_size": [
+        75.0,
+        100.0
+      ]
+    },
+    {
+      "source_line": 133,
+      "type": "MossFloor",
+      "pos": [
+        330.0,
+        1295.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_0",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 135,
+      "type": "MossFloor",
+      "pos": [
+        125.0,
+        1020.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_1",
+      "layer": 3,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 136,
+      "type": "MossFloor",
+      "pos": [
+        -100.0,
+        1020.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_2",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 138,
+      "type": "Bg",
+      "pos": [
+        235.0,
+        1150.0
+      ],
+      "rotation_deg": -90.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_0",
+      "layer": 4
+    },
+    {
+      "source_line": 139,
+      "type": "Bg",
+      "pos": [
+        230.0,
+        1225.0
+      ],
+      "rotation_deg": -30.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 140,
+      "type": "Bg",
+      "pos": [
+        170.0,
+        1100.0
+      ],
+      "rotation_deg": 15.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 5
+    },
+    {
+      "source_line": 141,
+      "type": "Bg",
+      "pos": [
+        75.0,
+        1070.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_0",
+      "layer": 6
+    },
+    {
+      "source_line": 142,
+      "type": "Bg",
+      "pos": [
+        0.0,
+        1060.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 143,
+      "type": "Bg",
+      "pos": [
+        -100.0,
+        1080.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_0",
+      "layer": 8,
+      "move_layer": 1
+    },
+    {
+      "source_line": 144,
+      "type": "Bg",
+      "pos": [
+        -180.0,
+        1050.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 145,
+      "type": "Bg",
+      "pos": [
+        124.0,
+        1215.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_shadow_5",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 146,
+      "type": "Bg",
+      "pos": [
+        25.0,
+        1140.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 147,
+      "type": "Bg",
+      "pos": [
+        -125.0,
+        1120.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 148,
+      "type": "Bg",
+      "pos": [
+        -250.0,
+        1085.0
+      ],
+      "rotation_deg": 10.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 149,
+      "type": "Plant",
+      "pos": [
+        -75.0,
+        940.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "grass_2",
+      "delay": 0.06,
+      "layer": -1,
+      "move_layer": 0,
+      "death_sprite": "grass_2_death",
+      "collision_size": [
+        80.0,
+        100.0
+      ]
+    },
+    {
+      "source_line": 150,
+      "type": "Bug",
+      "pos": [
+        0.0,
+        900.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 153,
+      "type": "Bg",
+      "pos": [
+        -280.0,
+        790.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_wall_1",
+      "layer": 2
+    },
+    {
+      "source_line": 154,
+      "type": "Bg",
+      "pos": [
+        -295.0,
+        940.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_wall_0",
+      "layer": 3
+    },
+    {
+      "source_line": 155,
+      "type": "Bg",
+      "pos": [
+        -620.0,
+        800.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_wall_1",
+      "layer": 3
+    },
+    {
+      "source_line": 156,
+      "type": "Bg",
+      "pos": [
+        -625.0,
+        850.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_wall_1",
+      "layer": 3
+    },
+    {
+      "source_line": 157,
+      "type": "MossFloor",
+      "pos": [
+        -525.0,
+        715.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_1",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 158,
+      "type": "MossFloor",
+      "pos": [
+        -370.0,
+        710.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -0.9,
+        0.9
+      ],
+      "sprite": "mosshole_floor_1",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 159,
+      "type": "Bg",
+      "pos": [
+        -580.0,
+        765.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 6
+    },
+    {
+      "source_line": 160,
+      "type": "Bg",
+      "pos": [
+        -500.0,
+        790.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 161,
+      "type": "Bg",
+      "pos": [
+        -410.0,
+        770.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_0",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 162,
+      "type": "Bg",
+      "pos": [
+        -330.0,
+        780.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 6
+    },
+    {
+      "source_line": 163,
+      "type": "Bg",
+      "pos": [
+        -600.0,
+        865.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_2",
+      "layer": 9,
+      "move_layer": 2,
+      "blur": false,
+      "k": 1.03
+    },
+    {
+      "source_line": 164,
+      "type": "Bg",
+      "pos": [
+        -435.0,
+        835.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_2",
+      "layer": 9,
+      "move_layer": 2,
+      "blur": false,
+      "k": 1.035
+    },
+    {
+      "source_line": 165,
+      "type": "Bg",
+      "pos": [
+        -300.0,
+        870.0
+      ],
+      "rotation_deg": -25.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_3",
+      "layer": 9,
+      "move_layer": 2,
+      "blur": false,
+      "k": 1.03
+    },
+    {
+      "source_line": 166,
+      "type": "Bg",
+      "pos": [
+        -250.0,
+        980.0
+      ],
+      "rotation_deg": -45.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_3",
+      "layer": 9,
+      "move_layer": 2,
+      "blur": false,
+      "k": 1.035
+    },
+    {
+      "source_line": 168,
+      "type": "Bg",
+      "pos": [
+        -450.0,
+        1000.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_shadow_4",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 172,
+      "type": "Bg",
+      "pos": [
+        -1110.0,
+        1110.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_wall_0",
+      "layer": 2
+    },
+    {
+      "source_line": 174,
+      "type": "MossFloor",
+      "pos": [
+        -800.0,
+        995.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_2",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 175,
+      "type": "MossFloor",
+      "pos": [
+        -1000.0,
+        995.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_2",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 177,
+      "type": "Bg",
+      "pos": [
+        -1100.0,
+        920.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_leaf_0",
+      "layer": -2,
+      "move_layer": -2
+    },
+    {
+      "source_line": 178,
+      "type": "Bg",
+      "pos": [
+        -1000.0,
+        875.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_leaf_1",
+      "layer": -2,
+      "move_layer": -1
+    },
+    {
+      "source_line": 179,
+      "type": "Bg",
+      "pos": [
+        -960.0,
+        925.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_leaf_0",
+      "layer": -7,
+      "move_layer": -5,
+      "blur": true
+    },
+    {
+      "source_line": 182,
+      "type": "Bg",
+      "pos": [
+        -685.0,
+        980.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_2",
+      "layer": 9,
+      "move_layer": 2,
+      "blur": false,
+      "k": 1.03
+    },
+    {
+      "source_line": 183,
+      "type": "Bg",
+      "pos": [
+        -830.0,
+        1030.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_0",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 184,
+      "type": "Bg",
+      "pos": [
+        -950.0,
+        1025.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 185,
+      "type": "Bg",
+      "pos": [
+        -1075.0,
+        1036.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 187,
+      "type": "Bg",
+      "pos": [
+        -700.0,
+        1030.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 188,
+      "type": "Bg",
+      "pos": [
+        -850.0,
+        1040.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 189,
+      "type": "Bg",
+      "pos": [
+        -1000.0,
+        1050.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 190,
+      "type": "Bg",
+      "pos": [
+        -1100.0,
+        1080.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 191,
+      "type": "Bg",
+      "pos": [
+        -800.0,
+        1190.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_fung_mask_01",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 192,
+      "type": "Bg",
+      "pos": [
+        -450.0,
+        1125.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_deep_mask",
+      "layer": 10,
+      "move_layer": 2
+    },
+    {
+      "source_line": 193,
+      "type": "Bug",
+      "pos": [
+        -800.0,
+        850.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 197,
+      "type": "Bg",
+      "pos": [
+        -1700.0,
+        1160.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_lake",
+      "layer": 2,
+      "alpha_255": 210
+    },
+    {
+      "source_line": 198,
+      "type": "Bg",
+      "pos": [
+        -1700.0,
+        1140.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_lake",
+      "layer": 5,
+      "alpha_255": 210
+    },
+    {
+      "source_line": 199,
+      "type": "Bg",
+      "pos": [
+        -1700.0,
+        1190.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_lake",
+      "layer": 1
+    },
+    {
+      "source_line": 200,
+      "type": "Bg",
+      "pos": [
+        -1700.0,
+        950.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_lake_light",
+      "layer": 2
+    },
+    {
+      "source_line": 208,
+      "type": "Animated",
+      "pos": [
+        -1150.0,
+        1070.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "lake_top",
+      "delay": 0.04,
+      "layer": 6,
+      "alpha_255": 125
+    },
+    {
+      "source_line": 210,
+      "type": "FireWorm",
+      "pos": [
+        -1500.0,
+        920.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 211,
+      "type": "FireWorm",
+      "pos": [
+        -1950.0,
+        945.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 212,
+      "type": "FireWorm",
+      "pos": [
+        -1250.0,
+        960.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 213,
+      "type": "FireWorm",
+      "pos": [
+        -1400.0,
+        975.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 214,
+      "type": "FireWorm",
+      "pos": [
+        -2000.0,
+        950.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 217,
+      "type": "Plant",
+      "pos": [
+        -1600.0,
+        770.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "grass_3",
+      "delay": 0.06,
+      "layer": -1,
+      "move_layer": 0,
+      "death_sprite": "grass_3_death",
+      "collision_size": [
+        75.0,
+        100.0
+      ]
+    },
+    {
+      "source_line": 218,
+      "type": "Plant",
+      "pos": [
+        -2200.0,
+        760.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "grass_3",
+      "delay": 0.06,
+      "layer": -1,
+      "move_layer": 0,
+      "death_sprite": "grass_3_death",
+      "collision_size": [
+        75.0,
+        100.0
+      ]
+    },
+    {
+      "source_line": 219,
+      "type": "Plant",
+      "pos": [
+        -2350.0,
+        760.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "grass_1",
+      "delay": 0.06,
+      "layer": -1,
+      "move_layer": 0,
+      "death_sprite": "grass_1_death",
+      "collision_size": [
+        150.0,
+        100.0
+      ]
+    },
+    {
+      "source_line": 222,
+      "type": "Bg",
+      "pos": [
+        -2475.0,
+        1075.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_fung_mask_04",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 223,
+      "type": "Bg",
+      "pos": [
+        -2475.0,
+        450.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_msk_angle_stalactites",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 224,
+      "type": "Bg",
+      "pos": [
+        -2450.0,
+        250.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_fung_mask_02",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 226,
+      "type": "Bone",
+      "pos": [
+        -1900.0,
+        850.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_bone_a",
+      "layer": 8,
+      "move_layer": 0,
+      "collision_size": [
+        160.0,
+        75.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 227,
+      "type": "Bone",
+      "pos": [
+        -2050.0,
+        955.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_bone_b",
+      "layer": 7,
+      "move_layer": 0,
+      "collision_size": [
+        160.0,
+        75.0
+      ],
+      "collision_offset": [
+        0.0,
+        -115.0
+      ]
+    },
+    {
+      "source_line": 228,
+      "type": "Bone",
+      "pos": [
+        -2200.0,
+        990.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_bone_c",
+      "layer": 6,
+      "move_layer": 0,
+      "collision_size": [
+        160.0,
+        75.0
+      ],
+      "collision_offset": [
+        0.0,
+        -150.0
+      ]
+    },
+    {
+      "source_line": 229,
+      "type": "Bone",
+      "pos": [
+        -2350.0,
+        1010.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_bone_d",
+      "layer": 5,
+      "move_layer": 0,
+      "collision_size": [
+        160.0,
+        75.0
+      ],
+      "collision_offset": [
+        0.0,
+        -170.0
+      ]
+    },
+    {
+      "source_line": 230,
+      "type": "Bone",
+      "pos": [
+        -2000.0,
+        950.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_bone_a_",
+      "layer": -2,
+      "move_layer": -2,
+      "collision_size": [
+        160.0,
+        75.0
+      ],
+      "collision_offset": [
+        -50.0,
+        -75.0
+      ]
+    },
+    {
+      "source_line": 231,
+      "type": "Bone",
+      "pos": [
+        -2150.0,
+        970.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_bone_b_",
+      "layer": -2,
+      "move_layer": -2,
+      "collision_size": [
+        160.0,
+        75.0
+      ],
+      "collision_offset": [
+        -50.0,
+        -105.0
+      ]
+    },
+    {
+      "source_line": 232,
+      "type": "Bone",
+      "pos": [
+        -2300.0,
+        1000.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_bone_c_",
+      "layer": -2,
+      "move_layer": -2,
+      "collision_size": [
+        160.0,
+        75.0
+      ],
+      "collision_offset": [
+        -50.0,
+        -150.0
+      ]
+    },
+    {
+      "source_line": 235,
+      "type": "MossFloor",
+      "pos": [
+        -2425.0,
+        845.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_floor_0",
+      "layer": 4,
+      "move_layer": 0,
+      "collision_size": [
+        225.0,
+        70.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 236,
+      "type": "Bg",
+      "pos": [
+        -2300.0,
+        980.0
+      ],
+      "rotation_deg": -45.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_1",
+      "layer": 7,
+      "move_layer": 1
+    },
+    {
+      "source_line": 237,
+      "type": "Bg",
+      "pos": [
+        -2350.0,
+        900.0
+      ],
+      "rotation_deg": -15.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_3",
+      "layer": 8,
+      "move_layer": 1
+    },
+    {
+      "source_line": 238,
+      "type": "Bg",
+      "pos": [
+        -2450.0,
+        880.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_2",
+      "layer": 8,
+      "move_layer": 1
+    },
+    {
+      "source_line": 239,
+      "type": "Bg",
+      "pos": [
+        -2550.0,
+        860.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 240,
+      "type": "Bg",
+      "pos": [
+        -2550.0,
+        730.0
+      ],
+      "rotation_deg": -75.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 241,
+      "type": "Bg",
+      "pos": [
+        -2510.0,
+        640.0
+      ],
+      "rotation_deg": -160.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_4",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 242,
+      "type": "Bg",
+      "pos": [
+        -2520.0,
+        760.0
+      ],
+      "rotation_deg": -60.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_moss_3",
+      "layer": 8,
+      "move_layer": 1
+    },
+    {
+      "source_line": 244,
+      "type": "PlatForm",
+      "pos": [
+        -1300.0,
+        900.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_plat_7",
+      "collision_size": [
+        120.0,
+        50.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 245,
+      "type": "PlatForm",
+      "pos": [
+        -1600.0,
+        875.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_plat_8",
+      "collision_size": [
+        130.0,
+        50.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 246,
+      "type": "PlatForm",
+      "pos": [
+        -2000.0,
+        600.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_plat_9",
+      "collision_size": [
+        250.0,
+        60.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 247,
+      "type": "PlatForm",
+      "pos": [
+        -1800.0,
+        400.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_plat_7",
+      "collision_size": [
+        120.0,
+        50.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 248,
+      "type": "PlatForm",
+      "pos": [
+        -2000.0,
+        200.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_plat_8",
+      "collision_size": [
+        130.0,
+        50.0
+      ],
+      "collision_offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_line": 250,
+      "type": "Fly",
+      "pos": [
+        -1000.0,
+        600.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 251,
+      "type": "Fly",
+      "pos": [
+        -2200.0,
+        500.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 257,
+      "type": "BubbleProducer",
+      "pos": [
+        -1800.0,
+        1200.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "source_line": 258,
+      "type": "Bg",
+      "pos": [
+        2550.0,
+        675.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_roof_1",
+      "layer": 4
+    },
+    {
+      "source_line": 259,
+      "type": "Bg",
+      "pos": [
+        1750.0,
+        500.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_roof_0",
+      "layer": 3
+    },
+    {
+      "source_line": 260,
+      "type": "Bg",
+      "pos": [
+        850.0,
+        485.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_roof_0",
+      "layer": 3
+    },
+    {
+      "source_line": 261,
+      "type": "Bg",
+      "pos": [
+        -175.0,
+        425.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_roof_0",
+      "layer": 3
+    },
+    {
+      "source_line": 262,
+      "type": "Bg",
+      "pos": [
+        2500.0,
+        325.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_fung_mask_01",
+      "layer": 11,
+      "move_layer": 2
+    },
+    {
+      "source_line": 263,
+      "type": "Bg",
+      "pos": [
+        2030.0,
+        600.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_shadow_2",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 264,
+      "type": "Bg",
+      "pos": [
+        2170.0,
+        830.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_shadow_3",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 265,
+      "type": "Bg",
+      "pos": [
+        2000.0,
+        480.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_shadow_6",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 266,
+      "type": "Bg",
+      "pos": [
+        250.0,
+        430.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_shadow_6",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 267,
+      "type": "Bg",
+      "pos": [
+        1950.0,
+        1040.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_fung_new_0106_Layer-254-copy",
+      "layer": 12,
+      "move_layer": 4
+    },
+    {
+      "source_line": 268,
+      "type": "Bg",
+      "pos": [
+        1800.0,
+        1060.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_fung_new_0105_Layer-254-copy-2",
+      "layer": 12,
+      "move_layer": 4
+    },
+    {
+      "source_line": 269,
+      "type": "Bg",
+      "pos": [
+        1250.0,
+        1150.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_fung_new_0106_Layer-254-copy",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 270,
+      "type": "Bg",
+      "pos": [
+        900.0,
+        1150.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_fung_new_0104_Layer-254-copy-3",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 271,
+      "type": "Bg",
+      "pos": [
+        100.0,
+        1030.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_shadow_0",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 273,
+      "type": "Bg",
+      "pos": [
+        -800.0,
+        900.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_leaf_3",
+      "layer": 11,
+      "move_layer": 4
+    },
+    {
+      "source_line": 274,
+      "type": "Bg",
+      "pos": [
+        -1050.0,
+        975.0
+      ],
+      "rotation_deg": -15.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_leaf_2",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 275,
+      "type": "Bg",
+      "pos": [
+        -1450.0,
+        1100.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        -0.85,
+        0.85
+      ],
+      "sprite": "mosshole_leaf_3",
+      "layer": 11,
+      "move_layer": 4
+    },
+    {
+      "source_line": 276,
+      "type": "Bg",
+      "pos": [
+        -2150.0,
+        1070.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "mosshole_leaf_2",
+      "layer": 11,
+      "move_layer": 4
+    },
+    {
+      "source_line": 277,
+      "type": "Bg",
+      "pos": [
+        -2350.0,
+        810.0
+      ],
+      "rotation_deg": 30.0,
+      "scale": [
+        -1.0,
+        1.0
+      ],
+      "sprite": "mosshole_fung_new_0104_Layer-254-copy-3",
+      "layer": 11,
+      "move_layer": 3
+    },
+    {
+      "source_line": 205,
+      "type": "Animated",
+      "pos": [
+        -2330.0,
+        1050.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "lake_top",
+      "delay": 0.045,
+      "layer": 6,
+      "alpha_255": 125
+    },
+    {
+      "source_line": 205,
+      "type": "Animated",
+      "pos": [
+        -2005.0,
+        1050.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "lake_top",
+      "delay": 0.045,
+      "layer": 6,
+      "alpha_255": 125
+    },
+    {
+      "source_line": 205,
+      "type": "Animated",
+      "pos": [
+        -1680.0,
+        1050.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "lake_top",
+      "delay": 0.045,
+      "layer": 6,
+      "alpha_255": 125
+    },
+    {
+      "source_line": 205,
+      "type": "Animated",
+      "pos": [
+        -1355.0,
+        1050.0
+      ],
+      "rotation_deg": 0.0,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "sprite": "lake_top",
+      "delay": 0.045,
+      "layer": 6,
+      "alpha_255": 125
+    }
+  ]
+}

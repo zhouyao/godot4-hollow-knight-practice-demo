@@ -53,6 +53,11 @@ func set_follow(node: Node2D) -> void:
 
 func clear() -> void:
 	_reset_level_state()
+	# 换关时玩家会被暂时摘出场景树，但锚点对象仍然合法：留着它，_process 会继续
+	# 把相机写到"旧房间坐标"，等玩家落到新入口再硬切，中间那段位移就容易露出残留滑动。
+	_follow_behavior._target = null
+	# 换关期间没有跟随目标是正常状态，别刷"尚未设置跟随锚点"的警告。
+	_warned_no_follow = true
 
 func _reset_level_state() -> void:
 	for i in range(_behaviors.size() - 1, -1, -1):

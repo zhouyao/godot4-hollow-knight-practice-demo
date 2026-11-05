@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" path="res://addons/zone_director/scenes/zone.tscn" id="2_u2dgq"]
 [ext_resource type="Script" uid="uid://bvy15idrjb48q" path="res://addons/zone_director/behaviors/AuFootstepBehavior.gd" id="3_2pp0w"]
 [ext_resource type="AudioStream" uid="uid://dnmyvxk6lmisu" path="res://assets/sounds/characters/players/player/player_waterwalk.ogg" id="4_3dhf3"]
-[ext_resource type="Script" uid="uid://dpsmw5co2vfua" path="res://scenes/worlds/_zones/behaviors/wet_splash_behavior.gd" id="5_6nkmd"]
+[ext_resource type="Script" uid="uid://dpsmw5co2vfua" path="res://scenes/worlds/_zones/wet_splash_behavior.gd" id="5_6nkmd"]
 [ext_resource type="Texture2D" uid="uid://b75ky7yasduhs" path="res://assets/animations/characters/players/player/wet_walk_effect.png" id="6_j463b"]
 [ext_resource type="PackedScene" uid="uid://dh324tslddcd4" path="res://addons/environment_fx/rain.tscn" id="7_c2dxy"]
 

@@ -1,0 +1,134 @@
+[gd_scene format=3 uid="uid://c03g5pi0u4bey"]
+
+[ext_resource type="PackedScene" uid="uid://bqr11wgnlhh6f" path="res://scenes/worlds/_base/world_template.tscn" id="1_world"]
+[ext_resource type="Script" uid="uid://mnpwdisxpfy" path="res://scenes/worlds/levels/ruin_house/ruin_house.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/_base/entry_point.tscn" id="3_entry"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/_base/level_gate.tscn" id="4_gate"]
+[ext_resource type="PackedScene" uid="uid://djrm6t28r8ysk" path="res://scenes/props/bench/chair.tscn" id="5_chair"]
+[ext_resource type="AudioStream" uid="uid://bc8pd4awn8tha" path="res://assets/sounds/ambience/tearcity_i.ogg" id="6_audio_i"]
+[ext_resource type="AudioStream" uid="uid://rj5sy2sjpm7t" path="res://assets/sounds/ambience/tearcity_o.ogg" id="7_audio_o"]
+[ext_resource type="Script" uid="uid://1033cnat8g0l" path="res://scenes/worlds/_base/parallax_bg.gd" id="8_parallax"]
+[ext_resource type="Texture2D" uid="uid://dv5h1ugu3xklo" path="res://assets/sprites/backgrounds/ruin_house/ruin_house_bg.jpg" id="9_bg"]
+[ext_resource type="Texture2D" uid="uid://cny3gb5if6gyh" path="res://assets/sprites/backgrounds/ruin_house/room_ruin_house_fg.png" id="10_fg"]
+[ext_resource type="Texture2D" uid="uid://pnuqea280sri" path="res://assets/textures/lights/circle.png" id="11_light"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
+size = Vector2(2493, 82)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(36, 1000)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ar1rq"]
+resource_local_to_scene = true
+size = Vector2(387, 202)
+
+[node name="WorldTemplate" unique_id=560156841 instance=ExtResource("1_world")]
+script = ExtResource("2_script")
+zone_name = "废墟小屋"
+
+[node name="Darkness" type="ColorRect" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="0" unique_id=894660221]
+z_index = -200
+offset_left = -5000.0
+offset_top = -4000.0
+offset_right = 5000.0
+offset_bottom = 4000.0
+mouse_filter = 2
+color = Color(0.02, 0.025, 0.035, 1)
+
+[node name="Bg_001" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="1" unique_id=1203467924]
+z_index = -5
+position = Vector2(0, 725)
+script = ExtResource("8_parallax")
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_001" index="0" unique_id=1425546176]
+scale = Vector2(2, 2)
+texture = ExtResource("9_bg")
+
+[node name="Platform_01" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="0" unique_id=1732748794]
+position = Vector2(0, 1100)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_01" index="0" unique_id=2128154321]
+position = Vector2(29.25, 150)
+shape = SubResource("RectangleShape2D_floor")
+
+[node name="Platform_02" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="1" unique_id=1501292030]
+position = Vector2(-650, 500)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_02" index="0" unique_id=2132770905]
+position = Vector2(-348, 128)
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="Platform_03" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="2" unique_id=259097291]
+position = Vector2(650, 500)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_03" index="0" unique_id=115305712]
+position = Vector2(394, 177)
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="Platform_04" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="3" unique_id=1121855226]
+position = Vector2(0, 250)
+collision_layer = 4
+collision_mask = 79
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_04" index="0" unique_id=267064407]
+position = Vector2(8.5, -57)
+shape = SubResource("RectangleShape2D_floor")
+
+[node name="Bg_002" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=2043833259]
+z_index = 5
+position = Vector2(0, 700)
+scale = Vector2(2, 2)
+texture = ExtResource("10_fg")
+
+[node name="DirectionalLight2D" parent="Lights" parent_id_path=PackedInt32Array(1627484379) index="0" unique_id=617027591]
+energy = 0.0
+
+[node name="ChairLight" type="PointLight2D" parent="Lights" parent_id_path=PackedInt32Array(1627484379) index="1" unique_id=1624815276]
+visible = false
+position = Vector2(0, 900)
+color = Color(1, 0.78, 0.5, 1)
+energy = 0.7
+texture = ExtResource("11_light")
+texture_scale = 2.5
+
+[node name="RuinChair" parent="LevelTransitions/Entries" index="0" unique_id=1848190926 instance=ExtResource("5_chair")]
+position = Vector2(0, 950)
+
+[node name="default" parent="LevelTransitions/Entries" index="1" unique_id=547298701 instance=ExtResource("3_entry")]
+position = Vector2(455, 925)
+facing = -1
+
+[node name="ToTearCity" parent="LevelTransitions/Gates" index="0" unique_id=1506762 instance=ExtResource("4_gate")]
+position = Vector2(950, 1092)
+target_area = "res://scenes/worlds/levels/tear_city/tear_city.tscn"
+target_entry = &"from_ruin_house"
+gate_id = &"to_tear_city"
+
+[node name="ToGrimmTent" parent="LevelTransitions/Gates" index="1" unique_id=632336424 instance=ExtResource("4_gate")]
+position = Vector2(-894, 1065)
+gate_id = &"to_grimm_tent"
+
+[node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0"]
+position = Vector2(-2.5, 721)
+shape = SubResource("RectangleShape2D_ar1rq")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." index="18" unique_id=469030928]
+color = Color(1.1, 1.05, 0.98, 1)
+
+[node name="Ambience" type="Node" parent="." index="19" unique_id=58537130]
+
+[node name="TeaCityInner" type="AudioStreamPlayer" parent="Ambience" index="0" unique_id=720728359]
+stream = ExtResource("6_audio_i")
+volume_db = -8.0
+bus = &"Music"
+
+[node name="TeaCityOuter" type="AudioStreamPlayer" parent="Ambience" index="1" unique_id=956978429]
+stream = ExtResource("7_audio_o")
+volume_db = -10.0
+bus = &"Music"

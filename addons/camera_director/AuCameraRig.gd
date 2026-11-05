@@ -94,6 +94,10 @@ var _shake_strength: float = 0.0
 var _shake_fade: float = 0.0
 var _shake_direction := Vector2.ZERO
 var _rng := RandomNumberGenerator.new()
+## 上一次 zoom 缓动：进出缩放区域很快时会有多条 tween 同时写 zoom，必须先杀掉旧的。
+var _zoom_tween: Tween = null
+## 硬切（teleport_to）后还剩几个物理帧要维持"关平滑"，见 teleport_to()。
+var _smoothing_off_frames := 0
 
 
 func _ready() -> void:
@@ -133,11 +137,14 @@ func set_target_pos(pos: Vector2) -> void:
 
 
 func apply_zoom(z: Vector2, duration := 0.0) -> void:
+	if is_instance_valid(_zoom_tween):
+		_zoom_tween.kill()
+		_zoom_tween = null
 	if duration <= 0.0:
 		zoom = z
 	else:
-		var t := create_tween()
-		t.tween_property(self, "zoom", z, duration)
+		_zoom_tween = create_tween()
+		_zoom_tween.tween_property(self, "zoom", z, duration)
 
 func set_limits(l: int, t: int, r: int, b: int) -> void:
 	limit_left = l
@@ -145,17 +152,45 @@ func set_limits(l: int, t: int, r: int, b: int) -> void:
 	limit_right = r
 	limit_bottom = b
 
+## 硬切位移：换关 / 读档 / 传送专用（一般在黑场里调用）。
+##
+## 为什么不能只靠 Camera2D.reset_smoothing()：
+##   · 它内部只是 `_update_scroll()` 后把 smoothed_camera_pos 对齐到 camera_pos，
+##     而 camera_pos 只在 Camera2D 自己的物理 tick 里（get_camera_transform）刷新。
+##     从 _process / await physics_frame 里调用，对齐到的是"上一物理帧"的旧值，
+##     平滑等于没清掉，相机仍会从旧位置滑过来。
+##   · 本项目开了 physics_interpolation，还必须 reset_physics_interpolation()，
+##     否则渲染层会在 prev/curr 两个物理变换之间插值，瞬移必然拖影。
+## 做法：本帧直接关平滑摆位，撑过两个物理帧（保证 camera_pos / smoothed_camera_pos
+## 都跑过新位置）再恢复 —— 期间画面不晃，黑场里也看不见。
+func teleport_to(pos: Vector2) -> void:
+	if camera == null:
+		return
+	_has_anchor = true
+	_anchor = pos
+	camera.position_smoothing_enabled = false
+	_smoothing_off_frames = 2
+	camera.global_position = pos
+	camera.offset = base_offset
+	camera.reset_physics_interpolation()  # 顺序关键：先清插值历史
+	camera.force_update_scroll()          # 再立刻重算 canvas transform
+
 func snap_to_target() -> void:
 	if not _has_anchor:
 		return
-	camera.global_position = _anchor
-	if camera.has_method("reset_smoothing"):
-		camera.reset_smoothing()
+	teleport_to(_anchor)
 
 
 ## 抖动用物理帧驱动：物理插值模式下 Camera2D 只在物理 tick 采样 offset，
 ## 放在 _process 里改 offset 实际要等到下个物理帧才生效，会出现阶梯感。
 func _physics_process(delta: float) -> void:
+	# 硬切后的"关平滑"窗口：必须放在抖动早退之前，否则不抖时永远恢复不了。
+	if _smoothing_off_frames > 0:
+		_smoothing_off_frames -= 1
+		if _smoothing_off_frames == 0:
+			camera.position_smoothing_enabled = position_smoothing_enabled
+			camera.reset_smoothing()
+
 	if _shake_strength <= 0.0:
 		return
 

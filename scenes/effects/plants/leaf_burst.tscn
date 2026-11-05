@@ -41,7 +41,7 @@ angular_velocity_min = 100.0
 angular_velocity_max = 150.0
 scale_amount_min = 0.4
 scale_amount_max = 0.8
-emitting = true
+emitting = false
 
 [node name="Leaves1" type="CPUParticles2D" parent="."]
 texture = SubResource("4_atlas1")
@@ -62,7 +62,7 @@ angular_velocity_min = 100.0
 angular_velocity_max = 150.0
 scale_amount_min = 0.4
 scale_amount_max = 0.8
-emitting = true
+emitting = false
 
 [node name="Leaves2" type="CPUParticles2D" parent="."]
 texture = SubResource("5_atlas2")
@@ -83,4 +83,4 @@ angular_velocity_min = 100.0
 angular_velocity_max = 150.0
 scale_amount_min = 0.4
 scale_amount_max = 0.8
-emitting = true
+emitting = false

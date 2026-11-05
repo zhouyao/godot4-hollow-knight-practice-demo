@@ -1,0 +1,51 @@
+[gd_resource type="SpriteFrames" load_steps=11 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/animations/effects/water_fountain/0.png" id="1_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/water_fountain/1.png" id="2_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/water_fountain/2.png" id="3_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/water_fountain/3.png" id="4_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/water_fountain/4.png" id="5_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/water_fountain/5.png" id="6_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/water_fountain/6.png" id="7_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/water_fountain/7.png" id="8_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/water_fountain/8.png" id="9_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/water_fountain/9.png" id="10_frame"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_frame")
+}
+],
+"loop": true,
+"name": &"default",
+"speed": 25.0
+}]

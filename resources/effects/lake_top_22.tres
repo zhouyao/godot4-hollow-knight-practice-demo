@@ -1,0 +1,135 @@
+[gd_resource type="SpriteFrames" load_steps=32 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/0.png" id="1_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/1.png" id="2_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/2.png" id="3_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/3.png" id="4_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/4.png" id="5_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/5.png" id="6_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/6.png" id="7_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/7.png" id="8_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/8.png" id="9_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/9.png" id="10_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/10.png" id="11_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/11.png" id="12_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/12.png" id="13_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/13.png" id="14_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/14.png" id="15_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/15.png" id="16_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/16.png" id="17_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/17.png" id="18_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/18.png" id="19_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/19.png" id="20_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/20.png" id="21_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/21.png" id="22_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/22.png" id="23_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/23.png" id="24_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/24.png" id="25_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/25.png" id="26_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/26.png" id="27_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/27.png" id="28_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/28.png" id="29_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/29.png" id="30_frame"]
+[ext_resource type="Texture2D" path="res://assets/animations/effects/lake_top/30.png" id="31_frame"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_frame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_frame")
+}
+],
+"loop": true,
+"name": &"default",
+"speed": 22.2222
+}]
