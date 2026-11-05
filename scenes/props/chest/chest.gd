@@ -68,6 +68,11 @@ const BURST_SCENE := preload("res://scenes/effects/chest/chest_burst.tscn")
 @export_range(0, 24, 1) var coins_min: int = 3
 @export_range(0, 24, 1) var coins_max: int = 6
 
+@export_group("持久化")
+## 一次性物件 ID：留空 = 换关 / 读档后重新出现；非空 = 打破后永久记住（写进存档 flags）。
+## 命名建议带区域前缀，例如 "chest:level_2/01"。
+@export var persistent_id: String = ""
+
 @export_group("炸开")
 @export var burst_scene: PackedScene = BURST_SCENE
 ## 碎石迸发中心相对"箱体中心"的额外偏移，用于微调起点高度。
@@ -90,6 +95,19 @@ var _jitter_tween: Tween = null
 
 func _ready() -> void:
 	health = max_health
+	# 换关 / 读档回来：这块箱子已经炸过，直接恢复成残骸状态，不再参与任何判定。
+	if not persistent_id.is_empty() and SaveManager.is_flagged(persistent_id):
+		_restore_broken()
+
+
+## 恢复"已炸开"的静态外观与碰撞状态（不播音效 / 不迸钱 / 不屏震）。
+func _restore_broken() -> void:
+	broken = true
+	if _idle_sprite != null:
+		_idle_sprite.visible = false
+	if _death_sprite != null:
+		_death_sprite.visible = true
+	_set_collision_enabled(false)
 
 
 ## 受击盒接线：Hitbox 就是个裸 Area2D（不含脚本）。它的掩码（LAYER_DETECTION_AND_ATTACK = 32）
@@ -214,6 +232,9 @@ func _spawn_coins() -> void:
 ## 残骸本身就是 DeathSprite，永久留在场景里，不做任何淡出或销毁。
 func _explode(host: Node) -> void:
 	broken = true
+	# 一次性物件：记进存档 flags（随下一次正常存档落盘）
+	if not persistent_id.is_empty():
+		SaveManager.mark_flag(persistent_id)
 	# 1. 立刻换成破损 / 掀盖贴图；两张贴图共用底边锚点，换贴图绝不悬空。
 	_idle_sprite.visible = false
 	_death_sprite.visible = true
@@ -263,4 +284,4 @@ func _spawn_burst(host: Node) -> void:
 
 
 func _effect_host() -> Node:
-	return get_tree().current_scene
+	return GameSession.content_root()

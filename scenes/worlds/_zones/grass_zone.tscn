@@ -18,6 +18,7 @@ zone_priority = 1
 size = Vector2(64, 32)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=870556469]
+debug_color = Color(0.35, 0.85, 0.55, 0)
 shape = SubResource("RectangleShape2D_grass")
 
 [node name="FootstepBehavior" type="Node" parent="." unique_id=1969310622]

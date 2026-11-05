@@ -3,12 +3,12 @@ class_name SkillBar
 
 ## 常驻技能条：底部居中 5 个槽位，游戏内始终存在。
 ## 层级比技能面板（100）高、比过场（128）低，所以技能面板打开时技能条仍浮在上方，
-## 玩家可以直接把技能图标拖进来；暂停菜单打开时由 WorldTemplate 整体隐藏。
+## 玩家可以直接把技能图标拖进来；暂停菜单打开时由 GameRoot 整体隐藏。
 
 
 @onready var slots_container: HBoxContainer = $Slots
 
-## 玩家引用（由 WorldTemplate._ready 注入）：槽位靠它读冷却剩余时间，为 null 时不画遮罩。
+## 玩家引用（由 GameRoot._ready 注入，切关不重建）：槽位靠它读冷却剩余时间，为 null 时不画遮罩。
 ## 用 setter 注入以便连接冷却 / 能量信号，仅在需要时驱动槽位刷新（空闲时零开销）。
 var _player_ref: PlayerInitial
 var player: PlayerInitial:
@@ -135,7 +135,7 @@ func on_slot_dropped() -> void:
 		slot.set_highlight(SkillSlot.HL_NONE)
 
 
-## 由 WorldTemplate 在打开 / 关闭技能面板时调用：控制槽位删除叉是否可见。
+## 由 GameRoot 在打开 / 关闭技能面板时调用：控制槽位删除叉是否可见。
 func set_panel_open(open: bool) -> void:
 	_panel_open = open
 	for slot in _slots:

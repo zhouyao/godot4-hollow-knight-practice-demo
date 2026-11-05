@@ -59,7 +59,8 @@ func _on_load_requested(slot: int) -> void:
 		_busy = false
 		return
 
-	TransitionLayer.change_scene(SaveManager.current_scene_path())
+	# 进的是常驻根场景，具体加载哪块区域由 GameSession 读存档决定
+	TransitionLayer.change_scene(Globals.GAME_SCENE_PATH)
 
 
 func _unhandled_input(event: InputEvent) -> void:

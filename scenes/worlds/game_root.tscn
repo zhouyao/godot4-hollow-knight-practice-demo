@@ -1,0 +1,29 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/worlds/game_root.gd" id="1_root"]
+[ext_resource type="PackedScene" uid="uid://434vdpo3jiq" path="res://scenes/characters/players/player/player.tscn" id="2_player"]
+[ext_resource type="Script" uid="uid://dos4hols5h4c2" path="res://addons/camera_director/AuCameraRig.gd" id="3_rig"]
+[ext_resource type="PackedScene" uid="uid://b0wloetbeydqe" path="res://scenes/ui/hud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/skill_bar/skill_bar.tscn" id="5_sbar"]
+[ext_resource type="Script" path="res://scenes/worlds/_base/view_culler.gd" id="6_culler"]
+
+[node name="GameRoot" type="Node2D"]
+script = ExtResource("1_root")
+
+[node name="WorldHost" type="Node2D" parent="."]
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(19, -27)
+max_health = 8
+
+[node name="AuCameraRig" type="Node2D" parent="."]
+script = ExtResource("3_rig")
+
+[node name="Hud" parent="." instance=ExtResource("4_hud")]
+
+[node name="SkillBar" parent="." instance=ExtResource("5_sbar")]
+
+[node name="FxHost" type="Node2D" parent="."]
+
+[node name="ViewCuller" type="Node2D" parent="."]
+script = ExtResource("6_culler")

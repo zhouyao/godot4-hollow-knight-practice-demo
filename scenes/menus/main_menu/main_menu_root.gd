@@ -5,6 +5,11 @@ extends CanvasLayer
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	# 从游戏退回：清掉 GameSession 对已释放节点的引用，并解除上一个场景留下的暂停
+	GameSession.reset()
+	get_tree().paused = false
+	# change_scene() 只负责淡出，淡入由目标场景自己揭开
+	TransitionLayer.fade_in()
 	# 菜单一出现就在后台线程化加载关卡：首次冷启动点“开始游戏”时，
 	# 磁盘冷读 + 资源解析会让主线程卡在黑场里一两秒，提前在这里做掉。
 	TransitionLayer.prefetch(Globals.GAME_SCENE_PATH)

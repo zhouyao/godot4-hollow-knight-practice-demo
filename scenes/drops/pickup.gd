@@ -202,7 +202,7 @@ func _collect(by: Node2D) -> void:
 func _detach_audio() -> void:
 	if _audio == null or _audio.stream == null:
 		return
-	var holder := get_tree().current_scene
+	var holder := GameSession.content_root()
 	if holder == null:
 		return
 	# keep_global_transform 传 false：音效位置下一行会显式重设，省一次变换换算。

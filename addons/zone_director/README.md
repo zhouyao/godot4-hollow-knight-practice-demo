@@ -86,8 +86,28 @@ func on_lost(_channel: StringName) -> void: pass    # 本区域失去该通道
 
 ## 关键参数（AuZone）
 
-`size`、`centered`、`parent_zone`、`surface`、`ambient`、`lighting`、`tags`、
-`zone_priority`、`detect_mask`、`target_group`。
+Inspector 里按五组排列：
+
+| 组 | 参数 |
+| --- | --- |
+| 通道 Channels | `surface` / `ambient` / `lighting` / `tags` / `zone_priority` |
+| 形状 Shape | `size` / `centered` |
+| 嵌套 Nesting | `parent_zone` |
+| 检测 Detection | `detect_mask` / `target_group` |
+| 编辑器预览 Editor Preview | `show_corners_in_editor` / `fill_alpha` / `corner_color` / `corner_size` |
+
+编辑器 2D 视图里**矩形内部完全透明**（`fill_alpha = 0` 默认），只画按通道自动着色的描边，
+不遮挡底下的关卡内容。需要淡色块时把 `fill_alpha` 调到 `0~1`（旧行为约为 `0.09`）。
+
+`fill_alpha` 同时作用于两处：脚本画的矩形填充，以及内部 `CollisionShape2D` 的
+`debug_color.a`（Godot 编辑器绘制的形状背景，默认 `0.42`）。`zone.tscn` 与
+`grass_zone.tscn` 里都直接存了 `debug_color = Color(0.35, 0.85, 0.55, 0)` 作默认值，
+`_ensure_shape()` 动态创建形状时也用 alpha `0`；脚本 `_sync_debug_color()` 再按
+`fill_alpha` 在编辑器里同步一遍。因此无论形状是预置的还是动态建的，背景都是透明的。
+
+区域四个角另画**实心直角三角形**（直角在角上、斜边朝内），颜色由 `corner_color` 单独控制，
+与描边色互不影响；`corner_size` 是直角边长，视图缩小时会自动放大以保证可见。
+以上全部仅编辑器生效，运行时不绘制。
 
 `AuZoneDirector` 侧只有 `exit_grace`（离开区域后的宽限时长，默认 0.15s，
 用于消除边界反复横跳造成的表现闪烁）。

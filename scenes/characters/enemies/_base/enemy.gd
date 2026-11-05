@@ -353,6 +353,11 @@ func _ready() -> void:
 	health = mini(initial_health, max_health)
 	debug.setup_health(max_health, health)
 
+	# 调试模式与角色调试面板同源：开启时把 NavigationAgent2D 的 Debug 也打开。
+	# 运行中在设置菜单切换会即时同步到在场敌人；后生成的敌人在这里读当前值。
+	_sync_navigation_debug(Globals.debug_enabled)
+	Globals.debug_enabled_changed.connect(_sync_navigation_debug)
+
 	spawn_position = global_position
 
 	if contact_damage_cooldown != null:
@@ -524,7 +529,7 @@ func take_damage(amount: int, from: Node2D = null) -> void:
 	if is_invulnerable():
 		return
 	# 受击命中特效：谁被砍谁生成（场景由本节点配置决定，可按来源种类细分）。
-	HitEffect.spawn(self, global_position, get_tree().current_scene,
+	HitEffect.spawn(self, global_position, GameSession.content_root(),
 			hit_effect_count_min, hit_effect_count_max, hit_effect_scatter, from)
 	health -= amount
 	_refresh_health_bar()
@@ -629,6 +634,15 @@ func _set_combat(active: bool) -> void:
 
 #region 导航、接触与投射物
 
+## 调试模式 → NavigationAgent2D 的 Debug 开关（Inspector 里 Debug 分组的 Enabled）。
+## 与 CharacterDebug 的血条 / 状态名共用 Globals.debug_enabled 一个入口：设置菜单选「开启」
+## 时在场的敌人立即显示寻路路径，选「关闭」时一起关掉；后生成的敌人在 _ready 里读当前值。
+## 没挂 NavigationAgent2D 的 BOSS 场景走 nav_velocity() 的退化分支，这里直接跳过。
+func _sync_navigation_debug(enabled: bool) -> void:
+	if navigation_agent != null:
+		navigation_agent.debug_enabled = enabled
+
+
 ## 是否只沿水平移动（贴地走 = true，全向 = false）。由 locomotion 决定，
 ## 调用点不再传 planar_only —— 那会把"运动介质"泄漏到每个状态里。
 func is_planar_mover() -> bool:
@@ -729,7 +743,8 @@ func launch_projectile(scene: PackedScene = null) -> void:
 		return
 	# 阵营由发射方写入：必须在 add_child 之前，弹药入树时才会套用正确的碰撞掩码。
 	p.faction = Ammo.Faction.ENEMY
-	get_tree().current_scene.add_child(p)
+	# 挂到当前区域：换关时弹幕随区域一起释放，不会残留到下一关
+	GameSession.content_root().add_child(p)
 	var origin := muzzle.global_position if muzzle != null else global_position
 	p.global_position = origin
 	var dir := Vector2(move_direction, 0.0)

@@ -35,13 +35,14 @@ shader_parameter/region_fade = 400.0
 shader_parameter/elliptical = false
 shader_parameter/mask_noise_texture = SubResource("NoiseTexture2D_mask")
 shader_parameter/cloud_noise_scale = 0.0016
-shader_parameter/edge_noise = 320.0
+shader_parameter/edge_noise = 200.0
 shader_parameter/edge_seed = 0.0
 shader_parameter/density_variation = 0.3
 shader_parameter/edge_margin = 0.04
 shader_parameter/edge_gamma = 1.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_zone"]
+resource_local_to_scene = true
 size = Vector2(1920, 1080)
 
 [node name="Rain" type="Node2D" unique_id=1633012946]

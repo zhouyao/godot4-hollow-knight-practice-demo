@@ -1,4 +1,4 @@
-extends WorldTemplate
+extends WorldArea
 
 @onready var light: DirectionalLight2D = $Lights/DirectionalLight2D
 

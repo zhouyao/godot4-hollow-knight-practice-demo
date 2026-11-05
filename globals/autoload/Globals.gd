@@ -6,7 +6,8 @@ signal level_preparing_changed(is_preparing: bool)
 
 const MAIN_MENU_SCENE_PATH := "res://main.tscn"
 const SYSTEM_SETTINGS_SCENE_PATH := "res://scenes/menus/settings_menu/system_settings_menu.tscn"
-const GAME_SCENE_PATH := "res://scenes/worlds/levels/level_1.tscn"
+## 游戏的"根场景"（常驻骨架）：具体进哪块区域由 GameSession 按存档决定。
+const GAME_SCENE_PATH := "res://scenes/worlds/game_root.tscn"
 
 
 const LAYER_PLAYER := 1 << 0

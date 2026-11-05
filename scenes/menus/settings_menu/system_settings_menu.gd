@@ -34,6 +34,10 @@ func _ready() -> void:
 	Tr.apply(self)
 	tab_operations.quiet_focus()
 
+	# 由暂停菜单 / 主菜单通过 change_scene 进来：解除暂停并揭开黑场
+	get_tree().paused = false
+	TransitionLayer.fade_in()
+
 func _exit_tree() -> void:
 	if Settings.volume.volume_committed.is_connected(_on_volume_preview):
 		Settings.volume.volume_committed.disconnect(_on_volume_preview)

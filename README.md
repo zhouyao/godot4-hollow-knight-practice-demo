@@ -2,6 +2,10 @@
 
 2D 横版动作 Demo（Godot 4.7）。
 
+## 文档
+
+- [关卡 / 转场系统使用清单](docs/level_system_guide.md)：常驻根场景架构、区域制作流程、入口 / 转场门 / 长椅 / 雾门 / 视野剔除 / 可拖拽相机边界、存档字段、调试与已知坑、全项目组件索引。
+
 ## 测试
 
 本项目使用 [GdUnit4](https://github.com/MikeSchulze/gdUnit4)（版本 `6.2.2`，已随仓库放在 `addons/gdUnit4`）作为单元/集成测试框架。

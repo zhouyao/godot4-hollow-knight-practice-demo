@@ -20,7 +20,7 @@ const FRAME_INTRO_DELAY := 0.5
 @onready var health_grid: GridContainer = $TopLeft/VBoxContainer/StatusDetails/HealthIndicators
 @onready var geo_label: Label = $TopLeft/VBoxContainer/MarginContainer/GeoIndicator/Label
 
-## 当前接管的玩家：HUD 与 Player 同属 WorldTemplate，_ready 时自动绑定同级节点。
+## 当前接管的玩家：HUD 与 Player 同属常驻的 GameRoot，切关不会重建。
 var _player: PlayerInitial
 ## 已生成的面具格（下标 0 = 第 1 格）。用 Node 存以避免 HUD 与格脚本强耦合。
 var _indicators: Array[Node] = []
@@ -32,7 +32,11 @@ func _ready() -> void:
 	Inventory.changed.connect(_on_inventory_changed)
 	_on_inventory_changed(&"coin", Inventory.count(&"coin"))
 	_play_frame_intro()
-	bind_player(get_parent().get_node_or_null(^"Player") as PlayerInitial)
+	# 常驻玩家与 HUD 同级；GameRoot 稍后还会再 bind 一次做兜底（重复传入是幂等的）。
+	var p := get_parent().get_node_or_null(^"Player") as PlayerInitial
+	if p == null:
+		p = GameSession.player as PlayerInitial
+	bind_player(p)
 
 
 ## 显式注入玩家（换关卡 / 玩家节点名字不同时用）：重复传入同一引用不会重复连信号。

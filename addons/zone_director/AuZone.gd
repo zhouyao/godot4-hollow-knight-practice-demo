@@ -60,6 +60,34 @@ signal player_exited(zone: Node, player: Node2D)
 ## 只响应属于该 Godot 组的 body。留空则不过滤。
 @export var target_group: StringName = &"player"
 
+@export_group("编辑器预览 Editor Preview")
+## 在 2D 编辑器里把区域四个角画成实心直角三角形（运行时不画）。
+@export var show_corners_in_editor: bool = true:
+	set(value):
+		show_corners_in_editor = value
+		queue_redraw()
+## 矩形内部填充的不透明度：`0` = **完全透明**（默认），只留描边与四角三角形，
+## 便于看清底下的关卡内容；调大则显示按通道自动着色的淡色块。
+## 同时作用于两处：脚本画的矩形填充，以及内部 `CollisionShape2D` 的
+## `debug_color` 的 alpha（Godot 编辑器绘制的形状背景，与 `_debug_color()` 无关）。
+## 矩形描边颜色始终由 `_debug_color()` 决定，不受此项影响。
+@export_range(0.0, 1.0, 0.01) var fill_alpha: float = 0.0:
+	set(value):
+		fill_alpha = clampf(value, 0.0, 1.0)
+		_sync_debug_color()
+		queue_redraw()
+## 四角三角形的颜色，与通道自动色（`_debug_color()`）相互独立，可逐区单独配。
+@export var corner_color: Color = Color(0.0, 0.0, 0.0):
+	set(value):
+		corner_color = value
+		queue_redraw()
+## 三角形的直角边长（世界单位）。编辑器缩得很小时会自动放大，
+## 保证至少有 6 个屏幕像素。最小值为 1。
+@export var corner_size: float = 80.0:
+	set(value):
+		corner_size = maxf(value, 1.0)
+		queue_redraw()
+
 
 ## 仲裁中心的 autoload 节点名。
 ## 刻意用字符串路径解析而不是直接写全局标识符：插件被复制到新工程、
@@ -86,6 +114,13 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		# 开局就在区域内时 body_entered 的时序不可靠，延迟一帧对齐初值。
 		_sync_initial_overlap.call_deferred()
+		set_process(false)
+	else:
+		# 编辑器下定时重绘：_ready 的那一次会被 2D 视口初始化冲掉，
+		# 之后若属性没变化就再也看不到四角三角形。
+		_sync_debug_color()
+		set_process(true)
+		queue_redraw()
 
 
 func _exit_tree() -> void:
@@ -245,7 +280,8 @@ func _ensure_shape() -> void:
 	if collision == null:
 		collision = CollisionShape2D.new()
 		collision.name = "CollisionShape2D"
-		collision.debug_color = Color(0.35, 0.85, 0.55, 0.3)
+		# alpha 默认 0：编辑器里新建的形状也不铺背景色，由 fill_alpha 统一控制。
+		collision.debug_color = Color(0.35, 0.85, 0.55, 0.0)
 		collision.shape = RectangleShape2D.new()
 		add_child(collision)
 		# 让编辑器把新建的形状随场景一起保存（owner 为空时不会落盘）。
@@ -270,6 +306,23 @@ func _own_shape(collision: CollisionShape2D) -> void:
 	collision.shape = shape.duplicate()
 
 
+## Godot 编辑器用 `CollisionShape2D.debug_color` 画碰撞形状的背景。
+## 把它的 alpha 与 `fill_alpha` 对齐：默认 0 = 内部形状背景全透明，
+## 只剩脚本画的矩形描边与四角三角形。
+## 仅在编辑器里改（运行时不碰节点属性）；值相同时不写，避免反复把场景标脏。
+func _sync_debug_color() -> void:
+	if not Engine.is_editor_hint():
+		return
+	var collision := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if collision == null:
+		return
+	var dc := collision.debug_color
+	if is_equal_approx(dc.a, fill_alpha):
+		return
+	dc.a = fill_alpha
+	collision.debug_color = dc
+
+
 func _apply_size() -> void:
 	var collision := get_node_or_null("CollisionShape2D") as CollisionShape2D
 	if collision == null or not (collision.shape is RectangleShape2D):
@@ -284,7 +337,10 @@ func _draw() -> void:
 		return
 	var r := Rect2(-size / 2.0, size) if centered else Rect2(Vector2.ZERO, size)
 	var col := _debug_color()
-	draw_rect(r, Color(col.r, col.g, col.b, 0.09))
+	# 默认全透明：中间不铺色块，避免盖住底下的关卡内容。
+	# 只有把 fill_alpha 调大时才画淡填充，描边始终保留。
+	if fill_alpha > 0.0:
+		draw_rect(r, Color(col.r, col.g, col.b, fill_alpha))
 	draw_rect(r, col, false, 2.0)
 	# 互斥通道画实心圆心、叠加通道画空心圆心，便于一眼分辨本区域说的是哪类话。
 	for i in EXCLUSIVE_MARKERS.size():
@@ -294,6 +350,66 @@ func _draw() -> void:
 		if declares(ADDITIVE_MARKERS[i]):
 			draw_arc(r.position + Vector2(14.0 + 14.0 * float(i), 30.0),
 					5.0, 0.0, TAU, 12, col, 2.0, true)
+
+	_draw_corner_triangles(r)
+
+
+const REDRAW_INTERVAL := 0.5
+
+var _redraw_accum := 0.0
+
+
+func _notification(what: int) -> void:
+	if Engine.is_editor_hint() and (what == NOTIFICATION_ENTER_TREE or what == NOTIFICATION_VISIBILITY_CHANGED):
+		queue_redraw()
+
+
+func _process(delta: float) -> void:
+	if not Engine.is_editor_hint():
+		set_process(false)
+		return
+	_redraw_accum += delta
+	if _redraw_accum >= REDRAW_INTERVAL:
+		_redraw_accum = 0.0
+		queue_redraw()
+
+
+## 四角实心直角三角形：直角顶点落在角上，两条直角边沿矩形边朝内，斜边指向中心。
+## 用 draw_colored_polygon 而不是描边，保证编辑器缩到很小时仍然看得见。
+func _draw_corner_triangles(r: Rect2) -> void:
+	if not show_corners_in_editor or r.size.x <= 0.0 or r.size.y <= 0.0:
+		return
+
+	var canvas_scale := 1.0
+	var vp := get_viewport()
+	if vp != null:
+		canvas_scale = maxf(vp.get_global_canvas_transform().get_scale().x, 0.001)
+	var s := maxf(corner_size, 6.0 / canvas_scale)
+
+	var corners := [
+		r.position,
+		Vector2(r.end.x, r.position.y),
+		r.end,
+		Vector2(r.position.x, r.end.y),
+	]
+	# 每个角"朝内"的两个方向，与 corners 顺序一一对应
+	var dirs := [
+		Vector2(1.0, 1.0), Vector2(-1.0, 1.0),
+		Vector2(-1.0, -1.0), Vector2(1.0, -1.0),
+	]
+
+	for i in 4:
+		var p: Vector2 = corners[i]
+		var d: Vector2 = dirs[i]
+		var a := p
+		var b := p + Vector2(d.x * s, 0.0)
+		var c := p + Vector2(0.0, d.y * s)
+		# 统一绕序，避免不同角的三角形因顶点方向相反而漏画
+		if (b - a).cross(c - a) < 0.0:
+			var tmp := b
+			b = c
+			c = tmp
+		draw_colored_polygon(PackedVector2Array([a, b, c]), corner_color)
 
 
 const EXCLUSIVE_MARKERS: Array[StringName] = [&"surface", &"lighting"]

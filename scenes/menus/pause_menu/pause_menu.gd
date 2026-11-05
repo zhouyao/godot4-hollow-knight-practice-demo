@@ -1,7 +1,7 @@
 extends CanvasLayer
 
-# 暂停菜单：由 WorldTemplate 在按 Esc 时实例化并 add_child 到世界节点下。
-# 自身的 process_mode 在 WorldTemplate.open_pause 中被设为 ALWAYS，
+# 暂停菜单：由 GameRoot 在按 Esc 时实例化并 add_child 到常驻根节点下。
+# 自身的 process_mode 在 GameRoot.open_pause 中被设为 ALWAYS，
 # 所以即使 SceneTree 已暂停，仍正常处理输入与按钮回调。
 # 两个面板：主面板（继续 / 音频 / 退回主菜单）与音频面板（内嵌 AudioContent）。
 # “退回主菜单”不直接切场景，先弹一次确认（复用 quit_menu，复刻 HK 的 quit_pause_menu）。

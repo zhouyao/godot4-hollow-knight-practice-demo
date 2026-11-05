@@ -229,7 +229,7 @@ func _spawn_splash(body: Node2D, strength: float = 1.0) -> void:
 ## 水花是 5 帧后自毁的一次性特效，挂到关卡根不会残留在雨区之外。
 func _splash_parent() -> Node:
 	if is_inside_tree():
-		var scene := get_tree().current_scene
+		var scene := GameSession.content_root()
 		if scene != null and scene != self:
 			return scene
 	var host := get_zone()

@@ -32,6 +32,7 @@ AuZoneDirector="*res://addons/zone_director/AuZoneDirector.gd"
 Skills="*res://resources/skills/skills_autoload.gd"
 PlayerCombat="*res://globals/autoload/PlayerCombat.gd"
 SaveManager="*res://globals/autoload/SaveManager.gd"
+GameSession="*res://globals/autoload/GameSession.gd"
 
 [display]
 

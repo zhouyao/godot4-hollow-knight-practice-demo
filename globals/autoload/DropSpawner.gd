@@ -76,9 +76,11 @@ func _spawn(scene: PackedScene, at: Vector2, item_id: StringName,
 					p.launch_speed_y))
 
 
-## 优先放进世界里的 "Drops" 容器（保持场景树整洁），没有则退回当前场景根节点。
+## 优先放进当前区域的 "Drops" 容器（保持场景树整洁），没有则退回区域根节点。
+## 用 GameSession.content_root() 而不是 current_scene：后者现在是常驻的 game_root，
+## 掉落物挂上去会跨关卡残留。
 func _parent() -> Node:
-	var scene := get_tree().current_scene
+	var scene := GameSession.content_root()
 	if scene == null:
 		return null
 	var container := scene.find_child("Drops", true, false)

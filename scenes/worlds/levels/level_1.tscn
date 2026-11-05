@@ -24,14 +24,22 @@
 [ext_resource type="Script" uid="uid://dk34x4net1iyr" path="res://scenes/characters/bosses/_base/behaviors/boss_arena_behavior.gd" id="20_beh"]
 [ext_resource type="Script" uid="uid://6o0ekifsw70h" path="res://scenes/worlds/levels/level_1.gd" id="21_lvl"]
 [ext_resource type="PackedScene" uid="uid://dcw0gneskq823" path="res://scenes/characters/bosses/soul_master/soul_master.tscn" id="22_n30dk"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/_base/entry_point.tscn" id="23_entry"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/_base/level_gate.tscn" id="24_gate"]
+[ext_resource type="PackedScene" path="res://scenes/props/bench/bench.tscn" id="25_bench"]
+[ext_resource type="PackedScene" path="res://scenes/worlds/_base/boss_fog_gate.tscn" id="27_fog"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rywq7"]
 size = Vector2(163.2125, 65)
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_yq11q"]
-vertices = PackedVector2Array(4943.8516, -2837.0078, 4903.1406, 7.0625, -4278.133, 67.92969, -4317.8594, -2847.9766)
+vertices = PackedVector2Array(7082.1484, 128.9375, -4278.133, 68.046875, -4317.8594, -2848, 7129.828, -2848.9922)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(-4328, -2858, -4288, 78, 4913, 17, 4954, -2847)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-4328, -2858, -4288, 78, 7092, 139, 7140, -2859)])
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wuuxf"]
+resource_local_to_scene = true
+size = Vector2(9888, 1425)
 
 [node name="WorldTest" unique_id=560156841 instance=ExtResource("1_h76fn")]
 script = ExtResource("21_lvl")
@@ -120,24 +128,25 @@ scale = Vector2(89, 0.192)
 
 [node name="Chest" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="6" unique_id=1778910463 instance=ExtResource("14_chest")]
 position = Vector2(-1800, 503)
+persistent_id = "chest:level_1/01"
 
-[node name="Crawlid" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=220108385 instance=ExtResource("7_xo2r0")]
+[node name="Crawlid" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=220108385 groups=["view_cull"] instance=ExtResource("7_xo2r0")]
 position = Vector2(-1000, 423)
 enemy_zone = NodePath("../../EnemyZones/EnemyZone2")
 
-[node name="Vengefly" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="1" unique_id=1746772293 instance=ExtResource("9_cm34k")]
+[node name="Vengefly" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="1" unique_id=1746772293 groups=["view_cull"] instance=ExtResource("9_cm34k")]
 position = Vector2(-1200, 100)
 enemy_zone = NodePath("../../EnemyZones/EnemyZone2")
 projectile_scene = null
 
-[node name="Mosscreep" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="2" unique_id=972801678 instance=ExtResource("10_cm34k")]
+[node name="Mosscreep" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="2" unique_id=972801678 groups=["view_cull"] instance=ExtResource("10_cm34k")]
 position = Vector2(-3000, 446)
 
-[node name="EnemyGround" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="3" unique_id=588911125 instance=ExtResource("8_3bc65")]
+[node name="EnemyGround" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="3" unique_id=588911125 groups=["view_cull"] instance=ExtResource("8_3bc65")]
 position = Vector2(1250, 200)
 enemy_zone = NodePath("../../EnemyZones/EnemyZone")
 
-[node name="EnemyFlying2" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="4" unique_id=1557758048 instance=ExtResource("9_nygb8")]
+[node name="EnemyFlying2" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="4" unique_id=1557758048 groups=["view_cull"] instance=ExtResource("9_nygb8")]
 position = Vector2(770, 300)
 chase_speed_multiplier = 2.0
 enemy_zone = NodePath("../../EnemyZones/EnemyZone")
@@ -150,18 +159,20 @@ position = Vector2(-1200, 422)
 
 [node name="G0" type="Node2D" parent="Efffects_0" index="0" unique_id=229419568]
 
-[node name="Grass0" parent="Efffects_0/G0" index="0" unique_id=1672507866 instance=ExtResource("12_nvw4u")]
+[node name="Grass0" parent="Efffects_0/G0" index="0" unique_id=1672507866 groups=["view_cull"] instance=ExtResource("12_nvw4u")]
 hits_to_die = 2
 corpse_y_offset = 5.0
 
 [node name="GrassZone" parent="Efffects_0/G0" index="1" unique_id=2005529879 instance=ExtResource("13_uoxyj")]
 position = Vector2(0, 66)
 scale = Vector2(2.2, 1)
+corner_color = Color(0.25, 0.85, 1, 0.95)
+corner_size = 24.0
 
 [node name="G2" type="Node2D" parent="Efffects_0" index="1" unique_id=1219452682]
 position = Vector2(-2000, 10)
 
-[node name="Grass2" parent="Efffects_0/G2" index="0" unique_id=1888133126 instance=ExtResource("12_nvw4u")]
+[node name="Grass2" parent="Efffects_0/G2" index="0" unique_id=1888133126 groups=["view_cull"] instance=ExtResource("12_nvw4u")]
 idle_animation = &"grass_2"
 death_animation = &"grass_2"
 hits_to_die = 2
@@ -170,6 +181,8 @@ corpse_y_offset = -5.0
 [node name="GrassZone" parent="Efffects_0/G2" index="1" unique_id=608866006 instance=ExtResource("13_uoxyj")]
 position = Vector2(5, 64)
 scale = Vector2(2.2, 1)
+corner_color = Color(0.25, 0.85, 1, 0.95)
+corner_size = 24.0
 
 [node name="HollowKnightScene" type="Node2D" parent="." index="8" unique_id=1437758410]
 
@@ -211,15 +224,10 @@ centered = false
 
 [node name="BossArenaBehavior" type="Node" parent="SoulMasterScene/BossArena" index="1" unique_id=122894332]
 script = ExtResource("20_beh")
-auto_start_fight = false
 boss_node = NodePath("../../SoulMaster")
 
 [node name="SoulMaster" parent="SoulMasterScene" index="1" unique_id=979105824 instance=ExtResource("22_n30dk")]
 position = Vector2(5983, -88)
-
-[node name="Player" parent="." index="10" unique_id=1112432844]
-position = Vector2(4700, 200)
-max_health = 8
 
 [node name="Layer_1" type="Parallax2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=80876967]
 
@@ -238,7 +246,7 @@ texture = ExtResource("5_l8c12")
 [node name="G1" type="Node2D" parent="Effects" parent_id_path=PackedInt32Array(996629329) index="0" unique_id=146498545]
 position = Vector2(-2800, 423)
 
-[node name="Grass1" parent="Effects/G1" index="0" unique_id=33662686 instance=ExtResource("12_nvw4u")]
+[node name="Grass1" parent="Effects/G1" index="0" unique_id=33662686 groups=["view_cull"] instance=ExtResource("12_nvw4u")]
 idle_animation = &"grass_1"
 death_animation = &"grass_1"
 hits_to_die = 2
@@ -247,11 +255,13 @@ corpse_y_offset = 8.0
 [node name="GrassZone" parent="Effects/G1" index="1" unique_id=637239354 instance=ExtResource("13_uoxyj")]
 position = Vector2(2, 64)
 scale = Vector2(2.2, 1)
+corner_color = Color(0.25, 0.85, 1, 0.95)
+corner_size = 24.0
 
 [node name="G3" type="Node2D" parent="Effects" parent_id_path=PackedInt32Array(996629329) index="1" unique_id=1910157471]
 position = Vector2(-1400, 425)
 
-[node name="Grass3" parent="Effects/G3" index="0" unique_id=1991747258 instance=ExtResource("12_nvw4u")]
+[node name="Grass3" parent="Effects/G3" index="0" unique_id=1991747258 groups=["view_cull"] instance=ExtResource("12_nvw4u")]
 idle_animation = &"grass_3"
 death_animation = &"grass_3"
 hits_to_die = 2
@@ -259,6 +269,31 @@ hits_to_die = 2
 [node name="GrassZone" parent="Effects/G3" index="1" unique_id=390967002 instance=ExtResource("13_uoxyj")]
 position = Vector2(3, 64)
 scale = Vector2(2.2, 1)
+corner_color = Color(0.25, 0.85, 1, 0.95)
+corner_size = 24.0
+
+[node name="default" parent="LevelTransitions/Entries" index="0" unique_id=391117050 instance=ExtResource("23_entry")]
+position = Vector2(-1700, 200)
+
+[node name="from_level_2" parent="LevelTransitions/Entries" index="1" unique_id=2079681964 instance=ExtResource("23_entry")]
+position = Vector2(-3100, 425)
+
+[node name="bench_01" parent="LevelTransitions/Entries" index="2" unique_id=83820754 instance=ExtResource("25_bench")]
+position = Vector2(4600, 425)
+
+[node name="ToLevel2" parent="LevelTransitions/Gates" index="0" unique_id=1062008697 instance=ExtResource("24_gate")]
+position = Vector2(-3400, 425)
+target_area = "res://scenes/worlds/levels/level_2.tscn"
+target_entry = &"from_level_1"
+gate_id = &"from_level_2"
+
+[node name="HollowKnightFog" parent="LevelTransitions/Gates" index="1" unique_id=524805189 instance=ExtResource("27_fog")]
+position = Vector2(2000, 200)
+boss_node = NodePath("../../../HollowKnightScene/HollowKnight")
+
+[node name="SoulMasterFog" parent="LevelTransitions/Gates" index="2" unique_id=1055150122 instance=ExtResource("27_fog")]
+position = Vector2(5000, 200)
+boss_node = NodePath("../../../SoulMasterScene/SoulMaster")
 
 [node name="EnemyZone" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="0" unique_id=556081287 instance=ExtResource("11_zone")]
 position = Vector2(1000, 178)
@@ -273,60 +308,60 @@ position = Vector2(-1200, -64)
 collision_layer = 16
 monitorable = false
 script = ExtResource("2_p6tgj")
+area_size = Vector2(3200, 600)
+centered = false
 vertical_lock_marker = NodePath("../../Markers/vertical_lock")
 can_look_up = true
 can_look_down = true
-area_size = Vector2(3200, 600)
-centered = false
 
 [node name="LeftCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="1" unique_id=324128848 node_paths=PackedStringArray("horizontal_lock_marker", "vertical_lock_marker")]
 position = Vector2(-1847, -64)
 collision_layer = 16
 monitorable = false
 script = ExtResource("2_p6tgj")
+area_size = Vector2(850, 600)
+centered = false
 horizontal_lock_marker = NodePath("../../Markers/horizontal_lock")
 vertical_lock_marker = NodePath("../../Markers/vertical_lock")
 can_look_up = true
 can_look_down = true
-area_size = Vector2(850, 600)
-centered = false
 
 [node name="ZoomCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="2" unique_id=146476761 node_paths=PackedStringArray("vertical_lock_marker")]
 position = Vector2(-3700, -64)
 collision_layer = 16
 monitorable = false
 script = ExtResource("2_p6tgj")
+area_size = Vector2(1900, 600)
+centered = false
 vertical_lock_marker = NodePath("../../Markers/vertical_lock")
 can_look_up = true
 can_look_down = true
-area_size = Vector2(1900, 600)
-centered = false
 
 [node name="HollowKnightCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="3" unique_id=1273820883 node_paths=PackedStringArray("horizontal_lock_marker", "vertical_lock_marker")]
 position = Vector2(1953, -41)
 collision_layer = 16
 monitorable = false
 script = ExtResource("2_p6tgj")
+area_size = Vector2(3134, 600)
+centered = false
 horizontal_lock_marker = NodePath("../../Markers/hollow_knight_lock")
 vertical_lock_marker = NodePath("../../Markers/hollow_knight_lock")
 horizontal_range = 600.0
 can_look_up = true
 can_look_down = true
-area_size = Vector2(3134, 600)
-centered = false
 
 [node name="SoulMasterCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="4" unique_id=147958072 node_paths=PackedStringArray("horizontal_lock_marker", "vertical_lock_marker")]
 position = Vector2(5000, -200)
 collision_layer = 16
 monitorable = false
 script = ExtResource("2_p6tgj")
+area_size = Vector2(1920, 700)
+centered = false
 horizontal_lock_marker = NodePath("../../Markers/soul_master_lock")
 vertical_lock_marker = NodePath("../../Markers/soul_master_lock")
 horizontal_range = 100.0
 can_look_up = true
 can_look_down = true
-area_size = Vector2(1920, 700)
-centered = false
 
 [node name="vertical_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="0" unique_id=1345446756]
 position = Vector2(0, 155)
@@ -339,6 +374,10 @@ position = Vector2(3378, 111)
 
 [node name="soul_master_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="3" unique_id=529168333]
 position = Vector2(5979, 111)
+
+[node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0"]
+position = Vector2(1944, -247.5)
+shape = SubResource("RectangleShape2D_wuuxf")
 
 [connection signal="body_entered" from="CameraLock/Areas/ZoomCameraLock" to="." method="_on_zoom_camera_lock_body_entered"]
 [connection signal="body_exited" from="CameraLock/Areas/ZoomCameraLock" to="." method="_on_zoom_camera_lock_body_exited"]

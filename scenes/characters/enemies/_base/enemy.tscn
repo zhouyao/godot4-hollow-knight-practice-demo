@@ -158,6 +158,7 @@ position = Vector2(30, -8)
 shape = SubResource("RectangleShape2D_h6q0h")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1869557334]
+debug_enabled = true
 
 [node name="Animation" type="Node2D" parent="." unique_id=953898085]
 

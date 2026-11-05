@@ -100,7 +100,7 @@ func _add_plume(out: Array, x: float, y: float, damage: int) -> void:
 	if plume == null:
 		return
 	plume.setup(damage, self)
-	get_tree().current_scene.add_child(plume)
+	GameSession.content_root().add_child(plume)
 	plume.global_position = Vector2(x, y)
 	out.append(plume)
 
