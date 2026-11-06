@@ -34,6 +34,7 @@ func _ready() -> void:
 	if player != null:
 		player.player_death.connect(_on_player_death)
 	GameSession.rested.connect(_on_rested)
+	GameSession.sat.connect(_on_sat)
 
 	# 兜底：进游戏时用存档值对齐一次窗口（覆盖启动延迟 apply 偶发的时序失败）。
 	Settings.display.apply_now()
@@ -52,13 +53,41 @@ func _ready() -> void:
 
 # ---------------------------------------------------------------- 提示
 
-## 长椅休息：弹一句"已休息 · 已保存"。
-func _on_rested(_bench_id: StringName) -> void:
+## 长椅休息：在长椅上方弹一句"已休息 · 已保存"。
+func _on_rested(bench_id: StringName) -> void:
+	_show_toast("已休息 · 已保存", bench_id)
+
+
+## 椅子上坐下（自动存档）：在椅子上方弹一句"存档成功"。
+func _on_sat(seat_id: StringName) -> void:
+	_show_toast("存档成功", seat_id)
+
+
+## anchor_id 对应的物件（长椅 / 椅子）决定提示框的箭头落点；
+## 拿不到（没挂 entry_id 的临时提示等）就回落屏幕下方居中，至少不会不显示。
+func _show_toast(text: String, anchor_id: StringName = &"") -> void:
 	var toast := TOAST_SCENE.instantiate() as Toast
 	if toast == null:
 		return
 	add_child(toast)
-	toast.show_text("已休息 · 已保存")
+	var anchor := _toast_anchor(anchor_id)
+	if anchor == Vector2.INF:
+		toast.show_text(text)
+	else:
+		toast.show_text_at(text, anchor)
+
+
+## 按 entry_id 回查物件（WorldArea.get_entry），问它要提示框锚点。
+func _toast_anchor(anchor_id: StringName) -> Vector2:
+	if anchor_id == &"" or not is_instance_valid(GameSession.current_area):
+		return Vector2.INF
+	var area := GameSession.current_area
+	if not area.has_method(&"get_entry"):
+		return Vector2.INF
+	var target: Node2D = area.call(&"get_entry", anchor_id)
+	if target == null or not target.has_method(&"get_prompt_anchor"):
+		return Vector2.INF
+	return target.call(&"get_prompt_anchor")
 
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -121,6 +121,10 @@ var slash_down_dive_speed: float = 5.0 * Globals.UNIT_SIZE
 
 # 击退 / 技能冷却
 var knockback: Vector2 = Vector2.ZERO
+
+## 座位锚点（全局坐标）：椅子通过 sit_down() 写入，sit 状态据此把角色钉在座位上
+## 而不落到地面。Vector2.INF 表示没有座位（在平地上坐下，照旧靠重力贴地）。
+var sit_anchor: Vector2 = Vector2.INF
 ## 技能冷却剩余时间表：skill_id -> 剩余秒数。每物理帧递减，归零自动移除条目。
 ## 放在玩家身上而不是状态里：受击 / 死亡 / 切状态都要继续走表，
 ## 而且暂停（paused=true）时随物理帧一起冻结，恢复后接着数。
@@ -151,6 +155,7 @@ var block_invincible: bool = false
 @onready var hurt_invincibility_timer: Timer = $Timer/hurt_invincibility_timer
 
 @onready var player_animated_sprite: AnimatedSprite2D = $Animation/PlayerAnimatedSprite
+@onready var effect_animated_sprite: AnimatedSprite2D = $Animation/EffectAnimatedSprite2D
 
 @onready var action_animation_player: AnimationPlayer = $Animation/ActionAnimationPlayer
 @onready var secondary_animation_player: AnimationPlayer = $Animation/SecondaryAnimationPlayer
@@ -339,14 +344,14 @@ func buffer_jump() -> void:
 	jump_buffer_timer = jump_buffer_time
 
 
-## 缓冲到期前逐帧重试；受击 / 死亡 / 冻结 / 格挡 / 回血这些屏蔽输入的状态里不补跳。
+## 缓冲到期前逐帧重试；受击 / 死亡 / 冻结 / 格挡 / 回血 / 坐下这些屏蔽输入的状态里不补跳。
 func _consume_jump_buffer() -> void:
 	if jump_buffer_timer <= 0.0 or state_machine == null:
 		return
 	var state_name := state_machine.current_state_name
 	if state_name == PlayerStateNames.HURT or state_name == PlayerStateNames.DEATH \
 			or state_name == PlayerStateNames.FREEZE or state_name == PlayerStateNames.BLOCK \
-			or state_name == PlayerStateNames.CURE:
+			or state_name == PlayerStateNames.CURE or state_name == PlayerStateNames.SIT:
 		return
 	var target := try_jump()
 	if target == &"":
@@ -355,13 +360,42 @@ func _consume_jump_buffer() -> void:
 	state_machine.set_state(target, true)
 
 
-## 治疗（食物掉落用）：不会超过 max_health，死亡状态下无效。
+## 坐下（长椅 / 椅子调用）：放到座位上并切进 sit 状态，回血回能由 sit 状态自己负责。
+## seat_position 是「角色原点」应处的全局坐标，由椅子按自己的座位高度算好传进来
+## （椅子原点 + Bench.seat_offset）；坐下期间 sit 状态把角色钉在这里，不再走重力。
+## 死亡 / 状态机缺失 / 已经在坐下时返回 false。
+func sit_down(seat_position: Vector2) -> bool:
+	if dead or state_machine == null \
+			or state_machine.current_state_name == PlayerStateNames.SIT:
+		return false
+	velocity = Vector2.ZERO
+	knockback = Vector2.ZERO
+	dash_carry = Vector2.ZERO
+	jump_buffer_timer = 0.0
+	end_attack()
+	sit_anchor = seat_position
+	global_position = seat_position
+	reset_physics_interpolation()
+	state_machine.set_state(PlayerStateNames.SIT, true)
+	return true
+
+
+## 治疗（食物掉落 / 坐下休息用）：不会超过 max_health，死亡状态下无效。
 func heal(amount: int) -> void:
 	if dead or amount <= 0:
 		return
 	health = mini(health + amount, max_health)
 	_refresh_health_bar()
 	health_changed.emit(health)
+
+
+## 回能（坐下休息用）：不会超过 max_energy，死亡状态下无效。
+func restore_energy(amount: int) -> void:
+	if dead or amount <= 0:
+		return
+	energy = mini(energy + amount, max_energy)
+	_refresh_energy_bar()
+	energy_changed.emit(energy)
 
 func _dead():
 	if dead:

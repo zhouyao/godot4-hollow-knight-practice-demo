@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/world_prompt.gd" id="1_prompt"]
+[ext_resource type="SpriteFrames" path="res://assets/animations/ui/prompt/prompt_frames.tres" id="2_frames"]
+
+[node name="WorldPrompt" type="CanvasLayer"]
+layer = 90
+script = ExtResource("1_prompt")
+
+[node name="Content" type="Control" parent="."]
+modulate = Color(1, 1, 1, 0)
+offset_right = 213.0
+offset_bottom = 176.0
+mouse_filter = 2
+
+[node name="Prompt" type="AnimatedSprite2D" parent="Content"]
+position = Vector2(106.5, 88)
+sprite_frames = ExtResource("2_frames")
+animation = &"idle"
+
+[node name="Label" type="Label" parent="Content"]
+offset_left = 0.0
+offset_top = 44.0
+offset_right = 213.0
+offset_bottom = 90.0
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+vertical_alignment = 1

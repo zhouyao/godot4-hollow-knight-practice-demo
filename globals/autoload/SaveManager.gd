@@ -19,7 +19,13 @@ const SLOT_COUNT := 4
 const SAVE_DIR := "user://saves"
 ## v2：scene_path 拆成 area_path + entry_id + flags（一次性物件持久化）。
 const SAVE_VERSION := 2
-const DEFAULT_SCENE_PATH := "res://scenes/worlds/levels/moss_hole/moss_hole.tscn"
+## 兜底场景：开发设置里的「首页路径」不可用时回落到开场动画。
+const DEFAULT_SCENE_PATH := DevelopmentSection.DEFAULT_HOME_PATH
+# 开发设置里可改成任意关卡，例如：
+#"res://scenes/worlds/levels/tear_city/tear_city.tscn"
+#"res://scenes/worlds/levels/soul_master_room/soul_master_room.tscn"
+#"res://scenes/worlds/levels/ruin_house/ruin_house.tscn"
+#"res://scenes/worlds/levels/moss_hole/moss_hole.tscn"
 const DEFAULT_ENTRY_ID := "default"
 
 ## 关卡目录整理（levels/ 一关一目录）之前的旧路径 → 新路径。
@@ -79,7 +85,7 @@ func get_summary(slot: int) -> Dictionary:
 		"max_energy": 0,
 		"coin": 0,
 		"food": 0,
-		"scene_path": DEFAULT_SCENE_PATH,
+		"scene_path": home_scene_path(),
 		"entry_id": DEFAULT_ENTRY_ID,
 		"saved_at": "",
 	}
@@ -103,17 +109,24 @@ func get_summary(slot: int) -> Dictionary:
 		"max_energy": int(player.get("max_energy", 0)),
 		"coin": int(inventory.get("coin", 0)),
 		"food": int(inventory.get("food", 0)),
-		"scene_path": migrate_area_path(String(data.get("area_path", data.get("scene_path", DEFAULT_SCENE_PATH)))),
+		"scene_path": migrate_area_path(String(data.get("area_path", data.get("scene_path", home_scene_path())))),
 		"entry_id": String(data.get("entry_id", DEFAULT_ENTRY_ID)),
 		"saved_at": String(data.get("saved_at", "")),
 	}
+
+
+## 首页场景：由「游戏设置 > 开发」里的首页路径提供，默认开场动画。
+## 只影响新建存档 / 空槽预览 / 坏路径兜底；已有存档仍按存档里的 area_path 继续。
+func home_scene_path() -> String:
+	var path := Settings.development.get_home_path()
+	return path if DevelopmentSection.is_valid_home_path(path) else DEFAULT_SCENE_PATH
 
 
 ## 读档 / 新建后要进入的区域场景。
 func current_scene_path() -> String:
 	var path := migrate_area_path(String(_data.get("area_path", _data.get("scene_path", ""))))
 	if path.is_empty() or not ResourceLoader.exists(path):
-		return DEFAULT_SCENE_PATH
+		return home_scene_path()
 	return path
 
 
@@ -198,11 +211,12 @@ func new_game(slot: int) -> bool:
 
 	current_slot = slot
 	_pending_load = false
+	var home := home_scene_path()
 	_data = {
 		"version": SAVE_VERSION,
 		"slot": slot,
-		"area_path": DEFAULT_SCENE_PATH,
-		"scene_path": DEFAULT_SCENE_PATH,  # 旧字段，保留兼容
+		"area_path": home,
+		"scene_path": home,  # 旧字段，保留兼容
 		"entry_id": DEFAULT_ENTRY_ID,
 		"zone": "",
 		"play_time": 0.0,
@@ -238,7 +252,7 @@ func load_game(slot: int) -> bool:
 	if not (_data.get("flags") is Array):
 		_data["flags"] = []
 	if String(_data.get("area_path", "")).is_empty():
-		_data["area_path"] = String(_data.get("scene_path", DEFAULT_SCENE_PATH))
+		_data["area_path"] = String(_data.get("scene_path", home_scene_path()))
 	# 目录整理前的旧档：把 area_path / scene_path 一起改写到新位置。
 	_data["area_path"] = migrate_area_path(String(_data["area_path"]))
 	_data["scene_path"] = migrate_area_path(String(_data.get("scene_path", _data["area_path"])))

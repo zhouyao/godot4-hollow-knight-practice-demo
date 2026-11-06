@@ -419,7 +419,23 @@ func _apply_movement() -> void:
 	var dt := get_physics_process_delta_time()
 	velocity += knockback
 	knockback *= exp(-knockback_decay_rate * dt)
+	# 地面常由多块矩形拼成，相邻块顶面差几像素就形成一道垂直面（moss_hole_0 的
+	# MossFloor_06/07 差 5px）。move_and_slide() 不会自动上台阶，怪追出去之后
+	# 回程会被这道面顶死，表现为 return 永远走不回出生点。
+	# 只在上一帧确实撞到墙面时尝试抬升：平地行走不做形状查询，也不影响飞行 / 水下怪。
+	if is_planar_mover() and _wall_blocked_last_frame():
+		try_step_up(velocity.x)
 	move_and_slide()
+
+
+## 上一帧的 move_and_slide() 是否被垂直面挡过。法线的 x 分量为主即墙面，
+## (0, -1) 这类地面法线不算 —— 否则平地上每帧都会被误判成"撞墙"。
+func _wall_blocked_last_frame() -> bool:
+	for i in range(get_slide_collision_count()):
+		var k: KinematicCollision2D = get_slide_collision(i)
+		if absf(k.get_normal().x) > 0.5:
+			return true
+	return false
 
 
 ## ---- 地形探测：地面专属，基类给"通行无阻"的默认实现 ----
@@ -437,6 +453,12 @@ func safe_step_x(preferred_x: float) -> float:
 
 ## 当前朝向的前方是否撞墙。地面怪查 WallDetector；飞行 / 水下怪恒 false。
 func wall_ahead() -> bool:
+	return false
+
+## 低矮台阶抬升援助：横移被地形垂直面顶住时把身体抬高一点，让这一步能跨过去。
+## 贴地怪（EnemyGround）重写；飞行 / 水下怪与没有地面探测的角色恒 false。
+## 返回 true 表示本帧已抬升，调用方随后照常 move_and_slide()。
+func try_step_up(_move_x: float) -> bool:
 	return false
 
 

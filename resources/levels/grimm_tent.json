@@ -1,0 +1,543 @@
+{
+  "level": "GrimmTent",
+  "objects": [
+    {
+      "type": "PlatForm",
+      "pos": [
+        0,
+        1030
+      ],
+      "size": [
+        3200,
+        64
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        650,
+        550
+      ],
+      "size": [
+        2000,
+        100
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        1525,
+        800
+      ],
+      "size": [
+        150,
+        400
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        -1650,
+        500
+      ],
+      "size": [
+        100,
+        1000
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        -900,
+        100
+      ],
+      "size": [
+        1500,
+        100
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        -300,
+        300
+      ],
+      "size": [
+        100,
+        400
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_extrance",
+      "pos": [
+        1350,
+        800
+      ],
+      "layer": -1,
+      "move_layer": -1
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_extrance_front",
+      "pos": [
+        1400,
+        820
+      ],
+      "layer": 5,
+      "move_layer": 0
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_extrance_light",
+      "pos": [
+        1330,
+        875
+      ],
+      "layer": 2,
+      "move_layer": 0
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_0",
+      "pos": [
+        1025.0,
+        1000
+      ],
+      "layer": 2,
+      "move_layer": 2
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_0",
+      "pos": [
+        275.0,
+        1000
+      ],
+      "layer": 2,
+      "move_layer": 2
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_0",
+      "pos": [
+        -475.0,
+        1000
+      ],
+      "layer": 2,
+      "move_layer": 2
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_0",
+      "pos": [
+        -1225.0,
+        1000
+      ],
+      "layer": 2,
+      "move_layer": 2
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_1",
+      "pos": [
+        1260.0,
+        1010
+      ],
+      "layer": 3,
+      "move_layer": 3
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_1",
+      "pos": [
+        580.0,
+        1010
+      ],
+      "layer": 3,
+      "move_layer": 3
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_1",
+      "pos": [
+        -100.0,
+        1010
+      ],
+      "layer": 3,
+      "move_layer": 3
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_1",
+      "pos": [
+        -780.0,
+        1010
+      ],
+      "layer": 3,
+      "move_layer": 3
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_1",
+      "pos": [
+        -1460.0,
+        1010
+      ],
+      "layer": 3,
+      "move_layer": 3
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_2",
+      "pos": [
+        -1000,
+        990
+      ],
+      "layer": 5,
+      "move_layer": 5
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_3",
+      "pos": [
+        1500,
+        975
+      ],
+      "layer": 5,
+      "move_layer": 5
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_2",
+      "pos": [
+        950,
+        1010
+      ],
+      "layer": 4,
+      "move_layer": 4
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ground_3",
+      "pos": [
+        -300,
+        1025
+      ],
+      "layer": 5,
+      "move_layer": 5
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_short_pole",
+      "pos": [
+        230,
+        950
+      ],
+      "layer": 4,
+      "move_layer": 4
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_curtain_",
+      "pos": [
+        -335,
+        410
+      ],
+      "layer": 4,
+      "move_layer": 0
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_wallpaper",
+      "pos": [
+        1100.0,
+        930
+      ],
+      "layer": -3,
+      "move_layer": -3
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ceiling",
+      "pos": [
+        1100.0,
+        675
+      ],
+      "layer": -2,
+      "move_layer": -2
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ceiling_0",
+      "pos": [
+        1100.0,
+        615
+      ],
+      "layer": 3,
+      "move_layer": 0
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ceiling_1",
+      "pos": [
+        825.0,
+        725
+      ],
+      "layer": 4,
+      "move_layer": 0
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_curtain",
+      "pos": [
+        825.0,
+        820
+      ],
+      "layer": -1,
+      "move_layer": -1
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_pole_standard",
+      "pos": [
+        1000.0,
+        825
+      ],
+      "layer": 5,
+      "move_layer": 5
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_rag",
+      "pos": [
+        1000.0,
+        700
+      ],
+      "layer": 5,
+      "move_layer": 0
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_wallpaper",
+      "pos": [
+        550.0,
+        930
+      ],
+      "layer": -3,
+      "move_layer": -3
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ceiling",
+      "pos": [
+        550.0,
+        675
+      ],
+      "layer": -2,
+      "move_layer": -2
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ceiling_0",
+      "pos": [
+        550.0,
+        615
+      ],
+      "layer": 3,
+      "move_layer": 0
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ceiling_1",
+      "pos": [
+        275.0,
+        725
+      ],
+      "layer": 4,
+      "move_layer": 0
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_curtain",
+      "pos": [
+        275.0,
+        820
+      ],
+      "layer": -1,
+      "move_layer": -1
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_pole_standard",
+      "pos": [
+        500.0,
+        825
+      ],
+      "layer": 5,
+      "move_layer": 5
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_rag",
+      "pos": [
+        500.0,
+        700
+      ],
+      "layer": 5,
+      "move_layer": 0
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_wallpaper",
+      "pos": [
+        0.0,
+        930
+      ],
+      "layer": -3,
+      "move_layer": -3
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ceiling",
+      "pos": [
+        0.0,
+        675
+      ],
+      "layer": -2,
+      "move_layer": -2
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ceiling_0",
+      "pos": [
+        0.0,
+        615
+      ],
+      "layer": 3,
+      "move_layer": 0
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_ceiling_1",
+      "pos": [
+        -275.0,
+        725
+      ],
+      "layer": 4,
+      "move_layer": 0
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_curtain",
+      "pos": [
+        -275.0,
+        820
+      ],
+      "layer": -1,
+      "move_layer": -1
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_pole_standard",
+      "pos": [
+        0.0,
+        825
+      ],
+      "layer": 5,
+      "move_layer": 5
+    },
+    {
+      "type": "Bg",
+      "sprite": "grimmtent_rag",
+      "pos": [
+        0.0,
+        700
+      ],
+      "layer": 5,
+      "move_layer": 0
+    },
+    {
+      "type": "Torch",
+      "pos": [
+        -700,
+        325
+      ],
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "type": "Torch",
+      "pos": [
+        -1500,
+        350
+      ],
+      "scale": [
+        1.1,
+        1.1
+      ]
+    },
+    {
+      "type": "Torch",
+      "pos": [
+        -1000,
+        300
+      ],
+      "scale": [
+        0.8,
+        0.8
+      ]
+    },
+    {
+      "type": "LevelTransformer",
+      "pos": [
+        1475,
+        900
+      ],
+      "target_level": "RuinHouse",
+      "target_pos": [
+        -550,
+        900
+      ],
+      "target_camera": [
+        -100,
+        250,
+        100,
+        750
+      ]
+    },
+    {
+      "type": "BossTrigger",
+      "pos": [
+        -1250,
+        850
+      ]
+    }
+  ]
+}

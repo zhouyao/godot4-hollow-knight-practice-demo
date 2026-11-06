@@ -81,6 +81,7 @@
 [ext_resource type="Texture2D" uid="uid://raqioj6k3dx2" path="res://assets/animations/characters/players/player/slash_up/4.png" id="62_w0v5a"]
 [ext_resource type="Texture2D" uid="uid://c35ssvnp3ldka" path="res://assets/animations/characters/players/player/walk/0.png" id="63_mbkrp"]
 [ext_resource type="Texture2D" uid="uid://c7qron8f7m8rf" path="res://assets/animations/characters/players/player/walk/1.png" id="64_88u8g"]
+[ext_resource type="Texture2D" uid="uid://dovdc1npi6h0w" path="res://assets/animations/characters/players/player/sit/SitDown.png" id="64_te4gy"]
 [ext_resource type="Texture2D" uid="uid://rvu5axwjjp2o" path="res://assets/animations/characters/players/player/walk/2.png" id="65_tudeu"]
 [ext_resource type="Texture2D" uid="uid://da54cgxrfghdt" path="res://assets/animations/characters/players/player/walk/3.png" id="66_vbth3"]
 [ext_resource type="Texture2D" uid="uid://b24vci0b58fq8" path="res://assets/animations/characters/players/player/walk/4.png" id="67_kvfry"]
@@ -332,6 +333,14 @@ animations = [{
 }],
 "loop": 0,
 "name": &"look_up",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("64_te4gy")
+}],
+"loop": 1,
+"name": &"sit",
 "speed": 5.0
 }, {
 "frames": [{

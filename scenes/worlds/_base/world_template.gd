@@ -20,6 +20,35 @@ class_name WorldArea
 ## 存档页显示的关卡名；子关卡可在场景里覆盖。
 @export var zone_name: String = ""
 
+@export_group("背景视差 Parallax")
+## 让本关所有 `ParallaxBg`（Background/ 下挂 parallax_bg.gd 的节点）共用同一个参考机位：
+## 相机走到参考机位时，整个背景与编辑器里的摆放**完全重合**，之后才按 move_layer 视差。
+## 关掉 = 旧行为（每层以自己的位置为锚，运行时永远对不上编辑器构图）。
+@export var parallax_reference_enabled := false
+
+## 参考机位取 `CameraBounds` 的中心（相机活动范围的正中）。
+## 关掉则用下面的 `parallax_reference_camera` 手填。
+@export var parallax_reference_from_bounds := true
+
+## 手填的参考机位（世界坐标，相机中心点）；只在上一项关闭时生效。
+@export var parallax_reference_camera := Vector2.ZERO
+
+## 背景视差是否有可用参考机位（`ParallaxBg` 逐层向上找本节点时调用）。
+func has_parallax_reference() -> bool:
+	return parallax_reference_enabled
+
+
+## 本关的参考机位；取不到 `CameraBounds` 时回落到手填值。
+func get_parallax_reference_camera() -> Vector2:
+	if not parallax_reference_from_bounds:
+		return parallax_reference_camera
+	var bounds := get_node_or_null(^"CameraBounds")
+	if bounds != null and bounds.has_method(&"get_center_rect"):
+		var rect: Rect2 = bounds.call(&"get_center_rect")
+		if rect.size != Vector2.ZERO:
+			return rect.get_center()
+	return parallax_reference_camera
+
 
 func _ready() -> void:
 	# 直接用 F6 运行本关卡时自举一个可玩的临时环境（正常流程不会走到这里）
@@ -96,6 +125,11 @@ func _bootstrap_standalone() -> void:
 	var bounds := get_node_or_null(^"CameraBounds")
 	if bounds != null and bounds.has_method(&"apply_zoom_config"):
 		bounds.call(&"apply_zoom_config", rig.zoom)
+
+	# F6 时相机是在 (0,0) 新建的，正常换关那套 teleport_to 没有跑，不硬切就会
+	# 从原点平滑滑到玩家身上（表现为开场"镜头下移"）。这里补一次瞬移：
+	# 目标取角色原点，与各关卡 _process 里的 set_target_pos() 保持一致，进场后零位移。
+	rig.teleport_to(p.global_position)
 
 
 func _on_standalone_zoom_changed(_new_zoom: Vector2) -> void:

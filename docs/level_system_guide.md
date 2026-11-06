@@ -91,7 +91,7 @@ autoload 顺序（`project.godot`）中 `GameSession` 放在最后，因为它�
 ### A. 新建一块区域
 
 - [ ] 在 `scenes/worlds/levels/` 下新建关卡目录（一关一目录，如 `levels/fungal_waste/`），
-      再复制 `levels/_dev/level_2.tscn` 到该目录并改名为 `<关卡名>.tscn` 作为模板
+	  再复制 `levels/_dev/level_2.tscn` 到该目录并改名为 `<关卡名>.tscn` 作为模板
 - [ ] 关卡专用脚本与场景同放：`levels/fungal_waste/fungal_waste.gd`
 - [ ] 改根节点名（如 `WorldLevel3`）
 - [ ] 设 `zone_name`（存档页显示的名字）
@@ -215,14 +215,18 @@ limit_bottom = rect.end.y      + half.y
 
 把框的**下边缘**拖到玩家站立高度附近即可（地面 y=500 → 玩家中心 425）；组件会自动补出 `bottom = 425 + 540 = 965` 以上，不会再出现"镜头被顶高、玩家贴屏幕下方"。
 
+> **例外：锁定区可以放宽它**。`AuCameraLockArea` 勾上 `override_bounds` 后，只要它是当前 `camera_priority` 最高的锁区，就会在**它锁定的那根轴**上把 `limit` 并集到「锁定目标 ± `*_range` ± 100（抬头余量）」，离开后自动恢复。
+> 这是单一矩形做不到的组合（例：地面段要把镜头钉死、但左上平台需要镜头抬到框外高度）的正解，不必为了一个区域把整关的框加高。
+> 注意 limit 是行为链之后的**硬钳制**，光靠 `camera_priority` 排序是越不过去的。
+
 **当前两关的框**
 
 | 区域 | 中心范围 Rect2 | CollisionShape2D `size` / `position` | 生效 limits |
 | --- | --- | --- | --- |
 | level_1 | `Rect2(-3000, -960, 9888, 1425)` | `9888×1425` / `(1944, -247.5)` | `-3960, -1500, 7848, 1005` |
-| level_2 | `Rect2(640, -250, 2880, 710)` | `2880×710` / `(2080, 105)` | `-320, -790, 4480, 1000` |
+| level_2 | `Rect2(640, 432, 2920, 82)` | `2920×82` / `(2100, 473)` | `-320, -108, 4520, 1054` |
 
-与改造前的手动值几乎完全一致；level_2 的 `get_screen_center_position()` 实测 `(612, 411)`，取景未变化。
+level_2 故意用一条 82 高的窄带把**地面段镜头钉死**（相机中心只能在 y ∈ [432, 514]），左上高台的取景因此落在框外，由 `CameraLock/Areas` 之外那个 `LeftCameraLock`（`override_bounds = true`、`camera_priority = 20`，垂直锁定到 `Marker2D (572, -203)`）放宽 Y 轴来解决。
 
 **注意事项**
 
@@ -326,7 +330,28 @@ toast.show_text("已保存")
 | 成员 | 说明 |
 | --- | --- |
 | `@export zone_name` | 存档页显示的区域名 |
+| `@export parallax_reference_enabled` | `false`，开启后本关所有 `ParallaxBg` 共用同一个**参考机位**：相机走到参考机位时背景与编辑器里的摆放完全重合（见下） |
+| `@export parallax_reference_from_bounds` | `true`，参考机位取 `CameraBounds` 中心 |
+| `@export parallax_reference_camera` | `Vector2.ZERO`，手填参考机位（相机中心世界坐标），上一项关闭时生效 |
 | `get_entry(entry_id) -> Node2D` | 查找顺序：`Entries` → `LevelTransitions` 直属子节点 → 全树按 `entry_id` 扫描 |
+
+### ParallaxBg（`Background/` 下挂 `parallax_bg.gd` 的节点）
+
+| 成员 | 说明 |
+| --- | --- |
+| `@export move_layer` | 视差层级，`0` = 不动；正数 = 前景（比世界跑得快），负数 = 远景 |
+| `@export k` | 每层系数，默认 `1.05`；实际倍率 `k^move_layer` |
+
+两种锚定模式（**编辑器里摆的位置 = 运行时位置** 只在第二种成立）：
+
+- **旧模式**（关卡没开 `parallax_reference_enabled`）：
+  `pos = cam − (cam − 层自己的位置) × k^move_layer`
+  每层锚点是各自的位置，任何机位下都不可能同时对上编辑器构图。
+- **参考机位模式**（WorldArea 开了 `parallax_reference_enabled`）：
+  `pos = 层自己的位置 + (cam − 参考机位) × (1 − k^move_layer)`
+  相机在参考机位时整个背景与编辑器**逐像素重合**，之后才按 `move_layer` 视差。
+
+> 想让"进场第一眼"就和编辑器一致，把 `parallax_reference_from_bounds` 关掉、`parallax_reference_camera` 填进场时机位（相机中心，y 一般等于 `CameraBounds` 的中心 y）。
 
 ### CameraBoundsRect
 
@@ -423,6 +448,7 @@ toast.show_text("已保存")
 - [ ] **新区域里放 Player** —— 会与常驻玩家冲突
 - [ ] **`change_scene` 后一直黑屏** —— 目标场景没调 `TransitionLayer.fade_in()`
 - [ ] **镜头上抬、玩家贴屏幕底部** —— `CameraBounds` 绿框的下边缘没拖到玩家站立高度附近（见 G 节）
+- [ ] **锁区进去了但镜头不动** —— 先算目标点在不在 `CameraBounds` 换算出的中心范围内（G 节表格）；在范围外要给该锁区勾 `override_bounds`。`camera_priority` 再高都越不过 limit
 - [ ] **改一个关卡的框，别的关卡跟着变** —— `RectangleShape2D` 丢了 `resource_local_to_scene = true`（脚本 `_ready()` 有 `duplicate()` 兜底）
 - [ ] **镜头边界完全不生效** —— 检查 `CameraBounds/CollisionShape2D` 的 shape 是不是 `RectangleShape2D`、size 是否 > 0；无效时回落 `±1000 万`
 - [ ] **地图加内容后镜头范围没变** —— 这是本方案的设计取舍，需要手动再拖一次框
@@ -532,13 +558,14 @@ toast.show_text("已保存")
 | `AuFollowBehavior` | `behaviors/follow_behavior.gd` | 基础跟随 | 目标节点 | 内置 |
 | `AuLockAreaBehavior` | `behaviors/lock_area_behavior.gd` | 锁定区生效时的相机约束 | 关联 `AuCameraLockArea` | 运行时按进出注册 |
 | `AuShotBehavior` | `behaviors/shot_behavior.gd` | 镜头接管（分镜 / BOSS 演出） | 目标 / zoom | `AuCameraDirector.push_override()` |
-| `AuCameraLockArea` | `addons/camera_director/AuCameraLockArea.gd` | 局部相机锁定区；编辑器里矩形内部透明、四角画可配色的实心方框 | Inspector 四组：① 区域 `area_size` / `centered` / `detect_layer` ② 锁定（子组 参考点 / 活动范围）`*_lock_marker` / `*_range` ③ 镜头行为 `can_look_up` / `can_look_down` ④ 编辑器预览 `show_corners_in_editor` / `fill_alpha` / `corner_color` / `corner_size` | level_1 `CameraLock/Areas/RightCameraLock`、`LeftCameraLock`、`ZoomCameraLock`、`HollowKnightCameraLock`、`SoulMasterCameraLock` |
-| 锁定参考点 | level_1 `CameraLock/Markers/*` | 锁定用的 Marker2D | — | `vertical_lock` / `horizontal_lock` / `hollow_knight_lock` / `soul_master_lock` |
+| `AuCameraLockArea` | `addons/camera_director/AuCameraLockArea.gd` | 局部相机锁定区；编辑器里矩形内部透明、四角画可配色的实心方框 | Inspector 五组：① 区域 `area_size` / `centered` / `detect_layer` ② 锁定（子组 参考点 / 活动范围）`*_lock_marker` / `*_range` ③ 优先级 & 边界 `camera_priority` / `override_bounds` ④ 镜头行为 `can_look_up` / `can_look_down` ⑤ 编辑器预览 `show_corners_in_editor` / `fill_alpha` / `corner_color` / `corner_size` | level_1 `CameraLock/Areas/RightCameraLock`、`LeftCameraLock`、`ZoomCameraLock`、`HollowKnightCameraLock`、`SoulMasterCameraLock`；level_2 `LeftCameraLock`（`override_bounds = true`） |
+| 锁定参考点 | level_1 `CameraLock/Markers/*` | 锁定用的 Marker2D | — | `vertical_lock` / `horizontal_lock` / `hollow_knight_lock` / `soul_master_lock`；level_2 `Marker2D` |
 | `CameraBoundsRect` | `_base/camera_bounds_rect.gd`（`@tool` Area2D） | 编辑器里可拖拽的**相机中心活动范围**，自身换算成四条 limit；同时承载**本关镜头缩放配置**（基础 zoom + 子区域进出切换）；预览框与内部 `CollisionShape2D` 背景都透明、四角实心圆可配色 | Inspector 两组：① 区域镜头 `zoom_enabled` / `area_zoom` / `zoom_duration` / `zoom_blend` / `zone_margin` ② 编辑器预览 `debug_draw` / `preview_zoom` / `fill_alpha` / `corner_color` / `corner_size`；外加 `CollisionShape2D.shape` | `WorldTemplate/CameraBounds`，每个 Area 继承一份 |
 | `CameraZoomZone` | `_base/camera_zoom_zone.gd`（`@tool` Node2D） | 挂在 `CameraBounds` 下的**镜头放大 / 缩小子区域**；编辑器画蓝框 + zoom 标签 | `enabled` / `size` / `centered` / `zone_zoom` / `priority` / `show_in_editor` / `fill_alpha` / `zone_color` | 按需在各关卡添加（模板里不预置） |
-| `CollisionShape2D` | `CameraBounds` 子节点 | 拖 handles 改矩形大小（原生编辑器交互） | `RectangleShape2D.size` / `position` | level_1 `9888×1425 @ (1944,-247.5)`；level_2 `2880×710 @ (2080,105)` |
+| `CollisionShape2D` | `CameraBounds` 子节点 | 拖 handles 改矩形大小（原生编辑器交互） | `RectangleShape2D.size` / `position` | level_1 `9888×1425 @ (1944,-247.5)`；level_2 `2920×82 @ (2100,473)` |
 
 > `AuCameraLockArea` 是**局部行为**（在某区域内改变跟随目标 / 范围），`CameraBoundsRect` 是**全局硬边界 + 区域 zoom 配置**（限制镜头中心能走到哪、镜头放多大），两者叠加生效。
+> 唯一的例外是锁区的 `override_bounds`：优先级最高的锁区可以在它锁定的轴上放宽这份硬边界（见 G 节）。
 
 ### 9.4 关卡流转
 

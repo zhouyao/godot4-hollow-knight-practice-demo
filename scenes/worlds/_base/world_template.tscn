@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bqr11wgnlhh6f"]
 
 [ext_resource type="Script" uid="uid://p4lhgrlll3a6" path="res://scenes/worlds/_base/world_template.gd" id="1_b5y87"]
-[ext_resource type="Script" path="res://scenes/worlds/_base/camera_bounds_rect.gd" id="2_cam"]
+[ext_resource type="Script" uid="uid://vjmrq2dylblx" path="res://scenes/worlds/_base/camera_bounds_rect.gd" id="2_cam"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cam"]
 resource_local_to_scene = true
@@ -26,6 +26,12 @@ collision_mask = 3
 
 [node name="Items" type="Node2D" parent="." unique_id=397992784]
 
+[node name="LevelTransitions" type="Node2D" parent="." unique_id=1356999430]
+
+[node name="Entries" type="Node2D" parent="LevelTransitions" unique_id=839994114]
+
+[node name="Gates" type="Node2D" parent="LevelTransitions" unique_id=1076165805]
+
 [node name="Enemies" type="Node2D" parent="." unique_id=1028343445]
 
 [node name="Drops" type="Node2D" parent="." unique_id=1475784248]
@@ -45,12 +51,6 @@ blend_mode = 1
 
 [node name="OcclusionLayer" type="Node2D" parent="." unique_id=67740318]
 
-[node name="LevelTransitions" type="Node2D" parent="." unique_id=1356999430]
-
-[node name="Entries" type="Node2D" parent="LevelTransitions" index="0"]
-
-[node name="Gates" type="Node2D" parent="LevelTransitions" index="1"]
-
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1428327126]
 
 [node name="EnemyZones" type="Node2D" parent="." unique_id=806486801]
@@ -61,15 +61,15 @@ blend_mode = 1
 
 [node name="Markers" type="Node2D" parent="CameraLock" unique_id=689316407]
 
-[node name="CameraBounds" type="Area2D" parent="." unique_id=3311550277]
+[node name="CameraBounds" type="Area2D" parent="." unique_id=-983417019]
 collision_layer = 0
 collision_mask = 0
 monitoring = false
 monitorable = false
 script = ExtResource("2_cam")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CameraBounds"]
-debug_color = Color(0, 0.6, 0.7, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CameraBounds" unique_id=1116790881]
 shape = SubResource("RectangleShape2D_cam")
+debug_color = Color(0, 0.6, 0.7, 0)
 
 [connection signal="body_entered" from="KillBox" to="." method="_on_kill_box_body_entered"]

@@ -1,0 +1,367 @@
+{
+  "level": "SoulMasterRoom",
+  "objects": [
+    {
+      "type": "Bg",
+      "sprite": "tearcity_0",
+      "pos": [
+        0,
+        0
+      ],
+      "layer": -30,
+      "move_layer": -30
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_4",
+      "pos": [
+        0,
+        1000
+      ],
+      "layer": -10,
+      "move_layer": -10
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_2",
+      "pos": [
+        -1200,
+        600
+      ],
+      "layer": -15,
+      "move_layer": -15
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_5",
+      "pos": [
+        1000,
+        1300
+      ],
+      "layer": -20,
+      "move_layer": -20
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_roof",
+      "pos": [
+        -1000,
+        500
+      ],
+      "layer": 2,
+      "move_layer": 0
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_window",
+      "pos": [
+        -1075,
+        800
+      ],
+      "layer": -2,
+      "move_layer": -2
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_doorbg",
+      "pos": [
+        -785,
+        890
+      ],
+      "layer": -1,
+      "move_layer": -1
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_fence",
+      "pos": [
+        -750.0,
+        950
+      ],
+      "layer": -3,
+      "move_layer": -3
+    },
+    {
+      "type": "Bg",
+      "sprite": "beam",
+      "pos": [
+        -765.0,
+        925
+      ],
+      "layer": -1,
+      "move_layer": 0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_fence",
+      "pos": [
+        -500.0,
+        950
+      ],
+      "layer": -3,
+      "move_layer": -3
+    },
+    {
+      "type": "Bg",
+      "sprite": "beam",
+      "pos": [
+        -530.0,
+        925
+      ],
+      "layer": -1,
+      "move_layer": 0,
+      "scale": [
+        1.0,
+        1.2999999999999998
+      ]
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_fence",
+      "pos": [
+        -250.0,
+        950
+      ],
+      "layer": -3,
+      "move_layer": -3
+    },
+    {
+      "type": "Bg",
+      "sprite": "beam",
+      "pos": [
+        -295.0,
+        925
+      ],
+      "layer": -1,
+      "move_layer": 0,
+      "scale": [
+        1.0,
+        1.5999999999999999
+      ]
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_fence",
+      "pos": [
+        0.0,
+        950
+      ],
+      "layer": -3,
+      "move_layer": -3
+    },
+    {
+      "type": "Bg",
+      "sprite": "beam",
+      "pos": [
+        -60.0,
+        925
+      ],
+      "layer": -1,
+      "move_layer": 0,
+      "scale": [
+        1.0,
+        1.9
+      ]
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_fence",
+      "pos": [
+        250.0,
+        950
+      ],
+      "layer": -3,
+      "move_layer": -3
+    },
+    {
+      "type": "Bg",
+      "sprite": "beam",
+      "pos": [
+        175.0,
+        925
+      ],
+      "layer": -1,
+      "move_layer": 0,
+      "scale": [
+        1.0,
+        1.5999999999999999
+      ]
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_fence",
+      "pos": [
+        500.0,
+        950
+      ],
+      "layer": -3,
+      "move_layer": -3
+    },
+    {
+      "type": "Bg",
+      "sprite": "beam",
+      "pos": [
+        410.0,
+        925
+      ],
+      "layer": -1,
+      "move_layer": 0,
+      "scale": [
+        1.0,
+        1.2999999999999998
+      ]
+    },
+    {
+      "type": "Bg",
+      "sprite": "tearcity_fence",
+      "pos": [
+        750.0,
+        950
+      ],
+      "layer": -3,
+      "move_layer": -3
+    },
+    {
+      "type": "Bg",
+      "sprite": "beam",
+      "pos": [
+        645.0,
+        925
+      ],
+      "layer": -1,
+      "move_layer": 0,
+      "scale": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        0,
+        1075
+      ],
+      "size": [
+        1500,
+        154
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "sprite": "tearcity_glassfloor"
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        -1265,
+        1030
+      ],
+      "size": [
+        346,
+        64
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "sprite": "tearcity_additions"
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        -925,
+        1030
+      ],
+      "size": [
+        346,
+        64
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "sprite": "tearcity_additions"
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        925,
+        1030
+      ],
+      "size": [
+        346,
+        64
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "sprite": "tearcity_additions"
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        -1000,
+        550
+      ],
+      "size": [
+        550,
+        250
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        -1325,
+        500
+      ],
+      "size": [
+        100,
+        1400
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        1100,
+        500
+      ],
+      "size": [
+        100,
+        1400
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "type": "PlatForm",
+      "pos": [
+        -775,
+        730
+      ],
+      "size": [
+        100,
+        110
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    }
+  ]
+}

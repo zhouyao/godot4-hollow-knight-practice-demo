@@ -6,32 +6,34 @@
 [ext_resource type="PackedScene" path="res://scenes/worlds/_base/level_gate.tscn" id="4_gate"]
 [ext_resource type="PackedScene" uid="uid://djrm6t28r8ysk" path="res://scenes/props/bench/chair.tscn" id="5_chair"]
 [ext_resource type="AudioStream" uid="uid://bc8pd4awn8tha" path="res://assets/sounds/ambience/tearcity_i.ogg" id="6_audio_i"]
+[ext_resource type="Script" uid="uid://c7hpea0g65weh" path="res://scenes/worlds/_base/entry_point.gd" id="7_4n86c"]
 [ext_resource type="AudioStream" uid="uid://rj5sy2sjpm7t" path="res://assets/sounds/ambience/tearcity_o.ogg" id="7_audio_o"]
 [ext_resource type="Script" uid="uid://1033cnat8g0l" path="res://scenes/worlds/_base/parallax_bg.gd" id="8_parallax"]
 [ext_resource type="Texture2D" uid="uid://dv5h1ugu3xklo" path="res://assets/sprites/backgrounds/ruin_house/ruin_house_bg.jpg" id="9_bg"]
 [ext_resource type="Texture2D" uid="uid://cny3gb5if6gyh" path="res://assets/sprites/backgrounds/ruin_house/room_ruin_house_fg.png" id="10_fg"]
+[ext_resource type="Script" uid="uid://0anauft5nso" path="res://addons/camera_director/AuCameraLockArea.gd" id="10_hgnd4"]
 [ext_resource type="Texture2D" uid="uid://pnuqea280sri" path="res://assets/textures/lights/circle.png" id="11_light"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
 size = Vector2(2493, 82)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
-size = Vector2(36, 1000)
+size = Vector2(36, 1631.5)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ar1rq"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hgnd4"]
 resource_local_to_scene = true
 size = Vector2(387, 202)
 
-[node name="WorldTemplate" unique_id=560156841 instance=ExtResource("1_world")]
+[node name="ruin_house" unique_id=560156841 instance=ExtResource("1_world")]
 script = ExtResource("2_script")
 zone_name = "废墟小屋"
 
 [node name="Darkness" type="ColorRect" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="0" unique_id=894660221]
 z_index = -200
-offset_left = -5000.0
-offset_top = -4000.0
-offset_right = 5000.0
-offset_bottom = 4000.0
+offset_left = -5485.0
+offset_top = -3707.0
+offset_right = 4515.0
+offset_bottom = 4293.0
 mouse_filter = 2
 color = Color(0.02, 0.025, 0.035, 1)
 
@@ -59,7 +61,7 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_02" index="0" unique_id=2132770905]
-position = Vector2(-348, 128)
+position = Vector2(-480, 222)
 shape = SubResource("RectangleShape2D_wall")
 
 [node name="Platform_03" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="2" unique_id=259097291]
@@ -68,7 +70,7 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_03" index="0" unique_id=115305712]
-position = Vector2(394, 177)
+position = Vector2(515, 223)
 shape = SubResource("RectangleShape2D_wall")
 
 [node name="Platform_04" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="3" unique_id=1121855226]
@@ -77,46 +79,74 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_04" index="0" unique_id=267064407]
-position = Vector2(8.5, -57)
+position = Vector2(9, -121)
 shape = SubResource("RectangleShape2D_floor")
+
+[node name="RuinChair" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="0" unique_id=1848190926 instance=ExtResource("5_chair")]
+position = Vector2(10, 1141)
+sit_on_enter = true
+seat_offset = Vector2(0, -43)
+
+[node name="ruin_house_right" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="1" unique_id=547298701 instance=ExtResource("3_entry")]
+position = Vector2(900, 1124)
+facing = -1
+
+[node name="ruin_house_left" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="2" unique_id=86066391 instance=ExtResource("3_entry")]
+position = Vector2(-900, 1124)
+facing = 1
+
+[node name="default" type="Marker2D" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="3" unique_id=965039085]
+position = Vector2(500, 1000)
+script = ExtResource("7_4n86c")
+metadata/_custom_type_script = "uid://c7hpea0g65weh"
+
+[node name="ruin_house_right" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="0" unique_id=1506762 instance=ExtResource("4_gate")]
+position = Vector2(1031, 1107)
+target_area = "uid://dwyw2bvpy5ip3"
+target_entry = &"soul_master_room_left"
+gate_id = &"ruin_house_right"
+requires_ground = true
+
+[node name="ruin_house_left" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="1" unique_id=632336424 instance=ExtResource("4_gate")]
+position = Vector2(-1006, 1112)
+target_area = "uid://bysaf7yy5ht5r"
+target_entry = &"grimm_gent_right"
+gate_id = &"ruin_house_left"
 
 [node name="Bg_002" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=2043833259]
 z_index = 5
-position = Vector2(0, 700)
-scale = Vector2(2, 2)
+position = Vector2(-3.9999542, 797.00006)
+scale = Vector2(3.040951, 2.6891568)
 texture = ExtResource("10_fg")
 
 [node name="DirectionalLight2D" parent="Lights" parent_id_path=PackedInt32Array(1627484379) index="0" unique_id=617027591]
 energy = 0.0
 
 [node name="ChairLight" type="PointLight2D" parent="Lights" parent_id_path=PackedInt32Array(1627484379) index="1" unique_id=1624815276]
-visible = false
 position = Vector2(0, 900)
 color = Color(1, 0.78, 0.5, 1)
 energy = 0.7
 texture = ExtResource("11_light")
 texture_scale = 2.5
 
-[node name="RuinChair" parent="LevelTransitions/Entries" index="0" unique_id=1848190926 instance=ExtResource("5_chair")]
-position = Vector2(0, 950)
+[node name="ZoomCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="0" unique_id=1954122499 node_paths=PackedStringArray("horizontal_lock_marker", "vertical_lock_marker")]
+position = Vector2(-960, 140)
+collision_layer = 16
+monitorable = false
+script = ExtResource("10_hgnd4")
+area_size = Vector2(1920, 1080)
+centered = false
+horizontal_lock_marker = NodePath("../../Markers/Camera_lock")
+vertical_lock_marker = NodePath("../../Markers/Camera_lock")
+can_look_up = true
+can_look_down = true
 
-[node name="default" parent="LevelTransitions/Entries" index="1" unique_id=547298701 instance=ExtResource("3_entry")]
-position = Vector2(455, 925)
-facing = -1
+[node name="Camera_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="0" unique_id=1237535381]
+position = Vector2(0, 824)
 
-[node name="ToTearCity" parent="LevelTransitions/Gates" index="0" unique_id=1506762 instance=ExtResource("4_gate")]
-position = Vector2(950, 1092)
-target_area = "res://scenes/worlds/levels/tear_city/tear_city.tscn"
-target_entry = &"from_ruin_house"
-gate_id = &"to_tear_city"
-
-[node name="ToGrimmTent" parent="LevelTransitions/Gates" index="1" unique_id=632336424 instance=ExtResource("4_gate")]
-position = Vector2(-894, 1065)
-gate_id = &"to_grimm_tent"
-
-[node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0"]
+[node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0" unique_id=1116790881]
 position = Vector2(-2.5, 721)
-shape = SubResource("RectangleShape2D_ar1rq")
+shape = SubResource("RectangleShape2D_hgnd4")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." index="18" unique_id=469030928]
 color = Color(1.1, 1.05, 0.98, 1)

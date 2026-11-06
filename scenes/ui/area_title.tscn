@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/area_title.gd" id="1_script"]
+[ext_resource type="SpriteFrames" path="res://resources/effects/area_title_top.tres" id="2_top"]
+[ext_resource type="SpriteFrames" path="res://resources/effects/area_title_bottom.tres" id="3_bottom"]
+[ext_resource type="Theme" uid="uid://dmt8kq3vncw2x" path="res://assets/themes/misted_theme.tres" id="4_theme"]
+[ext_resource type="FontFile" path="res://assets/fonts/trajan_pro.ttf" id="5_font"]
+
+[node name="AreaTitle" type="CanvasLayer"]
+layer = 120
+script = ExtResource("1_script")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("4_theme")
+
+[node name="Top" type="AnimatedSprite2D" parent="Root"]
+position = Vector2(960, 290)
+sprite_frames = ExtResource("2_top")
+animation = &"default"
+
+[node name="Bottom" type="AnimatedSprite2D" parent="Root"]
+position = Vector2(960, 475)
+sprite_frames = ExtResource("3_bottom")
+animation = &"default"
+
+[node name="Title" type="Label" parent="Root"]
+offset_left = 660.0
+offset_top = 360.0
+offset_right = 1260.0
+offset_bottom = 420.0
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 48
+text = "GROTTO"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Root"]
+offset_left = 660.0
+offset_top = 320.0
+offset_right = 1260.0
+offset_bottom = 360.0
+theme_override_fonts/font = ExtResource("5_font")
+theme_override_font_sizes/font_size = 20
+text = "M O S S"
+horizontal_alignment = 1
+vertical_alignment = 1

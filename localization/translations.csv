@@ -83,6 +83,10 @@ RB 键,Button RB,RB 键,RB 鍵
 调试模式,Debug Mode,调试模式,除錯模式
 开启,On,开启,開啟
 关闭,Off,关闭,關閉
+首页路径,Home Scene Path,首页路径,首頁路徑
+新建存档时进入的场景；按回车或点击别处生效，已有存档不受影响,"Scene used when starting a new game. Press Enter or click away to apply; existing saves are unaffected.",新建存档时进入的场景；按回车或点击别处生效，已有存档不受影响,新遊戲開始時進入的場景；按 Enter 或點擊別處生效，已有存檔不受影響
+已保存：新建存档将从该场景开始,Saved: new games will start from this scene,已保存：新建存档将从该场景开始,已儲存：新遊戲將從此場景開始
+路径不存在，请输入已存在的 .tscn 场景路径,"Scene not found. Enter an existing .tscn path.",路径不存在，请输入已存在的 .tscn 场景路径,路徑不存在，請輸入已存在的 .tscn 場景路徑
 选择存档,Select Profile,选择存档,選擇存檔
 新游戏,New Game,新游戏,新遊戲
 清除存档,Clear Save,清除存档,清除存檔
@@ -90,6 +94,8 @@ RB 键,Button RB,RB 键,RB 鍵
 未知区域,Unknown Area,未知区域,未知區域
 保存游戏,Save Game,保存游戏,儲存遊戲
 已保存,Saved,已保存,已儲存
+存档成功,Saved,存档成功,存檔成功
+坐下,Sit Down,坐下,坐下
 保存失败,Save Failed,保存失败,儲存失敗
 返回主菜单会自动保存当前进度,Progress auto-saves when returning,返回主菜单会自动保存当前进度,返回主選單前會自動儲存目前進度
 死亡 · 即将返回存档选择,Death · Returning to Profile Selection,死亡 · 即将返回存档选择,死亡 · 即將返回存檔選擇

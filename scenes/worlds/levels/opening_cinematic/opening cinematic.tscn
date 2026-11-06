@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://dd8ejrl78nmq"]
+
+[ext_resource type="Script" uid="uid://dvgeabypsqc2w" path="res://scenes/worlds/levels/opening_cinematic/opening_cinematic.gd" id="1_script"]
+[ext_resource type="VideoStream" uid="uid://78qnkmph025q" path="res://assets/videos/opening_cinematic.ogv" id="2_video"]
+[ext_resource type="PackedScene" path="res://scenes/menus/common/buttons/menu_button.tscn" id="3_button"]
+[ext_resource type="Theme" uid="uid://dmt8kq3vncw2x" path="res://assets/themes/misted_theme.tres" id="4_theme"]
+
+[node name="OpeningCinematic" type="CanvasLayer" unique_id=665395743]
+layer = 127
+script = ExtResource("1_script")
+
+[node name="VideoViewport" type="SubViewportContainer" parent="." unique_id=1474770598]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="VideoViewport" unique_id=249716436]
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="Video" type="VideoStreamPlayer" parent="VideoViewport/SubViewport" unique_id=2012461625]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("2_video")
+expand = true
+
+[node name="SkipButton" parent="." unique_id=228387902 instance=ExtResource("3_button")]
+z_index = 100
+custom_minimum_size = Vector2(260, 80)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -137.0
+offset_right = -40.0
+offset_bottom = -57.0
+grow_horizontal = 0
+grow_vertical = 0
+theme = ExtResource("4_theme")
+text = "跳过"

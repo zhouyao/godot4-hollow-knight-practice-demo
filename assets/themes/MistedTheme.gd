@@ -7,6 +7,7 @@ const VARIATION_TITLE := "TitleLabel"
 const VARIATION_MUTED := "MutedLabel"
 const VARIATION_HINT := "HintLabel"
 const VARIATION_ROW_BUTTON := "RowButton"
+const VARIATION_ROW_LINE_EDIT := "RowLineEdit"
 
 const FONT_LATIN_PATH := "res://assets/font/TrajanPro.ttf"
 ## 中文主字体：香萃刻宋（OFL 1.1）横向压缩 0.9 的变体。
@@ -25,6 +26,7 @@ const FONT_SIZE_ROW := 38
 const FONT_SIZE_MUTED := 30
 const FONT_SIZE_HINT := 24
 const FONT_SIZE_ROW_BUTTON := 30
+const FONT_SIZE_ROW_INPUT := 26
 const FONT_SIZE_BUTTON := 80
 
 const COLOR_TEXT := Color(0.95, 0.95, 0.95)
@@ -48,6 +50,7 @@ func _init() -> void:
 	set_type_variation(VARIATION_MUTED, "Label")
 	set_type_variation(VARIATION_HINT, "Label")
 	set_type_variation(VARIATION_ROW_BUTTON, "Button")
+	set_type_variation(VARIATION_ROW_LINE_EDIT, "LineEdit")
 
 	# 常规字体：套到所有基础控件类型（中文走思源宋体 Regular）
 	set_font("font", "Label", font_regular)
@@ -100,6 +103,18 @@ func _init() -> void:
 	set_stylebox("disabled", VARIATION_ROW_BUTTON, _make_row_line(0.1, 2))
 	set_stylebox("focus", VARIATION_ROW_BUTTON, _make_row_line(0.9, 3))
 
+	# 首页路径输入框：沿用行内控件「只有底边一条线」的样式，但需要左右内距，
+	# 并把光标 / 选中区配色改成暗底上可见的颜色。
+	set_stylebox("normal", VARIATION_ROW_LINE_EDIT, _row_edit_line(0.35, 2))
+	set_stylebox("focus", VARIATION_ROW_LINE_EDIT, _row_edit_line(0.9, 3))
+	set_stylebox("read_only", VARIATION_ROW_LINE_EDIT, _row_edit_line(0.1, 2))
+	set_font_size("font_size", VARIATION_ROW_LINE_EDIT, FONT_SIZE_ROW_INPUT)
+	set_color("font_color", VARIATION_ROW_LINE_EDIT, COLOR_TEXT)
+	set_color("font_placeholder_color", VARIATION_ROW_LINE_EDIT, COLOR_MUTED)
+	set_color("caret_color", VARIATION_ROW_LINE_EDIT, COLOR_TEXT)
+	set_color("font_selected_color", VARIATION_ROW_LINE_EDIT, Color(0.04, 0.05, 0.08))
+	set_color("selection_color", VARIATION_ROW_LINE_EDIT, Color(1, 1, 1, 0.25))
+
 	var pb_bg := StyleBoxFlat.new()
 	pb_bg.bg_color = Color(0.12, 0.12, 0.12)
 	var pb_fill := StyleBoxFlat.new()
@@ -122,4 +137,13 @@ static func _make_row_line(alpha: float, thickness: int) -> StyleBoxFlat:
 	box.bg_color = Color(0, 0, 0, 0)
 	box.border_width_bottom = thickness
 	box.border_color = Color(1, 1, 1, alpha)
+	return box
+
+
+static func _row_edit_line(alpha: float, thickness: int) -> StyleBoxFlat:
+	var box := _make_row_line(alpha, thickness)
+	box.content_margin_left = 12
+	box.content_margin_right = 12
+	box.content_margin_top = 4
+	box.content_margin_bottom = 6
 	return box

@@ -15,7 +15,6 @@
 [ext_resource type="Script" uid="uid://n5m4aggv4pj4" path="res://scenes/characters/players/player/states/slash_up.gd" id="13_vvfi6"]
 [ext_resource type="AudioStream" uid="uid://bvqp3ngqdnona" path="res://assets/sounds/characters/players/player/player_walk.ogg" id="14_3lsh5"]
 [ext_resource type="Script" uid="uid://d0perfsqddujp" path="res://scenes/characters/players/player/states/hurt.gd" id="14_dmgst"]
-[ext_resource type="Script" uid="uid://drqeaw71drqys" path="res://scenes/characters/players/player/states/death.gd" id="39_death"]
 [ext_resource type="AudioStream" uid="uid://cdltsupvpwh3v" path="res://assets/sounds/characters/players/player/player_death.ogg" id="15_oi6ae"]
 [ext_resource type="AudioStream" uid="uid://4il6pdwiaagt" path="res://assets/sounds/characters/players/player/player_jump.ogg" id="16_nm7y7"]
 [ext_resource type="AudioStream" uid="uid://dmgh73l7uuwrb" path="res://assets/sounds/characters/players/player/player_land.ogg" id="17_eix85"]
@@ -32,13 +31,39 @@
 [ext_resource type="AudioStream" uid="uid://dl2kfo2gvbkyy" path="res://assets/sounds/characters/players/player/sound_cure.ogg" id="28_inudu"]
 [ext_resource type="AudioStream" uid="uid://cvj0nrnyflx2" path="res://assets/sounds/characters/players/player/voice_cure.ogg" id="29_iaomr"]
 [ext_resource type="AnimationLibrary" uid="uid://chcmuoef0l46l" path="res://resources/characters/players/player/player_action_player.tres" id="30_muvqv"]
+[ext_resource type="Texture2D" uid="uid://c221vh12i7fw2" path="res://assets/animations/characters/players/player/sit_effect/0.png" id="34_c8mju"]
 [ext_resource type="PackedScene" path="res://scenes/debug/character_debug.tscn" id="35_aldr5"]
+[ext_resource type="Texture2D" uid="uid://cdgrc2bgm1vqf" path="res://assets/animations/characters/players/player/sit_effect/1.png" id="35_yidwb"]
+[ext_resource type="Script" uid="uid://bu1wtjy1civ2a" path="res://scenes/characters/players/player/states/sit.gd" id="36_fvm4r"]
+[ext_resource type="Texture2D" uid="uid://c2iyg73c7dnvl" path="res://assets/animations/characters/players/player/sit_effect/2.png" id="36_jvq74"]
 [ext_resource type="Script" path="res://scenes/characters/players/player/states/freeze.gd" id="37_freez"]
+[ext_resource type="Texture2D" uid="uid://ckuvlhfetchmg" path="res://assets/animations/characters/players/player/sit_effect/3.png" id="37_yt7lm"]
 [ext_resource type="Script" uid="uid://b3gokwimu2mdx" path="res://scenes/characters/players/player/states/double_jump.gd" id="38_dbljmp"]
+[ext_resource type="Script" uid="uid://drqeaw71drqys" path="res://scenes/characters/players/player/states/death.gd" id="39_death"]
 
 [sub_resource type="CapsuleShape2D" id="2_capsule"]
 radius = 40.0
 height = 150.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rywq7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("34_c8mju")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_yidwb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_jvq74")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_yt7lm")
+}],
+"loop": 1,
+"name": &"sit_effect",
+"speed": 5.0
+}]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_2n40l"]
 light_mode = 1
@@ -115,6 +140,10 @@ script = ExtResource("8_inudu")
 
 [node name="double_jump" type="Node" parent="StateMachine" unique_id=2010000008]
 script = ExtResource("38_dbljmp")
+
+[node name="sit" type="Node" parent="StateMachine" unique_id=855113319]
+script = ExtResource("36_fvm4r")
+metadata/_custom_type_script = "uid://bu1wtjy1civ2a"
 
 [node name="Audio" type="Node2D" parent="." unique_id=290561661]
 
@@ -209,10 +238,15 @@ disabled = true
 
 [node name="Animation" type="Node2D" parent="." unique_id=935029620]
 
+[node name="EffectAnimatedSprite2D" type="AnimatedSprite2D" parent="Animation" unique_id=1026182090]
+visible = false
+sprite_frames = SubResource("SpriteFrames_rywq7")
+animation = &"sit_effect"
+
 [node name="PlayerAnimatedSprite" type="AnimatedSprite2D" parent="Animation" unique_id=458371313]
 material = SubResource("CanvasItemMaterial_2n40l")
 sprite_frames = ExtResource("26_qkgkx")
-animation = &"death"
+animation = &"sit"
 
 [node name="ActionAnimationPlayer" type="AnimationPlayer" parent="Animation" unique_id=1051654828]
 root_node = NodePath("../..")

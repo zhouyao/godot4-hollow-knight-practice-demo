@@ -1,32 +1,65 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bssdyeddtfv63"]
 
-[ext_resource type="Script" path="res://scenes/menus/settings_menu/sections/development_content.gd" id="1_dvc"]
+[ext_resource type="Script" uid="uid://c2q4niai8bjcw" path="res://scenes/menus/settings_menu/sections/development_content.gd" id="1_dvc"]
 [ext_resource type="PackedScene" path="res://scenes/menus/settings_menu/sections/section_header.tscn" id="2_sh"]
+[ext_resource type="PackedScene" path="res://scenes/menus/common/buttons/reset_button.tscn" id="3_rb"]
 
-[node name="DevelopmentContent" type="VBoxContainer"]
-layout_mode = 2
+[node name="DevelopmentContent" type="VBoxContainer" unique_id=469730608]
 theme_override_constants/separation = 36
 script = ExtResource("1_dvc")
 
-[node name="DevelopmentTitle" parent="." instance=ExtResource("2_sh")]
+[node name="DevelopmentTitle" parent="." unique_id=1410655151 instance=ExtResource("2_sh")]
 layout_mode = 2
 title_text = "开发设置"
 
-[node name="DebugModeRow" type="HBoxContainer" parent="."]
+[node name="DebugModeRow" type="HBoxContainer" parent="." unique_id=1819308419]
 layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="NameLabel" type="Label" parent="DebugModeRow"]
+[node name="NameLabel" type="Label" parent="DebugModeRow" unique_id=1777030641]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 text = "调试模式"
 horizontal_alignment = 2
 
-[node name="DebugModeOption" type="OptionButton" parent="DebugModeRow"]
+[node name="DebugModeOption" type="OptionButton" parent="DebugModeRow" unique_id=320418108]
 custom_minimum_size = Vector2(320, 52)
 layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"RowButton"
 alignment = 1
+
+[node name="HomePathRow" type="HBoxContainer" parent="." unique_id=421779115]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="NameLabel" type="Label" parent="HomePathRow" unique_id=1194023626]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = "首页路径"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="HomePathEdit" type="LineEdit" parent="HomePathRow" unique_id=581242600]
+custom_minimum_size = Vector2(760, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"RowLineEdit"
+placeholder_text = "res://scenes/worlds/levels/..."
+caret_blink = true
+
+[node name="HomePathReset" parent="HomePathRow" unique_id=139732437 instance=ExtResource("3_rb")]
+layout_mode = 2
+size_flags_horizontal = 0
+tooltip_text = "重置默认值"
+
+[node name="HomePathHint" type="Label" parent="." unique_id=1267743484]
+custom_maximum_size = Vector2(1288, -1)
+layout_mode = 2
+theme_type_variation = &"HintLabel"
+text = "新建存档时进入的场景；按回车或点击别处生效，已有存档不受影响"
+horizontal_alignment = 2
+autowrap_mode = 2
 
 [connection signal="item_selected" from="DebugModeRow/DebugModeOption" to="." method="_on_debug_mode_option_item_selected"]

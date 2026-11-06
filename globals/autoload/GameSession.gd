@@ -18,6 +18,8 @@ signal area_load_started(area_path: String)
 signal area_changed(area_path: String, entry_id: StringName)
 ## 玩家在长椅休息了一次（副本给 UI 弹提示用）。
 signal rested(bench_id: StringName)
+## 玩家在可坐的椅子上坐下并落盘（副本给 UI 弹"存档成功"用）。
+signal sat(seat_id: StringName)
 
 
 const DEFAULT_ENTRY: StringName = &"default"
@@ -28,7 +30,8 @@ var world_host: Node2D = null
 var fx_host: Node2D = null
 
 ## 当前挂载的区域
-var current_area: Node2D = null
+## 类型是 Node 而不是 Node2D：区域不一定是世界模板，开场视频（Control 根）也走这条换关流程。
+var current_area: Node = null
 var current_area_path: String = ""
 var current_entry_id: StringName = DEFAULT_ENTRY
 
@@ -129,8 +132,11 @@ func travel_to(area_path: String, entry_id: StringName = DEFAULT_ENTRY) -> void:
 
 ## 回主菜单时清掉对已释放节点的引用，避免 autoload 持有悬空指针。
 func reset() -> void:
-	if is_instance_valid(player) and player.get_parent() != null:
-		player.get_parent().remove_child(player)
+	if is_instance_valid(player):
+		# 若停在过场里退回菜单，别把 PROCESS_MODE_DISABLED 留在被复用的玩家上。
+		player.process_mode = Node.PROCESS_MODE_INHERIT
+		if player.get_parent() != null:
+			player.get_parent().remove_child(player)
 	player = null
 
 	if is_instance_valid(current_area):
@@ -161,6 +167,11 @@ func set_flag(id: String) -> void:
 ## 由长椅调用：广播"已休息"，UI 层据此弹提示。
 func notify_rested(bench_id: StringName) -> void:
 	rested.emit(bench_id)
+
+
+## 由可坐的椅子调用：广播"已坐下并落盘"，UI 层据此弹"存档成功"。
+func notify_sat(seat_id: StringName) -> void:
+	sat.emit(seat_id)
 
 
 # ---------------------------------------------------------------- 内部
@@ -194,11 +205,23 @@ func _swap_area(area_path: String) -> void:
 	_apply_camera_bounds()
 
 	# 4) 把玩家插回"关卡内 Player"原来的绘制位置：模板里是 Drops 之前。
+	#    非 Node2D 区域（开场视频等全屏过场）没有地面，玩家会一直下落并把 2D 相机拖走：
+	#    挂回 WorldHost、冻结它的处理，换回世界区域时再解冻。
 	if is_instance_valid(player):
-		var anchor := current_area.get_node_or_null(^"Drops")
-		current_area.add_child(player)
-		if anchor != null:
-			current_area.move_child(player, anchor.get_index())
+		var world_area := current_area is Node2D
+		player.process_mode = Node.PROCESS_MODE_INHERIT if world_area else Node.PROCESS_MODE_DISABLED
+		if world_area:
+			var anchor := current_area.get_node_or_null(^"Drops")
+			current_area.add_child(player)
+			if anchor != null:
+				current_area.move_child(player, anchor.get_index())
+		else:
+			if "velocity" in player:
+				player.set(&"velocity", Vector2.ZERO)
+			var host := _area_host()
+			host.add_child(player)
+			if host == current_area.get_parent():
+				host.move_child(player, current_area.get_index())
 
 	# 等一帧让新 Area 的 _ready（相机锁区注册、BOSS 读档判定等）跑完
 	await get_tree().process_frame
@@ -256,13 +279,14 @@ func _place_player(entry_id: StringName) -> void:
 	if not is_instance_valid(player) or current_area == null:
 		return
 
-	var marker: Node2D = null
-	if current_area.has_method(&"get_entry"):
-		marker = current_area.call(&"get_entry", entry_id)
+	# 没有入口表（开场视频等非世界区域）：不需要摆放玩家，也不该报"缺入口"。
+	if not current_area.has_method(&"get_entry"):
+		return
+
+	var marker: Node2D = current_area.call(&"get_entry", entry_id)
 	if marker == null and entry_id != DEFAULT_ENTRY:
 		push_warning("[GameSession] 入口不存在：%s/%s，回落到默认入口" % [current_area_path, entry_id])
-		if current_area.has_method(&"get_entry"):
-			marker = current_area.call(&"get_entry", DEFAULT_ENTRY)
+		marker = current_area.call(&"get_entry", DEFAULT_ENTRY)
 	if marker == null:
 		push_warning("[GameSession] 区域缺少默认入口：%s" % current_area_path)
 		return
@@ -301,6 +325,7 @@ func snap_camera() -> void:
 	# 对准跟随锚点而不是角色原点：CameraPosition 带 ±100 的水平偏移（还会随朝向翻转），
 	# 用原点硬切，淡入后相机会再挪 100~200px。
 	var camera_marker := player.get_node_or_null(^"CameraPosition") as Node2D
+	# 只需这一次瞬移：插件据此开启入场窗口，锁区由 body_entered 注册时会自动硬切到最终目标。
 	rig.teleport_to(camera_marker.global_position if camera_marker != null else player.global_position)
 	# 等相机在新位置跑完两个物理帧（limit 钳制 / 插值历史 / 平滑恢复都落定）再允许淡入。
 	await get_tree().physics_frame

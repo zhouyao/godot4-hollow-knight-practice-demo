@@ -7,6 +7,12 @@ class_name EnemyGround
 @onready var wall_detector: RayCast2D = $WallDetector
 @onready var ledge_detector: RayCast2D = $LedgeDetector
 
+## 可自动跨过的矮台阶最大高度（像素）。地面由多块矩形拼成时相邻块顶面常差几像素，
+## CharacterBody2D 不会自己上台阶；超过这个高度的高墙不抬升，交给 return 的超时归位兜底。
+@export var step_up_height: float = 12.0
+## 抬升可行性检查时向移动方向试探的距离（像素）。略大于一帧横移量即可。
+@export var step_up_probe: float = 8.0
+
 func _flip_extra() -> void:
 	super._flip_extra()  # 翻转 muzzle（吐弹口）
 	if wall_detector != null:
@@ -71,3 +77,43 @@ func wall_ahead() -> bool:
 		return false
 	wall_detector.force_raycast_update()
 	return wall_detector.is_colliding()
+
+
+## 矮台阶抬升：由 Enemy._apply_movement() 在上一帧确实撞到垂直面时调用。
+## 逐级试探 h ≤ step_up_height：把身体形状放到「抬高 h + 前进一步」的位置做形状查询，
+## 只要该位置与自身抬高后的位置都不与地形重叠，就把身体真的抬上去，本帧的横移即可跨过台阶。
+## 高墙 / 天花板在任何 h 下都会重叠 → 返回 false，不抬升（return 状态另有超时归位兜底）。
+## 用形状查询而不是 test_move()：贴着地面横移时 test_move 会把脚下地板当成碰撞，
+## 导致平地上被误判成"前方有墙"而每帧无谓抬升。
+func try_step_up(move_x: float) -> bool:
+	if move_x == 0.0 or collision_shape == null or collision_shape.shape == null:
+		return false
+	var space := get_world_2d().direct_space_state
+	if space == null:
+		return false
+	var dir := signf(move_x)
+	var base := collision_shape.global_transform
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = collision_shape.shape
+	query.collision_mask = collision_mask
+	query.collide_with_bodies = true
+	query.collide_with_areas = false
+	query.exclude = [get_rid()]
+	var h := 4.0
+	while h <= step_up_height:
+		var raised := base
+		raised.origin += Vector2(0.0, -h)
+		query.transform = raised
+		if not space.intersect_shape(query, 1).is_empty():
+			h += 4.0
+			continue
+		var ahead := base
+		ahead.origin += Vector2(dir * step_up_probe, -h)
+		query.transform = ahead
+		if not space.intersect_shape(query, 1).is_empty():
+			h += 4.0
+			continue
+		global_position.y -= h
+		velocity.y = 0.0
+		return true
+	return false

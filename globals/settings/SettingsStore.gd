@@ -11,6 +11,7 @@ const DISPLAY_SETTING_NAME := "Display"
 const DEVELOPMENT_SETTING_NAME := "Development"
 const LOCALE_KEY := "locale"
 const DEBUG_MODE_KEY := "debug_mode"
+const HOME_PATH_KEY := "home_path"
 const WINDOW_MODE_KEY := "window_mode"
 const WINDOW_SIZE_KEY := "window_size"
 

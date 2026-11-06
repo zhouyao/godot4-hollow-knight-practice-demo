@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bh3n56i9slr15" path="res://scenes/menus/main_menu/main_menu_root.gd" id="2_root"]
 
 [sub_resource type="VideoStreamTheora" id="VideoStreamTheora_bg"]
-file = "res://assets/video/menu/Classic.ogv"
+file = "res://assets/videos/Classic.ogv"
 
 [node name="MainMenu" type="CanvasLayer" unique_id=390350015]
 script = ExtResource("2_root")

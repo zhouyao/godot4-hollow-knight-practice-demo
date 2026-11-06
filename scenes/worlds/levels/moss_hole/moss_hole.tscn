@@ -95,7 +95,7 @@ size = Vector2(2000, 200)
 size = Vector2(475, 200)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6"]
-size = Vector2(775, 200)
+size = Vector2(775, 217)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7"]
 size = Vector2(800, 200)
@@ -109,7 +109,7 @@ size = Vector2(225.5, 53)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gatewall"]
 size = Vector2(40, 600)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_l8csm"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5rf3w"]
 resource_local_to_scene = true
 size = Vector2(730, 23)
 
@@ -707,7 +707,7 @@ texture = ExtResource("28_texture2d")
 
 [node name="Bg_060" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="60" unique_id=502891800]
 z_index = 10
-position = Vector2(-1220, 925)
+position = Vector2(-1222, 925)
 script = ExtResource("10_script")
 move_layer = 2
 
@@ -881,7 +881,8 @@ texture = ExtResource("33_texture2d")
 
 [node name="Bg_079" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="79" unique_id=38451637]
 z_index = 12
-position = Vector2(-920, 1025)
+position = Vector2(-920, 1125)
+scale = Vector2(3, 3)
 script = ExtResource("10_script")
 move_layer = 4
 
@@ -900,6 +901,7 @@ texture = ExtResource("29_texture2d")
 [node name="Bg_081" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="81" unique_id=1811477534]
 z_index = 12
 position = Vector2(-1025, 1035)
+scale = Vector2(2, 2)
 script = ExtResource("10_script")
 move_layer = 4
 
@@ -917,7 +919,8 @@ texture = ExtResource("29_texture2d")
 
 [node name="Bg_083" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="83" unique_id=153442487]
 z_index = 12
-position = Vector2(-1225, 975)
+position = Vector2(-1225, 1075)
+scale = Vector2(3, 3)
 script = ExtResource("10_script")
 move_layer = 4
 
@@ -926,7 +929,8 @@ texture = ExtResource("29_texture2d")
 
 [node name="Bg_084" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="84" unique_id=2073059872]
 z_index = 12
-position = Vector2(-1300, 925)
+position = Vector2(-1400, 925)
+scale = Vector2(2, 2)
 script = ExtResource("10_script")
 move_layer = 4
 
@@ -936,6 +940,7 @@ texture = ExtResource("29_texture2d")
 [node name="Bg_085" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="85" unique_id=990848009]
 z_index = 12
 position = Vector2(-1625, 850)
+scale = Vector2(3, 3)
 script = ExtResource("10_script")
 move_layer = 4
 
@@ -944,7 +949,8 @@ texture = ExtResource("29_texture2d")
 
 [node name="Bg_086" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="86" unique_id=45884400]
 z_index = 12
-position = Vector2(-1500, 900)
+position = Vector2(-1500, 1000)
+scale = Vector2(2, 2)
 script = ExtResource("10_script")
 move_layer = 4
 
@@ -1131,6 +1137,7 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_05" index="0" unique_id=1052092146]
+position = Vector2(0, 8.5)
 shape = SubResource("RectangleShape2D_6")
 
 [node name="Platform_06" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="5" unique_id=1009598602]
@@ -1343,6 +1350,20 @@ collision_mask = 79
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/GateWall_ToMossHole0" index="0" unique_id=1896895313]
 position = Vector2(104, -22)
 shape = SubResource("RectangleShape2D_gatewall")
+
+[node name="default" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="0" unique_id=87898458 instance=ExtResource("3_packedscene")]
+position = Vector2(84, 289)
+facing = 1
+
+[node name="from_moss_hole" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="1" unique_id=1532532512 instance=ExtResource("3_packedscene")]
+position = Vector2(-1545, 616)
+facing = 1
+
+[node name="ToMossHole0" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="0" unique_id=360154154 instance=ExtResource("4_packedscene")]
+position = Vector2(-1785, 624)
+target_area = "res://scenes/worlds/levels/moss_hole_0/moss_hole_0.tscn"
+target_entry = &"from_moss_hole"
+gate_id = &"from_moss_hole"
 
 [node name="Bg_001" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=478202218]
 z_index = 2
@@ -1594,23 +1615,9 @@ energy = 0.8
 texture = ExtResource("52_texture2d")
 texture_scale = 1.2
 
-[node name="default" parent="LevelTransitions/Entries" index="0" unique_id=87898458 instance=ExtResource("3_packedscene")]
-position = Vector2(84, 289)
-facing = 1
-
-[node name="from_moss_hole" parent="LevelTransitions/Entries" index="1" unique_id=1532532512 instance=ExtResource("3_packedscene")]
-position = Vector2(-1545, 616)
-facing = 1
-
-[node name="ToMossHole0" parent="LevelTransitions/Gates" index="0" unique_id=360154154 instance=ExtResource("4_packedscene")]
-position = Vector2(-1785, 624)
-target_area = "res://scenes/worlds/levels/moss_hole_0/moss_hole_0.tscn"
-target_entry = &"from_moss_hole"
-gate_id = &"from_moss_hole"
-
-[node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0"]
+[node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0" unique_id=1116790881]
 position = Vector2(-464, 601.5)
-shape = SubResource("RectangleShape2D_l8csm")
+shape = SubResource("RectangleShape2D_5rf3w")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." index="18" unique_id=1783583867]
 

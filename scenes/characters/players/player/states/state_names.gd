@@ -21,3 +21,5 @@ const DEATH: StringName = &"death"
 const FREEZE: StringName = &"freeze"
 const BLOCK: StringName = &"block"
 const CURE: StringName = &"cure"
+## 坐下（长椅 / 椅子）：坐下期间回血回能，按方向键即可起身。
+const SIT: StringName = &"sit"

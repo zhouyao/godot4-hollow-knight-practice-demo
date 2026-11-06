@@ -9,34 +9,38 @@
 [ext_resource type="PackedScene" path="res://addons/zone_director/scenes/zone.tscn" id="7_zone"]
 [ext_resource type="PackedScene" uid="uid://cc7bpmgddem53" path="res://scenes/characters/enemies/enemy_ground/enemy_ground.tscn" id="8_enemy"]
 [ext_resource type="PackedScene" uid="uid://cwtmrqxf83kjo" path="res://scenes/characters/enemies/enemy_ground_crawlid/crawlid.tscn" id="9_crawlid"]
+[ext_resource type="Script" uid="uid://0anauft5nso" path="res://addons/camera_director/AuCameraLockArea.gd" id="10_13qwb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kill"]
-size = Vector2(32, 32)
+size = Vector2(32, 83)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_y67rj"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_13qwb"]
 resource_local_to_scene = true
-size = Vector2(2880, 710)
+size = Vector2(2920, 82)
 
 [node name="WorldLevel2" unique_id=1943215682 instance=ExtResource("1_base")]
 zone_name = "试炼回廊"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KillBox" parent_id_path=PackedInt32Array(1663494127) index="0" unique_id=696752096]
-position = Vector2(2080, 700)
+position = Vector2(2080, 787.5)
 scale = Vector2(150, 1)
 shape = SubResource("RectangleShape2D_kill")
 
 [node name="Darkness" type="Parallax2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="0" unique_id=1375613363]
+visible = false
 repeat_size = Vector2(1920, 1080)
 
 [node name="ColorRect" type="ColorRect" parent="Background/Darkness" index="0" unique_id=1540414161]
-offset_right = 1920.0
-offset_bottom = 1080.0
+offset_left = -1.0
+offset_top = -6.0
+offset_right = 1919.0
+offset_bottom = 1074.0
 mouse_filter = 2
 color = Color(0.08627451, 0.09411765, 0.11764706, 1)
 
 [node name="Floor1A" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="0" unique_id=1382951930 instance=ExtResource("2_floor")]
-position = Vector2(-320, 500)
-scale = Vector2(38, 0.5)
+position = Vector2(-317, 500)
+scale = Vector2(60, 0.5)
 
 [node name="Floor1B" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="1" unique_id=415366258 instance=ExtResource("2_floor")]
 position = Vector2(1456, 500)
@@ -66,6 +70,33 @@ persistent_id = "chest:level_2/01"
 position = Vector2(3300, 500)
 persistent_id = "chest:level_2/02"
 
+[node name="Ledge5" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="8" unique_id=498290294 instance=ExtResource("2_floor")]
+position = Vector2(360, 169)
+scale = Vector2(12, 0.25)
+
+[node name="Ledge6" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="9" unique_id=1210231529 instance=ExtResource("2_floor")]
+position = Vector2(459, 15)
+scale = Vector2(12, 0.25)
+
+[node name="default" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="0" unique_id=336191150 instance=ExtResource("3_entry")]
+position = Vector2(252, 258)
+
+[node name="from_level_1" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="1" unique_id=1704829993 instance=ExtResource("3_entry")]
+position = Vector2(-100, 425)
+facing = 1
+
+[node name="bench_02" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="2" unique_id=1743556426 instance=ExtResource("6_bench")]
+position = Vector2(300, 425)
+
+[node name="bench_03" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="3" unique_id=430745604 instance=ExtResource("6_bench")]
+position = Vector2(2600, 425)
+
+[node name="ToLevel1" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="0" unique_id=1289408667 instance=ExtResource("4_gate")]
+position = Vector2(-248, 401)
+target_area = "res://scenes/worlds/levels/_dev/level_1.tscn"
+target_entry = &"from_level_2"
+gate_id = &"from_level_1"
+
 [node name="EnemyGround" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=786504763 groups=["view_cull"] instance=ExtResource("8_enemy")]
 position = Vector2(1800, 423)
 enemy_zone = NodePath("../../EnemyZones/EnemyZone")
@@ -73,29 +104,26 @@ enemy_zone = NodePath("../../EnemyZones/EnemyZone")
 [node name="Crawlid" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="1" unique_id=17612678 groups=["view_cull"] instance=ExtResource("9_crawlid")]
 position = Vector2(3600, 423)
 
-[node name="default" parent="LevelTransitions/Entries" index="0" unique_id=336191150 instance=ExtResource("3_entry")]
-position = Vector2(-200, 425)
-
-[node name="from_level_1" parent="LevelTransitions/Entries" index="1" unique_id=1704829993 instance=ExtResource("3_entry")]
-position = Vector2(-100, 425)
-facing = 1
-
-[node name="bench_02" parent="LevelTransitions/Entries" index="2" unique_id=1743556426 instance=ExtResource("6_bench")]
-position = Vector2(300, 425)
-
-[node name="bench_03" parent="LevelTransitions/Entries" index="3" unique_id=430745604 instance=ExtResource("6_bench")]
-position = Vector2(2600, 425)
-
-[node name="ToLevel1" parent="LevelTransitions/Gates" index="0" unique_id=1289408667 instance=ExtResource("4_gate")]
-position = Vector2(150, 425)
-target_area = "res://scenes/worlds/levels/_dev/level_1.tscn"
-target_entry = &"from_level_2"
-gate_id = &"from_level_1"
-
 [node name="EnemyZone" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="0" unique_id=83842781 instance=ExtResource("7_zone")]
 position = Vector2(2200, 200)
 size = Vector2(1400, 700)
 
-[node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0"]
-position = Vector2(2080, 105)
-shape = SubResource("RectangleShape2D_y67rj")
+[node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0" unique_id=1116790881]
+position = Vector2(2100, 473)
+shape = SubResource("RectangleShape2D_13qwb")
+
+[node name="LeftCameraLock" type="Area2D" parent="." index="18" unique_id=549440917 node_paths=PackedStringArray("vertical_lock_marker")]
+position = Vector2(-225, -412)
+collision_layer = 16
+monitorable = false
+script = ExtResource("10_13qwb")
+area_size = Vector2(850, 600)
+centered = false
+vertical_lock_marker = NodePath("../Marker2D")
+camera_priority = 20
+override_bounds = true
+can_look_up = true
+can_look_down = true
+
+[node name="Marker2D" type="Marker2D" parent="." index="19" unique_id=290120383]
+position = Vector2(572, -203)
