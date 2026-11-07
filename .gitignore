@@ -21,3 +21,5 @@
 # macOS 元数据
 .DS_Store
 **/.DS_Store
+
+.editorconfig
