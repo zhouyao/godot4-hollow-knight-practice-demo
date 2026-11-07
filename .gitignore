@@ -5,6 +5,7 @@
 /export/
 /build/
 /dist/
+/tools/
 
 # 本地/用户配置（由 Godot 自动生成，因人而异）
 .godot/mono/
