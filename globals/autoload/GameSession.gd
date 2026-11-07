@@ -38,6 +38,8 @@ var current_entry_id: StringName = DEFAULT_ENTRY
 var _traveling := false
 ## 路径 -> PackedScene：切过的关常驻内存，来回走不重复读盘
 var _cache: Dictionary = {}
+## 正在后台线程加载的规范化路径 -> true，避免同一关重复发起线程请求
+var _pending_loads: Dictionary = {}
 ## 项目初始 zoom（game_root 里 AuCameraRig.zoom）；没配区域 zoom 的关卡回落到它。
 var _default_zoom := Vector2.ONE
 
@@ -93,6 +95,7 @@ func content_root() -> Node:
 func bootstrap(area_path: String, entry_id: StringName = DEFAULT_ENTRY) -> void:
 	if area_path.is_empty():
 		area_path = SaveManager.current_scene_path()
+	area_path = _canonical_area_path(area_path)
 	area_load_started.emit(area_path)
 
 	await _swap_area(area_path)
@@ -108,6 +111,7 @@ func bootstrap(area_path: String, entry_id: StringName = DEFAULT_ENTRY) -> void:
 
 ## 运行时换关（门 / 电梯 / 剧情传送）。
 func travel_to(area_path: String, entry_id: StringName = DEFAULT_ENTRY) -> void:
+	area_path = _canonical_area_path(area_path)
 	if _traveling or area_path.is_empty():
 		return
 	# 同一关同一入口：不重复触发（防止玩家站在门上反复弹门）
@@ -116,6 +120,8 @@ func travel_to(area_path: String, entry_id: StringName = DEFAULT_ENTRY) -> void:
 
 	_traveling = true
 	area_load_started.emit(area_path)
+	# 后台加载与淡出动画并行：冷读几十 MB 资源时不把黑场末尾再拖长。
+	prefetch_area(area_path)
 
 	await TransitionLayer.fade_out()
 	await _swap_area(area_path)
@@ -177,6 +183,7 @@ func notify_sat(seat_id: StringName) -> void:
 # ---------------------------------------------------------------- 内部
 
 func _swap_area(area_path: String) -> void:
+	area_path = _canonical_area_path(area_path)
 	# 1) 把玩家从旧 Area 里摘出来，避免随旧 Area 一起被释放。
 	if is_instance_valid(player) and player.get_parent() != null:
 		player.get_parent().remove_child(player)
@@ -333,32 +340,71 @@ func snap_camera() -> void:
 
 
 func _load_async(path: String) -> PackedScene:
-	if _cache.has(path):
-		return _cache[path]
+	var key := _canonical_area_path(path)
+	# travel_to 已提前发起后台加载；这里只等结果，避免同一份 PackedScene 被请求两次。
+	prefetch_area(key)
+	var tree := Engine.get_main_loop() as SceneTree
+	while _pending_loads.has(key) and tree != null:
+		await tree.process_frame
+	if _cache.has(key):
+		return _cache[key]
 
-	if ResourceLoader.has_cached(path):
-		var cached := ResourceLoader.load(path, "PackedScene") as PackedScene
+	# 线程加载没跑起来（路径异常 / 别的系统占用请求）时退回同步加载。
+	var sync := ResourceLoader.load(key, "PackedScene") as PackedScene
+	if sync != null:
+		_cache[key] = sync
+	return sync
+
+
+## 后台预加载一块 Area；可在淡出前调用，让磁盘 IO 与黑场动画并行。
+func prefetch_area(path: String) -> void:
+	var key := _canonical_area_path(path)
+	if key.is_empty() or _cache.has(key) or _pending_loads.has(key):
+		return
+
+	if ResourceLoader.has_cached(key):
+		var cached := ResourceLoader.load(key, "PackedScene") as PackedScene
 		if cached != null:
-			_cache[path] = cached
-			return cached
+			_cache[key] = cached
+		return
 
-	if ResourceLoader.load_threaded_request(path, "PackedScene", true) != OK:
-		# 已经被别的系统请求过 / 参数异常：退回同步加载
-		var sync := ResourceLoader.load(path, "PackedScene") as PackedScene
+	if ResourceLoader.load_threaded_request(key, "PackedScene", false) != OK:
+		# 别的系统已请求过 / 路径异常：退回同步加载，避免重复消费线程结果。
+		var sync := ResourceLoader.load(key, "PackedScene") as PackedScene
 		if sync != null:
-			_cache[path] = sync
-		return sync
+			_cache[key] = sync
+		return
 
-	while true:
-		var status := ResourceLoader.load_threaded_get_status(path)
+	_pending_loads[key] = true
+	_pump_prefetch(key)
+
+
+func _pump_prefetch(key: String) -> void:
+	# 用 MainLoop 的信号而不是 Node.get_tree()：预加载可能在根节点装配期间发起，
+	# 此时 autoload 的 data.tree 还未就绪，get_tree() 会返回 null。
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		_pending_loads.erase(key)
+		return
+	while _pending_loads.has(key):
+		var status := ResourceLoader.load_threaded_get_status(key)
 		if status == ResourceLoader.THREAD_LOAD_LOADED:
-			var packed := ResourceLoader.load_threaded_get(path) as PackedScene
+			var packed := ResourceLoader.load_threaded_get(key) as PackedScene
 			if packed != null:
-				_cache[path] = packed
-			return packed
+				_cache[key] = packed
+			_pending_loads.erase(key)
+			return
 		if status == ResourceLoader.THREAD_LOAD_FAILED \
 				or status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
-			return null
-		await get_tree().process_frame
+			_pending_loads.erase(key)
+			return
+		await tree.process_frame
 
-	return null
+
+## UID 与 res:// 路径统一成 res:// 作为缓存键，避免同一关被重复加载 / 重复判定。
+func _canonical_area_path(path: String) -> String:
+	if path.begins_with("uid://"):
+		var resolved := ResourceUID.uid_to_path(path)
+		if not resolved.is_empty():
+			return resolved
+	return path

@@ -37,7 +37,9 @@
 [ext_resource type="Texture2D" uid="uid://dfmejw1y4fptt" path="res://assets/sprites/environment/tear_city/corpse_set_01_0005_nail4-copy.png" id="34_texture2d"]
 [ext_resource type="Texture2D" uid="uid://ufvcaqm53b1m" path="res://assets/sprites/props/tear_city/ruin_plat_float_01.png" id="35_texture2d"]
 [ext_resource type="Texture2D" uid="uid://cytwadkmsxjdd" path="res://assets/sprites/props/tear_city/ruin_plat_float_03.png" id="36_texture2d"]
+[ext_resource type="PackedScene" uid="uid://dbrmlcm3kxitm" path="res://scenes/characters/enemies/enemy_flying_vengefly/vengefly.tscn" id="37_rwi5m"]
 [ext_resource type="Texture2D" uid="uid://d4gmcec3yjcfr" path="res://assets/sprites/props/tear_city/ruin_plat_float_02.png" id="37_texture2d"]
+[ext_resource type="PackedScene" uid="uid://cwtmrqxf83kjo" path="res://scenes/characters/enemies/enemy_ground_crawlid/crawlid.tscn" id="38_4l13c"]
 [ext_resource type="Texture2D" uid="uid://bky7kpwhlr7qf" path="res://assets/sprites/props/tear_city/ruin_plat_float_05_wide.png" id="38_texture2d"]
 [ext_resource type="Texture2D" uid="uid://cpspk15nwsix0" path="res://assets/sprites/props/tear_city/Floor_1.png" id="39_texture2d"]
 [ext_resource type="Texture2D" uid="uid://c1s6tx011oq45" path="res://assets/sprites/environment/tear_city/_0021_city_break.png" id="40_texture2d"]
@@ -45,6 +47,12 @@
 [ext_resource type="Texture2D" uid="uid://bof0wk0v3tcj4" path="res://assets/sprites/environment/moss_hole/cave_light.png" id="42_81s0y"]
 [ext_resource type="Texture2D" uid="uid://dunyne17dpijj" path="res://assets/sprites/environment/tear_city/_0017_city_break.png" id="42_texture2d"]
 [ext_resource type="Texture2D" uid="uid://cgektiolw73tv" path="res://assets/sprites/environment/tear_city/_0019_city_break.png" id="43_texture2d"]
+[ext_resource type="PackedScene" path="res://addons/zone_director/scenes/zone.tscn" id="45_tedwv"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_wkk6u"]
+vertices = PackedVector2Array(2176.8906, 1222.0469, -1918.1016, 1245.9375, -1937.8906, -614.03125, 2157.1016, -627.96094)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-1948, -624, -1928, 1256, 2187, 1232, 2167, -638)])
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1"]
 shader = ExtResource("10_shader")
@@ -146,13 +154,16 @@ size = Vector2(200, 100)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_9"]
 size = Vector2(450, 100)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_81s0y"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4l13c"]
 resource_local_to_scene = true
 size = Vector2(1838, 667)
 
 [node name="tear_city" unique_id=560156841 instance=ExtResource("1_packedscene")]
 script = ExtResource("2_script")
 zone_name = "泪城"
+
+[node name="NavigationRegion2D" parent="NavigationAreas" parent_id_path=PackedInt32Array(1557722077) index="0" unique_id=420728257]
+navigation_polygon = SubResource("NavigationPolygon_wkk6u")
 
 [node name="Darkness" type="ColorRect" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="0" unique_id=1160421674]
 z_index = -200
@@ -560,6 +571,34 @@ target_area = "uid://clfa5t1yqmyny"
 target_entry = &"moss_hole_0_left"
 gate_id = &"tear_city_right"
 
+[node name="Vengefly" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=1746772293 instance=ExtResource("37_rwi5m")]
+position = Vector2(200, -120)
+enemy_zone = NodePath("../../EnemyZones/EnemyZone")
+projectile_scene = null
+
+[node name="Vengefly2" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="1" unique_id=948595583 instance=ExtResource("37_rwi5m")]
+position = Vector2(-300, 0)
+enemy_zone = NodePath("../../EnemyZones/EnemyZone")
+projectile_scene = null
+
+[node name="Crawlid" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="2" unique_id=220108385 instance=ExtResource("38_4l13c")]
+position = Vector2(100, 899)
+step_up_height = 12.0
+step_up_probe = 8.0
+enemy_zone = NodePath("../../EnemyZones/EnemyZone2")
+
+[node name="Crawlid2" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="3" unique_id=827971859 instance=ExtResource("38_4l13c")]
+position = Vector2(-300, 899)
+step_up_height = 12.0
+step_up_probe = 8.0
+enemy_zone = NodePath("../../EnemyZones/EnemyZone2")
+
+[node name="Crawlid3" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="4" unique_id=1777005388 instance=ExtResource("38_4l13c")]
+position = Vector2(-1110, 899)
+step_up_height = 12.0
+step_up_probe = 8.0
+enemy_zone = NodePath("../../EnemyZones/EnemyZone3")
+
 [node name="Bg_001" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=1704424894]
 z_index = 5
 position = Vector2(1200, 875)
@@ -781,9 +820,21 @@ position = Vector2(1879.1335, 390.13254)
 scale = Vector2(-5.477841, -52.301613)
 texture = ExtResource("42_81s0y")
 
+[node name="EnemyZone" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="0" unique_id=995830604 instance=ExtResource("45_tedwv")]
+position = Vector2(0, -100)
+size = Vector2(1400, 700)
+
+[node name="EnemyZone2" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="1" unique_id=1474383695 instance=ExtResource("45_tedwv")]
+position = Vector2(0, 800)
+size = Vector2(1000, 400)
+
+[node name="EnemyZone3" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="2" unique_id=1460376819 instance=ExtResource("45_tedwv")]
+position = Vector2(-1250, 817)
+size = Vector2(600, 300)
+
 [node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0" unique_id=1116790881]
 position = Vector2(101, 322.5)
-shape = SubResource("RectangleShape2D_81s0y")
+shape = SubResource("RectangleShape2D_4l13c")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." index="18" unique_id=350747079]
 color = Color(1.05, 1.07, 1.1, 1)

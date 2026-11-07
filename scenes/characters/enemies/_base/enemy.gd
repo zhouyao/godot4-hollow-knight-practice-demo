@@ -98,6 +98,28 @@ var move_speed: float
 ## 走"tuning > 本项 > 状态默认值"链；逐只覆盖在世界场景里改这一项即可。
 @export var chase_speed_multiplier: float = -1.0
 
+@export_group("导航")
+## 是否让 NavigationAgent2D 参与 nav_velocity() 的路径查询（默认关）。
+## 当前各关卡的 NavigationPolygon 都是一整块凸四边形、没有按 Obstacles 挖洞，
+## A* 给出来的就是"直线到目标"，开着没有任何绕障收益；节点与 NavigationRegion2D
+## 都保留，等以后烘焙出带洞的导航网格再逐只 / 整类打开即可。
+## 关掉时退化为直线趋近：飞行怪的绕障由 EnemyFlightNavigation 负责，贴地怪由
+## WallDetector / LedgeDetector 负责，行为与现在等价。与 flight_avoidance_enabled
+## 相互独立（后者只管飞行怪的射线避障）。
+@export var use_navigation: bool = false
+
+@export_group("飞行寻路")
+## 全向怪（飞行 / 水下）的局部避障开关：关卡导航多边形常常是一整块大矩形，
+## NavigationAgent2D 会给出穿过掩体的直线，本项打开后由 EnemyFlightNavigation
+## 用前视射线绕开实体，并在玩家被掩体挡住时主动寻找有视线的射击位。贴地怪不受影响。
+@export var flight_avoidance_enabled: bool = true
+## 前视探测距离 = 本帧速度 × 本值（秒），再夹到 [96, 240] 像素。
+## 太小会来不及转向、直接撞上平台；太大会在离掩体很远时就开始绕路。
+@export_range(0.2, 2.0, 0.05) var flight_lookahead_time: float = 0.9
+## 视线被挡时重新挑选射击位的间隔（秒）：0.25 秒一次足够跟上玩家移动，
+## 又不会每物理帧做几十次物理查询。
+@export_range(0.05, 1.0, 0.05) var flight_replan_interval: float = 0.25
+
 @export_group("受击")
 ## 受击后的无敌帧时长（秒）：由 hurt_invincibility_timer 计时，期间不再结算伤害；
 ## 同时决定受击白闪时长，以及 hurt 状态没配 hold_time 时的硬直时长。
@@ -283,7 +305,7 @@ func resting_state() -> StringName:
 var spawn_position: Vector2 = Vector2.ZERO
 
 ## ---- 子系统 ----
-## 三个子系统各自保管自己的状态，Enemy 上不再有对应的裸字段。
+## 各子系统自己保管自己的状态，Enemy 上不再有对应的裸字段。
 ## 都必须在 _ready() 内、早于 state_machine.start() 调用 setup(self)。
 
 ## 转身 / 朝向表现（见 facing/enemy_facing.gd）。
@@ -292,6 +314,9 @@ var facing := EnemyFacing.new()
 var aggro := EnemyAggro.new()
 ## 音效：子节点收集 + 衰减参数 + 镜头可见性（见 audio/enemy_audio.gd）。
 var audio := EnemyAudio.new()
+## 全向怪的局部避障与射击位重定位（见 navigation/enemy_flight_navigation.gd）。
+## 贴地怪只创建不调用：nav_velocity() 的全向分支会短路掉它。
+var flight_nav := EnemyFlightNavigation.new()
 
 ## 当前是否处于战斗（仇恨）状态。
 ## 代理到 aggro.combat_active：状态脚本读 enemy.combat_active 的调用面保持不变。
@@ -349,6 +374,9 @@ func _ready() -> void:
 	facing.setup(self)
 	# 解析并绑定领地。同样早于 state_machine.start()。
 	aggro.setup(self)
+	# 全向怪的避障需要碰撞形状 / 碰撞掩码，@onready 此时已就绪；
+	# 同样必须早于状态机首帧（patrol 会立刻调 nav_velocity）。
+	flight_nav.setup(self)
 
 	health = mini(initial_health, max_health)
 	debug.setup_health(max_health, health)
@@ -624,6 +652,20 @@ func _on_hurt_invincibility_timer_timeout() -> void:
 func has_line_of_sight() -> bool:
 	return aggro.has_line_of_sight()
 
+## 开火判据：全向怪要求"整个身宽都看得见玩家"（三条平行射线），避免从掩体角
+## 擦着中心线通过时站定吐空弹；贴地怪 / 未开避障的怪沿用单线 has_line_of_sight()。
+## 与 tick_combat() 的丢战判据刻意不同：丢战仍按单线算，这样中心线擦边可见时
+## 怪不会立刻收兵，而是继续绕到真正打得到人的位置。
+func has_clear_shot() -> bool:
+	if not use_line_of_sight:
+		return true
+	if is_planar_mover() or not flight_avoidance_enabled:
+		return has_line_of_sight()
+	var p := get_player()
+	if p == null:
+		return false
+	return flight_nav.has_clear_shot(p.global_position)
+
 ## 目标是否仍在牵引范围内（出生点 leash_range 内）。未开战时视为在范围内。
 func is_within_leash() -> bool:
 	return aggro.is_within_leash()
@@ -659,10 +701,10 @@ func _set_combat(active: bool) -> void:
 ## 调试模式 → NavigationAgent2D 的 Debug 开关（Inspector 里 Debug 分组的 Enabled）。
 ## 与 CharacterDebug 的血条 / 状态名共用 Globals.debug_enabled 一个入口：设置菜单选「开启」
 ## 时在场的敌人立即显示寻路路径，选「关闭」时一起关掉；后生成的敌人在 _ready 里读当前值。
-## 没挂 NavigationAgent2D 的 BOSS 场景走 nav_velocity() 的退化分支，这里直接跳过。
+## use_navigation 关闭时没有路径可画，一并关掉；没挂 NavigationAgent2D 的 BOSS 场景直接跳过。
 func _sync_navigation_debug(enabled: bool) -> void:
 	if navigation_agent != null:
-		navigation_agent.debug_enabled = enabled
+		navigation_agent.debug_enabled = enabled and use_navigation
 
 
 ## 是否只沿水平移动（贴地走 = true，全向 = false）。由 locomotion 决定，
@@ -679,17 +721,20 @@ func is_in_medium() -> bool:
 		return true
 	return locomotion.can_occupy(self, global_position)
 
-## 用 NavigationAgent2D 计算朝 target_pos 的本帧期望速度，由追击状态调用并写回 enemy.velocity。
+## 计算朝 target_pos 的本帧期望速度，由各状态调用并写回 enemy.velocity。
 ## speed：期望移动速度（像素/秒）。
+## use_navigation 打开且挂了 NavigationAgent2D 时取下一个路径点；关闭 / 没节点 /
+## 导航网格未烘焙时都退化为直线趋近，保证仍可移动。
 ## 是否只取水平分量由 locomotion.nav_planar_only 决定（见 is_planar_mover）。
-## 已抵达终点时返回零向量；若导航网格缺失/未烘焙，agent 会原地返回，此时退化为直线趋近，保证仍可移动。
+## 全向怪额外过一道局部避障：关卡的导航多边形通常没按平台挖洞，直线路径会径直撞上
+## 掩体，而 move_and_slide() 只会静默吃掉位移（见 navigation/enemy_flight_navigation.gd）。
 func nav_velocity(target_pos: Vector2, speed: float) -> Vector2:
 	if global_position.distance_to(target_pos) <= nav_arrive_distance:
 		return Vector2.ZERO
 	var next_pos := target_pos
-	# 没有 NavigationAgent2D 子节点时 next_pos 保持为目标点，退化为直线趋近，
-	# 而不是返回零向量把怪钉在原地。
-	if navigation_agent != null:
+	# use_navigation 关闭 / 没有 NavigationAgent2D 子节点时 next_pos 保持为目标点，
+	# 退化为直线趋近，而不是返回零向量把怪钉在原地。
+	if use_navigation and navigation_agent != null:
 		navigation_agent.target_position = target_pos
 		next_pos = navigation_agent.get_next_path_position()
 		# 导航网格不可用时 agent 返回自身位置，退化为直接朝目标移动。
@@ -701,6 +746,9 @@ func nav_velocity(target_pos: Vector2, speed: float) -> Vector2:
 		if dir.x == 0.0:
 			return Vector2.ZERO
 		dir = Vector2(signf(dir.x), 0.0)
+		return dir * speed
+	if flight_avoidance_enabled:
+		return flight_nav.steer(next_pos, speed)
 	return dir * speed
 
 ## 接触判定：拿自己的身体碰撞形状去查玩家，替代原来的 AttackArea.overlaps_body()。
@@ -790,7 +838,7 @@ func has_projectile() -> bool:
 ##   projectile_scene 决定显 melee_attack_range 还是显四个远程数值项；
 ##   contact_damage_enabled 管 contact_damage / contact_cooldown；
 ##   drop_table 管 drop_scatter；sfx_only_on_screen 管 sfx_screen_margin；
-##   enemy_zone 管 zone_exit_chase_time。
+##   enemy_zone 管 zone_exit_chase_time；locomotion 管飞行寻路三项。
 ## 子类若要追加规则，重写后先调用 super._validate_property(property)（目前无子类重写）。
 ## 注意：新增一种运动介质通常**不需要**改这里 —— 介质专属参数应挂在对应的
 ## EnemyLocomotion 资源上（如 SwimmingLocomotion），而不是往基类继续堆导出项。
@@ -815,6 +863,10 @@ func _validate_property(property: Dictionary) -> void:
 		"zone_exit_chase_time":
 			# 没绑领地就没有"离开领地"这回事，宽限时长用不上。
 			if enemy_zone.is_empty():
+				property.usage = HIDDEN_BUT_SAVED
+		"flight_avoidance_enabled", "flight_lookahead_time", "flight_replan_interval":
+			# 只对全向怪（飞行 / 水下）有意义：贴地怪走 nav_velocity 的水平分支。
+			if locomotion == null or locomotion.nav_planar_only:
 				property.usage = HIDDEN_BUT_SAVED
 
 #endregion

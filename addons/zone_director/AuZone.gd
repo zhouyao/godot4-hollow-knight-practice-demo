@@ -94,8 +94,18 @@ signal player_exited(zone: Node, player: Node2D)
 ## autoload 尚未注册时也不会编译失败，只会静默降级（见 _director()）。
 const DIRECTOR_NODE := "AuZoneDirector"
 
+## 幽灵进入复核用的宽松余量（像素）：约等于玩家胶囊的半高（1 格 = 96px）。
+## 区域按这个尺寸外扩后仍不含玩家中心，就说明这次 body_entered 只可能来自旧坐标；
+## "形状先压到边界、中心还在外面"的真实进入仍会被放行。
+## 插件不依赖工程 autoload，故写死数值而不是读 Globals.UNIT_SIZE。
+const ENTER_NEAR_MARGIN := 96.0
+
 var _depth := -1
-var _body_count := 0
+## 当前确实在本区域内的目标集合（instance id → body）。
+## 不能用计数器：物理引擎的 body_entered 与 _sync_initial_overlap() 的延迟补登记可能
+## 针对同一个 body 各来一次，计数变成 2，而离开只来一次 body_exited ——
+## player_exited 就永远不发，敌人会一直以为玩家还在领地里。
+var _bodies_inside: Dictionary = {}
 var _last_body: Node2D = null
 ## 已登记的 AuZoneBehavior（由挂件 _ready 自行登记 / 由 _collect_behaviors() 扫描补齐）。
 var _behavior_nodes: Array = []
@@ -182,10 +192,26 @@ func _director():
 
 # ---- 事件转发给挂件 ----
 
+## Area2D 的 body_entered 可能基于物理服务器里上一帧的 transform：换关 / 入口瞬移时
+## 玩家先以旧坐标（常见 (0,0)）入树，随后被摆到入口，本帧仍会广播一次"进入"。
+## 节点坐标是当帧真实值，物理服务器与重叠缓存都滞后 —— 因此先用当前坐标复核，
+## 再等一个物理帧让 Area2D 的重叠结果刷新后复核一次，幽灵进入直接丢弃。
+## 真实进入只晚一帧广播，换来领地怪不会被"从没进过的领地"凭空拉进战斗。
 func _on_body_entered(body: Node) -> void:
-	if not _matches(body):
+	if not _matches(body) or not _body_near_zone(body):
 		return
-	_body_count += 1
+	await get_tree().physics_frame
+	if not is_inside_tree() or not is_instance_valid(body):
+		return
+	if not _body_near_zone(body) or not get_overlapping_bodies().has(body):
+		return
+	_commit_body_entered(body)
+
+
+func _commit_body_entered(body: Node) -> void:
+	if not _matches(body) or _bodies_inside.has(body.get_instance_id()):
+		return
+	_bodies_inside[body.get_instance_id()] = body
 	_last_body = body as Node2D
 	player_entered.emit(self, body)
 	var d = _director()
@@ -197,10 +223,10 @@ func _on_body_entered(body: Node) -> void:
 
 
 func _on_body_exited(body: Node) -> void:
-	if not _matches(body):
+	if not _matches(body) or not _bodies_inside.has(body.get_instance_id()):
 		return
-	_body_count = maxi(_body_count - 1, 0)
-	if _body_count > 0:
+	_bodies_inside.erase(body.get_instance_id())
+	if not _bodies_inside.is_empty():
 		return              # 多个目标时，最后一个离开才算数
 	player_exited.emit(self, body)
 	var d = _director()
@@ -234,6 +260,13 @@ func _matches(body: Node) -> bool:
 	return true
 
 
+## 目标此刻是否"可能"真的在本区域附近：只读节点当前坐标，不碰滞后的物理服务器缓存。
+func _body_near_zone(body: Node) -> bool:
+	if not (body is Node2D):
+		return false
+	return global_rect().grow(ENTER_NEAR_MARGIN).has_point((body as Node2D).global_position)
+
+
 func _compute_depth() -> int:
 	if not parent_zone.is_empty():
 		var p := get_node_or_null(parent_zone) as AuZone
@@ -248,6 +281,9 @@ func _compute_depth() -> int:
 	return d
 
 
+## 开局就在区域内时 body_entered 的时序不可靠，延迟一帧补登记初值。
+## 入树时旧坐标造成的幽灵重叠由 _on_body_entered() 的下一物理帧复核统一过滤；
+## 与物理信号重复补登记时，由 _bodies_inside 的集合去重兜住。
 func _sync_initial_overlap() -> void:
 	if not is_inside_tree():
 		return

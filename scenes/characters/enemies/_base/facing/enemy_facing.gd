@@ -289,9 +289,13 @@ func _check_facing(delta: float) -> void:
 	if bad:
 		mismatch_t = 0.0 if mismatch_t < 0.0 else mismatch_t + delta
 		if mismatch_t > 0.5:
+			# 占位符顺序：名字 / 状态 / 持续秒数 / 逻辑朝向 / scale.x / velocity.x / clip。
+			# 漏掉 mismatch_t 会把 clip(StringName) 错位喂给 %.1f，报
+			# "String formatting error: a number is required."，且整条 warning 变成原始格式串。
 			push_warning("%s[%s]: 朝向/位移不一致 %.2fs — move_direction=%d, scale.x=%.2f, velocity.x=%.1f, clip=%s"
 					% [_enemy.name,
 					_enemy.state_machine.get_state_name() if _enemy.state_machine != null else &"?",
+					mismatch_t,
 					_enemy.move_direction, _enemy.animated_sprite.scale.x, _enemy.velocity.x,
 					_enemy.action_animation_player.current_animation
 							if _enemy.action_animation_player != null else &"?"])

@@ -74,6 +74,7 @@ collision_mask = 29
 script = ExtResource("1_ylc4c")
 slash_down_bounce_height_units = 10.0
 damage_knockback_y = 600.0
+initial_health = 10
 
 [node name="Timer" type="Node" parent="." unique_id=2135656479]
 

@@ -53,6 +53,7 @@
 [ext_resource type="Texture2D" uid="uid://btdgyh4rc3x0m" path="res://assets/sprites/environment/moss_hole/mosshole_wall_0.png" id="48_texture2d"]
 [ext_resource type="PackedScene" uid="uid://bqsqwrfub1mkt" path="res://scenes/characters/enemies/enemy_ground_mosscreep/mosscreep.tscn" id="49_hvrvb"]
 [ext_resource type="Texture2D" uid="uid://b1hfk7p6v3ij1" path="res://assets/sprites/environment/moss_hole/mosshole_ground_0.png" id="49_texture2d"]
+[ext_resource type="PackedScene" path="res://scenes/characters/enemies/enemy_aspid_hunter/enemy_aspid_hunter.tscn" id="50_le7kb"]
 [ext_resource type="Texture2D" uid="uid://7ilo1vydvru8" path="res://assets/sprites/environment/moss_hole/mosshole_wall_1.png" id="50_texture2d"]
 [ext_resource type="Texture2D" uid="uid://bvkeu5fo02yy4" path="res://assets/sprites/environment/moss_hole/mosshole_floor_0.png" id="51_texture2d"]
 [ext_resource type="Texture2D" uid="uid://dhu3janiarvlx" path="res://assets/sprites/environment/moss_hole/lake_water.png" id="52_texture2d"]
@@ -74,6 +75,7 @@
 [ext_resource type="Script" uid="uid://0anauft5nso" path="res://addons/camera_director/AuCameraLockArea.gd" id="67_akqlf"]
 [ext_resource type="Texture2D" uid="uid://d3u37o1qy5v8x" path="res://assets/sprites/environment/moss_hole/mosshole_bone_c_.png" id="67_texture2d"]
 [ext_resource type="Texture2D" uid="uid://pnuqea280sri" path="res://assets/textures/lights/circle.png" id="68_texture2d"]
+[ext_resource type="PackedScene" path="res://addons/zone_director/scenes/zone.tscn" id="72_ygeiw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kill"]
 size = Vector2(6400, 123)
@@ -160,7 +162,7 @@ size = Vector2(300, 200)
 size = Vector2(500, 400)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7"]
-size = Vector2(400, 400)
+size = Vector2(400, 417)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8"]
 size = Vector2(500, 200)
@@ -178,10 +180,10 @@ size = Vector2(80, 951)
 size = Vector2(354, 400)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_13"]
-size = Vector2(1030, 200)
+size = Vector2(1030, 41.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_14"]
-size = Vector2(750, 200)
+size = Vector2(750, 65)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_15"]
 size = Vector2(350, 75)
@@ -196,7 +198,7 @@ size = Vector2(130, 50)
 size = Vector2(250, 60)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_19"]
-size = Vector2(273.5, 70)
+size = Vector2(273.5, 61.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_20"]
 size = Vector2(275, 70)
@@ -216,7 +218,7 @@ size = Vector2(79, 285)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gatewall"]
 size = Vector2(40, 600)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_le7kb"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ygeiw"]
 resource_local_to_scene = true
 size = Vector2(3567, 11)
 
@@ -1306,6 +1308,7 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_06" index="0" unique_id=1577760903]
+position = Vector2(0, -8.5)
 shape = SubResource("RectangleShape2D_7")
 
 [node name="Platform_07" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="6" unique_id=193757420]
@@ -1365,6 +1368,7 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_13" index="0" unique_id=1563560175]
+position = Vector2(0, -58.5)
 shape = SubResource("RectangleShape2D_13")
 
 [node name="Platform_14" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="13" unique_id=2127275989]
@@ -1373,6 +1377,7 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_14" index="0" unique_id=1241581590]
+position = Vector2(0, -20.75)
 shape = SubResource("RectangleShape2D_13")
 
 [node name="Platform_15" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="14" unique_id=280315927]
@@ -1389,6 +1394,7 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_16" index="0" unique_id=1151852934]
+position = Vector2(0, -67.5)
 shape = SubResource("RectangleShape2D_14")
 
 [node name="Platform_17" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="16" unique_id=1505376240]
@@ -1667,39 +1673,7 @@ collision_layer = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/MossFloor_13/StepArea" index="0" unique_id=787992567]
 shape = SubResource("RectangleShape2D_19")
 
-[node name="MossFloor_14" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="35" unique_id=638428212]
-position = Vector2(-525, 715)
-collision_layer = 4
-collision_mask = 79
-script = ExtResource("12_script")
-visual_path = NodePath("../../Foreground/MossFloorVisual_14")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/MossFloor_14" index="0" unique_id=78870020]
-shape = SubResource("RectangleShape2D_19")
-
-[node name="StepArea" type="Area2D" parent="Obstacles/MossFloor_14" index="1" unique_id=1008223677]
-collision_layer = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/MossFloor_14/StepArea" index="0" unique_id=1306023242]
-shape = SubResource("RectangleShape2D_19")
-
-[node name="MossFloor_15" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="36" unique_id=1788233857]
-position = Vector2(-370, 710)
-collision_layer = 4
-collision_mask = 79
-script = ExtResource("12_script")
-visual_path = NodePath("../../Foreground/MossFloorVisual_15")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/MossFloor_15" index="0" unique_id=1185721677]
-shape = SubResource("RectangleShape2D_19")
-
-[node name="StepArea" type="Area2D" parent="Obstacles/MossFloor_15" index="1" unique_id=2077157100]
-collision_layer = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/MossFloor_15/StepArea" index="0" unique_id=1507167861]
-shape = SubResource("RectangleShape2D_19")
-
-[node name="MossFloor_16" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="37" unique_id=199285952]
+[node name="MossFloor_16" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="35" unique_id=199285952]
 position = Vector2(-800, 995)
 collision_layer = 4
 collision_mask = 79
@@ -1715,7 +1689,7 @@ collision_layer = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/MossFloor_16/StepArea" index="0" unique_id=1250027391]
 shape = SubResource("RectangleShape2D_19")
 
-[node name="MossFloor_17" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="38" unique_id=880917197]
+[node name="MossFloor_17" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="36" unique_id=880917197]
 position = Vector2(-1000, 995)
 collision_layer = 4
 collision_mask = 79
@@ -1731,14 +1705,14 @@ collision_layer = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/MossFloor_17/StepArea" index="0" unique_id=1048195145]
 shape = SubResource("RectangleShape2D_19")
 
-[node name="MossFloor_18" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="39" unique_id=1943650645]
+[node name="MossFloor_18" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="37" unique_id=1943650645]
 position = Vector2(-2425, 845)
 collision_layer = 4
 collision_mask = 79
 script = ExtResource("12_script")
 visual_path = NodePath("../../Foreground/MossFloorVisual_18")
 
-[node name="Bone_01" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="40" unique_id=159190965]
+[node name="Bone_01" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="38" unique_id=159190965]
 position = Vector2(-1900, 850)
 collision_layer = 4
 collision_mask = 79
@@ -1752,7 +1726,7 @@ collision_layer = 0
 position = Vector2(0, -30)
 shape = SubResource("RectangleShape2D_bone01")
 
-[node name="Bone_02" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="41" unique_id=1143034257]
+[node name="Bone_02" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="39" unique_id=1143034257]
 position = Vector2(-2050, 955)
 collision_layer = 4
 collision_mask = 79
@@ -1766,7 +1740,7 @@ collision_layer = 0
 position = Vector2(0, -30)
 shape = SubResource("RectangleShape2D_bone02")
 
-[node name="Bone_05" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="42" unique_id=396320543]
+[node name="Bone_05" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="40" unique_id=396320543]
 position = Vector2(-2000, 950)
 collision_layer = 4
 collision_mask = 79
@@ -1780,7 +1754,7 @@ collision_layer = 0
 position = Vector2(0, -30)
 shape = SubResource("RectangleShape2D_bone05")
 
-[node name="Bone_06" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="43" unique_id=1564282452]
+[node name="Bone_06" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="41" unique_id=1564282452]
 position = Vector2(-2150, 970)
 collision_layer = 4
 collision_mask = 79
@@ -1794,7 +1768,7 @@ collision_layer = 0
 position = Vector2(0, -30)
 shape = SubResource("RectangleShape2D_bone06")
 
-[node name="GateWall_ToMossHole" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="44" unique_id=984822470]
+[node name="GateWall_ToMossHole" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="42" unique_id=984822470]
 position = Vector2(2600, 800)
 collision_layer = 4
 collision_mask = 79
@@ -1803,7 +1777,7 @@ collision_mask = 79
 position = Vector2(33, 0)
 shape = SubResource("RectangleShape2D_gatewall")
 
-[node name="Chest" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="45" unique_id=476091609 instance=ExtResource("45_3lc2n")]
+[node name="Chest" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="43" unique_id=476091609 instance=ExtResource("45_3lc2n")]
 position = Vector2(-1998, 177)
 persistent_id = "chest:level_1/01"
 
@@ -1833,6 +1807,25 @@ gate_id = &"moss_hole_0_left"
 
 [node name="Mosscreep" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=220108385 instance=ExtResource("49_hvrvb")]
 position = Vector2(1117, 1150)
+step_up_height = 12.0
+step_up_probe = 8.0
+
+[node name="Mosscreep2" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="1" unique_id=1164917973 instance=ExtResource("49_hvrvb")]
+position = Vector2(-400, 625)
+step_up_height = 12.0
+step_up_probe = 8.0
+
+[node name="AspidHunter" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="2" unique_id=216059343 instance=ExtResource("50_le7kb")]
+position = Vector2(382, 737)
+enemy_zone = NodePath("../../EnemyZones/EnemyZone")
+
+[node name="AspidHunter2" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="3" unique_id=450812821 instance=ExtResource("50_le7kb")]
+position = Vector2(-1182, 437)
+enemy_zone = NodePath("../../EnemyZones/EnemyZone2")
+
+[node name="AspidHunter3" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="4" unique_id=1434398845 instance=ExtResource("50_le7kb")]
+position = Vector2(-2182, 337)
+enemy_zone = NodePath("../../EnemyZones/EnemyZone3")
 
 [node name="Bg_001" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=1866976924]
 z_index = 2
@@ -2270,12 +2263,23 @@ size = Vector2(200, 50)
 energy = 0.0
 
 [node name="LakeLight" type="PointLight2D" parent="Lights" parent_id_path=PackedInt32Array(1627484379) index="1" unique_id=2126448393]
-visible = false
 position = Vector2(-1647, 1088)
 color = Color(0.35, 1, 0.55, 1)
 energy = 1.6
 texture = ExtResource("68_texture2d")
 texture_scale = 3.0
+
+[node name="EnemyZone" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="0" unique_id=979892577 instance=ExtResource("72_ygeiw")]
+position = Vector2(298, 742)
+size = Vector2(1000, 700)
+
+[node name="EnemyZone2" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="1" unique_id=1625702739 instance=ExtResource("72_ygeiw")]
+position = Vector2(-1198, 600)
+size = Vector2(1000, 700)
+
+[node name="EnemyZone3" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="2" unique_id=633301943 instance=ExtResource("72_ygeiw")]
+position = Vector2(-2198, 500)
+size = Vector2(500, 700)
 
 [node name="LeftCameraLock" type="Area2D" parent="CameraLock/Areas" parent_id_path=PackedInt32Array(1193241330) index="0" unique_id=1759258753 node_paths=PackedStringArray("vertical_lock_marker")]
 position = Vector2(-2195, -325)
@@ -2295,7 +2299,7 @@ position = Vector2(-1827, 242)
 
 [node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0" unique_id=1116790881]
 position = Vector2(-193.5, 792.5)
-shape = SubResource("RectangleShape2D_le7kb")
+shape = SubResource("RectangleShape2D_ygeiw")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." index="18" unique_id=1885032864]
 color = Color(1.08, 1.12, 1.06, 1)

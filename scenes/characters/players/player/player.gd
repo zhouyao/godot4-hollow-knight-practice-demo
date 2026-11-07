@@ -173,6 +173,13 @@ func _ready() -> void:
 	# 防止换场景 / 重开战斗后残留 true。
 	PlayerCombat.is_attacking = false
 
+	# 坐下烟雾只在 sit 动画期间显示：动画库的 RESET 轨道 / 编辑器预览可能把 visible
+	# 留在 true，并把 frame 停在特效最后一帧。入场时统一复位，避免开局或换关后
+	# 角色身上挂着一张静态烟雾图。
+	effect_animated_sprite.visible = false
+	effect_animated_sprite.stop()
+	effect_animated_sprite.frame = 0
+
 	gravity = 2.0 * max_jump_height / pow(jump_duration, 2)
 	max_jump_velocity = -sqrt(2.0 * gravity * max_jump_height)
 	min_jump_velocity = -sqrt(2.0 * gravity * min_jump_height)

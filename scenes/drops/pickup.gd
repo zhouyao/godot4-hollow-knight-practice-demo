@@ -42,14 +42,17 @@ class_name Pickup
 
 enum Phase { SETTLE, IDLE, MAGNET }
 
+## 落地射线的容差（像素）：起点上抬、终点下探各留一点，
+## 避免金币贴地时射线从碰撞体内部起手反而打不到地面。
+const GROUND_PROBE_SKIN := 4.0
+
 var _phase := Phase.SETTLE
 var _vel := Vector2.ZERO
-var _ground_y := 0.0
 var _age := 0.0
 var _player: Node2D = null
 ## 是否已由 DropSpawner 抛出：场景里预置的 Pickup（放在 Items 下）不走 launch()。
 var _launched := false
-## 地面高度尚未探测：统一推迟到第一个物理帧（射线查询必须在物理帧内）。
+## 首帧贴地判定：射线查询必须在物理帧内，统一推迟到第一个物理帧。
 var _need_probe := true
 
 @onready var _audio: AudioStreamPlayer2D = $Audio/Pickup as AudioStreamPlayer2D
@@ -72,10 +75,9 @@ func launch(dir: Vector2) -> void:
 func _physics_process(delta: float) -> void:
 	if _need_probe:
 		_need_probe = false
-		_ground_y = _probe_ground_y()
 		# 预置在场景里的（放在 Items 下）没被抛出：已在地面就直接待拾取，
 		# 悬空摆放的则走 SETTLE 自由落体。
-		if not _launched and global_position.y >= _ground_y - 0.5:
+		if not _launched and is_finite(_probe_ground(GROUND_PROBE_SKIN, global_position)):
 			_set_phase(Phase.IDLE)
 
 	_age += delta
@@ -94,17 +96,26 @@ func _physics_process(delta: float) -> void:
 			_magnet(delta)
 
 
+## 重力积分 + 逐帧落地检测：金币是横向抛出的，出生点正下方的平台未必是它真正
+## 会落到的地方，所以每帧按"当前 x + 本帧位移"向下打一条短射线，飞出平台边缘就继续下落。
+## 打不到地面也不再钳到出生高度（那会让空中击杀的掉落物凭空悬停），
+## 而是继续自由落体，掉出地图后由 life_time 兜底清理。
 func _integrate(delta: float) -> void:
 	_vel.y += fall_gravity * delta
-	global_position += _vel * delta
-	if global_position.y < _ground_y:
-		return
-	global_position.y = _ground_y
-	if bounce > 0.0 and absf(_vel.y) > 120.0:
-		_vel = Vector2(_vel.x * 0.4, -absf(_vel.y) * bounce)
-		return
-	_vel = Vector2.ZERO
-	_set_phase(Phase.IDLE)
+	var step := _vel * delta
+	var pos := global_position + step
+	if step.y > 0.0:
+		var ground_y := _probe_ground(step.y, Vector2(pos.x, global_position.y))
+		if is_finite(ground_y):
+			pos.y = ground_y
+			global_position = pos
+			if bounce > 0.0 and absf(_vel.y) > 120.0:
+				_vel = Vector2(_vel.x * 0.4, -absf(_vel.y) * bounce)
+				return
+			_vel = Vector2.ZERO
+			_set_phase(Phase.IDLE)
+			return
+	global_position = pos
 
 
 ## IDLE 期间主动查一次当前重叠的玩家。
@@ -124,7 +135,8 @@ func _check_idle_magnet() -> void:
 func _magnet(delta: float) -> void:
 	var p := _get_player()
 	if p == null:
-		_set_phase(Phase.IDLE)
+		# 目标消失时恢复重力：磁吸可能已经把金币带到半空，回 IDLE 会让它悬停。
+		_set_phase(Phase.SETTLE)
 		return
 	if _age < pick_delay:
 		return
@@ -136,20 +148,22 @@ func _magnet(delta: float) -> void:
 	global_position += to_p.normalized() * minf(magnet_speed * delta, d)
 
 
-## 向下打一条射线求地面高度：mask 只查 Objects 层，避免被敌人/投射物干扰。
-## 打不到（悬空 / 掉出地图）时退化为出生高度，配合 life_time 自动消失。
-func _probe_ground_y() -> float:
+## 从 at 向下打一条「本帧位移」长度的射线找地面：返回命中点 y，没命中返回 INF。
+## mask 只查 Objects 层，避免被敌人 / 投射物干扰；起点上抬 GROUND_PROBE_SKIN，
+## 让贴地的金币也能从地面上方起手命中，而不是从碰撞体内部起手被忽略。
+func _probe_ground(length: float, at: Vector2) -> float:
 	var space := get_world_2d().direct_space_state
 	if space == null:
-		return global_position.y
+		return INF
+	var from := at - Vector2(0.0, GROUND_PROBE_SKIN)
 	var q := PhysicsRayQueryParameters2D.create(
-			global_position, global_position + Vector2(0.0, 800.0))
+			from, from + Vector2(0.0, length + GROUND_PROBE_SKIN))
 	q.collision_mask = Globals.LAYER_OBJECTS
 	q.exclude = [get_rid()]
 	var hit := space.intersect_ray(q)
-	if hit.is_empty():
-		return global_position.y
-	return float(hit.get("position", global_position).y)
+	if not hit.has("position"):
+		return INF
+	return float(hit["position"].y)
 
 
 func _on_body_entered(body: Node2D) -> void:
@@ -162,7 +176,8 @@ func _on_body_entered(body: Node2D) -> void:
 
 func _on_body_exited(body: Node2D) -> void:
 	if body == _player and _phase == Phase.MAGNET:
-		_set_phase(Phase.IDLE)
+		# 没被吃掉的金币继续下落，而不是停在玩家离开时的那个空中高度。
+		_set_phase(Phase.SETTLE)
 
 
 ## 阶段切换的唯一入口：必须走这里，子类（CoinPickup 等）才能收到

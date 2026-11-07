@@ -11,7 +11,8 @@ class_name EnemyChaseState
 ## 走法同样不再按怪物类型建子类，而是按 **贴地 / 全向** 两条分支收在本文件里，
 ## 由 locomotion.nav_planar_only 一处分派：
 ##   _planar_chase_move() —— 地面怪：沿地水平靠近，前方踏空时站定张望、到点放弃
-##   _omni_chase_move()   —— 飞行怪 / 水下怪：全向靠近，进入保持距离后只留纵向分量
+##   _omni_chase_move()   —— 飞行怪 / 水下怪：全向靠近；视线被掩体挡住时先绕到
+##                            有视线的射击位，看得见玩家且进入射程才站定吐弹
 ## 逐敌人可变状态（_blocked_time 等）留在本状态节点上，不进共享的 Locomotion 资源。
 
 ## 追击速度倍率：乘以 enemy.move_speed。
@@ -30,12 +31,22 @@ class_name EnemyChaseState
 ## 前方踏空（悬崖 / 平台边缘）导致无法靠近目标时，坚持多久放弃战斗回巢（秒）。仅贴地怪。
 ## 站定张望比卡在边缘来回掉头体面得多，也让这场打不着的战斗能正常收场（chase → return）。
 @export var blocked_give_up_time: float = 1.5
+## 全向追击时连续这么久"想动却没产生位移"即判定卡住（秒）：换绕行侧 + 短暂脱困。
+## 只靠前视射线挡不住所有几何：怪可能钻进与身体等宽的缝，射线说能过、身体过不去。
+@export var chase_stuck_time: float = 0.6
 ## 注：以上默认值取地面怪的量级（速度 1.0 / 射程 400 / 近战 64 / 保持 140）。
 ## 飞行怪的量级（1.5 / 500 / 140 / 120）写在各自 .tscn 的 chase 节点上。
 
 var _attack_timer := 0.0
 ## 连续无法靠近目标的累计时长（秒）：达到 blocked_give_up_time 即丢战。仅贴地怪。
 var _blocked_time := 0.0
+## 全向追击的卡住看门狗：位移锚点与"净位移一直很小"的累计时长。
+## 用锚点而不是逐帧位移：卡在窄缝里时 move_and_slide() 会让身体小幅抖动，
+## 逐帧比较会不停清零计时，明明没挪窝却永远判不出卡住。
+var _stuck_anchor := Vector2.ZERO
+var _chase_stuck_time := 0.0
+## 连续脱困次数：一直够不到玩家就主动收兵，别无限期顶着掩体。
+var _stuck_resets := 0
 
 func enter(_from: StringName) -> void:
 	# 声明循环动作（而不是只 _play_action）：转身动画播完要恢复到它，
@@ -45,6 +56,9 @@ func enter(_from: StringName) -> void:
 	# 旧版飞行侧这里按 _from 分了两支，但两支都是把计时器置 0，是死分支。
 	_attack_timer = 0.0
 	_blocked_time = 0.0
+	_stuck_anchor = enemy.global_position
+	_chase_stuck_time = 0.0
+	_stuck_resets = 0
 
 func update(delta: float) -> void:
 	var player := enemy.get_player()
@@ -62,7 +76,9 @@ func get_transition(delta: float) -> StringName:
 	return _check_combat_transition(delta)
 
 ## 统一转换：离开可活动介质→丢战回巢；战斗丢失→RETURN；
-## 进入攻击距离且冷却走完→ATTACK；否则空。
+## 进入攻击距离、看得见玩家且冷却走完→ATTACK；否则空。
+## 视线这一条是必须的：弹丸会被 Objects 层掩体直接吃掉（projectile_aspid.gd），
+## 隔着掩体进 attack 只会站定吐空弹，看起来就是"怪卡在平台上发呆"。
 func _check_combat_transition(delta: float) -> StringName:
 	# 变量名不能用 machine —— 那是基类 State 的属性，同名局部变量会遮蔽它。
 	var esm := enemy.state_machine
@@ -81,6 +97,7 @@ func _check_combat_transition(delta: float) -> StringName:
 	var player := enemy.get_player()
 	if player != null \
 			and enemy.global_position.distance_to(player.global_position) <= _attack_range() \
+			and enemy.has_clear_shot() \
 			and _can_attack(delta):
 		return EnemyStateNames.ATTACK
 	return &""
@@ -115,7 +132,7 @@ func _chase_move(player: Node2D, delta: float) -> void:
 	if enemy.is_planar_mover():
 		_planar_chase_move(player, delta)
 	else:
-		_omni_chase_move(player)
+		_omni_chase_move(player, delta)
 
 ## 贴地靠近：远程怪追到保持距离内就停下（仍面朝目标），且全程不踏空。
 func _planar_chase_move(player: Node2D, delta: float) -> void:
@@ -150,14 +167,68 @@ func _planar_chase_move(player: Node2D, delta: float) -> void:
 
 	_blocked_time = 0.0
 
-## 全向靠近（飞行 / 水下）：朝目标飞，进入保持距离后只保留纵向分量（站定吐弹的水平间距）。
-func _omni_chase_move(player: Node2D) -> void:
-	var target_pos := player.global_position
-	var dir := enemy.nav_velocity(target_pos, _chase_speed())
-	# 与目标保持水平间距，避免贴脸冲撞。
-	if absf(target_pos.x - enemy.global_position.x) <= _keep_distance():
-		dir.x = 0.0
-	enemy.velocity = dir
-	# 朝向必须用带死区的 _face_toward，不能用 signf(dir.x)：
-	# 玩家几乎在正上 / 正下方时 x 差会在 0 附近抖动，取符号会导致原地疯狂翻面。
-	_face_toward(target_pos.x)
+## 全向靠近（飞行 / 水下）：
+##   看得见玩家 + 在射程内 → 站定吐弹（仅远程怪），不再直冲玩家；
+##   视线被掩体挡住 → 先飞到"打得到玩家"的射击位，由 nav_velocity() 的避障绕开实体；
+##   其余情况 → 朝玩家靠近。
+## 旧实现在 |dx| <= shoot_keep_distance 时把 dir.x 清零：玩家躲在正下方的掩体下时，
+## 速度会变成纯垂直分量，move_and_slide() 静默吃掉位移，怪就永远顶着平台。
+func _omni_chase_move(player: Node2D, delta: float) -> void:
+	var player_pos := player.global_position
+	var pos := enemy.global_position
+	var dist := pos.distance_to(player_pos)
+	var keep := _keep_distance()
+	var speed := _chase_speed()
+	var sight := enemy.has_clear_shot()
+
+	# 卡住看门狗：velocity 有值、move_and_slide() 却没推动身体（贴在掩体 / 卡在窄缝）。
+	# 站定吐弹不算卡住；到点就换绕行侧、丢弃射击位并短暂朝最开阔的方向脱离。
+	# 判据是"距锚点的净位移"：正常绕行每 0.6 秒能走 70px 以上，不会被误判。
+	var wants_to_move := not sight or dist > _attack_range()
+	if not wants_to_move:
+		_stuck_anchor = pos
+		_chase_stuck_time = 0.0
+		_stuck_resets = 0
+	else:
+		_chase_stuck_time += delta
+		if pos.distance_to(_stuck_anchor) >= 16.0:
+			_stuck_anchor = pos
+			_chase_stuck_time = 0.0
+			_stuck_resets = 0
+		elif _chase_stuck_time >= _tuning(&"chase_stuck_time", chase_stuck_time):
+			if enemy.flight_avoidance_enabled:
+				enemy.flight_nav.on_stuck()
+				_stuck_resets += 1
+				# 换侧、换射击位、脱困都试过还够不到人：收兵回巢，交给视线/领地
+				# 决定何时重开战，比一直贴着掩体抖到 combat_lose_time 体面得多。
+				if _stuck_resets >= 3:
+					enemy._set_combat(false)
+					return
+			_stuck_anchor = pos
+			_chase_stuck_time = 0.0
+
+	if enemy.has_projectile() and sight and dist <= _attack_range():
+		if keep > 0.0 and dist < keep * 0.75:
+			# 贴太近：朝反方向拉开一点，同样走避障，避免倒着飞又撞上掩体。
+			var back := pos + player_pos.direction_to(pos) * keep
+			enemy.velocity = enemy.nav_velocity(back, speed * 0.6)
+		else:
+			_stop()
+		_face_toward(player_pos.x)
+		enemy.flight_nav.reset()
+		return
+
+	var target_pos := player_pos
+	if not sight and enemy.flight_avoidance_enabled:
+		var spot := enemy.flight_nav.find_firing_spot(
+				player_pos, maxf(keep, 100.0), _attack_range())
+		if enemy.flight_nav.has_firing_spot:
+			target_pos = spot
+	enemy.velocity = enemy.nav_velocity(target_pos, speed)
+	# 朝向必须用带死区的 _face_toward，且跟着"这帧真正要去的地方"：
+	# 绕行时头朝侧面，而不是一直盯着墙后的玩家原地翻面。脱困阶段尤其要跟速度，
+	# 否则 facing 的 DEBUG 自检会持续报"朝向/位移不一致"。
+	var face_x := target_pos.x
+	if enemy.flight_nav.is_escaping:
+		face_x = pos.x + enemy.velocity.x
+	_face_toward(face_x)

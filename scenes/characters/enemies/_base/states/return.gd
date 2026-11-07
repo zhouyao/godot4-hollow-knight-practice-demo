@@ -7,7 +7,7 @@ class_name EnemyReturnState
 ##
 ## 走法同样按 **贴地 / 全向** 两条分支收在本文件里，由 locomotion.nav_planar_only 分派：
 ##   _planar_return_move() —— 地面怪：沿地走回家，朝家那一步会踏空时先退避再重新规划
-##   _omni_return_move()   —— 飞行怪 / 水下怪：直飞 / 直游回巢，并保持头朝前进方向
+##   _omni_return_move()   —— 飞行怪 / 水下怪：带局部避障地飞 / 游回巢，并保持头朝前进方向
 ## 逐敌人可变状态（_escape_* 等）留在本状态节点上，不进共享的 Locomotion 资源。
 
 ## 抵达出生点的判定距离（像素）。
@@ -20,7 +20,8 @@ class_name EnemyReturnState
 ## 连续退避超过这么久，说明"家在对岸、根本过不去"：放弃防踏空判定，直接朝家走。仅贴地怪。
 ## 保留这条兜底是为了让 return 一定能结束 —— 否则敌人会永远卡在平台边缘回不了巢。
 @export var escape_patience: float = 3.0
-## 横移连续这么久没有产生实际位移即判定为"卡死"（秒），直接归位到出生点。
+## 连续这么久没有产生实际位移即判定为"卡死"（秒），直接归位到出生点。
+## 贴地怪按 x 位移判、全向怪按 2D 位移判（见 _tick_stuck），飞行怪同样需要这条兜底。
 ## 关卡的 NavigationRegion2D 常是一整块大矩形，不反映平台高差；导航会径直穿过
 ## 高墙，而 move_and_slide() 只会静默吃掉位移。矮台阶已由 EnemyGround.try_step_up()
 ## 跨过，剩下跨不过去的地形必须靠这条兜底，否则 return 会永远停在半路。
@@ -31,8 +32,10 @@ var _escape_origin: float = 0.0
 var _escape_time: float = 0.0
 ## 退避超时后置 true：本状态下不再检查悬崖，一路朝家走。
 var _ignore_ledge: bool = false
-## 卡死看门狗：上一帧的 x 与连续无位移时长。
+## 卡死看门狗：上一帧位置与连续无位移时长。
+## 贴地怪只按 x 判断（重力/落地使 y 一直有微小变化），全向怪按 2D 位移判断。
 var _last_x: float = 0.0
+var _last_pos: Vector2 = Vector2.ZERO
 var _stuck_time: float = 0.0
 
 func enter(_from: StringName) -> void:
@@ -43,6 +46,7 @@ func enter(_from: StringName) -> void:
 	_escape_time = 0.0
 	_ignore_ledge = false
 	_last_x = enemy.global_position.x
+	_last_pos = enemy.global_position
 	_stuck_time = 0.0
 
 func update(delta: float) -> void:
@@ -68,19 +72,22 @@ func _has_arrived() -> bool:
 	return d <= _tuning(&"arrive_distance", arrive_distance)
 
 ## 只看"实际走了没有"：导航有速度不等于 move_and_slide() 真的推动了身体。
-## 撞墙、dir.x == 0、转身动画站定都会让 x 停住，逐帧累计；一有位移就清零，
+## 撞墙、被掩体卡住、转身动画站定都会让位置停住，逐帧累计；一有位移就清零，
 ## 所以退避（主动背离家）与正常行走都不会误触发。
+## 全向怪同样需要这条兜底：飞行怪回巢时会直线撞上平台，之前被 is_planar_mover()
+## 挡在门外，结果丢战后悬在半空永远回不了家。改用 2D 位移即可，因为贴地怪的
+## y 受重力影响不能拿来判断卡死，仍沿用 x 判据。
 func _tick_stuck(delta: float) -> void:
-	# 全向怪的 home_distance 是 2D 距离，可能正在纯纵向归位（x 本来就不该动），
-	# 不能拿 x 是否变化当"卡死"。这个坑只出在沿地走的怪身上。
-	if not enemy.is_planar_mover():
-		return
-	var x := enemy.global_position.x
-	if absf(x - _last_x) > 0.5:
-		_last_x = x
+	var pos := enemy.global_position
+	var moved := absf(pos.x - _last_x) > 0.5 if enemy.is_planar_mover() \
+			else pos.distance_to(_last_pos) > 0.5
+	if moved:
+		_last_x = pos.x
+		_last_pos = pos
 		_stuck_time = 0.0
 		return
-	_last_x = x
+	_last_x = pos.x
+	_last_pos = pos
 	_stuck_time += delta
 	if _stuck_time >= _tuning(&"stuck_give_up_time", stuck_give_up_time):
 		_snap_home()
@@ -93,6 +100,7 @@ func _snap_home() -> void:
 	enemy.knockback = Vector2.ZERO
 	enemy.global_position = enemy.spawn_position
 	_last_x = enemy.global_position.x
+	_last_pos = enemy.global_position
 	_stuck_time = 0.0
 
 ## 本帧的返回速度（像素 / 秒）。
