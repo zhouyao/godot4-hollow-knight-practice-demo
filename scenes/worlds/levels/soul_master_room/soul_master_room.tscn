@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://cehg3yjmo25y6" path="res://scenes/worlds/levels/soul_master_room/soul_master_room.gd" id="2_script"]
 [ext_resource type="PackedScene" path="res://scenes/worlds/_base/entry_point.tscn" id="3_packedscene"]
 [ext_resource type="PackedScene" path="res://scenes/worlds/_base/level_gate.tscn" id="4_packedscene"]
-[ext_resource type="PackedScene" path="res://scenes/worlds/_base/boss_fog_gate.tscn" id="5_packedscene"]
+[ext_resource type="PackedScene" uid="uid://cwfa8ohfnlct7" path="res://scenes/worlds/_base/invisible_wall.tscn" id="5_packedscene"]
 [ext_resource type="AudioStream" uid="uid://sv5wlbx8kc4s" path="res://assets/sounds/ambience/tearcity_boss_.ogg" id="7_audiostream"]
 [ext_resource type="Script" uid="uid://1033cnat8g0l" path="res://scenes/worlds/_base/parallax_bg.gd" id="8_script"]
 [ext_resource type="Texture2D" uid="uid://pnuqea280sri" path="res://assets/textures/lights/circle.png" id="9_texture2d"]
@@ -13,14 +13,19 @@
 [ext_resource type="Texture2D" uid="uid://cmm1ol1ph0vti" path="res://assets/sprites/backgrounds/tear_city/ruins_mid_buildings.png" id="12_texture2d"]
 [ext_resource type="Texture2D" uid="uid://bsqh0npt6ig1c" path="res://assets/sprites/backgrounds/tear_city/BG_far_0002_a.png" id="13_texture2d"]
 [ext_resource type="Texture2D" uid="uid://cpk6311epd46n" path="res://assets/sprites/environment/tear_city/ruind_window_03.png" id="14_texture2d"]
+[ext_resource type="Script" uid="uid://c7hpea0g65weh" path="res://scenes/worlds/_base/entry_point.gd" id="15_2x50q"]
 [ext_resource type="Texture2D" uid="uid://bibxx3l2qtbas" path="res://assets/sprites/environment/tear_city/ruin_add_doorbg_straight.png" id="15_texture2d"]
 [ext_resource type="Texture2D" uid="uid://cms21ct3xw66m" path="res://assets/sprites/environment/tear_city/ruin_layered_0013_f.png" id="16_texture2d"]
 [ext_resource type="Texture2D" uid="uid://crh0o0kj5kysk" path="res://assets/sprites/environment/tear_city/GG_beam_straight.png" id="17_texture2d"]
 [ext_resource type="PackedScene" uid="uid://cakt81jhr2nea" path="res://addons/environment_fx/snow.tscn" id="18_cj3q8"]
+[ext_resource type="PackedScene" path="res://addons/zone_director/scenes/zone.tscn" id="18_cxmud"]
+[ext_resource type="PackedScene" uid="uid://dcw0gneskq823" path="res://scenes/characters/bosses/soul_master/soul_master.tscn" id="18_gvr0m"]
 [ext_resource type="Texture2D" uid="uid://d1rskrtrc54v5" path="res://assets/sprites/environment/tear_city/ruind_bridge_roof_02_r.png" id="18_texture2d"]
+[ext_resource type="Script" uid="uid://dk34x4net1iyr" path="res://scenes/characters/bosses/_base/behaviors/boss_arena_behavior.gd" id="19_bxgkl"]
 [ext_resource type="Texture2D" uid="uid://fu8phh6xi3wp" path="res://assets/sprites/props/tear_city/mage_lord_room_0002_floor.png" id="19_texture2d"]
 [ext_resource type="Script" uid="uid://0anauft5nso" path="res://addons/camera_director/AuCameraLockArea.gd" id="20_cj3q8"]
 [ext_resource type="Texture2D" uid="uid://707smxq7b8je" path="res://assets/sprites/props/tear_city/ruins_additions_0036_a.png" id="20_texture2d"]
+[ext_resource type="Texture2D" uid="uid://dxaaheqrbj4x2" path="res://assets/sprites/environment/grimm_tent/SpriteAtlasTexture-Divine-1024x2048-fmt12.png" id="22_bxgkl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2"]
 size = Vector2(1500, 154)
@@ -43,12 +48,9 @@ size = Vector2(100, 1400)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8"]
 size = Vector2(100, 1400)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_9"]
-size = Vector2(63, 240)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_cj3q8"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bxgkl"]
 resource_local_to_scene = true
-size = Vector2(796, 612)
+size = Vector2(793, 417)
 
 [node name="WorldTemplate" unique_id=560156841 instance=ExtResource("1_packedscene")]
 script = ExtResource("2_script")
@@ -297,16 +299,7 @@ collision_mask = 79
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_07" index="0" unique_id=1139619396]
 shape = SubResource("RectangleShape2D_8")
 
-[node name="Platform_08" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="7" unique_id=666077121]
-position = Vector2(-775, 730)
-collision_layer = 4
-collision_mask = 79
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_08" index="0" unique_id=1652667752]
-position = Vector2(-18.5, -139)
-shape = SubResource("RectangleShape2D_9")
-
-[node name="Platform_09" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="8" unique_id=2079025793]
+[node name="Platform_09" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="7" unique_id=2079025793]
 position = Vector2(1292, 1030)
 collision_layer = 4
 collision_mask = 79
@@ -317,42 +310,32 @@ shape = SubResource("RectangleShape2D_5")
 [node name="Sprite2D" type="Sprite2D" parent="Obstacles/Platform_09" index="1" unique_id=861689311]
 texture = ExtResource("20_texture2d")
 
-[node name="soul_master_room_right" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="0" unique_id=315250328 instance=ExtResource("3_packedscene")]
-position = Vector2(1200, 923)
-facing = 1
+[node name="SoulMasterScene" type="Node2D" parent="Enemies" parent_id_path=PackedInt32Array(1028343445) index="0" unique_id=946203530]
 
-[node name="soul_master_room_left" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="1" unique_id=1404271796 instance=ExtResource("3_packedscene")]
-position = Vector2(-1200, 923)
-facing = -1
+[node name="BossArena" parent="Enemies/SoulMasterScene" index="0" unique_id=581160266 instance=ExtResource("18_cxmud")]
+position = Vector2(-817, 15)
+size = Vector2(2120, 1000)
+centered = false
 
-[node name="soul_master_room_left" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="0" unique_id=1987354739 instance=ExtResource("4_packedscene")]
-position = Vector2(-1330, 915)
-target_area = "uid://c03g5pi0u4bey"
-target_entry = &"ruin_house_right"
-gate_id = &"soul_master_room_left"
+[node name="BossArenaBehavior" type="Node" parent="Enemies/SoulMasterScene/BossArena" index="1" unique_id=537241127]
+script = ExtResource("19_bxgkl")
+boss_node = NodePath("../../SoulMaster")
 
-[node name="soul_master_room_right" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="1" unique_id=1738813408 instance=ExtResource("4_packedscene")]
-position = Vector2(1330, 915)
-target_area = "uid://oqvqpu8ug6un"
-target_entry = &"tear_city_left"
-gate_id = &"soul_master_room_right"
-requires_ground = true
-
-[node name="BossGateLeft" parent="LevelTransitions" parent_id_path=PackedInt32Array(1356999430) index="2" unique_id=968626530 instance=ExtResource("5_packedscene")]
-position = Vector2(-780, 690)
-
-[node name="BossGateRight" parent="LevelTransitions" parent_id_path=PackedInt32Array(1356999430) index="3" unique_id=1886263914 instance=ExtResource("5_packedscene")]
-position = Vector2(1060, 685)
+[node name="SoulMaster" parent="Enemies/SoulMasterScene" index="1" unique_id=170488292 instance=ExtResource("18_gvr0m")]
+position = Vector2(300, 300)
 
 [node name="Bg_001" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=843839948]
 z_index = 2
 position = Vector2(-1041, 431)
 texture = ExtResource("18_texture2d")
 
-[node name="BossTrigger" type="Marker2D" parent="Effects" parent_id_path=PackedInt32Array(996629329) index="0" unique_id=2129691009]
-position = Vector2(200, 600)
+[node name="Bg_003" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="1" unique_id=128297296]
+z_index = 2
+position = Vector2(-1376, 857)
+scale = Vector2(-1, 1.2866251)
+texture = ExtResource("22_bxgkl")
 
-[node name="Snow" parent="Effects" parent_id_path=PackedInt32Array(996629329) index="1" unique_id=613339209 instance=ExtResource("18_cj3q8")]
+[node name="Snow" parent="Effects" parent_id_path=PackedInt32Array(996629329) index="0" unique_id=613339209 instance=ExtResource("18_cj3q8")]
 position = Vector2(0, 500)
 size = Vector2(5000, 2200)
 
@@ -387,9 +370,45 @@ can_look_down = true
 [node name="Camera_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="0" unique_id=2083762502]
 position = Vector2(570, 565)
 
+[node name="default" type="Marker2D" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="0" unique_id=116702580]
+position = Vector2(1241, 900)
+script = ExtResource("15_2x50q")
+metadata/_custom_type_script = "uid://c7hpea0g65weh"
+
+[node name="soul_master_room_right" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="1" unique_id=315250328 instance=ExtResource("3_packedscene")]
+position = Vector2(1200, 923)
+facing = 1
+
+[node name="soul_master_room_left" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="2" unique_id=1404271796 instance=ExtResource("3_packedscene")]
+position = Vector2(-1200, 923)
+facing = -1
+
+[node name="soul_master_room_left" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="0" unique_id=1987354739 instance=ExtResource("4_packedscene")]
+position = Vector2(-1330, 915)
+target_area = "uid://c03g5pi0u4bey"
+target_entry = &"ruin_house_right"
+gate_id = &"soul_master_room_left"
+
+[node name="soul_master_room_right" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="1" unique_id=1738813408 instance=ExtResource("4_packedscene")]
+position = Vector2(1349, 915)
+target_area = "uid://oqvqpu8ug6un"
+target_entry = &"tear_city_left"
+gate_id = &"soul_master_room_right"
+requires_ground = true
+
+[node name="BossWallLeft" parent="LevelTransitions" parent_id_path=PackedInt32Array(1356999430) index="2" unique_id=968626530 instance=ExtResource("5_packedscene")]
+position = Vector2(-793, 500)
+wall_size = Vector2(24, 1000)
+boss_node = NodePath("../../Enemies/SoulMasterScene/SoulMaster")
+
+[node name="BossWallRight" parent="LevelTransitions" parent_id_path=PackedInt32Array(1356999430) index="3" unique_id=1886263914 instance=ExtResource("5_packedscene")]
+position = Vector2(1275, 500)
+wall_size = Vector2(24, 1000)
+boss_node = NodePath("../../Enemies/SoulMasterScene/SoulMaster")
+
 [node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0" unique_id=1116790881]
-position = Vector2(-84, 459)
-shape = SubResource("RectangleShape2D_cj3q8")
+position = Vector2(-57.5, 356.5)
+shape = SubResource("RectangleShape2D_bxgkl")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." index="18" unique_id=1742989081]
 color = Color(1.02, 1.05, 1.1, 1)

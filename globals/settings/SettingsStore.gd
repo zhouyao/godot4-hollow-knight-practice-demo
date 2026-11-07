@@ -12,6 +12,8 @@ const DEVELOPMENT_SETTING_NAME := "Development"
 const LOCALE_KEY := "locale"
 const DEBUG_MODE_KEY := "debug_mode"
 const HOME_PATH_KEY := "home_path"
+const BOSS_HEALTH_KEY := "boss_health"
+const MOB_HEALTH_KEY := "mob_health"
 const WINDOW_MODE_KEY := "window_mode"
 const WINDOW_SIZE_KEY := "window_size"
 

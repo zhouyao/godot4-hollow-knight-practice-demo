@@ -6,11 +6,16 @@ extends Enemy
 ## 与 Enemy.enemy_death 的分工：enemy_death 负责"状态机转 defeat"，
 ## 本信号负责对外（存档标记 / 解锁 / 转场）。
 signal boss_defeated
+## BOSS 被激活（收到第一次开战请求）时发出，早于入场演出与 enter_combat。
+## 需要"一激活就封锁退路"的关卡组件（雾门等）监听它；整场战斗只发一次。
+signal boss_activated
 ## 阶段切换时发出，参数为新阶段的索引（0 起）。
 signal phase_changed(phase_index: int)
 
 ## 当前阶段索引，0 起。
 var phase_index: int = 0
+## boss_activated 只发一次：入场演出收尾、领地反复拉仇恨、受击都会再走开战路径。
+var _activated: bool = false
 
 
 #region 过场锁定与生命周期（BOSS 通用）
@@ -39,6 +44,12 @@ func is_invulnerable() -> bool:
 ## 接触伤害的"设计值"：候场 / 入场 / 招式会临时关掉它，退出时按此还原。
 ## 直接还原"进入状态时的值"只会得到 dormant 关掉的 false，BOSS 就永远不蹭人了。
 var base_contact_damage: bool = true
+
+
+## 开发设置把敌方血量分成 BOSS / 小怪两项：BOSS 走自己那一项。
+## Enemy._ready() 通过虚方法取覆盖值，基类不必反向依赖 Boss 子类。
+func _health_override() -> int:
+	return Globals.boss_health_override
 
 
 func _ready() -> void:
@@ -162,11 +173,28 @@ func resting_state() -> StringName:
 
 ## 开战入口：由 BossArena 在玩家踏入时调用，或由入场动画的方法轨道在演出结束时调用。
 ## 走 Enemy 现成的仇恨广播（enter_combat_zone → _set_combat → enter_combat 信号），
-## 关卡侧监听 enter_combat 即可切 BGM / 锁门 / 亮血条 —— 与领地开战是同一条路径。
+## 关卡侧监听 enter_combat 即可切 BGM / 亮血条 —— 与领地开战是同一条路径。
+## 需要"一激活就锁门"的组件改听 boss_activated：带入场演出的 BOSS 会先演出数秒。
 func begin_fight() -> void:
 	if dead or combat_active:
 		return
+	notify_boss_activated()
 	enter_combat_zone()
+
+
+## 领地仇恨 / 接触命中会绕过 begin_fight() 直接走这里，补发一次激活。
+## 子类覆盖后若不调 super（如 SoulMaster 的入场分支），需自行调 notify_boss_activated()。
+func enter_combat_zone() -> void:
+	notify_boss_activated()
+	super.enter_combat_zone()
+
+
+## 广播"BOSS 已激活"，幂等。放在切状态 / 拉仇恨之前，保证是第一时间发出。
+func notify_boss_activated() -> void:
+	if _activated:
+		return
+	_activated = true
+	boss_activated.emit()
 
 
 func start_phase(index: int) -> void:
@@ -181,6 +209,9 @@ func start_phase(index: int) -> void:
 func _dead() -> void:
 	super._dead()
 	boss_defeated.emit()
+	# 关卡内信号只给"撤雾墙 / 灯光"这类局部组件用；胜利 UI 常驻在 GameRoot，
+	# 跨关卡也拿不到 BOSS 节点，故再经 GameSession 广播一次（所有 BOSS 通用）。
+	GameSession.notify_boss_defeated(persistent_id)
 
 
 ## BOSS 不做尸体淡出。
@@ -287,6 +318,31 @@ func arena_rect() -> Rect2:
 	return Rect2()
 
 
+## 身体原点允许的最高 y（头顶刚好贴住领地上沿）；没有领地时返回 NAN。
+## 瞬移到空中 / 跃击时拿它做下限，BOSS 就不会跑到屏幕上方的天花板外侧。
+func arena_ceiling_y() -> float:
+	var arena := arena_rect()
+	if arena.size.y <= 0.0:
+		return NAN
+	return minf(arena.position.y + body_bottom(), arena.end.y - body_bottom())
+
+
+## 把「身体原点」坐标裁进竞技场（按碰撞体尺寸内缩）：瞬移 / 闪现落点共用，
+## 保证 BOSS 整个身体留在领地内，不会瞬到墙外或领地上方的装饰平台上。
+## 没有领地时原样返回，兼容旧关卡布局。
+func clamp_position_to_arena(pos: Vector2) -> Vector2:
+	var arena := arena_rect()
+	if arena.size.x <= 0.0 or arena.size.y <= 0.0:
+		return pos
+	var lo_x := arena.position.x + body_half_width()
+	var hi_x := arena.end.x - body_half_width()
+	var lo_y := arena.position.y + body_bottom()
+	var hi_y := arena.end.y - body_bottom()
+	var x := clampf(pos.x, lo_x, hi_x) if lo_x <= hi_x else arena.get_center().x
+	var y := clampf(pos.y, lo_y, hi_y) if lo_y <= hi_y else arena.get_center().y
+	return Vector2(x, y)
+
+
 ## 地形检测用的碰撞 mask（取探测器的 mask，缺省 4 = 地形层）。
 func ground_mask() -> int:
 	return ground_probe.collision_mask if ground_probe != null else 4
@@ -331,12 +387,24 @@ func _probe_length() -> float:
 ## x 处地面顶部的 y（向下打一条长射线）。
 ## 没有地面时返回 fallback：默认 NAN，便于调用方用 is_nan() 区分"悬崖"与"合法落点"；
 ## 只想兜底不区分时传自己的 y 即可。
+##
+## 有领地时射线区间以领地为准：从领地上沿向下扫到领地底边之外。旧写法
+## 「自身 y - 800 → 自身 y + 1200」有两个坑：头顶上方的天花板 / 装饰平台会被当成
+## 脚下地面（grimm_gent 的 Platform_05 顶面 y=-10，会把瞬移落点算到 y≈-387，
+## BOSS 飞出屏幕并卡在天花板上）；BOSS 一旦已经跑到高处，射线又够不到真正的地面，
+## 错误位置会被后续招式一直放大。
 func ground_y_at(x: float, fallback: float = NAN) -> float:
 	var space := get_world_2d().direct_space_state
 	if space == null:
 		return fallback
-	var from := Vector2(x, global_position.y - 800.0)
-	var to := Vector2(x, global_position.y + 1200.0)
+	var from_y := global_position.y - 800.0
+	var to_y := global_position.y + 1200.0
+	var arena := arena_rect()
+	if arena.size.y > 0.0:
+		from_y = arena.position.y + 1.0
+		to_y = arena.end.y + 200.0
+	var from := Vector2(x, from_y)
+	var to := Vector2(x, to_y)
 	var query := PhysicsRayQueryParameters2D.create(from, to)
 	query.collision_mask = ground_mask()
 	query.exclude = [get_rid()]
@@ -366,6 +434,8 @@ func find_ground_position_near(target_x: float, near_dist: float, max_dist: floa
 	if space == null:
 		return Vector2.ZERO
 	var feet := feet_offset()
+	var arena := arena_rect()
+	var has_arena := arena.size.x > 0.0 and arena.size.y > 0.0
 	# 候选（横距, 左右）：从近到远、左右交替。
 	var candidates: Array[Vector2] = [
 		Vector2(near_dist, 1.0),
@@ -375,10 +445,17 @@ func find_ground_position_near(target_x: float, near_dist: float, max_dist: floa
 	]
 	for cand_off in candidates:
 		var cand_x := target_x + cand_off.x * cand_off.y
+		if has_arena:
+			# 别把候选点挑到领地外的墙里 / 悬崖外。
+			cand_x = clampf(cand_x,
+					arena.position.x + body_half_width(), arena.end.x - body_half_width())
 		var ground_y := ground_y_at(cand_x)
 		if is_nan(ground_y):
 			continue  # 悬崖：脚下没地，跳过
 		var cand := Vector2(cand_x, ground_y - feet)
+		if has_arena:
+			# 最后一道保险：落点整体裁进领地，绝不落到领地上方的平台上。
+			cand = clamp_position_to_arena(cand)
 		if blocked_by_wall(cand):
 			continue  # 卡墙：跳过
 		return cand

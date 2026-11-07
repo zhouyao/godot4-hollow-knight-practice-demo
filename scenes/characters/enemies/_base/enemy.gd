@@ -56,9 +56,9 @@ const HIDDEN_BUT_SAVED := PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_STORAGE
 
 @export_group("生命")
 ## 最大血量，同时也是血条上限。enemy.tscn 根节点已显式覆盖为 5（脚本默认 100）。
-@export var max_health: int = 100
+@export var max_health: int = 5
 ## 初始血量：出生时取 min(initial_health, max_health)，可用于让敌人残血出场。
-@export var initial_health: int = 3
+@export var initial_health: int = 5
 
 @export_group("运动介质")
 ## 运动模式：决定垂直方向怎么动、导航是否只取水平分量、死后尸体怎么处理（落地 / 下沉）。
@@ -328,6 +328,11 @@ var combat_active: bool:
 
 
 var health: int
+## 场景里配置的原始血量：开发设置填 0（跟随关卡）时据此还原。
+var _scene_max_health: int
+var _scene_initial_health: int
+## health 初始化完成后，运行中改设置才需要顺带刷新当前血量与血条上限。
+var _health_initialized := false
 var move_direction: int = 1
 var knockback: Vector2 = Vector2.ZERO
 var dead: bool = false
@@ -378,13 +383,22 @@ func _ready() -> void:
 	# 同样必须早于状态机首帧（patrol 会立刻调 nav_velocity）。
 	flight_nav.setup(self)
 
+	# 开发设置可整体覆盖 BOSS / 小怪的出生血量：先记下场景原值，
+	# 再让 health、血条上限、BOSS 阶段比例都基于覆盖后的值计算。
+	_scene_max_health = max_health
+	_scene_initial_health = initial_health
+	_apply_health_override()
+
 	health = mini(initial_health, max_health)
+	_health_initialized = true
 	debug.setup_health(max_health, health)
 
 	# 调试模式与角色调试面板同源：开启时把 NavigationAgent2D 的 Debug 也打开。
 	# 运行中在设置菜单切换会即时同步到在场敌人；后生成的敌人在这里读当前值。
 	_sync_navigation_debug(Globals.debug_enabled)
 	Globals.debug_enabled_changed.connect(_sync_navigation_debug)
+	# 血量设置变化同样即时同步到在场敌人；连接到节点实例，销毁时自动断开。
+	Globals.enemy_health_override_changed.connect(_apply_health_override)
 
 	spawn_position = global_position
 
@@ -398,6 +412,29 @@ func _ready() -> void:
 
 	if state_machine != null:
 		state_machine.start()
+
+
+## 开发设置的出生血量覆盖：0 = 沿用关卡原值；> 0 = 该类敌人满血出生。
+## 直接改写导出的 max_health / initial_health：血条上限、BOSS 阶段比例、
+## dormant 的整场复位都读这两个属性，无需逐个同步。运行中改设置会把在场
+## 敌人重置为满血，方便反复调试；未初始化或已死亡的敌人只改属性。
+func _apply_health_override() -> void:
+	var value := _health_override()
+	if value > 0:
+		max_health = value
+		initial_health = value
+	else:
+		max_health = _scene_max_health
+		initial_health = _scene_initial_health
+	if not _health_initialized or dead:
+		return
+	health = mini(initial_health, max_health)
+	debug.setup_health(max_health, health)
+
+
+## 该类敌人当前应使用的覆盖值；Boss 子类重写为 boss_health_override。
+func _health_override() -> int:
+	return Globals.mob_health_override
 
 
 ## 解析单项 tuning 覆盖（tuning > 本节点同名导出 > fallback），与 EnemyState._tuning 同规则。

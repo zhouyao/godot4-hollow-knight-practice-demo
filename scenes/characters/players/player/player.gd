@@ -77,7 +77,7 @@ signal health_changed(health: int)
 
 @export_group("生命 Health")
 ## 最大生命值，同时也是血条上限。
-@export var max_health: int = 10
+@export var max_health: int = 8
 ## 初始血量：出生时取 min(initial_health, max_health)，可让角色残血出场。
 @export var initial_health: int = 8
 ## 受击后的无敌帧时长（秒），由 hurt_invincibility_timer 计时，期间不再结算伤害。
@@ -87,7 +87,7 @@ signal health_changed(health: int)
 ## 最大能量值，同时也是能量条上限。
 @export var max_energy: int = 10
 ## 初始能量：出生时取 min(initial_energy, max_energy)。命中敌人会 +1，可用于大招消耗。
-@export var initial_energy: int = 5
+@export var initial_energy: int = 10
 
 # ----------------------------------------------------------------------------
 # 运行时量（不导出）：由上面的配置在 _ready 换算，或由状态机逐帧维护。
@@ -577,11 +577,16 @@ func _on_player_state_changed(new_state: StringName, _old_state: StringName) -> 
 ## 但同一敌人只吃一次伤害、只回一次能量、只施加一次反冲。
 var _slash_hit_targets: Dictionary = {}
 
+## 本次下劈是否已反弹过：一次下劈最多弹一次，避免判定区内多个目标 / 重复进入事件叠加抬升。
+## 由 begin_attack() 清零；end_attack() 不清，防止挥砍被打断后又弹一次。
+var _slash_down_bounced: bool = false
 
-## 起手一次挥砍：清空命中登记表。
+
+## 起手一次挥砍：清空命中登记表与下劈反弹标记。
 ## 判定区不动 —— 它由动画轨道在 0.1s 处打开，这里提前打开会被 t=0 的关键帧（disabled=true）覆盖。
 func begin_attack() -> void:
 	_slash_hit_targets.clear()
+	_slash_down_bounced = false
 
 
 ## 申领一次命中：本次挥砍内首次命中该目标返回 true（可以结算），重复命中返回 false。
@@ -605,14 +610,34 @@ func _on_up_attack_area_body_entered(body: Node2D) -> void:
 func _on_down_attack_area_body_entered(body: Node2D) -> void:
 	if state_machine == null or state_machine.get_state_name() != PlayerStateNames.SLASH_DOWN:
 		return
-	# --- 暂不只针对于怪物，20261031
-	#if not (body is Enemy):
-	#	return
-	# 只在本次挥砍首次命中该目标时结算并反弹：弹起后再落回同一敌人既不结算、也不再弹。
+	# 只有砍到硬物才可能反弹：判定区里没有碰撞体（纯空气）时本回调根本不会触发，
+	# 草 / 掉落物 / NPC 这类软目标也不能当踏板。
+	if not _is_slash_down_solid(body):
+		return
+	# 一次下劈只弹一次，且只在俯冲下落时弹：弹起后即便判定区里还残留同一目标，
+	# 也不会再被结算成"首次命中"而二次抬升。
+	if _slash_down_bounced or velocity.y < 0.0:
+		return
 	if _hit_enemy(body):
 		velocity.y = slash_down_bounce_velocity
+		_slash_down_bounced = true
 		# 下劈反弹（pogo）同样刷新振翅次数，与原作一致。
 		reset_air_jumps()
+
+
+## 下劈反弹只认"硬物"：敌人，以及地面 / 平台 / 可破坏的静态实体。
+## 玩家自身、其它角色、掉落物不算；BOSS 过场锁定期间视为没砍中，也不弹。
+func _is_slash_down_solid(body: Node2D) -> bool:
+	if body == self or body is PlayerInitial:
+		return false
+	if body is Enemy:
+		return not body.is_cutscene_invulnerable()
+	# CharacterBody2D（NPC 等）/ RigidBody2D（掉落物）不能当踏板。
+	if body is CharacterBody2D or body is RigidBody2D:
+		return false
+	# TileMapLayer 的地形碰撞体不是 PhysicsBody2D，按类名兜底识别。
+	return body is StaticBody2D or body is AnimatableBody2D \
+			or body.get_class() == "TileMapLayer"
 
 ## 结算一次挥砍命中，返回是否真的结算 —— 同一目标在一次挥砍内只返回一次 true。
 ## 调用方（下劈）据此决定要不要追加"命中后反弹"这类演出。

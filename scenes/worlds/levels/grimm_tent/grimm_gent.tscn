@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://2dl8xaissdda" path="res://scenes/worlds/levels/grimm_tent/grimm_tent.gd" id="2_script"]
 [ext_resource type="PackedScene" path="res://scenes/worlds/_base/entry_point.tscn" id="3_packedscene"]
 [ext_resource type="PackedScene" path="res://scenes/worlds/_base/level_gate.tscn" id="4_packedscene"]
-[ext_resource type="PackedScene" path="res://scenes/worlds/_base/boss_fog_gate.tscn" id="5_packedscene"]
+[ext_resource type="PackedScene" uid="uid://cwfa8ohfnlct7" path="res://scenes/worlds/_base/invisible_wall.tscn" id="5_packedscene"]
 [ext_resource type="AudioStream" uid="uid://c5nqgqmwbinhs" path="res://assets/sounds/ambience/grimmtent.ogg" id="6_audiostream"]
 [ext_resource type="Script" uid="uid://1033cnat8g0l" path="res://scenes/worlds/_base/parallax_bg.gd" id="7_script"]
 [ext_resource type="Texture2D" uid="uid://pnuqea280sri" path="res://assets/textures/lights/circle.png" id="8_texture2d"]
@@ -14,10 +14,14 @@
 [ext_resource type="Texture2D" uid="uid://cpiletu0qrf4k" path="res://assets/sprites/environment/grimm_tent/grimm_curtain.png" id="12_texture2d"]
 [ext_resource type="Texture2D" uid="uid://pcsm1lbjufdr" path="res://assets/sprites/environment/grimm_tent/attic_0005_6.png" id="13_texture2d"]
 [ext_resource type="Texture2D" uid="uid://vlx5gf4sghwo" path="res://assets/sprites/environment/grimm_tent/main_tent_short_pole.png" id="14_texture2d"]
+[ext_resource type="PackedScene" path="res://addons/zone_director/scenes/zone.tscn" id="15_17my1"]
 [ext_resource type="Texture2D" uid="uid://c2ncj35oyq5uk" path="res://assets/sprites/environment/grimm_tent/grimm_wallpaper.png" id="15_texture2d"]
 [ext_resource type="Script" uid="uid://c7hpea0g65weh" path="res://scenes/worlds/_base/entry_point.gd" id="16_0e320"]
 [ext_resource type="Texture2D" uid="uid://bsk2vtka8aayo" path="res://assets/sprites/environment/grimm_tent/Grimm_Main_tent_0008_4.png" id="16_texture2d"]
+[ext_resource type="Script" uid="uid://dk34x4net1iyr" path="res://scenes/characters/bosses/_base/behaviors/boss_arena_behavior.gd" id="16_yuumx"]
+[ext_resource type="PackedScene" uid="uid://34xyraq1r58p" path="res://scenes/characters/bosses/hollow_knight/effects/boss_chain.tscn" id="17_7uaj0"]
 [ext_resource type="Texture2D" uid="uid://dq86wu4qw51ua" path="res://assets/sprites/environment/grimm_tent/grimm_curtain_02.png" id="17_texture2d"]
+[ext_resource type="PackedScene" uid="uid://c0pepo3g8tuu5" path="res://scenes/characters/bosses/hollow_knight/hollow_knight.tscn" id="18_qnnw6"]
 [ext_resource type="Texture2D" uid="uid://b3hhd87j0p2c7" path="res://assets/sprites/environment/grimm_tent/grimm_pole_standard.png" id="18_texture2d"]
 [ext_resource type="Texture2D" uid="uid://eutyfqmtb15l" path="res://assets/sprites/environment/grimm_tent/Main_tent_entrance_front.png" id="19_texture2d"]
 [ext_resource type="Texture2D" uid="uid://dxaaheqrbj4x2" path="res://assets/sprites/environment/grimm_tent/SpriteAtlasTexture-Divine-1024x2048-fmt12.png" id="20_texture2d"]
@@ -27,6 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://di6qoa5hcb8t0" path="res://assets/sprites/environment/grimm_tent/Grimm_Main_tent_0006_6.png" id="23_texture2d"]
 [ext_resource type="Texture2D" uid="uid://doowdfsteatcy" path="res://assets/sprites/environment/grimm_tent/grimm_rag_main_tent.png" id="24_texture2d"]
 [ext_resource type="Texture2D" uid="uid://d2lj6jpuwtmce" path="res://assets/sprites/environment/grimm_tent/Divine_Room_0002_4.png" id="25_texture2d"]
+[ext_resource type="Script" uid="uid://bepe51m4wv5nm" path="res://addons/zone_director/AuZone.gd" id="27_fy00k"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0e320"]
 atlas = ExtResource("23_3g4bh")
@@ -114,26 +119,30 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2"]
-size = Vector2(4306, 64)
+size = Vector2(7069.5, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3"]
-size = Vector2(2000, 100)
+size = Vector2(3055, 100)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4"]
-size = Vector2(56, 400)
+size = Vector2(56, 986)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5"]
 size = Vector2(100, 1000)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6"]
-size = Vector2(2488, 100)
+size = Vector2(3567, 100)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7"]
 size = Vector2(100, 400)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_0e320"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fy00k"]
 resource_local_to_scene = true
-size = Vector2(1962, 14)
+size = Vector2(3000, 600)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_17my1"]
+resource_local_to_scene = true
+size = Vector2(4230, 14)
 
 [node name="WorldTemplate" unique_id=560156841 instance=ExtResource("1_packedscene")]
 script = ExtResource("2_script")
@@ -155,7 +164,8 @@ position = Vector2(1350, 800)
 script = ExtResource("7_script")
 move_layer = -1
 
-[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_001" index="0" unique_id=414974991]
+[node name="Sprite2D2" type="Sprite2D" parent="Background/Bg_001" index="0" unique_id=826672337]
+position = Vector2(978, 1)
 texture = ExtResource("9_texture2d")
 
 [node name="Bg_002" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="2" unique_id=1522766367]
@@ -165,6 +175,9 @@ script = ExtResource("7_script")
 move_layer = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="Background/Bg_002" index="0" unique_id=822988868]
+texture = ExtResource("10_texture2d")
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_002/Sprite2D" index="0" unique_id=1853408191]
 texture = ExtResource("10_texture2d")
 
 [node name="Bg_003" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="3" unique_id=1664390777]
@@ -202,6 +215,11 @@ script = ExtResource("7_script")
 move_layer = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="Background/Bg_006" index="0" unique_id=1243168006]
+position = Vector2(585, -10)
+texture = ExtResource("11_texture2d")
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_006/Sprite2D" index="0" unique_id=1951730724]
+position = Vector2(554, 1)
 texture = ExtResource("11_texture2d")
 
 [node name="Bg_007" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="7" unique_id=1223020376]
@@ -240,6 +258,9 @@ move_layer = 3
 [node name="Sprite2D" type="Sprite2D" parent="Background/Bg_010" index="0" unique_id=1202980799]
 texture = ExtResource("11_texture2d")
 
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_010/Sprite2D" index="0" unique_id=1180465179]
+texture = ExtResource("11_texture2d")
+
 [node name="Bg_011" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="11" unique_id=1348679211]
 z_index = 5
 position = Vector2(-1000, 990)
@@ -257,6 +278,14 @@ move_layer = 5
 
 [node name="Sprite2D" type="Sprite2D" parent="Background/Bg_012" index="0" unique_id=794215796]
 position = Vector2(0, 56)
+texture = ExtResource("13_texture2d")
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_012/Sprite2D" index="0" unique_id=1218410684]
+position = Vector2(399, 2)
+texture = ExtResource("13_texture2d")
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_012/Sprite2D/Sprite2D" index="0" unique_id=22773643]
+position = Vector2(399, 2)
 texture = ExtResource("13_texture2d")
 
 [node name="Bg_013" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="13" unique_id=716027379]
@@ -294,8 +323,18 @@ script = ExtResource("7_script")
 move_layer = -3
 
 [node name="Sprite2D" type="Sprite2D" parent="Background/Bg_016" index="0" unique_id=695834155]
-position = Vector2(0, -44.5)
-scale = Vector2(1, 1.278125)
+position = Vector2(40.5, -122.99998)
+scale = Vector2(1.9066988, 1.76875)
+texture = ExtResource("15_texture2d")
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_016/Sprite2D" index="0" unique_id=1749408595]
+position = Vector2(326.7427, -59.314785)
+scale = Vector2(0.6511918, 1.533928)
+texture = ExtResource("15_texture2d")
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_016/Sprite2D/Sprite2D" index="0" unique_id=272349231]
+position = Vector2(456, -2.6661015)
+scale = Vector2(1.200957, 0.9578338)
 texture = ExtResource("15_texture2d")
 
 [node name="Bg_017" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="17" unique_id=9227083]
@@ -307,6 +346,15 @@ move_layer = -2
 [node name="Sprite2D" type="Sprite2D" parent="Background/Bg_017" index="0" unique_id=2130538928]
 texture = ExtResource("16_texture2d")
 
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_017/Sprite2D" index="0" unique_id=915448626]
+position = Vector2(496, -2)
+texture = ExtResource("16_texture2d")
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_017/Sprite2D/Sprite2D" index="0" unique_id=492509672]
+position = Vector2(496, -10.25)
+scale = Vector2(1, 1.1153846)
+texture = ExtResource("16_texture2d")
+
 [node name="Bg_018" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="18" unique_id=522299378]
 z_index = -1
 position = Vector2(825, 817)
@@ -314,6 +362,14 @@ script = ExtResource("7_script")
 move_layer = -1
 
 [node name="Sprite2D" type="Sprite2D" parent="Background/Bg_018" index="0" unique_id=1848219794]
+texture = ExtResource("17_texture2d")
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_018/Sprite2D" index="0" unique_id=70094776]
+position = Vector2(558, 40)
+texture = ExtResource("17_texture2d")
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_018/Sprite2D/Sprite2D" index="0" unique_id=1949062662]
+position = Vector2(525, 12)
 texture = ExtResource("17_texture2d")
 
 [node name="Bg_019" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="19" unique_id=1675186346]
@@ -325,6 +381,14 @@ move_layer = 5
 [node name="Sprite2D" type="Sprite2D" parent="Background/Bg_019" index="0" unique_id=58722206]
 texture = ExtResource("18_texture2d")
 
+[node name="Sprite2D2" type="Sprite2D" parent="Background/Bg_019" index="1" unique_id=1347341218]
+position = Vector2(718, 206)
+texture = ExtResource("12_texture2d")
+
+[node name="Sprite2D3" type="Sprite2D" parent="Background/Bg_019" index="2" unique_id=2136685595]
+position = Vector2(829, -11)
+texture = ExtResource("18_texture2d")
+
 [node name="Bg_020" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="20" unique_id=1611539218]
 z_index = -3
 position = Vector2(550, 930)
@@ -332,8 +396,8 @@ script = ExtResource("7_script")
 move_layer = -3
 
 [node name="Sprite2D" type="Sprite2D" parent="Background/Bg_020" index="0" unique_id=386729270]
-position = Vector2(0, -44.5)
-scale = Vector2(1, 1.278125)
+position = Vector2(0, -102.5)
+scale = Vector2(1, 1.640625)
 texture = ExtResource("15_texture2d")
 
 [node name="Bg_021" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="21" unique_id=251510513]
@@ -370,8 +434,8 @@ script = ExtResource("7_script")
 move_layer = -3
 
 [node name="Sprite2D" type="Sprite2D" parent="Background/Bg_024" index="0" unique_id=169755386]
-position = Vector2(0, -49)
-scale = Vector2(1, 1.30625)
+position = Vector2(0, -110)
+scale = Vector2(1, 1.6875)
 texture = ExtResource("15_texture2d")
 
 [node name="Bg_025" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="25" unique_id=1692682750]
@@ -421,6 +485,10 @@ move_layer = 5
 position = Vector2(0, 40)
 texture = ExtResource("12_texture2d")
 
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_029/Sprite2D" index="0" unique_id=386420037]
+position = Vector2(-898, -1)
+texture = ExtResource("12_texture2d")
+
 [node name="Bg_030" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="30" unique_id=366286341]
 z_index = 3
 position = Vector2(-2460, 982)
@@ -431,18 +499,47 @@ move_layer = 3
 position = Vector2(0, 13)
 texture = ExtResource("11_texture2d")
 
+[node name="Bg_031" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="31" unique_id=535539197]
+z_index = 2
+position = Vector2(-2975, 1011)
+script = ExtResource("7_script")
+move_layer = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_031" index="0" unique_id=1280337459]
+position = Vector2(0, -3)
+texture = ExtResource("10_texture2d")
+
+[node name="Bg_032" type="Node2D" parent="Background" parent_id_path=PackedInt32Array(1742804954) index="32" unique_id=637066145]
+z_index = 3
+position = Vector2(-3600, 1010)
+script = ExtResource("7_script")
+move_layer = 3
+
+[node name="Sprite2D" type="Sprite2D" parent="Background/Bg_032" index="0" unique_id=1272543996]
+texture = ExtResource("11_texture2d")
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="0" unique_id=712987045]
-position = Vector2(561, 899)
+position = Vector2(561, 858)
 sprite_frames = SubResource("SpriteFrames_rywq7")
 frame_progress = 0.3606236
 
 [node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="1" unique_id=1640697699]
-position = Vector2(50, 900)
+position = Vector2(27, 868)
 sprite_frames = SubResource("SpriteFrames_rywq7")
 frame_progress = 0.09493478
 
 [node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="2" unique_id=1277140098]
-position = Vector2(1144, 893)
+position = Vector2(1137, 855)
+sprite_frames = SubResource("SpriteFrames_rywq7")
+frame_progress = 0.5636923
+
+[node name="AnimatedSprite2D4" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="3" unique_id=541699100]
+position = Vector2(2222, 848)
+sprite_frames = SubResource("SpriteFrames_rywq7")
+frame_progress = 0.43207437
+
+[node name="AnimatedSprite2D5" type="AnimatedSprite2D" parent="Forebackground" parent_id_path=PackedInt32Array(1506133326) index="4" unique_id=483538884]
+position = Vector2(1710, 850)
 sprite_frames = SubResource("SpriteFrames_rywq7")
 frame_progress = 0.43207437
 
@@ -452,7 +549,7 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_01" index="0" unique_id=930055367]
-position = Vector2(-517, -31)
+position = Vector2(-704, -25)
 shape = SubResource("RectangleShape2D_2")
 
 [node name="Platform_02" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="1" unique_id=1271779740]
@@ -461,6 +558,7 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_02" index="0" unique_id=1010794772]
+position = Vector2(527.5, -96)
 shape = SubResource("RectangleShape2D_3")
 
 [node name="Platform_03" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="2" unique_id=1493642204]
@@ -469,7 +567,7 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_03" index="0" unique_id=692242884]
-position = Vector2(47, 0)
+position = Vector2(1050, -268)
 shape = SubResource("RectangleShape2D_4")
 
 [node name="Platform_04" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="3" unique_id=2117299261]
@@ -478,7 +576,7 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_04" index="0" unique_id=807102456]
-position = Vector2(-1000, 53)
+position = Vector2(-2002, 40)
 shape = SubResource("RectangleShape2D_5")
 
 [node name="Platform_05" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="4" unique_id=433204334]
@@ -487,7 +585,7 @@ collision_layer = 4
 collision_mask = 79
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_05" index="0" unique_id=234006010]
-position = Vector2(-494, 0)
+position = Vector2(-1030.5, -60)
 shape = SubResource("RectangleShape2D_6")
 
 [node name="Platform_06" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="5" unique_id=253388846]
@@ -498,33 +596,45 @@ collision_mask = 79
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Obstacles/Platform_06" index="0" unique_id=101353923]
 shape = SubResource("RectangleShape2D_7")
 
-[node name="grimm_gent_right" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="0" unique_id=353112878 instance=ExtResource("3_packedscene")]
-position = Vector2(1400, 923)
-facing = -1
+[node name="HollowKnightScene" type="Node2D" parent="." index="7" unique_id=1057226257]
+position = Vector2(-5300, 475)
 
-[node name="default" type="Marker2D" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="1" unique_id=1633738120]
-position = Vector2(-1300, 800)
-script = ExtResource("16_0e320")
-metadata/_custom_type_script = "uid://c7hpea0g65weh"
+[node name="BossArena" parent="HollowKnightScene" index="0" unique_id=1553862205 instance=ExtResource("15_17my1")]
+position = Vector2(3327, 57)
+size = Vector2(3300, 880)
 
-[node name="grimm_gent_right" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="0" unique_id=841300006 instance=ExtResource("4_packedscene")]
-position = Vector2(1500, 915)
-target_area = "uid://c03g5pi0u4bey"
-target_entry = &"ruin_house_left"
-gate_id = &"grimm_gent_right"
+[node name="BossArenaBehavior" type="Node" parent="HollowKnightScene/BossArena" index="1" unique_id=44034499]
+script = ExtResource("16_yuumx")
+auto_start_fight = false
+boss_node = NodePath("../../HollowKnight")
 
-[node name="BossGate" parent="LevelTransitions" parent_id_path=PackedInt32Array(1356999430) index="2" unique_id=445703632 instance=ExtResource("5_packedscene")]
-position = Vector2(-300, 650)
-scale = Vector2(-1, 1.2)
+[node name="BossChain1" parent="HollowKnightScene" index="1" unique_id=18913694 instance=ExtResource("17_7uaj0")]
+position = Vector2(2390, 442)
+scale = Vector2(-1, 1)
+
+[node name="BossChain2" parent="HollowKnightScene" index="2" unique_id=2093305065 instance=ExtResource("17_7uaj0")]
+position = Vector2(2830, 442)
+scale = Vector2(-1, 1)
+
+[node name="BossChain3" parent="HollowKnightScene" index="3" unique_id=461965674 instance=ExtResource("17_7uaj0")]
+position = Vector2(3977, 442)
+
+[node name="BossChain4" parent="HollowKnightScene" index="4" unique_id=830335573 instance=ExtResource("17_7uaj0")]
+position = Vector2(4400, 442)
+
+[node name="HollowKnight" parent="HollowKnightScene" index="5" unique_id=170488292 instance=ExtResource("18_qnnw6")]
+position = Vector2(3400, 85)
+arena_path = NodePath("../BossArena")
+patrol_enabled = false
 
 [node name="Bg_001" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=741291076]
 z_index = 5
-position = Vector2(1400, 820)
+position = Vector2(2438, 771)
 texture = ExtResource("19_texture2d")
 
 [node name="Bg_002" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="1" unique_id=1039687109]
 z_index = 2
-position = Vector2(1371, 879)
+position = Vector2(2421, 845)
 texture = ExtResource("20_texture2d")
 
 [node name="Bg_003" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="2" unique_id=700895172]
@@ -534,8 +644,8 @@ texture = ExtResource("21_texture2d")
 
 [node name="Bg_004" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="3" unique_id=107742931]
 z_index = 3
-position = Vector2(850, 310)
-scale = Vector2(2.8942807, 3.0918367)
+position = Vector2(1367.5, 310)
+scale = Vector2(4.6880417, 3.0918367)
 texture = ExtResource("22_texture2d")
 
 [node name="Bg_005" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="4" unique_id=266755366]
@@ -545,42 +655,60 @@ texture = ExtResource("23_texture2d")
 
 [node name="Bg_006" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="5" unique_id=916076643]
 z_index = 5
-position = Vector2(1052, 435.00006)
-scale = Vector2(4.3185186, 1.7867647)
+position = Vector2(1910, 461.5)
+scale = Vector2(4.3185186, 2.4963236)
 texture = ExtResource("24_texture2d")
 
-[node name="Bg_007" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="6" unique_id=1832504273]
+[node name="Bg_015" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="6" unique_id=624567859]
+z_index = 5
+position = Vector2(41081.5, 2362.8413)
+scale = Vector2(80.53866, 5.704297)
+texture = ExtResource("24_texture2d")
+
+[node name="Bg_007" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="7" unique_id=1832504273]
 z_index = 3
-position = Vector2(891.25, 578)
-scale = Vector2(2.1828423, 1.3775511)
+position = Vector2(1500.25, 578)
+scale = Vector2(4.2937613, 1.3775511)
 texture = ExtResource("22_texture2d")
 
-[node name="Bg_008" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="7" unique_id=2111222213]
+[node name="Bg_008" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="8" unique_id=2111222213]
 z_index = 4
 position = Vector2(275, 725)
 texture = ExtResource("23_texture2d")
 
-[node name="Bg_009" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="8" unique_id=1374795576]
+[node name="Bg_009" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="9" unique_id=1374795576]
 z_index = 5
-position = Vector2(609, 464.75)
+position = Vector2(519, 457)
 scale = Vector2(3.0185187, 1.7444854)
 texture = ExtResource("24_texture2d")
 
-[node name="Bg_010" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="9" unique_id=61503253]
+[node name="Bg_010" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="10" unique_id=61503253]
 z_index = 3
 position = Vector2(-51.750008, 270)
 scale = Vector2(1.1793761, 2.6530612)
 texture = ExtResource("22_texture2d")
 
-[node name="Bg_011" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="10" unique_id=1419027071]
+[node name="Bg_011" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="11" unique_id=1419027071]
 z_index = 4
 position = Vector2(-275, 725)
 texture = ExtResource("23_texture2d")
 
-[node name="Bg_012" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="11" unique_id=1712936648]
+[node name="Bg_012" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="12" unique_id=1712936648]
 z_index = 5
 position = Vector2(-43.75, 544.5)
 scale = Vector2(1.6481482, 2.1433823)
+texture = ExtResource("24_texture2d")
+
+[node name="Bg_013" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="13" unique_id=1543941167]
+z_index = 5
+position = Vector2(1421, 452.99997)
+scale = Vector2(4.3185186, 2.2867646)
+texture = ExtResource("24_texture2d")
+
+[node name="Bg_014" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="14" unique_id=1892903290]
+z_index = 5
+position = Vector2(1008, 409)
+scale = Vector2(3.0185187, 1.7444854)
 texture = ExtResource("24_texture2d")
 
 [node name="Torch_01" type="Node2D" parent="Effects" parent_id_path=PackedInt32Array(996629329) index="0" unique_id=1705618761]
@@ -630,15 +758,49 @@ position = Vector2(-1250, 850)
 [node name="DirectionalLight2D" parent="Lights" parent_id_path=PackedInt32Array(1627484379) index="0" unique_id=617027591]
 energy = 0.0
 
-[node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0" unique_id=1116790881]
-position = Vector2(-463, 561)
-shape = SubResource("RectangleShape2D_0e320")
+[node name="AuZone" type="Area2D" parent="EnemyZones" parent_id_path=PackedInt32Array(806486801) index="0" unique_id=622904463]
+position = Vector2(-300, 400)
+collision_layer = 0
+monitorable = false
+script = ExtResource("27_fy00k")
+size = Vector2(3000, 600)
+centered = false
+metadata/_custom_type_script = "uid://bepe51m4wv5nm"
 
-[node name="CanvasModulate" type="CanvasModulate" parent="." index="18" unique_id=433057856]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyZones/AuZone" index="0" unique_id=1855902900]
+position = Vector2(1500, 300)
+shape = SubResource("RectangleShape2D_fy00k")
+debug_color = Color(0.35, 0.85, 0.55, 0)
+
+[node name="grimm_gent_right" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="0" unique_id=353112878 instance=ExtResource("3_packedscene")]
+position = Vector2(2336, 859)
+facing = -1
+
+[node name="default" type="Marker2D" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="1" unique_id=1633738120]
+position = Vector2(-936, 859)
+script = ExtResource("16_0e320")
+metadata/_custom_type_script = "uid://c7hpea0g65weh"
+
+[node name="grimm_gent_right" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="0" unique_id=841300006 instance=ExtResource("4_packedscene")]
+position = Vector2(2482, 882)
+target_area = "uid://c03g5pi0u4bey"
+target_entry = &"ruin_house_left"
+gate_id = &"grimm_gent_right"
+
+[node name="BossGate" parent="LevelTransitions" parent_id_path=PackedInt32Array(1356999430) index="2" unique_id=445703632 instance=ExtResource("5_packedscene")]
+position = Vector2(-325, 518)
+wall_size = Vector2(24, 1000)
+boss_node = NodePath("../../HollowKnightScene/HollowKnight")
+
+[node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0" unique_id=1116790881]
+position = Vector2(-563, 561)
+shape = SubResource("RectangleShape2D_17my1")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." index="19" unique_id=433057856]
 position = Vector2(27, 8)
 color = Color(1.12, 0.98, 0.86, 1)
 
-[node name="Ambience" type="Node" parent="." index="19" unique_id=1053709165]
+[node name="Ambience" type="Node" parent="." index="20" unique_id=1053709165]
 
 [node name="GrimmTent" type="AudioStreamPlayer" parent="Ambience" index="0" unique_id=704261664]
 stream = ExtResource("6_audiostream")

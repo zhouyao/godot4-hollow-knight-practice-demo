@@ -2,16 +2,18 @@
 
 [ext_resource type="PackedScene" uid="uid://br8vy2on44xtx" path="res://scenes/characters/enemies/_base/enemy.tscn" id="1_enemy"]
 [ext_resource type="Script" uid="uid://bg17gpcj1lae8" path="res://scenes/characters/enemies/enemy_ground/enemy_ground.gd" id="2_56q28"]
-[ext_resource type="Script" uid="uid://bcphuefragvqn" path="res://scenes/characters/enemies/_base/states/patrol.gd" id="7_gpatrol"]
 [ext_resource type="Script" uid="uid://dpnrokqju07xm" path="res://scenes/characters/enemies/_base/states/chase.gd" id="3_cinxp"]
 [ext_resource type="Script" uid="uid://cmadfewjishqo" path="res://scenes/characters/enemies/_base/states/attack.gd" id="5_gatk"]
 [ext_resource type="Script" uid="uid://bgjjdsnqxgtyw" path="res://scenes/characters/enemies/_base/states/return.gd" id="6_ret"]
+[ext_resource type="Script" uid="uid://bcphuefragvqn" path="res://scenes/characters/enemies/_base/states/patrol.gd" id="7_gpatrol"]
 [ext_resource type="PackedScene" uid="uid://cl38x7ce5rm3y" path="res://scenes/projectiles/projectile.tscn" id="8_proj"]
 [ext_resource type="Resource" uid="uid://piw3hsrkqnak" path="res://resources/drops/enemy_basic.tres" id="9_drop"]
 
 [node name="EnemyGround" unique_id=220108385 instance=ExtResource("1_enemy")]
 script = ExtResource("2_56q28")
-patrol_enabled = true
+step_up_height = 12.0
+step_up_probe = 8.0
+initial_health = 5
 projectile_scene = ExtResource("8_proj")
 drop_table = ExtResource("9_drop")
 

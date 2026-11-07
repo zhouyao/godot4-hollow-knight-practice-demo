@@ -25,8 +25,10 @@ func setup(def: SkillDefinition) -> void:
 	if def.icon != null:
 		icon_rect.texture = def.icon
 
-	# 悬停提示 = 技能名 + 冷却时长 + 能量消耗；冷却 / 消耗为 0 的维度不显示。
+	# 悬停提示 = 技能名 + 描述 + 冷却时长 + 能量消耗；空描述 / 0 值维度不显示。
 	var tooltip_lines := PackedStringArray([tr(def.display_name)])
+	if not def.description.is_empty():
+		tooltip_lines.append(tr(def.description))
 	if def.cooldown > 0.0:
 		tooltip_lines.append(tr(COOLDOWN_HINT) % def.cooldown)
 	if def.energy_cost > 0:

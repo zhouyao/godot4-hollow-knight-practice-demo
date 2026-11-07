@@ -212,6 +212,12 @@ func _on_chain_broke() -> void:
 	_broken_count += 1
 	_play_for_current_chains()
 	if _broken_count >= _total_chains:
+		# 四链全断 = BOSS 被唤醒：立刻广播"已激活"，让关卡空气墙在苏醒演出
+		# 开始前就落下（BossFogGate 只听 boss_activated / enter_combat）。
+		# 这里不调 begin_fight()：正式拉仇恨留给演出结束后的 idle，避免过场
+		# 期间 combat_active 提前置位；关卡里 auto_start_fight=false 也没有别的补发点。
+		if boss != null:
+			boss.notify_boss_activated()
 		machine.set_state(BossStateNames.DORMANT_END)
 
 

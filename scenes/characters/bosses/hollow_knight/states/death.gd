@@ -2,7 +2,8 @@ extends BossState
 class_name HollowKnightDeathState
 
 ## 击败演出：先播 ActionAnimationPlayer/death（精灵逐帧定格死亡姿态），
-## 随后 boss 缓慢向上升起、渐渐变淡，完全消失后于原死亡位置撒落钱币。
+## 随后 boss 缓慢向上升起、渐渐变淡，完全消失后在玩家附近撒落钱币
+## （玩家不可用 / 脚下无地面时回落到原死亡位置）。
 ## 尸体不销毁（Boss._start_corpse_fade 为空），整场击败由本状态收尾。
 
 ## 向上升起的总位移（像素，向上为负）与持续时间（秒）。
@@ -64,7 +65,21 @@ func update(delta: float) -> void:
 func _spawn_coins() -> void:
 	if boss == null:
 		return
-	boss.drop_loot(_spawn_at)
+	boss.drop_loot(_drop_point_near_player())
+
+
+## 战后奖励落点：BOSS 升空消散的 2.3 秒里玩家常常已经跑开，钱撒在升空前的
+## 原死亡点会离玩家很远。优先取玩家脚下贴地点（避免从半空 / 墙里冒出），
+## 玩家不可用或该处没有地面时回落到 enter() 记录的原死亡点。
+func _drop_point_near_player() -> Vector2:
+	var player := boss.get_player() as Node2D
+	if player == null:
+		return _spawn_at
+	var x := player.global_position.x
+	var y := boss.ground_y_at(x, NAN)
+	if is_nan(y):
+		return _spawn_at
+	return Vector2(x, y)
 
 func _disable_collision() -> void:
 	if boss == null:

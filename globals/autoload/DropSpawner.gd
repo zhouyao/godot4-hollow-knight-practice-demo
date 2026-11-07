@@ -68,7 +68,10 @@ func _spawn(scene: PackedScene, at: Vector2, item_id: StringName,
 	# 直接 add_child 带碰撞体的 Area2D 会触发 area_set_shape_disabled 报错。
 	# 延迟到刷新结束后再挂载并激活，避免改动 monitoring 状态。
 	parent.call_deferred("add_child", p)
-	p.call_deferred("set_deferred", "global_position", at)
+	# 只延迟一层：位置在 add_child 之后、reset_physics_interpolation / launch
+	# 之前就写入。原来的 call_deferred("set_deferred") 是双重延迟，位置要等下一批
+	# 队列才生效，掉落物会先以世界原点 (0,0) 参与 _ready / 发射 / 插值重置。
+	p.set_deferred("global_position", at)
 	# 位置改变后必须重置插值，否则第一帧会从世界原点飞过来。
 	p.call_deferred("reset_physics_interpolation")
 	p.call_deferred("launch",

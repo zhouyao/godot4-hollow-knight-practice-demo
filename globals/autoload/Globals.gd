@@ -48,7 +48,9 @@ func lock_monarch_wings() -> void:
 ## 调试信息显示开关变化时发出（角色血条、状态名、回巢倒计时等据此显隐）。
 signal debug_enabled_changed(enabled: bool)
 
-var _debug_enabled := true
+## 与 DevelopmentSection.DEFAULT_DEBUG_MODE 一致（默认关闭）；
+## Settings 启动 load() 时按存档值回填，存档没有该项就保持关闭。
+var _debug_enabled := false
 var debug_enabled: bool:
 	set(value):
 		if _debug_enabled == value:
@@ -57,6 +59,23 @@ var debug_enabled: bool:
 		debug_enabled_changed.emit(value)
 	get:
 		return _debug_enabled
+
+
+## 开发设置里的敌方出生血量覆盖：0 = 沿用关卡里配置的原始血量。
+## Enemy._ready() 与在场敌人都读这里，敌人脚本不必直接依赖 Settings 单例。
+signal enemy_health_override_changed()
+
+var boss_health_override: int = 0
+var mob_health_override: int = 0
+
+
+func set_enemy_health_overrides(boss: int, mob: int) -> void:
+	if boss_health_override == boss and mob_health_override == mob:
+		return
+	boss_health_override = boss
+	mob_health_override = mob
+	enemy_health_override_changed.emit()
+
 
 ## 死亡结算结束后回主菜单时，让主菜单跳过标题页、直接展开存档选择页。
 var _open_save_menu_on_main_menu := false

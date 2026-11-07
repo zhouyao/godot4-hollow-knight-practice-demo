@@ -10,7 +10,8 @@ config_version=5
 
 [application]
 
-config/name="Misted"
+config/name="godot4-hollow-knight-practice-demo "
+config/description="A fan-made 2D Hollow Knight recreation practice demo built with Godot 4."
 run/main_scene="uid://dnhvawra6o88v"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
@@ -168,3 +169,4 @@ common/physics_interpolation=true
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true

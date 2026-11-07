@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c2q4niai8bjcw" path="res://scenes/menus/settings_menu/sections/development_content.gd" id="1_dvc"]
 [ext_resource type="PackedScene" path="res://scenes/menus/settings_menu/sections/section_header.tscn" id="2_sh"]
 [ext_resource type="PackedScene" path="res://scenes/menus/common/buttons/reset_button.tscn" id="3_rb"]
+[ext_resource type="PackedScene" path="res://scenes/menus/settings_menu/rows/health_row.tscn" id="4_hr"]
 
 [node name="DevelopmentContent" type="VBoxContainer" unique_id=469730608]
 theme_override_constants/separation = 36
@@ -28,6 +29,23 @@ layout_mode = 2
 size_flags_vertical = 4
 theme_type_variation = &"RowButton"
 alignment = 1
+
+[node name="BossHealthRow" parent="." instance=ExtResource("4_hr")]
+layout_mode = 2
+is_boss = true
+display_name = "Boss 血量"
+
+[node name="MobHealthRow" parent="." instance=ExtResource("4_hr")]
+layout_mode = 2
+display_name = "小怪血量"
+
+[node name="HealthHint" type="Label" parent="."]
+custom_maximum_size = Vector2(1288, -1)
+layout_mode = 2
+theme_type_variation = &"HintLabel"
+text = "填 0 或留空沿用关卡原始血量；1~999 覆盖该类敌人的出生血量，改动即时作用于在场敌人"
+horizontal_alignment = 2
+autowrap_mode = 2
 
 [node name="HomePathRow" type="HBoxContainer" parent="." unique_id=421779115]
 layout_mode = 2

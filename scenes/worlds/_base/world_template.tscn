@@ -26,12 +26,6 @@ collision_mask = 3
 
 [node name="Items" type="Node2D" parent="." unique_id=397992784]
 
-[node name="LevelTransitions" type="Node2D" parent="." unique_id=1356999430]
-
-[node name="Entries" type="Node2D" parent="LevelTransitions" unique_id=839994114]
-
-[node name="Gates" type="Node2D" parent="LevelTransitions" unique_id=1076165805]
-
 [node name="Enemies" type="Node2D" parent="." unique_id=1028343445]
 
 [node name="Drops" type="Node2D" parent="." unique_id=1475784248]
@@ -60,6 +54,12 @@ blend_mode = 1
 [node name="Areas" type="Node2D" parent="CameraLock" unique_id=1193241330]
 
 [node name="Markers" type="Node2D" parent="CameraLock" unique_id=689316407]
+
+[node name="LevelTransitions" type="Node2D" parent="." unique_id=1356999430]
+
+[node name="Entries" type="Node2D" parent="LevelTransitions" unique_id=839994114]
+
+[node name="Gates" type="Node2D" parent="LevelTransitions" unique_id=1076165805]
 
 [node name="CameraBounds" type="Area2D" parent="." unique_id=-983417019]
 collision_layer = 0

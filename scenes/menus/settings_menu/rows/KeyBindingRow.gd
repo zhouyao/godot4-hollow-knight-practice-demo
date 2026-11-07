@@ -34,7 +34,9 @@ var _hint_timer: SceneTreeTimer = null
 func _ready() -> void:
 	super._ready()
 
+	keyboard_reset.set_meta(Tr.SOURCE_META_TOOLTIP, "恢复默认按键")
 	keyboard_reset.tooltip_text = tr("恢复默认按键")
+	gamepad_reset.set_meta(Tr.SOURCE_META_TOOLTIP, "恢复默认按键")
 	gamepad_reset.tooltip_text = tr("恢复默认按键")
 
 	keyboard_button.pressed.connect(_on_bind_pressed.bind(Slot.KEYBOARD))

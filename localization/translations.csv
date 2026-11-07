@@ -87,6 +87,9 @@ RB 键,Button RB,RB 键,RB 鍵
 新建存档时进入的场景；按回车或点击别处生效，已有存档不受影响,"Scene used when starting a new game. Press Enter or click away to apply; existing saves are unaffected.",新建存档时进入的场景；按回车或点击别处生效，已有存档不受影响,新遊戲開始時進入的場景；按 Enter 或點擊別處生效，已有存檔不受影響
 已保存：新建存档将从该场景开始,Saved: new games will start from this scene,已保存：新建存档将从该场景开始,已儲存：新遊戲將從此場景開始
 路径不存在，请输入已存在的 .tscn 场景路径,"Scene not found. Enter an existing .tscn path.",路径不存在，请输入已存在的 .tscn 场景路径,路徑不存在，請輸入已存在的 .tscn 場景路徑
+Boss 血量,Boss Health,Boss 血量,Boss 血量
+小怪血量,Mob Health,小怪血量,小怪血量
+填 0 或留空沿用关卡原始血量；1~999 覆盖该类敌人的出生血量，改动即时作用于在场敌人,"Enter 0 or leave blank to keep each level's original health. 1-999 overrides the spawn health of that enemy type; changes apply to enemies already on screen.",填 0 或留空沿用关卡原始血量；1~999 覆盖该类敌人的出生血量，改动即时作用于在场敌人,填 0 或留空沿用關卡原始血量；1~999 覆蓋該類敵人的出生血量，變更即時作用於在場敵人
 选择存档,Select Profile,选择存档,選擇存檔
 新游戏,New Game,新游戏,新遊戲
 清除存档,Clear Save,清除存档,清除存檔
@@ -99,3 +102,23 @@ RB 键,Button RB,RB 键,RB 鍵
 保存失败,Save Failed,保存失败,儲存失敗
 返回主菜单会自动保存当前进度,Progress auto-saves when returning,返回主菜单会自动保存当前进度,返回主選單前會自動儲存目前進度
 死亡 · 即将返回存档选择,Death · Returning to Profile Selection,死亡 · 即将返回存档选择,死亡 · 即將返回存檔選擇
+胜利,Victory,胜利,勝利
+继续,Resume,继续,繼續
+音量,Volume,音量,音量
+动作,Action,动作,動作
+技能面板 - 可拖动图标到下方技能条,Skill Panel - Drag icons onto the skill bar below,技能面板 - 可拖动图标到下方技能条,技能面板 - 可拖動圖示到下方技能條
+已休息 · 已保存,Rested · Saved,已休息 · 已保存,已休息 · 已儲存
+跳过,Skip,跳过,跳過
+回血（Cure）,Heal (Cure),回血（Cure）,回血（Cure）
+格挡（Block）,Guard (Block),格挡（Block）,格擋（Block）
+冲刺,Dash,冲刺,衝刺
+消耗1点能量回复1点生命（1能换1血），冷却1秒；无能量或满血时不可用,"Costs 1 Energy to restore 1 Health (1 for 1). Cooldown: 1 s; unavailable without energy or at full health.",消耗1点能量回复1点生命（1能换1血），冷却1秒；无能量或满血时不可用,消耗1點能量回復1點生命（1能換1血），冷卻1秒；無能量或滿血時不可用
+不消耗能量，冷却1.5秒，格挡前方攻击持续0.5秒,"No energy cost. Cooldown: 1.5 s. Blocks frontal attacks for 0.5 s.",不消耗能量，冷却1.5秒，格挡前方攻击持续0.5秒,不消耗能量，冷卻1.5秒，格擋前方攻擊持續0.5秒
+苔藓洞穴,Mossy Grotto,苔藓洞穴,苔蘚洞穴
+苔藓洞穴深处,Depths of the Mossy Grotto,苔藓洞穴深处,苔蘚洞穴深處
+泪城,City of Tears,泪城,淚城
+灵魂大师,Soul Master,灵魂大师,靈魂大師
+废墟小屋,Ruined House,废墟小屋,廢墟小屋
+格林帐篷,Grimm's Tent,格林帐篷,格林帳篷
+遗忘荒径,Forgotten Path,遗忘荒径,遺忘荒徑
+试炼回廊,Trial Corridor,试炼回廊,試煉迴廊

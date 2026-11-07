@@ -5,7 +5,7 @@ class_name WorldArea
 ##
 ## Player / HUD / SkillBar / 相机 / 暂停菜单 / 死亡结算全部常驻在
 ## res://scenes/worlds/game_root.tscn，由 GameSession 统一调度；
-## 本脚本只保留"关卡自己该知道的事"：区域名、入口点、出门判定。
+## 本脚本只保留"关卡自己该知道的事"：区域名、进入提示、入口点、出门判定。
 ##
 ## 节点约定（world_template.tscn 已固定，子关卡继承后只往里填内容）：
 ##   LevelTransitions/
@@ -17,8 +17,16 @@ class_name WorldArea
 ##   EnemyZones/       敌人领地
 ##   CameraLock/       相机锁定区
 
-## 存档页显示的关卡名；子关卡可在场景里覆盖。
+## 进入提示 UI：由 WorldArea 统一加载，文案取各关的 zone_name。
+const AREA_TITLE_SCENE := preload("res://scenes/ui/area_title.tscn")
+
+## 存档页与区域标题共用的关卡名；填中文原文作翻译 key（见 translations.csv）。
+## 存档里也存这份 key，显示方统一用 tr() 翻译；子关卡可在场景里覆盖。
 @export var zone_name: String = ""
+
+@export_group("区域标题 Area Title")
+## 进入本关时弹出区域标题（文案取 zone_name）；默认关闭，需要提示的关卡在场景里打开。
+@export var show_area_title := false
 
 @export_group("背景视差 Parallax")
 ## 让本关所有 `ParallaxBg`（Background/ 下挂 parallax_bg.gd 的节点）共用同一个参考机位：
@@ -50,10 +58,38 @@ func get_parallax_reference_camera() -> Vector2:
 	return parallax_reference_camera
 
 
+var _area_title_shown := false
+
+
 func _ready() -> void:
 	# 直接用 F6 运行本关卡时自举一个可玩的临时环境（正常流程不会走到这里）
 	if get_tree().current_scene == self:
 		_bootstrap_standalone()
+	if show_area_title:
+		_schedule_area_title()
+
+
+# ---------------------------------------------------------------- 进入区域标题
+
+## 换关时本关卡是在黑场里 _ready 的；等揭幕后再播标题，
+## 免得 1.7s 的淡入前半段被黑幕吃掉。F6 直接跑单关时没有黑场，立刻显示。
+func _schedule_area_title() -> void:
+	if not TransitionLayer.is_black():
+		_play_area_title()
+		return
+	TransitionLayer.faded_in.connect(_play_area_title, CONNECT_ONE_SHOT)
+
+
+func _play_area_title() -> void:
+	if _area_title_shown:
+		return
+	if zone_name.is_empty():
+		push_warning("[WorldArea] 开启了区域标题但未配置 zone_name：%s" % scene_file_path)
+		return
+	_area_title_shown = true
+	var layer := AREA_TITLE_SCENE.instantiate()
+	layer.set(&"title", zone_name)
+	add_child(layer)
 
 
 ## 按 entry_id 找入口标记。找不到返回 null，由 GameSession 回落 / 报警。

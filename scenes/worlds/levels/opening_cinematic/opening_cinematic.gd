@@ -18,6 +18,7 @@ var _leaving := false
 func _ready() -> void:
 	_video.finished.connect(_leave)
 	_skip.pressed.connect(_leave)
+	Tr.apply(self)
 	_pin_skip_pointer()
 	# game_root 是黑场加载的，此时整棵树还处于 paused=true。
 	# VideoStreamPlayer 默认 PROCESS_MODE_INHERIT，暂停时 play() 不会推进解码，

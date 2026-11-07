@@ -6,9 +6,17 @@ extends SettingsSection
 signal debug_mode_changed(enabled: bool)
 ## 首页路径变化并落盘后发出。UI 连它同步输入框。
 signal home_path_changed(path: String)
+## 敌方出生血量覆盖变化并落盘后发出。UI 连它同步输入框。
+signal boss_health_changed(value: int)
+signal mob_health_changed(value: int)
 
-## 保持与现状一致：Demo 中角色调试面板默认显示。
-const DEFAULT_DEBUG_MODE := true
+## 调试模式默认关闭；只有开发设置里手动选「开启」才显示角色调试信息与寻路路径。
+const DEFAULT_DEBUG_MODE := false
+## 敌方出生血量覆盖：0 = 沿用关卡原始值（默认，不打乱现有关卡数值）；
+## 1~999 = 该类敌人一律满血出生，max_health 与 initial_health 同时取该值。
+const DEFAULT_BOSS_HEALTH := 0
+const DEFAULT_MOB_HEALTH := 0
+const MAX_HEALTH_OVERRIDE := 999
 ## 默认首页 = 开场动画。以前硬编码在 SaveManager.DEFAULT_SCENE_PATH，
 ## 现在由开发设置提供，SaveManager 只保留同名常量作最后的兜底。
 const DEFAULT_HOME_PATH := "res://scenes/worlds/levels/opening_cinematic/opening cinematic.tscn"
@@ -20,6 +28,7 @@ func load() -> void:
 	var enabled := get_debug_mode()
 	Globals.debug_enabled = enabled
 	_apply_navigation_debug(enabled)
+	Globals.set_enemy_health_overrides(get_boss_health(), get_mob_health())
 
 
 func get_debug_mode() -> bool:
@@ -89,9 +98,69 @@ func reset_home_path() -> void:
 	set_home_path(DEFAULT_HOME_PATH)
 
 
+# ---------------------------------------------------------------- 敌方血量
+
+## ConfigFile 里 bool 与数值容易混（历史上有过写错类型的配置），float 也一并接受。
+## 越界 / 非法值夹到合法区间，避免血条上限与 BOSS 阶段比例算出脏值。
+static func _sanitize_health(stored: Variant) -> int:
+	if stored is bool:
+		return 0
+	if stored is int:
+		return clampi(stored, 0, MAX_HEALTH_OVERRIDE)
+	if stored is float and not is_nan(stored):
+		return clampi(roundi(stored), 0, MAX_HEALTH_OVERRIDE)
+	return 0
+
+
+func get_boss_health() -> int:
+	return _sanitize_health(_store.get_value(
+		SettingsStore.DEVELOPMENT_SETTING_NAME,
+		SettingsStore.BOSS_HEALTH_KEY,
+		DEFAULT_BOSS_HEALTH,
+	))
+
+
+func set_boss_health(value: int) -> void:
+	var normalized := clampi(value, 0, MAX_HEALTH_OVERRIDE)
+	if normalized == get_boss_health():
+		return
+	_store.set_value(
+		SettingsStore.DEVELOPMENT_SETTING_NAME,
+		SettingsStore.BOSS_HEALTH_KEY,
+		normalized,
+	)
+	save()
+	Globals.set_enemy_health_overrides(normalized, get_mob_health())
+	boss_health_changed.emit(normalized)
+
+
+func get_mob_health() -> int:
+	return _sanitize_health(_store.get_value(
+		SettingsStore.DEVELOPMENT_SETTING_NAME,
+		SettingsStore.MOB_HEALTH_KEY,
+		DEFAULT_MOB_HEALTH,
+	))
+
+
+func set_mob_health(value: int) -> void:
+	var normalized := clampi(value, 0, MAX_HEALTH_OVERRIDE)
+	if normalized == get_mob_health():
+		return
+	_store.set_value(
+		SettingsStore.DEVELOPMENT_SETTING_NAME,
+		SettingsStore.MOB_HEALTH_KEY,
+		normalized,
+	)
+	save()
+	Globals.set_enemy_health_overrides(get_boss_health(), normalized)
+	mob_health_changed.emit(normalized)
+
+
 func reset() -> void:
 	set_debug_mode(DEFAULT_DEBUG_MODE)
 	reset_home_path()
+	set_boss_health(DEFAULT_BOSS_HEALTH)
+	set_mob_health(DEFAULT_MOB_HEALTH)
 
 
 ## 导航调试绘制的总闸：NavigationAgent2D.debug_enabled 只决定「这只怪画不画路径」，

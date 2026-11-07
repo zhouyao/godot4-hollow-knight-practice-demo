@@ -13,9 +13,15 @@ const SKILL_PANEL_SCENE := preload("res://scenes/menus/skill_panel/skill_panel.t
 const DEATH_SCREEN_SCENE := preload("res://scenes/ui/death_screen.tscn")
 ## 轻量提示条（休息 / 存档反馈等）。
 const TOAST_SCENE := preload("res://scenes/ui/toast.tscn")
+## BOSS 击败后的胜利提示（与区域标题同版式）。
+const VICTORY_TITLE_SCENE := preload("res://scenes/ui/victory_title.tscn")
+## boss_defeated 在死亡瞬间发出，击败演出还要 2~3 秒才收尾；稍等再弹，别盖住升空 / 坠落淡出。
+const VICTORY_DELAY := 1.6
 
 var pause_menu: CanvasLayer = null
 var skill_panel: CanvasLayer = null
+## 同一时间只允许一层胜利标题（一个关卡可能连着打两只 BOSS）。
+var victory_title: VictoryTitle = null
 
 @onready var skill_bar: SkillBar = $SkillBar
 @onready var hud: Hud = $Hud
@@ -35,6 +41,7 @@ func _ready() -> void:
 		player.player_death.connect(_on_player_death)
 	GameSession.rested.connect(_on_rested)
 	GameSession.sat.connect(_on_sat)
+	GameSession.boss_defeated.connect(_on_boss_defeated)
 
 	# 兜底：进游戏时用存档值对齐一次窗口（覆盖启动延迟 apply 偶发的时序失败）。
 	Settings.display.apply_now()
@@ -52,6 +59,20 @@ func _ready() -> void:
 
 
 # ---------------------------------------------------------------- 提示
+
+## BOSS 击败：等击败演出（升空消散 / 坠落淡出）播得差不多，再弹胜利标题。
+## 标题挂在常驻的 GameRoot 下，切关不会重复创建；BOSS 的 _dead() 有守卫，整场只广播一次。
+func _on_boss_defeated(_boss_id: String) -> void:
+	var area := GameSession.current_area
+	await get_tree().create_timer(VICTORY_DELAY).timeout
+	# 期间回存档页 / 死亡结算 / 换了关卡，都不再补弹。
+	if not is_instance_valid(self) or get_tree().paused or GameSession.current_area != area:
+		return
+	if victory_title != null and is_instance_valid(victory_title):
+		victory_title.queue_free()
+	victory_title = VICTORY_TITLE_SCENE.instantiate() as VictoryTitle
+	add_child(victory_title)
+
 
 ## 长椅休息：在长椅上方弹一句"已休息 · 已保存"。
 func _on_rested(bench_id: StringName) -> void:

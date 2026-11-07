@@ -2,15 +2,16 @@
 
 [ext_resource type="PackedScene" uid="uid://br8vy2on44xtx" path="res://scenes/characters/enemies/_base/enemy.tscn" id="1_enemy"]
 [ext_resource type="PackedScene" uid="uid://cl38x7ce5rm3y" path="res://scenes/projectiles/projectile.tscn" id="3_proj"]
-[ext_resource type="Script" uid="uid://bcphuefragvqn" path="res://scenes/characters/enemies/_base/states/patrol.gd" id="9_fpatrol"]
 [ext_resource type="Script" uid="uid://dpnrokqju07xm" path="res://scenes/characters/enemies/_base/states/chase.gd" id="7_chase"]
-[ext_resource type="Script" uid="uid://cmadfewjishqo" path="res://scenes/characters/enemies/_base/states/attack.gd" id="10_fatk"]
 [ext_resource type="Script" uid="uid://bgjjdsnqxgtyw" path="res://scenes/characters/enemies/_base/states/return.gd" id="8_ret"]
+[ext_resource type="Script" uid="uid://bcphuefragvqn" path="res://scenes/characters/enemies/_base/states/patrol.gd" id="9_fpatrol"]
+[ext_resource type="Script" uid="uid://cmadfewjishqo" path="res://scenes/characters/enemies/_base/states/attack.gd" id="10_fatk"]
 [ext_resource type="Resource" uid="uid://piw3hsrkqnak" path="res://resources/drops/enemy_basic.tres" id="11_drop"]
 [ext_resource type="Resource" path="res://resources/characters/enemies/_shared/locomotion/flying.tres" id="12_loco"]
 
 [node name="EnemyFlying" unique_id=1746772293 instance=ExtResource("1_enemy")]
 motion_mode = 1
+initial_health = 5
 locomotion = ExtResource("12_loco")
 projectile_scene = ExtResource("3_proj")
 drop_table = ExtResource("11_drop")

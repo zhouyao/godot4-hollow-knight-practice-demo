@@ -20,6 +20,8 @@ signal area_changed(area_path: String, entry_id: StringName)
 signal rested(bench_id: StringName)
 ## 玩家在可坐的椅子上坐下并落盘（副本给 UI 弹"存档成功"用）。
 signal sat(seat_id: StringName)
+## BOSS 被击败（副本给常驻 UI 弹胜利提示用，参数为 BOSS 的 persistent_id）。
+signal boss_defeated(boss_id: String)
 
 
 const DEFAULT_ENTRY: StringName = &"default"
@@ -178,6 +180,11 @@ func notify_rested(bench_id: StringName) -> void:
 ## 由可坐的椅子调用：广播"已坐下并落盘"，UI 层据此弹"存档成功"。
 func notify_sat(seat_id: StringName) -> void:
 	sat.emit(seat_id)
+
+
+## 由 Boss._dead() 调用：广播 BOSS 已被击败，常驻 UI 层据此弹胜利提示。
+func notify_boss_defeated(boss_id: String) -> void:
+	boss_defeated.emit(boss_id)
 
 
 # ---------------------------------------------------------------- 内部

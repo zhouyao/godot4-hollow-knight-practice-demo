@@ -52,6 +52,8 @@ func enter_combat_zone() -> void:
 	if state_machine != null \
 			and state_machine.get_state_name() == BossStateNames.DORMANT \
 			and state_machine.states.has(BossStateNames.ENTRANCE):
+		# 本分支不调 super，激活信号要在这里补发：雾门靠它在演出第一帧就关门。
+		notify_boss_activated()
 		state_machine.set_state(BossStateNames.ENTRANCE)
 		return
 	super.enter_combat_zone()

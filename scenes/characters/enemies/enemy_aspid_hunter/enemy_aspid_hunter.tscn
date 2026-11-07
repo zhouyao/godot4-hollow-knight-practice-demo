@@ -1,69 +1,64 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene format=3 uid="uid://b82ac55kn8krb"]
 
-[ext_resource type="PackedScene" path="res://scenes/characters/enemies/enemy_flying/enemy_flying.tscn" id="1_base"]
+[ext_resource type="PackedScene" uid="uid://cg7ionofoem53" path="res://scenes/characters/enemies/enemy_flying/enemy_flying.tscn" id="1_base"]
 [ext_resource type="SpriteFrames" path="res://resources/characters/enemies/aspid_hunter/aspid_hunter_sprite.tres" id="2_frames"]
-[ext_resource type="AnimationLibrary" path="res://resources/characters/enemies/aspid_hunter/aspid_hunter_animations.tres" id="3_anim"]
+[ext_resource type="AnimationLibrary" uid="uid://cjp70e45vag8w" path="res://resources/characters/enemies/aspid_hunter/aspid_hunter_animations.tres" id="3_anim"]
 [ext_resource type="PackedScene" path="res://scenes/projectiles/projectile_aspid.tscn" id="4_proj"]
-[ext_resource type="AudioStream" path="res://assets/sounds/characters/enemies/aspid_hunter/aspid_hunter_attack.ogg" id="5_attack"]
-[ext_resource type="AudioStream" path="res://assets/sounds/characters/enemies/aspid_hunter/aspid_hunter_hurt.ogg" id="6_hurt"]
-[ext_resource type="AudioStream" path="res://assets/sounds/characters/enemies/aspid_hunter/aspid_hunter_death.ogg" id="7_death"]
+[ext_resource type="AudioStream" uid="uid://b4yn7epn6f5vp" path="res://assets/sounds/characters/enemies/aspid_hunter/aspid_hunter_attack.ogg" id="5_attack"]
+[ext_resource type="AudioStream" uid="uid://cuyi5j7d7fbfe" path="res://assets/sounds/characters/enemies/aspid_hunter/aspid_hunter_hurt.ogg" id="6_hurt"]
+[ext_resource type="AudioStream" uid="uid://cl22atof2p87i" path="res://assets/sounds/characters/enemies/aspid_hunter/aspid_hunter_death.ogg" id="7_death"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(104, 92)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rywq7"]
+radius = 40.25
+height = 106.42
 
-[node name="AspidHunter" instance=ExtResource("1_base")]
-max_health = 4
-initial_health = 4
+[node name="AspidHunter" unique_id=482559928 instance=ExtResource("1_base")]
 move_speed_units = 1.1
-contact_damage = 1
 projectile_scene = ExtResource("4_proj")
-projectile_damage = 1
 corpse_lifetime = -1.0
 corpse_y_offset = 18.0
 turn_animation = &""
 
-[node name="patrol" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="2"]
+[node name="patrol" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="2" unique_id=2000000006]
 patrol_radius = 260.0
 patrol_speed_multiplier = 0.8
 wait_time = 1.0
 bob_amplitude = 28.0
 bob_frequency = 2.5
 
-[node name="chase" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="3"]
+[node name="chase" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="3" unique_id=170000001]
 chase_speed_multiplier = 1.2
 shoot_range = 520.0
-shoot_keep_distance = 180.0
 attack_interval = 2.0
+shoot_keep_distance = 180.0
 
-[node name="attack" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="4"]
+[node name="attack" parent="StateMachine" parent_id_path=PackedInt32Array(1283964249) index="4" unique_id=2000000007]
 attack_recover = 0.25
 
-[node name="Muzzle" parent="."]
-position = Vector2(48, 2)
-
-[node name="BodyCollisionShape2D" parent="."]
-position = Vector2(0, 10)
-shape = SubResource("RectangleShape2D_body")
-
-[node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(953898085) index="0"]
-scale = Vector2(-1, 1)
-sprite_frames = ExtResource("2_frames")
-animation = &"idle"
-
-[node name="ActionAnimationPlayer" parent="Animation" parent_id_path=PackedInt32Array(953898085) index="1"]
-libraries/ = ExtResource("3_anim")
-
-[node name="attack" parent="Audio" parent_id_path=PackedInt32Array(1887151212) index="0"]
+[node name="attack" parent="Audio" parent_id_path=PackedInt32Array(1887151212) index="0" unique_id=2061305228]
 stream = ExtResource("5_attack")
 volume_db = -3.0
 pitch_scale = 1.15
 
-[node name="hurt" parent="Audio" parent_id_path=PackedInt32Array(1887151212) index="1"]
+[node name="hurt" parent="Audio" parent_id_path=PackedInt32Array(1887151212) index="1" unique_id=1964145947]
 stream = ExtResource("6_hurt")
 volume_db = -10.0
 pitch_scale = 1.25
 
-[node name="death" parent="Audio" parent_id_path=PackedInt32Array(1887151212) index="2"]
+[node name="death" parent="Audio" parent_id_path=PackedInt32Array(1887151212) index="2" unique_id=1699287581]
 stream = ExtResource("7_death")
 volume_db = -2.0
 pitch_scale = 0.9
+
+[node name="Muzzle" parent="." index="4" unique_id=1436587748]
+position = Vector2(48, 2)
+
+[node name="BodyCollisionShape2D" parent="." index="5" unique_id=366153699]
+shape = SubResource("CapsuleShape2D_rywq7")
+
+[node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(953898085) index="0" unique_id=1162166538]
+scale = Vector2(-1, 1)
+sprite_frames = ExtResource("2_frames")
+
+[node name="ActionAnimationPlayer" parent="Animation" parent_id_path=PackedInt32Array(953898085) index="1" unique_id=736473467]
+libraries/ = ExtResource("3_anim")

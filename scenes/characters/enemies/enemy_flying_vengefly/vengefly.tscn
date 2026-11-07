@@ -8,6 +8,7 @@
 size = Vector2(99, 100)
 
 [node name="Vengefly" unique_id=1746772293 instance=ExtResource("1_tsxcx")]
+initial_health = 5
 corpse_lifetime = -1.0
 corpse_y_offset = 25.0
 turn_animation = &""

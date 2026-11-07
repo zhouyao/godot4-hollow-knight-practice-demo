@@ -1,8 +1,7 @@
 extends WorldArea
 
-## MossHole_0 关卡：环境音 + 进入湖泊区域后叠加 mossgrotto + GROTTO 区域标题。
-
-const AREA_TITLE_SCENE := preload("res://scenes/ui/area_title.tscn")
+## MossHole_0 关卡：环境音 + 进入湖泊区域后叠加 mossgrotto。
+## 进入提示由 WorldArea 统一处理（本关场景里打开了 show_area_title）。
 
 ## 前景萤火虫（AnimatedSprite2D）：围着出生点乱飞 —— 随机冲刺 + 弹簧回拉 + 振翅抖动。
 const DRIFT_RADIUS := 45.0 ## 允许乱飞的活动半径（像素），超出后被明显拉回
@@ -37,7 +36,6 @@ class DriftState:
 
 
 var _grotto_started := false
-var _title_shown := false
 var _standalone_rig: Node = null
 var _standalone_player: Node2D = null
 var _drifts: Array[DriftState] = []
@@ -64,6 +62,7 @@ func _ready() -> void:
 	_setup_drift(_as3)
 	_setup_drift(_as4)
 
+
 func _process(delta: float) -> void:
 	_update_drift(delta)
 
@@ -74,7 +73,6 @@ func _process(delta: float) -> void:
 	if player != null and not _grotto_started and player.global_position.x < 1800.0:
 		_grotto_started = true
 		_grotto.play()
-		_show_area_title()
 
 	if _standalone_rig != null and is_instance_valid(_standalone_player):
 		_standalone_rig.set_target_pos(_standalone_player.global_position)
@@ -88,13 +86,6 @@ func _apply_camera_bounds_for_standalone() -> void:
 	var limits: Rect2 = bounds.call(&"get_camera_limits", rig.zoom, get_viewport().get_visible_rect().size)
 	if limits.size.x > 0.0 and limits.size.y > 0.0:
 		rig.set_limits(int(limits.position.x), int(limits.position.y), int(limits.end.x), int(limits.end.y))
-
-
-func _show_area_title() -> void:
-	if _title_shown:
-		return
-	_title_shown = true
-	add_child(AREA_TITLE_SCENE.instantiate())
 
 
 # ---------------------------------------------------------------- 前景萤火虫乱飞

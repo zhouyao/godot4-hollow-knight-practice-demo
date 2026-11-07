@@ -5,8 +5,9 @@ class_name HollowKnightTeleportSmashState
 ## 三段相位（计时器 + is_on_floor 推进，不依赖 animation_finished，避免信号链路断掉卡死）：
 ##   1) OUT    消失：原地播 teleport_out + 音效 Audio/teleport；瞬移开始瞬间在玩家落点地面
 ##                  施放一排 boss_plume（预警，不伤人，同 down_smash，横跨整个 BossArena）；
-##   2) FALL   瞬移下杀：把 BOSS 瞬移到玩家头顶 teleport_height 像素处，给向下初速，纯重力
-##                  快速下坠，播 dstab_land（俯冲姿态）；落地即停；
+##   2) FALL   瞬移下杀：把 BOSS 瞬移到玩家头顶 teleport_height 像素处（不低于领地上沿，
+##                  保证整只 BOSS 不会飞出屏幕），给向下初速，纯重力快速下坠，
+##                  播 dstab_land（俯冲姿态）；落地即停；
 ##   3) RECOVER 落地：播 Audio/land，引爆所有 plume（plume_burst 伤人），
 ##                  落点正下方（水平距内）玩家追加下杀伤害；随后短暂硬直回 idle。
 
@@ -85,7 +86,7 @@ func update(delta: float) -> void:
 				go_idle()
 
 
-## 瞬移：把 BOSS 直接挪到玩家头顶 teleport_height 像素处，给向下初速，切到俯冲动画。
+## 瞬移：把 BOSS 挪到玩家头顶 teleport_height 像素处并裁进领地，给向下初速，切到俯冲动画。
 func _begin_fall() -> void:
 	if boss == null:
 		return
@@ -95,7 +96,14 @@ func _begin_fall() -> void:
 	var p := boss.get_player()
 	var target_x := _landing_x
 	var target_y := (p.global_position.y if p != null else boss.global_position.y) - teleport_height
-	boss.global_position = Vector2(target_x, target_y)
+	# 领地上沿是本关能安全出现的最高处：再往上（玩家跳到上层平台时 p.y - 1000 ≈ -700）
+	# BOSS 会整只飞出屏幕，并踩在领地外的天花板平台上落地，再也回不到场地里。
+	var ceiling := boss.arena_ceiling_y()
+	if not is_nan(ceiling):
+		target_y = maxf(target_y, ceiling)
+	var start := boss.clamp_position_to_arena(Vector2(target_x, target_y))
+	_landing_x = start.x
+	boss.teleport_to(start)
 	boss.velocity = Vector2(0.0, fall_initial_speed)
 	if p != null:
 		boss.face_toward(p.global_position.x)

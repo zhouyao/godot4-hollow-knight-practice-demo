@@ -1501,8 +1501,6 @@ _data = {
 [node name="HollowKnight" unique_id=170488292 instance=ExtResource("1_1qa0c")]
 script = ExtResource("2_4yi87")
 persistent_id = "hollow_knight"
-max_health = 100
-initial_health = 3
 patrol_enabled = true
 drop_table = ExtResource("3_kx5bg")
 corpse_lifetime = 3.0

@@ -25,10 +25,11 @@ func exit(_to: StringName) -> void:
 	player.end_attack()
 
 func on_attack_pressed() -> void:
-	if player.is_on_floor() or not Input.is_action_pressed(&"down"):
-		return
-	if machine != null:
-		machine.set_state(PlayerStateNames.SLASH_DOWN, true)
+	# 一次下劈 = 一次完整挥砍：动作期间不允许强制重入本状态。
+	# 旧实现里连点攻击会不断重置 elapsed、重播动画、把命中登记表清空，
+	# 使同一个目标被反复当成"首次命中"，进而反复触发下劈反弹（凭空无限抬升）。
+	# 想连续 pogo，等本次挥砍结束后从 jump / fall 重新起手即可，且仍须真正砍中硬物。
+	pass
 
 func get_transition(_delta: float) -> StringName:
 	if elapsed <= hold_time:

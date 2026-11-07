@@ -13,6 +13,7 @@ class_name VolumeRow
 func _ready() -> void:
 	super._ready()
 	slider.step = Settings.volume.VOLUME_STEP * 100.0
+	reset_button.set_meta(Tr.SOURCE_META_TOOLTIP, "重置默认值")
 	reset_button.tooltip_text = tr("重置默认值")
 
 	slider.value_changed.connect(_on_value_changed)

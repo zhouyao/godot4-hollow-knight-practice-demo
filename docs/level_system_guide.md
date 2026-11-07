@@ -138,10 +138,12 @@ autoload 顺序（`project.godot`）中 `GameSession` 放在最后，因为它�
 
 | 事件 | 动作 |
 | --- | --- |
-| BOSS `enter_combat` | 落墙 + 雾淡入（挡住退路） |
-| BOSS `boss_defeated` | 撤墙 + 雾淡出 |
+| BOSS `boss_activated` | 激活的第一时间落墙（不等入场演出，防止玩家趁演出逃离） |
+| BOSS `enter_combat` | 落墙（兼容旧 BOSS；已落墙则无动作） |
+| BOSS `boss_defeated` | 撤墙 |
 | 读档时 BOSS 已击败 | 直接保持敞开 |
 
+> `boss_activated` 由 `Boss.begin_fight()` / `enter_combat_zone()` 在切状态前广播，只发一次；带入场演出的 BOSS（SoulMaster）要等演出收尾才发 `enter_combat`。
 > 不监听 `leave_combat`：否则玩家跑远脱战就能把门重新打开，雾门形同虚设。
 
 ### F. 视野剔除（ViewCuller）

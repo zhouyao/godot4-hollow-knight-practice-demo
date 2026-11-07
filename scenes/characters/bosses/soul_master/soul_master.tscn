@@ -34,6 +34,7 @@
 [ext_resource type="Texture2D" uid="uid://cjww8mici26vy" path="res://assets/animations/characters/bosses/soul_master/dash_start/4.png" id="10_evxlf"]
 [ext_resource type="Texture2D" uid="uid://jqby1rusbjl" path="res://assets/animations/characters/bosses/soul_master/dash_start/5.png" id="11_ntc8i"]
 [ext_resource type="Script" uid="uid://s0nm0400y2fr" path="res://scenes/characters/bosses/soul_master/states/dash.gd" id="12_wxo8e"]
+[ext_resource type="AudioStream" uid="uid://cda4pve2eirrr" path="res://assets/sounds/characters/bosses/soul_master/death.ogg" id="13_ofjkc"]
 [ext_resource type="AudioStream" uid="uid://baipsfgb7iq3x" path="res://assets/sounds/characters/bosses/soul_master/ground.ogg" id="24_iob8l"]
 [ext_resource type="Texture2D" uid="uid://rkrqniglhrga" path="res://assets/animations/characters/bosses/soul_master/teleport/0.png" id="25_gdyqg"]
 [ext_resource type="Texture2D" uid="uid://dlg64r2acsgda" path="res://assets/animations/characters/bosses/soul_master/quake_down/Quake.png" id="25_gvvkx"]
@@ -406,7 +407,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [false]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -442,7 +443,7 @@ tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"quake_down"]
+"values": [&"idle"]
 }
 tracks/6/type = "value"
 tracks/6/imported = false
@@ -478,7 +479,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [false]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -951,10 +952,8 @@ _data = {
 
 [node name="SoulMaster" unique_id=170488292 instance=ExtResource("1_e4ahp")]
 script = ExtResource("2_6ncju")
-persistent_id = "soul_master"
 teleport_area = Rect2(0, 0, 0, 0)
-max_health = 100
-initial_health = 3
+persistent_id = "soul_master"
 locomotion = ExtResource("8_loco")
 drop_table = ExtResource("3_ct8p8")
 corpse_lifetime = 3.0
@@ -999,10 +998,9 @@ metadata/_custom_type_script = "uid://bx0ynw1ygcsak"
 [node name="quake" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="6" unique_id=1800000002]
 script = ExtResource("72_qk")
 air_height = 600.0
+waves_per_side = 3
 wave_speed = 600.0
 wave_lifetime = 7.0
-waves_per_side = 3
-wave_speed_falloff = 0.7
 metadata/_custom_type_script = "uid://b0n0pv6kvgyxe"
 
 [node name="dash" type="Node" parent="StateMachine" parent_id_path=PackedInt32Array(885825929) index="7" unique_id=1431676176]
@@ -1010,6 +1008,9 @@ script = ExtResource("12_wxo8e")
 drop_speed = 2000.0
 dash_speed = 1000.0
 metadata/_custom_type_script = "uid://s0nm0400y2fr"
+
+[node name="death" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="0" unique_id=1598064983]
+stream = ExtResource("13_ofjkc")
 
 [node name="entrance" type="AudioStreamPlayer2D" parent="Audio" parent_id_path=PackedInt32Array(196072747) index="1" unique_id=1841063679]
 stream = ExtResource("6_77din")
@@ -1071,6 +1072,7 @@ bus = &"Sound"
 shape = SubResource("CircleShape2D_magkm")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="0" unique_id=397079005]
+visible = false
 position = Vector2(0, -300)
 sprite_frames = SubResource("SpriteFrames_wxo8e")
 animation = &"quake_down_tail"
@@ -1078,12 +1080,13 @@ frame = 5
 
 [node name="EnemyAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="1" unique_id=1331468369]
 sprite_frames = SubResource("SpriteFrames_e4ahp")
-animation = &"quake_down"
 
 [node name="EffectAnimatedSprite" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="2" unique_id=2028615876]
+visible = false
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_gdyqg")
 animation = &"teleport_effect"
+frame = 3
 
 [node name="ActionAnimationPlayer" parent="Animation" parent_id_path=PackedInt32Array(55078650) index="3" unique_id=609070108]
 libraries/ = SubResource("AnimationLibrary_utio7")

@@ -76,9 +76,8 @@ func _do_teleport() -> void:
 		var side := 1.0 if p.global_position.x >= boss.global_position.x else -1.0
 		chosen = Vector2(p.global_position.x + appear_distance * side, p.global_position.y)
 
-	boss.global_position = chosen
-	boss.velocity = Vector2.ZERO
-	boss.face_toward(p.global_position.x)  # 瞬移后朝向玩家，劈砍自然朝玩家
+	# 落点裁进领地（防御贴边 / 兜底点越界），并走统一瞬变重置物理插值。
+	boss.teleport_to(boss.clamp_position_to_arena(chosen), true)
 
 
 func _begin_in() -> void:

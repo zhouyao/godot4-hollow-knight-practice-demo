@@ -116,6 +116,7 @@ size = Vector2(730, 23)
 [node name="MossHole" unique_id=560156841 instance=ExtResource("1_packedscene")]
 script = ExtResource("2_script")
 zone_name = "苔藓洞穴"
+show_area_title = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KillBox" parent_id_path=PackedInt32Array(1663494127) index="0" unique_id=1153291566]
 position = Vector2(-500, 2050)

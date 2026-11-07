@@ -20,4 +20,7 @@ func set_display_name(value: String) -> void:
 
 
 func _apply_display_name() -> void:
+	# 行首名称由脚本动态赋值：把中文 key 记进 meta，
+	# 父级 Tr.apply 切语言时才不会把当前译文误当 key。
+	name_label.set_meta(Tr.SOURCE_META, display_name)
 	name_label.text = tr(display_name)

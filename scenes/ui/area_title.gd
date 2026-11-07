@@ -1,26 +1,24 @@
 extends CanvasLayer
 
-## 区域标题：两行文字 + 上下花纹，淡入 → 停留 → 淡出，结束后自毁。
-## 复刻源项目 SceneTitleUI（GROTTO / M O S S）。
+## 区域标题：单行主标题 + 上下花纹，淡入 → 停留 → 淡出，结束后自毁。
+## 文案由使用方传入（关卡一般传地图名）。
 
 const FADE_IN := 1.7
 const HOLD := 5.0
 const FADE_OUT := 0.85
 
-@export var title := "GROTTO"
-@export var subtitle := "M O S S"
+## 中文原文作翻译 key（见 translations.csv），_ready 时统一走 Tr.apply。
+@export var title := "未知区域"
 
 @onready var _title: Label = $Root/Title
-@onready var _subtitle: Label = $Root/Subtitle
 @onready var _top: AnimatedSprite2D = $Root/Top
 @onready var _bottom: AnimatedSprite2D = $Root/Bottom
 
 
 func _ready() -> void:
 	_title.text = title
-	_subtitle.text = subtitle
+	Tr.apply(self)
 	_title.modulate.a = 0.0
-	_subtitle.modulate.a = 0.0
 	_top.frame = 0
 	_bottom.frame = 0
 	_play()
@@ -43,7 +41,6 @@ func _play() -> void:
 
 func _set_alpha(a: float) -> void:
 	_title.modulate.a = a
-	_subtitle.modulate.a = a
 
 
 func _set_top_frame(v: float) -> void:

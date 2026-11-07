@@ -10,6 +10,7 @@
 [ext_resource type="AudioStream" uid="uid://rj5sy2sjpm7t" path="res://assets/sounds/ambience/tearcity_o.ogg" id="7_audio_o"]
 [ext_resource type="Script" uid="uid://1033cnat8g0l" path="res://scenes/worlds/_base/parallax_bg.gd" id="8_parallax"]
 [ext_resource type="Texture2D" uid="uid://dv5h1ugu3xklo" path="res://assets/sprites/backgrounds/ruin_house/ruin_house_bg.jpg" id="9_bg"]
+[ext_resource type="Texture2D" uid="uid://dxaaheqrbj4x2" path="res://assets/sprites/environment/grimm_tent/SpriteAtlasTexture-Divine-1024x2048-fmt12.png" id="10_bu3p4"]
 [ext_resource type="Texture2D" uid="uid://cny3gb5if6gyh" path="res://assets/sprites/backgrounds/ruin_house/room_ruin_house_fg.png" id="10_fg"]
 [ext_resource type="Script" uid="uid://0anauft5nso" path="res://addons/camera_director/AuCameraLockArea.gd" id="10_hgnd4"]
 [ext_resource type="Texture2D" uid="uid://pnuqea280sri" path="res://assets/textures/lights/circle.png" id="11_light"]
@@ -20,9 +21,9 @@ size = Vector2(2493, 82)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
 size = Vector2(36, 1631.5)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hgnd4"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bu3p4"]
 resource_local_to_scene = true
-size = Vector2(387, 202)
+size = Vector2(378, 57)
 
 [node name="ruin_house" unique_id=560156841 instance=ExtResource("1_world")]
 script = ExtResource("2_script")
@@ -46,7 +47,12 @@ script = ExtResource("8_parallax")
 scale = Vector2(2, 2)
 texture = ExtResource("9_bg")
 
-[node name="Platform_01" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="0" unique_id=1732748794]
+[node name="RuinChair" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="0" unique_id=1848190926 instance=ExtResource("5_chair")]
+position = Vector2(10, 1153)
+sit_on_enter = true
+seat_offset = Vector2(0, -43)
+
+[node name="Platform_01" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="1" unique_id=1732748794]
 position = Vector2(0, 1100)
 collision_layer = 4
 collision_mask = 79
@@ -55,7 +61,7 @@ collision_mask = 79
 position = Vector2(29.25, 150)
 shape = SubResource("RectangleShape2D_floor")
 
-[node name="Platform_02" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="1" unique_id=1501292030]
+[node name="Platform_02" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="2" unique_id=1501292030]
 position = Vector2(-650, 500)
 collision_layer = 4
 collision_mask = 79
@@ -64,7 +70,7 @@ collision_mask = 79
 position = Vector2(-480, 222)
 shape = SubResource("RectangleShape2D_wall")
 
-[node name="Platform_03" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="2" unique_id=259097291]
+[node name="Platform_03" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="3" unique_id=259097291]
 position = Vector2(650, 500)
 collision_layer = 4
 collision_mask = 79
@@ -73,7 +79,7 @@ collision_mask = 79
 position = Vector2(515, 223)
 shape = SubResource("RectangleShape2D_wall")
 
-[node name="Platform_04" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="3" unique_id=1121855226]
+[node name="Platform_04" type="StaticBody2D" parent="Obstacles" parent_id_path=PackedInt32Array(1863231430) index="4" unique_id=1121855226]
 position = Vector2(0, 250)
 collision_layer = 4
 collision_mask = 79
@@ -82,42 +88,17 @@ collision_mask = 79
 position = Vector2(9, -121)
 shape = SubResource("RectangleShape2D_floor")
 
-[node name="RuinChair" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="0" unique_id=1848190926 instance=ExtResource("5_chair")]
-position = Vector2(10, 1141)
-sit_on_enter = true
-seat_offset = Vector2(0, -43)
-
-[node name="ruin_house_right" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="1" unique_id=547298701 instance=ExtResource("3_entry")]
-position = Vector2(900, 1124)
-facing = -1
-
-[node name="ruin_house_left" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="2" unique_id=86066391 instance=ExtResource("3_entry")]
-position = Vector2(-900, 1124)
-facing = 1
-
-[node name="default" type="Marker2D" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="3" unique_id=965039085]
-position = Vector2(500, 1000)
-script = ExtResource("7_4n86c")
-metadata/_custom_type_script = "uid://c7hpea0g65weh"
-
-[node name="ruin_house_right" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="0" unique_id=1506762 instance=ExtResource("4_gate")]
-position = Vector2(1031, 1107)
-target_area = "uid://dwyw2bvpy5ip3"
-target_entry = &"soul_master_room_left"
-gate_id = &"ruin_house_right"
-requires_ground = true
-
-[node name="ruin_house_left" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="1" unique_id=632336424 instance=ExtResource("4_gate")]
-position = Vector2(-1006, 1112)
-target_area = "uid://bysaf7yy5ht5r"
-target_entry = &"grimm_gent_right"
-gate_id = &"ruin_house_left"
-
 [node name="Bg_002" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="0" unique_id=2043833259]
 z_index = 5
-position = Vector2(-3.9999542, 797.00006)
-scale = Vector2(3.040951, 2.6891568)
+position = Vector2(3.4999428, 689.5)
+scale = Vector2(3.1347423, 3.4096386)
 texture = ExtResource("10_fg")
+
+[node name="Bg_003" type="Sprite2D" parent="Foreground" parent_id_path=PackedInt32Array(1812575969) index="1" unique_id=458878031]
+z_index = 2
+position = Vector2(-825, 1027.032)
+scale = Vector2(-1, 1.2866251)
+texture = ExtResource("10_bu3p4")
 
 [node name="DirectionalLight2D" parent="Lights" parent_id_path=PackedInt32Array(1627484379) index="0" unique_id=617027591]
 energy = 0.0
@@ -144,9 +125,35 @@ can_look_down = true
 [node name="Camera_lock" type="Marker2D" parent="CameraLock/Markers" parent_id_path=PackedInt32Array(689316407) index="0" unique_id=1237535381]
 position = Vector2(0, 824)
 
+[node name="ruin_house_right" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="0" unique_id=547298701 instance=ExtResource("3_entry")]
+position = Vector2(900, 1124)
+facing = -1
+
+[node name="ruin_house_left" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="1" unique_id=86066391 instance=ExtResource("3_entry")]
+position = Vector2(-900, 1124)
+facing = 1
+
+[node name="default" type="Marker2D" parent="LevelTransitions/Entries" parent_id_path=PackedInt32Array(839994114) index="2" unique_id=965039085]
+position = Vector2(500, 1000)
+script = ExtResource("7_4n86c")
+metadata/_custom_type_script = "uid://c7hpea0g65weh"
+
+[node name="ruin_house_right" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="0" unique_id=1506762 instance=ExtResource("4_gate")]
+position = Vector2(1031, 1107)
+target_area = "uid://dwyw2bvpy5ip3"
+target_entry = &"soul_master_room_left"
+gate_id = &"ruin_house_right"
+requires_ground = true
+
+[node name="ruin_house_left" parent="LevelTransitions/Gates" parent_id_path=PackedInt32Array(1076165805) index="1" unique_id=632336424 instance=ExtResource("4_gate")]
+position = Vector2(-1006, 1112)
+target_area = "uid://bysaf7yy5ht5r"
+target_entry = &"grimm_gent_right"
+gate_id = &"ruin_house_left"
+
 [node name="CollisionShape2D" parent="CameraBounds" parent_id_path=PackedInt32Array(-983417019) index="0" unique_id=1116790881]
-position = Vector2(-2.5, 721)
-shape = SubResource("RectangleShape2D_hgnd4")
+position = Vector2(0, 736.5)
+shape = SubResource("RectangleShape2D_bu3p4")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." index="18" unique_id=469030928]
 color = Color(1.1, 1.05, 0.98, 1)

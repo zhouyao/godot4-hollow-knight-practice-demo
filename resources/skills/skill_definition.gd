@@ -11,7 +11,7 @@ extends Resource
 @export var icon: Texture2D                    # 左侧图标
 @export var preview_frames: SpriteFrames       # 右侧动画预览用的 SpriteFrames
 @export var preview_animation: StringName = &"default"
-@export var description: String = ""
+@export var description: String = ""          # 翻译 key（中文原文，展示处走 tr()）
 ## 冷却时长（秒）：0 表示无冷却。施放时由玩家读取并计时，技能条 UI 也用它算遮罩比例。
 @export var cooldown: float = 0.0
 ## 施放消耗的能量点数：0 表示不消耗能量。能量不足时技能按不出去。

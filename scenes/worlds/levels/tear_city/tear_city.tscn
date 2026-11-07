@@ -161,6 +161,7 @@ size = Vector2(1838, 667)
 [node name="tear_city" unique_id=560156841 instance=ExtResource("1_packedscene")]
 script = ExtResource("2_script")
 zone_name = "泪城"
+show_area_title = true
 
 [node name="NavigationRegion2D" parent="NavigationAreas" parent_id_path=PackedInt32Array(1557722077) index="0" unique_id=420728257]
 navigation_polygon = SubResource("NavigationPolygon_wkk6u")

@@ -3,12 +3,14 @@
 [ext_resource type="PackedScene" uid="uid://cc7bpmgddem53" path="res://scenes/characters/enemies/enemy_ground/enemy_ground.tscn" id="1_sgcrh"]
 [ext_resource type="AudioStream" uid="uid://ckelgorscj7ip" path="res://assets/sounds/characters/enemies/crawlid/crawlid_walk.ogg" id="2_nxsdj"]
 [ext_resource type="SpriteFrames" uid="uid://7rb1m82ndlbm" path="res://resources/characters/enemies/crawlid/crawlid_sprite.tres" id="3_r7r7o"]
-[ext_resource type="AnimationLibrary" uid="uid://b0yir7rm0vs0" path="res://resources/characters/enemies/crawlid/crawlid_player.res" id="4_cekqu"]
+[ext_resource type="AnimationLibrary" uid="uid://bxy7luklkngd" path="res://resources/characters/enemies/crawlid/crawlid_player.res" id="4_cekqu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fysxx"]
 size = Vector2(104, 82)
 
 [node name="Crawlid" unique_id=220108385 instance=ExtResource("1_sgcrh")]
+step_up_height = 12.0
+step_up_probe = 8.0
 projectile_scene = null
 corpse_lifetime = -1.0
 corpse_y_offset = -5.0

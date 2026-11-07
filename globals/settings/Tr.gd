@@ -30,6 +30,13 @@ static func _apply_node(node: Node) -> void:
 static func _translated(node: Node, text: String, meta: StringName) -> String:
 	if text == "":
 		return text
+	var has_source := node.has_meta(meta)
 	var source: String = node.get_meta(meta, text) as String
+	var translated := TranslationServer.translate(source)
+	# 数字、键名等脚本动态生成的文本不是翻译 key：别把它记成 source，
+	# 否则切换语言时会拿旧译文 / 旧数值当 key，把刚刷新过的文本覆盖回去。
+	# 已显式写入 source 的动态文本（HintLabel 等）仍按 source 翻译。
+	if not has_source and translated == source:
+		return text
 	node.set_meta(meta, source)
-	return TranslationServer.translate(source)
+	return translated

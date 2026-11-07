@@ -69,7 +69,10 @@ func _refresh() -> void:
 
 	_details.display(summary)
 	var zone := String(summary.get("zone", ""))
-	_zone_label.text = zone if not zone.is_empty() else "未知区域"
+	var zone_key := zone if not zone.is_empty() else "未知区域"
+	# 存档里存的是区域名中文 key：写进 meta 后，父级 Tr.apply 切语言时能按 key 重译。
+	_zone_label.set_meta(Tr.SOURCE_META, zone_key)
+	_zone_label.text = tr(zone_key)
 	_time_label.text = SaveManager.format_play_time(float(summary.get("play_time", 0.0)))
 
 

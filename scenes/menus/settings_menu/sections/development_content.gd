@@ -1,7 +1,8 @@
 extends VBoxContainer
 
-# 「开发」页：调试模式开关 + 首页路径。内容与状态都由 Settings.development 提供，
-# 这里只负责控件的构建、同步与语言切换后的重建。
+# 「开发」页：调试模式 + 敌方出生血量 + 首页路径。状态都由 Settings.development 提供；
+# 两行血量是复用的 HealthRow，各自连自己的设置信号；本脚本只负责调试开关与首页路径
+# 的控件构建、同步与语言切换后的重建。
 
 const OFF_TEXT := "关闭"
 const ON_TEXT := "开启"

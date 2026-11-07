@@ -30,6 +30,10 @@ func enter(from: StringName) -> void:
 	# 进入 idle 后状态名不再属于锁定集，这里再把残留的 invincible 清干净。
 	if boss != null:
 		boss.invincible = false
+		# 过场全部结束 = 正式开战：补上 begin_fight()（→ enter_combat），与
+		# SoulMaster 入场演出收尾一致。boss_activated 已在四链全断时发过（幂等），
+		# 这里负责仇恨 / BGM 等开战广播；每次复位后重进 idle 也会重新拉起仇恨。
+		boss.begin_fight()
 
 
 # ---- 决策三件套（基类 decide_next 会调用这三个钩子）----
