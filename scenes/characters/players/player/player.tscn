@@ -30,6 +30,7 @@
 [ext_resource type="AudioStream" uid="uid://bseug08ujbq11" path="res://assets/sounds/characters/players/player/player_blcok.ogg" id="27_muvqv"]
 [ext_resource type="AudioStream" uid="uid://dl2kfo2gvbkyy" path="res://assets/sounds/characters/players/player/sound_cure.ogg" id="28_inudu"]
 [ext_resource type="AudioStream" uid="uid://cvj0nrnyflx2" path="res://assets/sounds/characters/players/player/voice_cure.ogg" id="29_iaomr"]
+[ext_resource type="AudioStream" uid="uid://fhhyedlgbjqr" path="res://assets/sounds/characters/players/player/sound_swordhit.ogg" id="38_hit01"]
 [ext_resource type="AnimationLibrary" uid="uid://chcmuoef0l46l" path="res://resources/characters/players/player/player_action_player.tres" id="30_muvqv"]
 [ext_resource type="Texture2D" uid="uid://c221vh12i7fw2" path="res://assets/animations/characters/players/player/sit_effect/0.png" id="34_c8mju"]
 [ext_resource type="PackedScene" path="res://scenes/debug/character_debug.tscn" id="35_aldr5"]
@@ -185,6 +186,10 @@ bus = &"Sound"
 
 [node name="block" type="AudioStreamPlayer2D" parent="Audio" unique_id=1819241663]
 stream = ExtResource("27_muvqv")
+bus = &"Sound"
+
+[node name="sword_hit" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("38_hit01")
 bus = &"Sound"
 
 [node name="cure1" type="AudioStreamPlayer2D" parent="Audio" unique_id=2045801021]

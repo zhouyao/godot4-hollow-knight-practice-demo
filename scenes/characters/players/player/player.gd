@@ -21,7 +21,7 @@ signal health_changed(health: int)
 #      （帝王之翼的 max_air_jumps / double_jump_height_units，以及两处历史覆盖值
 #       slash_down_bounce_height_units = 10.0、damage_knockback_y = 600.0），
 #      改名会让这些值失联，加载场景时被丢弃。改数值请优先在 player.tscn 里改。
-#   2. 分组顺序 = Inspector 显示顺序：跳跃 → 挥砍 → 冲刺 → 受击 → 生命 → 能量。
+#   2. 分组顺序 = Inspector 显示顺序：跳跃 → 挥砍 → 打击反馈 → 冲刺 → 受击 → 生命 → 能量。
 #      @export_group 一直作用到下一个 group，新增导出项要放进对应组，别插在组外。
 #   3. 单位：格数在 _ready 里乘 Globals.UNIT_SIZE；时间统一秒；衰减速率统一"每秒"。
 #      ## 文档注释会变成 Inspector 的悬浮提示。
@@ -53,6 +53,15 @@ signal health_changed(health: int)
 ## 命中敌人后玩家自身的水平反冲力：沿攻击反方向弹开，制造"出手后一顿"的手感。
 ## 量级远小于受击击退，走同一条击退衰减通道。
 @export var attacker_recoil_x: float = 1000.0
+
+@export_group("打击反馈 Hit Feedback")
+## 命中时打击音效的音高随机幅度：实际取 1±该值（0.08 → 0.92~1.08），避免连击听感重复。
+## 设为 0 则每次都用原始音高。
+@export_range(0.0, 0.5, 0.01) var hit_pitch_jitter: float = 0.08
+## 命中瞬间的定格时长（秒，真实时间）：0 = 关闭定格。建议 0.03~0.06，再长会明显拖慢节奏。
+@export var hitstop_duration: float = 0.05
+## 定格期间的时间缩放：0 = 完全冻结（推荐）；0.1~0.3 会留一点慢动作感。
+@export_range(0.0, 1.0, 0.01) var hitstop_time_scale: float = 0.0
 
 @export_group("冲刺 Dash")
 ## 冲刺被打断成挥砍时残留的冲量初速 = 冲刺速度 × 该比例，0.6 表示保留六成。
@@ -650,6 +659,7 @@ func _hit_enemy(body: Node2D) -> bool:
 	# 去重：本次挥砍已结算过该目标就直接跳过，伤害 / 能量 / 反冲 / 反弹一律不重复给。
 	if not _claim_hit(body):
 		return false
+	_play_hit_feedback()
 	if body is Enemy:
 		# 用目标的统一免疫判据：死亡 / 受击无敌帧 / BOSS 过场锁定（沉睡、苏醒演出）都算"没打中"，
 		# 不给能量、不施加反冲 —— 否则砍沉睡中的 boss 会有"打到了"的手感。
@@ -692,4 +702,50 @@ func _on_attack_area_area_entered(area: Node) -> void:
 		return
 	# 与 body 路径同一套去重：草 / 宝箱等 Area2D 目标在一次挥砍里同样只结算一次。
 	if area.has_method("take_damage") and _claim_hit(area):
+		_play_hit_feedback()
 		area.take_damage(slash_damage, self)
+
+
+## 命中反馈入口：打击音效 + 短暂定格。body 与 Area2D 两条命中结算路径各调一次。
+func _play_hit_feedback() -> void:
+	_play_hit_sfx()
+	_apply_hitstop()
+
+
+## 打击音效：每次成功结算一个目标响一次（stream 在 player.tscn 的 Audio/sword_hit 上配置）。
+## 播放前在 1±hit_pitch_jitter 内随机音高，连续命中不会听起来像复读同一段声音。
+func _play_hit_sfx() -> void:
+	var s := audio_nodes.get("sword_hit") as AudioStreamPlayer2D
+	if s == null or s.stream == null:
+		return
+	s.pitch_scale = clampf(randf_range(1.0 - hit_pitch_jitter, 1.0 + hit_pitch_jitter), 0.05, 4.0)
+	s.play()
+
+
+## 命中定格（hitstop）：把 Engine.time_scale 压到 hitstop_time_scale，短暂"顿一下"。
+## 用时间缩放而不是 get_tree().paused：音效是真实时间播放的，仍然照常放完，
+## 也不用给敌人 / 特效 / 相机逐个配 process_mode。
+## 解冻必须走 ignore_time_scale 的真实计时器 —— 普通计时器在 time_scale=0 时永远到不了期。
+func _apply_hitstop() -> void:
+	if hitstop_duration <= 0.0:
+		return
+	var tree := get_tree()
+	if tree == null:
+		return
+	_hitstop_generation += 1
+	var generation := _hitstop_generation
+	Engine.time_scale = clampf(hitstop_time_scale, 0.0, 1.0)
+	var timer := tree.create_timer(hitstop_duration, true, false, true)
+	timer.timeout.connect(PlayerInitial._on_hitstop_timeout.bind(generation))
+
+
+## 命中定格代次：每次触发起停都 +1，只有代次最新的那次回调才解冻，
+## 否则一次挥砍穿透多个目标时，前一个回调会把后一个刚起的定格提前解掉。
+## 计步与解冻都写成 static：定时器回调不依赖玩家实例，定格途中玩家被释放也能正常解冻。
+static var _hitstop_generation: int = 0
+
+
+static func _on_hitstop_timeout(generation: int) -> void:
+	if generation != _hitstop_generation:
+		return
+	Engine.time_scale = 1.0
