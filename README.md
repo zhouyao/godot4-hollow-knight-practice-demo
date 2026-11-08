@@ -27,6 +27,55 @@
 
 > 项目仍在开发中：NPC 系统、护符 / 法术系统尚未实现，部分关卡仅为调试示例。功能以实际代码为准，完整系统与组件索引见 `docs/level_system_guide.md`。
 
+## 截图
+
+以下均为项目实际运行画面（1920×1080 窗口），点击任意图片可查看原图。
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <a href="screenshot/01-key-bindings.webp"><img src="screenshot/01-key-bindings.webp" width="100%" alt="按键设置"></a>
+      <sub><b>按键设置</b><br>键盘 / 手柄键位重绑定</sub>
+    </td>
+    <td align="center" width="33%">
+      <a href="screenshot/02-save-slots.webp"><img src="screenshot/02-save-slots.webp" width="100%" alt="存档选择"></a>
+      <sub><b>存档选择</b><br>4 槽存档与进度摘要</sub>
+    </td>
+    <td align="center" width="33%">
+      <a href="screenshot/03-moss-hole-treasure.webp"><img src="screenshot/03-moss-hole-treasure.webp" width="100%" alt="苔藓洞窟"></a>
+      <sub><b>苔藓洞窟</b><br>草区场景、宝箱与血量提示</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <a href="screenshot/04-pause-menu.webp"><img src="screenshot/04-pause-menu.webp" width="100%" alt="暂停菜单"></a>
+      <sub><b>暂停菜单</b><br>继续 / 保存 / 音频 / 退回主菜单</sub>
+    </td>
+    <td align="center" width="33%">
+      <a href="screenshot/05-tears-city-rain.webp"><img src="screenshot/05-tears-city-rain.webp" width="100%" alt="泪城雨区"></a>
+      <sub><b>泪城</b><br>雨区、视差背景与雕像</sub>
+    </td>
+    <td align="center" width="33%">
+      <a href="screenshot/06-tears-city-battle.webp"><img src="screenshot/06-tears-city-battle.webp" width="100%" alt="泪城战斗"></a>
+      <sub><b>雨区战斗</b><br>灵魂槽、血量与底部技能条</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <a href="screenshot/07-bench.webp"><img src="screenshot/07-bench.webp" width="100%" alt="长椅存档点"></a>
+      <sub><b>长椅存档点</b><br>坐下回血与存档</sub>
+    </td>
+    <td align="center" width="33%">
+      <a href="screenshot/08-grimm-tent.webp"><img src="screenshot/08-grimm-tent.webp" width="100%" alt="格里姆帐篷"></a>
+      <sub><b>格里姆帐篷</b><br>剧团舞台与观众</sub>
+    </td>
+    <td align="center" width="33%">
+      <a href="screenshot/09-hollow-knight-boss.webp"><img src="screenshot/09-hollow-knight-boss.webp" width="100%" alt="空洞骑士 BOSS 战"></a>
+      <sub><b>BOSS 战</b><br>空洞骑士入场演出</sub>
+    </td>
+  </tr>
+</table>
+
 ## 环境与运行
 
 依赖只有 Godot 4.7 本身；`addons/` 下的插件已随仓库提供，并在 `project.godot` 中启用，无需额外安装。
@@ -76,6 +125,7 @@ Godot --headless --path . res://scenes/worlds/game_root.tscn --quit-after 180
 ├── addons/                      camera_director、environment_fx、zone_director、
 │                                sprite_frames_to_animation_player、gdUnit4
 ├── docs/                        关卡 / 转场系统使用清单
+├── screenshot/                  README 展示截图（带 .gdignore，不导入、不打进导出包）
 ├── reports/                     GdUnit4 历史测试报告产物
 └── tools/                       插件打包辅助脚本
 ```
